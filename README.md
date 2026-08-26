@@ -1,4 +1,4 @@
-# 🌉 Pemantauan & Analisis Tren Spasial-Temporal Polutan Udara ($NO_2$) di Area Jembatan Suramadu Berbasis Data Satelit Sentinel-5P
+#  Pemantauan & Analisis Tren Spasial-Temporal Polutan Udara ($NO_2$) di Area Jembatan Suramadu Berbasis Data Satelit Sentinel-5P
 
 **Mata Kuliah:** Pengumpulan dan Sains Data (PSD)  
 **Program Studi:** Sains Data / Teknik Informatika  
@@ -8,7 +8,7 @@
 
 ---
 
-## 📌 1. Business Understanding (Pemahaman Bisnis & Domain)
+##  1. Business Understanding (Pemahaman Bisnis & Domain)
 
 ### 1.1 Latar Belakang
 Kualitas udara merupakan indikator vital dalam kesehatan lingkungan. Koridor Selat Madura, khususnya kawasan sekeliling **Jembatan Suramadu** (menghubungkan Kota Surabaya dan Kabupaten Bangkalan), memiliki karakteristik mobilitas yang unik:
@@ -24,7 +24,7 @@ Nitrogen Dioksida ($NO_2$) adalah salah satu gas polutan beracun utama (*Criteri
 
 ---
 
-## 🛰️ 2. Data Understanding (Spesifikasi & Akuisisi Data Satelit)
+##  2. Data Understanding (Spesifikasi & Akuisisi Data Satelit)
 
 ### 2.1 Sumber Data & Sensor
 Data tidak dikumpulkan dari stasioner pemantau darat, melainkan diekstraksi dari **Satelit Sentinel-5 Precursor (Sentinel-5P)** milik *European Space Agency* (ESA) yang diakses melalui ekosistem **Copernicus Data Space Ecosystem (CDSE)**.
@@ -47,7 +47,7 @@ Penarikan data dilakukan secara *server-side processing* memanfaatkan **openEO A
 
 ---
 
-## 🧪 3. Temuan Awal & Analisis Visual (Exploratory Data)
+##  3. Temuan Awal & Analisis Visual (Exploratory Data)
 
 Berdasarkan eksekusi pada file `rawling_data.ipynb`, grafik *time-series* yang dihasilkan menunjukkan beberapa fenomena:
 * **Fluktuasi Harian:** Konsentrasi $NO_2$ bervariasi secara dinamis antara $0.00000\ mol/m^2$ hingga puncak tertinggi mencapai sekitar $0.00025\ mol/m^2$.
@@ -56,7 +56,7 @@ Berdasarkan eksekusi pada file `rawling_data.ipynb`, grafik *time-series* yang d
 
 ---
 
-## 📁 4. Struktur Repositori
+##  4. Struktur Repositori
 
 ```text
 TugasPSD/
