@@ -1,11 +1,13 @@
-# Welcome to your Jupyter Book
+# Analisis Kualitas Udara (Polutan NO2) Area Suramadu
 
-This is a small sample book to give you a feel for how book content is
-structured.
-It shows off a few of the major file types, as well as some sample content.
-It does not go in-depth into any particular topic - check out [the Jupyter Book documentation](https://jupyterbook.org) for more information.
+Selamat datang di Laporan Analisis Data Spasial-Temporal Kualitas Udara!
 
-Check out the content pages bundled with this sample book to see more.
+Proyek ini disusun untuk memenuhi tugas mata kuliah **Pengumpulan dan Sains Data (PSD)**. Fokus utama dari repositori ini adalah melakukan *crawling* data dari satelit pengamat bumi (Sentinel-5P) untuk memantau tingkat polusi udara di daerah asal saya, yaitu **Kawasan Jembatan Suramadu**.
 
-```{tableofcontents}
-```
+**Informasi Proyek:**
+*   **Mata Kuliah:** Pengumpulan dan Sains Data (PSD)
+*   **Wilayah Observasi:** Jembatan Suramadu, Jawa Timur (Bounding Box: 112.65, -7.22 s.d 112.78, -7.14)
+*   **Periode Data:** 1 September 2025 - 31 Agustus 2026
+*   **Sumber Data:** Copernicus Data Space Ecosystem (Satelit Sentinel-5P)
+
+Silakan navigasi menggunakan menu di sebelah kiri untuk membaca detail *Business Understanding* dan *Data Understanding*.

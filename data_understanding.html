@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Analisis Kualitas Udara (Polutan NO2) Area Suramadu &#8212; My sample book</title>
+    <title>2. Data Understanding &#8212; My sample book</title>
   
   
   
@@ -57,10 +57,10 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'data_understanding';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1. Business Understanding" href="business_understanding.html" />
+    <link rel="prev" title="1. Business Understanding" href="business_understanding.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -123,8 +123,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -143,7 +141,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="intro.html">
   
   
   
@@ -174,15 +172,15 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     Analisis Kualitas Udara (Polutan NO2) Area Suramadu
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Data Understanding</a></li>
 </ul>
 
     </div>
@@ -254,7 +252,7 @@
       
       
       
-      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fdata_understanding.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -284,7 +282,7 @@
       
       
       
-      <li><a href="_sources/intro.md" target="_blank"
+      <li><a href="_sources/data_understanding.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -355,7 +353,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -366,11 +366,22 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Analisis Kualitas Udara (Polutan NO2) Area Suramadu</h1>
+    <h1>2. Data Understanding</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">Deskripsi Polutan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">Eksplorasi Fitur (Dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apakah-ada-data-aneh-anomali">Apakah Ada Data Aneh (Anomali)?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">Visualisasi Akhir (Time Series)</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -380,20 +391,42 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="analisis-kualitas-udara-polutan-no2-area-suramadu">
-<h1>Analisis Kualitas Udara (Polutan NO2) Area Suramadu<a class="headerlink" href="#analisis-kualitas-udara-polutan-no2-area-suramadu" title="Link to this heading">#</a></h1>
-<p>Selamat datang di Laporan Analisis Data Spasial-Temporal Kualitas Udara!</p>
-<p>Proyek ini disusun untuk memenuhi tugas mata kuliah <strong>Pengumpulan dan Sains Data (PSD)</strong>. Fokus utama dari repositori ini adalah melakukan <em>crawling</em> data dari satelit pengamat bumi (Sentinel-5P) untuk memantau tingkat polusi udara di daerah asal saya, yaitu <strong>Kawasan Jembatan Suramadu</strong>.</p>
-<p><strong>Informasi Proyek:</strong></p>
+  <section class="tex2jax_ignore mathjax_ignore" id="data-understanding">
+<h1>2. Data Understanding<a class="headerlink" href="#data-understanding" title="Link to this heading">#</a></h1>
+<p>Tahap ini berfokus pada pengenalan spesifikasi dataset hasil <em>crawling</em> dan analisis terhadap fitur-fitur yang didapatkan dari sensor satelit Sentinel-5P.</p>
+<section id="deskripsi-polutan">
+<h2>Deskripsi Polutan<a class="headerlink" href="#deskripsi-polutan" title="Link to this heading">#</a></h2>
+<p>Satelit memonitor berbagai polutan berbahaya di troposfer bumi. Dua yang paling umum menjadi indikator kualitas udara adalah <strong>CO</strong> dan <strong>NO2</strong>:</p>
 <ul class="simple">
-<li><p><strong>Mata Kuliah:</strong> Pengumpulan dan Sains Data (PSD)</p></li>
-<li><p><strong>Wilayah Observasi:</strong> Jembatan Suramadu, Jawa Timur (Bounding Box: 112.65, -7.22 s.d 112.78, -7.14)</p></li>
-<li><p><strong>Periode Data:</strong> 1 September 2025 - 31 Agustus 2026</p></li>
-<li><p><strong>Sumber Data:</strong> Copernicus Data Space Ecosystem (Satelit Sentinel-5P)</p></li>
+<li><p><strong>Apa itu CO (Karbon Monoksida)?</strong>
+CO adalah gas beracun yang tidak berwarna, tidak berbau, dan tidak berasa. Gas ini utamanya dihasilkan dari proses pembakaran bahan bakar fosil yang <em>tidak sempurna</em>. Sumber terbesarnya adalah asap knalpot kendaraan bermotor. Jika terhirup dalam jumlah banyak, CO sangat berbahaya karena akan mengikat hemoglobin dalam darah dan menghalangi suplai oksigen ke tubuh.</p></li>
+<li><p><strong>Apa itu NO2 (Nitrogen Dioksida)?</strong>
+NO2 adalah gas beracun berwarna coklat kemerahan dengan bau yang tajam dan menyengat. Berbeda dengan CO, NO2 dihasilkan dari pembakaran bahan bakar fosil pada <em>suhu tinggi</em>, seperti mesin diesel kendaraan berat, kapal laut, dan aktivitas industri/pembangkit listrik. Pada proyek ini, <strong>NO2 dipilih sebagai fitur utama</strong> karena kawasan Suramadu merupakan jalur padat kendaraan logistik antar-pulau.</p></li>
 </ul>
-<p>Silakan navigasi menggunakan menu di sebelah kiri untuk membaca detail <em>Business Understanding</em> dan <em>Data Understanding</em>.</p>
-<div class="toctree-wrapper compound">
-</div>
+</section>
+<section id="eksplorasi-fitur-dataset">
+<h2>Eksplorasi Fitur (Dataset)<a class="headerlink" href="#eksplorasi-fitur-dataset" title="Link to this heading">#</a></h2>
+<p>Data yang diunduh (disimpan dalam <code class="docutils literal notranslate"><span class="pre">data_polutan_no2_clean.csv</span></code>) memiliki dua fitur utama:</p>
+<ol class="arabic simple">
+<li><p><strong>Tanggal (Date):</strong> Menunjukkan waktu observasi satelit dalam rentang 1 September 2025 hingga 31 Agustus 2026 (resolusi harian).</p></li>
+<li><p><strong>Konsentrasi NO2:</strong> Nilai kepadatan partikel polutan NO2 di udara area Suramadu, diukur menggunakan satuan ukur <strong>mol/m²</strong>.</p></li>
+</ol>
+</section>
+<section id="apakah-ada-data-aneh-anomali">
+<h2>Apakah Ada Data Aneh (Anomali)?<a class="headerlink" href="#apakah-ada-data-aneh-anomali" title="Link to this heading">#</a></h2>
+<p>Dalam proses <em>crawling</em> dan eksplorasi data (<em>Exploratory Data Analysis</em>), ditemukan beberapa data “aneh” yang wajar terjadi pada observasi satelit optik:</p>
+<ol class="arabic simple">
+<li><p><strong>Missing Values (Data Kosong/NaN):</strong> Terdapat beberapa hari di mana satelit gagal mengambil nilai konsentrasi NO2 yang valid. Hal ini disebabkan oleh fenomena alam, yaitu instrumen satelit tertutup oleh formasi <strong>awan tebal</strong> sehingga sensor tidak bisa menembus hingga ke permukaan tanah. (Solusi: Dilakukan <em>Linear Interpolation</em>).</p></li>
+<li><p><strong>Nilai Negatif (-0.000001):</strong> Pada ringkasan statistik awal, ditemukan nilai konsentrasi NO2 yang berada di bawah angka nol (negatif). Secara fisika, polutan tidak mungkin bernilai minus. Data aneh ini muncul akibat <em>noise</em> (gangguan sinyal) pada spektrometer satelit saat pembacaan level konsentrasi yang sangat rendah. (Solusi: Dilakukan proses <em>clipping</em> menjadi nilai 0).</p></li>
+<li><p><strong>Spike Extreme (Lonjakan Tajam):</strong> Terdapat hari-hari tertentu dengan grafik lonjakan polusi yang sangat ekstrem dibanding hari biasanya. Ini bisa diakibatkan oleh kondisi kemacetan luar biasa, cuaca dengan minim angin (polutan terperangkap), atau asap dari kebakaran lahan musiman.</p></li>
+</ol>
+</section>
+<section id="visualisasi-akhir-time-series">
+<h2>Visualisasi Akhir (Time Series)<a class="headerlink" href="#visualisasi-akhir-time-series" title="Link to this heading">#</a></h2>
+<p>Berikut adalah grafik deret waktu (<em>time-series</em>) yang merepresentasikan fluktuasi kualitas udara di kawasan Jembatan Suramadu selama 1 tahun terakhir:</p>
+<p><img alt="Grafik Tren Polusi NO2 Suramadu" src="grafik_no2.png" /></p>
+<p><em>(Garis merah muda menunjukkan data mentah harian, sedangkan garis biru menunjukkan data rata-rata bergerak (Moving Average 7 Hari) untuk memperjelas tren utama).</em></p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -426,14 +459,14 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
+    <a class="left-prev"
        href="business_understanding.html"
-       title="next page">
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-subtitle">previous</p>
         <p class="prev-next-title">1. Business Understanding</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -441,6 +474,24 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">Deskripsi Polutan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">Eksplorasi Fitur (Dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apakah-ada-data-aneh-anomali">Apakah Ada Data Aneh (Anomali)?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">Visualisasi Akhir (Time Series)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
