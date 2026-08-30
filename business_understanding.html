@@ -377,8 +377,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-proyek">Tujuan Proyek</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat">Manfaat</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-proyek">1.2 Tujuan Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat-proyek">1.3 Manfaat Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batasan-masalah">1.4 Batasan Masalah</a></li>
 </ul>
             </nav>
         </div>
@@ -392,18 +394,46 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="business-understanding">
 <h1>1. Business Understanding<a class="headerlink" href="#business-understanding" title="Link to this heading">#</a></h1>
-<section id="tujuan-proyek">
-<h2>Tujuan Proyek<a class="headerlink" href="#tujuan-proyek" title="Link to this heading">#</a></h2>
-<p>Tujuan utama dari proyek eksplorasi data ini adalah untuk <strong>mengetahui dan memetakan tingkat kualitas udara</strong>, khususnya fluktuasi konsentrasi gas beracun Nitrogen Dioksida (NO2), di wilayah Surabaya dan Madura (berpusat di koridor Jembatan Suramadu) selama satu tahun terakhir (September 2025 - Agustus 2026).</p>
+<section id="latar-belakang">
+<h2>1.1 Latar Belakang<a class="headerlink" href="#latar-belakang" title="Link to this heading">#</a></h2>
+<p>Kualitas udara merupakan salah satu indikator penting dalam menentukan tingkat kelayakan huni suatu wilayah. Di era pembangunan infrastruktur yang masif, kawasan-kawasan dengan mobilitas transportasi tinggi kerap menghadapi tantangan berupa penurunan kualitas udara akibat emisi gas buang kendaraan bermotor.</p>
+<p>Jembatan Suramadu, yang menghubungkan Kota Surabaya (Pulau Jawa) dan Kabupaten Bangkalan (Pulau Madura), merupakan salah satu infrastruktur strategis dengan intensitas lalu lintas logistik antarpulau yang sangat tinggi. Sejak beroperasi, jembatan ini menjadi jalur utama distribusi barang dan mobilitas masyarakat, yang secara tidak langsung turut berkontribusi terhadap emisi gas buang, khususnya dari kendaraan berat bermesin diesel.</p>
+<p>Sayangnya, pemantauan kualitas udara menggunakan stasiun pengukuran berbasis darat (<em>ground station</em>) di area sekitar jembatan maupun perairan Selat Madura masih sangat terbatas, baik dari segi jumlah maupun cakupan wilayah. Keterbatasan ini menyulitkan proses pemantauan kualitas udara secara berkelanjutan dan menyeluruh.</p>
+<p>Perkembangan teknologi penginderaan jauh (<em>remote sensing</em>) melalui satelit <strong>Sentinel-5P</strong>, yang membawa instrumen <strong>TROPOMI</strong> (<em>TROpospheric Monitoring Instrument</em>), menghadirkan solusi alternatif yang efisien. Melalui data satelit ini, konsentrasi gas polutan seperti Nitrogen Dioksida (NO2) dapat dipantau secara harian tanpa memerlukan instalasi sensor fisik di lapangan.</p>
+<p>Atas dasar inilah, proyek analisis data ini disusun untuk mengeksplorasi, membersihkan, dan memvisualisasikan data kualitas udara di kawasan Jembatan Suramadu menggunakan data historis Sentinel-5P selama periode satu tahun.</p>
 </section>
-<section id="manfaat">
-<h2>Manfaat<a class="headerlink" href="#manfaat" title="Link to this heading">#</a></h2>
-<p>Mengapa kita perlu mengetahui kualitas udara di area ini? Berikut adalah beberapa manfaat utamanya:</p>
+<section id="tujuan-proyek">
+<h2>1.2 Tujuan Proyek<a class="headerlink" href="#tujuan-proyek" title="Link to this heading">#</a></h2>
+<p>Tujuan utama dari proyek eksplorasi data ini adalah untuk <strong>mengetahui dan memetakan tingkat kualitas udara</strong>, khususnya fluktuasi konsentrasi gas beracun Nitrogen Dioksida (NO2), di wilayah Surabaya dan Madura yang berpusat di koridor Jembatan Suramadu, selama satu tahun terakhir (September 2025 – Agustus 2026).</p>
+<p>Secara lebih rinci, tujuan proyek ini meliputi:</p>
 <ol class="arabic simple">
-<li><p><strong>Bagi Kesehatan Masyarakat (Early Warning):</strong> Memberikan informasi kepada masyarakat sekitar pesisir dan pengguna jalan tol Suramadu mengenai tingkat risiko paparan polusi. Paparan NO2 jangka panjang sangat berbahaya karena dapat memicu masalah pernapasan akut seperti asma dan bronkitis.</p></li>
-<li><p><strong>Evaluasi Kebijakan Lingkungan &amp; Transportasi:</strong> Jembatan Suramadu adalah urat nadi logistik dengan mobilitas kendaraan yang sangat tinggi. Data ini dapat dimanfaatkan oleh pemerintah daerah (Pemkot Surabaya &amp; Pemkab Bangkalan) untuk mengevaluasi apakah emisi kendaraan bermotor di area tersebut sudah melampaui batas aman, sehingga bisa menjadi dasar pembuatan kebijakan (misal: uji emisi ketat atau pembatasan kendaraan berat di jam tertentu).</p></li>
-<li><p><strong>Pemanfaatan Teknologi Big Data:</strong> Membuktikan bahwa pemantauan lingkungan kini dapat dilakukan secara <em>remote</em> dan murah memanfaatkan data satelit <em>cloud-based</em> (tanpa harus membangun stasiun sensor fisik yang mahal di tengah jembatan atau laut).</p></li>
+<li><p>Mengumpulkan data konsentrasi NO2 dari satelit Sentinel-5P melalui platform Copernicus Data Space Ecosystem.</p></li>
+<li><p>Melakukan proses pembersihan data (<em>data cleaning</em>) terhadap nilai-nilai anomali yang ditemukan selama observasi.</p></li>
+<li><p>Mengidentifikasi pola dan tren temporal konsentrasi NO2 sepanjang periode pengamatan.</p></li>
+<li><p>Menyajikan hasil analisis dalam bentuk visualisasi deret waktu (<em>time-series</em>) yang informatif dan mudah dipahami.</p></li>
 </ol>
+</section>
+<section id="manfaat-proyek">
+<h2>1.3 Manfaat Proyek<a class="headerlink" href="#manfaat-proyek" title="Link to this heading">#</a></h2>
+<p>Mengapa kita perlu mengetahui kualitas udara di area ini? Berikut adalah beberapa manfaat utama dari proyek ini:</p>
+<ol class="arabic simple">
+<li><p><strong>Bagi Kesehatan Masyarakat (<em>Early Warning</em>):</strong> Memberikan informasi kepada masyarakat sekitar pesisir dan pengguna jalan tol Suramadu mengenai tingkat risiko paparan polusi. Paparan NO2 jangka panjang sangat berbahaya karena dapat memicu masalah pernapasan akut seperti asma dan bronkitis.</p></li>
+<li><p><strong>Evaluasi Kebijakan Lingkungan &amp; Transportasi:</strong> Jembatan Suramadu adalah urat nadi logistik dengan mobilitas kendaraan yang sangat tinggi. Data ini dapat dimanfaatkan oleh pemerintah daerah (Pemkot Surabaya &amp; Pemkab Bangkalan) untuk mengevaluasi apakah emisi kendaraan bermotor di area tersebut sudah melampaui batas aman, sehingga bisa menjadi dasar pembuatan kebijakan (misal: uji emisi ketat atau pembatasan kendaraan berat di jam tertentu).</p></li>
+<li><p><strong>Pemanfaatan Teknologi Big Data &amp; Remote Sensing:</strong> Membuktikan bahwa pemantauan lingkungan kini dapat dilakukan secara <em>remote</em> dan murah dengan memanfaatkan data satelit <em>cloud-based</em>, tanpa harus membangun stasiun sensor fisik yang mahal di tengah jembatan atau laut.</p></li>
+<li><p><strong>Kontribusi Akademis:</strong> Menjadi referensi awal bagi penelitian lanjutan terkait dampak infrastruktur transportasi terhadap kualitas udara di wilayah kepulauan, khususnya yang menggunakan pendekatan penginderaan jauh.</p></li>
+</ol>
+</section>
+<section id="batasan-masalah">
+<h2>1.4 Batasan Masalah<a class="headerlink" href="#batasan-masalah" title="Link to this heading">#</a></h2>
+<p>Agar proyek ini memiliki fokus yang jelas dan terarah, berikut adalah batasan-batasan yang ditetapkan:</p>
+<ul class="simple">
+<li><p><strong>Parameter Utama:</strong> Analisis kuantitatif difokuskan hanya pada satu polutan, yaitu <strong>Nitrogen Dioksida (NO2)</strong>. Polutan Karbon Monoksida (CO) dibahas secara konseptual sebagai pembanding pada bagian <em>Data Understanding</em>, namun tidak dianalisis secara mendalam pada tahap eksplorasi data.</p></li>
+<li><p><strong>Cakupan Wilayah:</strong> Observasi dibatasi pada koridor Jembatan Suramadu berdasarkan <em>bounding box</em> koordinat 112.65, -7.22 s.d. 112.78, -7.14, sehingga hasil analisis tidak dapat digeneralisasi untuk seluruh wilayah Jawa Timur.</p></li>
+<li><p><strong>Sumber Data:</strong> Data yang digunakan merupakan data sekunder hasil observasi satelit (Sentinel-5P), bukan hasil pengukuran langsung di lapangan (<em>ground-truth</em>). Oleh karena itu, akurasi data bergantung pada kondisi atmosfer, resolusi spasial sensor, dan tutupan awan pada saat perekaman.</p></li>
+<li><p><strong>Rentang Waktu:</strong> Data yang dianalisis terbatas pada periode 1 September 2025 hingga 31 Agustus 2026 (satu tahun observasi), sehingga belum dapat merepresentasikan tren jangka panjang (multi-tahun).</p></li>
+<li><p><strong>Sifat Analisis:</strong> Proyek ini bersifat deskriptif dan eksploratif (<em>Exploratory Data Analysis</em>), berfokus pada identifikasi pola dan anomali data, serta belum mencakup pemodelan prediktif (<em>forecasting</em>) maupun analisis korelasi kausal terhadap faktor lain.</p></li>
+<li><p><strong>Faktor Eksternal:</strong> Variabel meteorologis seperti kecepatan angin, arah angin, dan curah hujan hanya disinggung secara kualitatif sebagai konteks penjelas anomali data, tanpa dilakukan analisis statistik kuantitatif terhadap variabel-variabel tersebut.</p></li>
+</ul>
 </section>
 </section>
 
@@ -471,8 +501,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-proyek">Tujuan Proyek</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat">Manfaat</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#latar-belakang">1.1 Latar Belakang</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tujuan-proyek">1.2 Tujuan Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manfaat-proyek">1.3 Manfaat Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batasan-masalah">1.4 Batasan Masalah</a></li>
 </ul>
   </nav></div>
 

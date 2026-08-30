@@ -355,7 +355,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -371,6 +373,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-proyek">Informasi Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-kawasan-suramadu">Mengapa Kawasan Suramadu?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-laporan">Struktur Laporan</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -382,16 +394,32 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="analisis-kualitas-udara-polutan-no2-area-suramadu">
 <h1>Analisis Kualitas Udara (Polutan NO2) Area Suramadu<a class="headerlink" href="#analisis-kualitas-udara-polutan-no2-area-suramadu" title="Link to this heading">#</a></h1>
-<p>Selamat datang di Laporan Analisis Data Spasial-Temporal Kualitas Udara!</p>
-<p>Proyek ini disusun untuk memenuhi tugas mata kuliah <strong>Pengumpulan dan Sains Data (PSD)</strong>. Fokus utama dari repositori ini adalah melakukan <em>crawling</em> data dari satelit pengamat bumi (Sentinel-5P) untuk memantau tingkat polusi udara di daerah asal saya, yaitu <strong>Kawasan Jembatan Suramadu</strong>.</p>
-<p><strong>Informasi Proyek:</strong></p>
+<p>Selamat datang pada laporan <strong>Analisis Data Spasial-Temporal Kualitas Udara</strong> kawasan Jembatan Suramadu. Laporan interaktif ini disusun menggunakan platform Jupyter Book untuk mendokumentasikan secara sistematis proses eksplorasi data, mulai dari pemahaman masalah bisnis (<em>business understanding</em>) hingga pemahaman menyeluruh terhadap karakteristik dataset (<em>data understanding</em>).</p>
+<p>Proyek ini disusun untuk memenuhi tugas mata kuliah <strong>Pengumpulan dan Sains Data (PSD)</strong>. Fokus utama dari repositori ini adalah melakukan proses <em>crawling</em> data dari satelit pengamat bumi <strong>Sentinel-5P</strong> milik <em>European Space Agency</em> (ESA), guna memantau dan menganalisis tingkat polusi udara — khususnya fluktuasi konsentrasi gas <strong>Nitrogen Dioksida (NO2)</strong> — di kawasan <strong>Jembatan Suramadu</strong>, yaitu jalur penghubung utama antara Pulau Jawa (Surabaya) dan Pulau Madura.</p>
+<section id="informasi-proyek">
+<h2>Informasi Proyek<a class="headerlink" href="#informasi-proyek" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Mata Kuliah:</strong> Pengumpulan dan Sains Data (PSD)</p></li>
-<li><p><strong>Wilayah Observasi:</strong> Jembatan Suramadu, Jawa Timur (Bounding Box: 112.65, -7.22 s.d 112.78, -7.14)</p></li>
-<li><p><strong>Periode Data:</strong> 1 September 2025 - 31 Agustus 2026</p></li>
+<li><p><strong>Wilayah Observasi:</strong> Jembatan Suramadu, Jawa Timur (<em>Bounding Box</em>: 112.65, -7.22 s.d. 112.78, -7.14)</p></li>
+<li><p><strong>Periode Data:</strong> 1 September 2025 – 31 Agustus 2026</p></li>
 <li><p><strong>Sumber Data:</strong> Copernicus Data Space Ecosystem (Satelit Sentinel-5P)</p></li>
+<li><p><strong>Parameter Utama:</strong> Konsentrasi troposferik Nitrogen Dioksida (NO2)</p></li>
+<li><p><strong>Metode:</strong> Pengumpulan data satelit (<em>remote sensing</em>), pembersihan data (<em>data cleaning</em>), dan analisis deret waktu (<em>time-series analysis</em>)</p></li>
 </ul>
-<p>Silakan navigasi menggunakan menu di sebelah kiri untuk membaca detail <em>Business Understanding</em> dan <em>Data Understanding</em>.</p>
+</section>
+<section id="mengapa-kawasan-suramadu">
+<h2>Mengapa Kawasan Suramadu?<a class="headerlink" href="#mengapa-kawasan-suramadu" title="Link to this heading">#</a></h2>
+<p>Jembatan Suramadu bukan sekadar penghubung transportasi, melainkan juga urat nadi logistik dengan volume kendaraan bermotor yang tinggi setiap harinya. Tingginya mobilitas ini berpotensi menjadikan kawasan tersebut sebagai titik akumulasi polutan udara, sehingga penting untuk dipantau secara berkelanjutan menggunakan pendekatan yang efisien dan hemat biaya seperti teknologi penginderaan jauh (<em>remote sensing</em>).</p>
+</section>
+<section id="struktur-laporan">
+<h2>Struktur Laporan<a class="headerlink" href="#struktur-laporan" title="Link to this heading">#</a></h2>
+<p>Laporan ini terbagi ke dalam beberapa bagian utama yang dapat diakses melalui menu navigasi di sebelah kiri:</p>
+<ol class="arabic simple">
+<li><p><strong>Business Understanding</strong> — memuat latar belakang, tujuan, manfaat, serta batasan masalah dari proyek ini.</p></li>
+<li><p><strong>Data Understanding</strong> — memuat deskripsi dataset, penjelasan mendalam mengenai polutan CO dan NO2, identifikasi anomali data, serta visualisasi tren akhir.</p></li>
+</ol>
+<p>Selamat membaca, dan silakan mulai eksplorasi melalui tautan <strong>“Next”</strong> di bagian bawah halaman ini.</p>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -441,6 +469,23 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-proyek">Informasi Proyek</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-kawasan-suramadu">Mengapa Kawasan Suramadu?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-laporan">Struktur Laporan</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

@@ -376,10 +376,20 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">Deskripsi Polutan</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">Eksplorasi Fitur (Dataset)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apakah-ada-data-aneh-anomali">Apakah Ada Data Aneh (Anomali)?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">Visualisasi Akhir (Time Series)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tentang-satelit-sentinel-5p">2.1 Tentang Satelit Sentinel-5P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">2.2 Deskripsi Polutan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-co-karbon-monoksida">Apa itu CO (Karbon Monoksida)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-no2-nitrogen-dioksida">Apa itu NO2 (Nitrogen Dioksida)?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">2.3 Eksplorasi Fitur (Dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-data-anomali-data-quality-assessment">2.4 Analisis Data Anomali (Data Quality Assessment)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-missing-values-data-kosong-nan">a. Missing Values (Data Kosong/NaN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-nilai-negatif">b. Nilai Negatif</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-spike-ekstrem-lonjakan-tajam">c. Spike Ekstrem (Lonjakan Tajam)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">2.5 Visualisasi Akhir (Time Series)</a></li>
 </ul>
             </nav>
         </div>
@@ -393,37 +403,67 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="data-understanding">
 <h1>2. Data Understanding<a class="headerlink" href="#data-understanding" title="Link to this heading">#</a></h1>
-<p>Tahap ini berfokus pada pengenalan spesifikasi dataset hasil <em>crawling</em> dan analisis terhadap fitur-fitur yang didapatkan dari sensor satelit Sentinel-5P.</p>
+<p>Tahap ini berfokus pada pengenalan spesifikasi dataset hasil <em>crawling</em> dan analisis terhadap fitur-fitur yang didapatkan dari sensor satelit <strong>Sentinel-5P</strong>.</p>
+<section id="tentang-satelit-sentinel-5p">
+<h2>2.1 Tentang Satelit Sentinel-5P<a class="headerlink" href="#tentang-satelit-sentinel-5p" title="Link to this heading">#</a></h2>
+<p>Sentinel-5P merupakan satelit pengamat bumi yang diluncurkan oleh <em>European Space Agency</em> (ESA) pada Oktober 2017 sebagai bagian dari Program Copernicus. Satelit ini membawa instrumen utama bernama <strong>TROPOMI</strong> (<em>TROpospheric Monitoring Instrument</em>), yang mampu memantau berbagai gas jejak (<em>trace gases</em>) di atmosfer bumi secara harian dengan cakupan hampir global, termasuk Ozon (O3), Sulfur Dioksida (SO2), Metana (CH4), Karbon Monoksida (CO), dan Nitrogen Dioksida (NO2).</p>
+</section>
 <section id="deskripsi-polutan">
-<h2>Deskripsi Polutan<a class="headerlink" href="#deskripsi-polutan" title="Link to this heading">#</a></h2>
+<h2>2.2 Deskripsi Polutan<a class="headerlink" href="#deskripsi-polutan" title="Link to this heading">#</a></h2>
 <p>Satelit memonitor berbagai polutan berbahaya di troposfer bumi. Dua yang paling umum menjadi indikator kualitas udara adalah <strong>CO</strong> dan <strong>NO2</strong>:</p>
+<section id="apa-itu-co-karbon-monoksida">
+<h3>Apa itu CO (Karbon Monoksida)?<a class="headerlink" href="#apa-itu-co-karbon-monoksida" title="Link to this heading">#</a></h3>
+<p>CO adalah gas beracun yang tidak berwarna, tidak berbau, dan tidak berasa. Gas ini umumnya dihasilkan dari proses pembakaran bahan bakar fosil yang <em>tidak sempurna</em> (<em>incomplete combustion</em>). Sumber terbesarnya adalah asap knalpot kendaraan bermotor, terutama kendaraan dengan sistem pembakaran yang kurang optimal. Jika terhirup dalam jumlah banyak, CO sangat berbahaya karena dapat mengikat hemoglobin dalam darah menggantikan oksigen, sehingga menghalangi suplai oksigen ke seluruh jaringan tubuh.</p>
+</section>
+<section id="apa-itu-no2-nitrogen-dioksida">
+<h3>Apa itu NO2 (Nitrogen Dioksida)?<a class="headerlink" href="#apa-itu-no2-nitrogen-dioksida" title="Link to this heading">#</a></h3>
+<p>NO2 adalah gas beracun berwarna coklat kemerahan dengan bau tajam yang menyengat. Berbeda dengan CO, NO2 dihasilkan dari pembakaran bahan bakar fosil pada <em>suhu tinggi</em>, seperti pada mesin diesel kendaraan berat, kapal laut, serta aktivitas industri dan pembangkit listrik.</p>
+<p>Pada proyek ini, <strong>NO2 dipilih sebagai fitur (parameter) utama</strong> karena beberapa alasan:</p>
 <ul class="simple">
-<li><p><strong>Apa itu CO (Karbon Monoksida)?</strong>
-CO adalah gas beracun yang tidak berwarna, tidak berbau, dan tidak berasa. Gas ini utamanya dihasilkan dari proses pembakaran bahan bakar fosil yang <em>tidak sempurna</em>. Sumber terbesarnya adalah asap knalpot kendaraan bermotor. Jika terhirup dalam jumlah banyak, CO sangat berbahaya karena akan mengikat hemoglobin dalam darah dan menghalangi suplai oksigen ke tubuh.</p></li>
-<li><p><strong>Apa itu NO2 (Nitrogen Dioksida)?</strong>
-NO2 adalah gas beracun berwarna coklat kemerahan dengan bau yang tajam dan menyengat. Berbeda dengan CO, NO2 dihasilkan dari pembakaran bahan bakar fosil pada <em>suhu tinggi</em>, seperti mesin diesel kendaraan berat, kapal laut, dan aktivitas industri/pembangkit listrik. Pada proyek ini, <strong>NO2 dipilih sebagai fitur utama</strong> karena kawasan Suramadu merupakan jalur padat kendaraan logistik antar-pulau.</p></li>
+<li><p>Kawasan Suramadu merupakan jalur padat kendaraan logistik antarpulau, termasuk truk-truk besar bermesin diesel yang menjadi sumber utama emisi NO2.</p></li>
+<li><p>NO2 memiliki korelasi kuat dengan aktivitas transportasi darat dan laut, sehingga relevan untuk mengevaluasi dampak lalu lintas terhadap kualitas udara.</p></li>
+<li><p>Data NO2 dari instrumen TROPOMI memiliki kualitas dan resolusi yang cukup baik untuk dianalisis dalam skala kawasan seperti Suramadu, dibandingkan gas-gas lain yang konsentrasinya lebih dipengaruhi oleh faktor global/regional.</p></li>
 </ul>
 </section>
+</section>
 <section id="eksplorasi-fitur-dataset">
-<h2>Eksplorasi Fitur (Dataset)<a class="headerlink" href="#eksplorasi-fitur-dataset" title="Link to this heading">#</a></h2>
-<p>Data yang diunduh (disimpan dalam <code class="docutils literal notranslate"><span class="pre">data_polutan_no2_clean.csv</span></code>) memiliki dua fitur utama:</p>
+<h2>2.3 Eksplorasi Fitur (Dataset)<a class="headerlink" href="#eksplorasi-fitur-dataset" title="Link to this heading">#</a></h2>
+<p>Data yang diunduh dari Copernicus Data Space Ecosystem disimpan dalam berkas <code class="docutils literal notranslate"><span class="pre">data_polutan_no2_clean.csv</span></code>, dengan dua fitur utama sebagai berikut:</p>
 <ol class="arabic simple">
-<li><p><strong>Tanggal (Date):</strong> Menunjukkan waktu observasi satelit dalam rentang 1 September 2025 hingga 31 Agustus 2026 (resolusi harian).</p></li>
-<li><p><strong>Konsentrasi NO2:</strong> Nilai kepadatan partikel polutan NO2 di udara area Suramadu, diukur menggunakan satuan ukur <strong>mol/m²</strong>.</p></li>
+<li><p><strong>Tanggal (Date):</strong> Menunjukkan waktu observasi satelit dalam rentang <strong>1 September 2025 hingga 31 Agustus 2026</strong>, dengan resolusi harian (<em>daily</em>).</p></li>
+<li><p><strong>Konsentrasi NO2:</strong> Nilai kepadatan kolom troposferik polutan NO2 di udara area Suramadu, diukur menggunakan satuan <strong>mol/m²</strong> (<em>tropospheric NO2 column density</em>). Semakin tinggi nilainya, semakin tinggi pula konsentrasi molekul NO2 yang berada di kolom udara pada titik pengamatan tersebut.</p></li>
 </ol>
 </section>
-<section id="apakah-ada-data-aneh-anomali">
-<h2>Apakah Ada Data Aneh (Anomali)?<a class="headerlink" href="#apakah-ada-data-aneh-anomali" title="Link to this heading">#</a></h2>
-<p>Dalam proses <em>crawling</em> dan eksplorasi data (<em>Exploratory Data Analysis</em>), ditemukan beberapa data “aneh” yang wajar terjadi pada observasi satelit optik:</p>
-<ol class="arabic simple">
-<li><p><strong>Missing Values (Data Kosong/NaN):</strong> Terdapat beberapa hari di mana satelit gagal mengambil nilai konsentrasi NO2 yang valid. Hal ini disebabkan oleh fenomena alam, yaitu instrumen satelit tertutup oleh formasi <strong>awan tebal</strong> sehingga sensor tidak bisa menembus hingga ke permukaan tanah. (Solusi: Dilakukan <em>Linear Interpolation</em>).</p></li>
-<li><p><strong>Nilai Negatif (-0.000001):</strong> Pada ringkasan statistik awal, ditemukan nilai konsentrasi NO2 yang berada di bawah angka nol (negatif). Secara fisika, polutan tidak mungkin bernilai minus. Data aneh ini muncul akibat <em>noise</em> (gangguan sinyal) pada spektrometer satelit saat pembacaan level konsentrasi yang sangat rendah. (Solusi: Dilakukan proses <em>clipping</em> menjadi nilai 0).</p></li>
-<li><p><strong>Spike Extreme (Lonjakan Tajam):</strong> Terdapat hari-hari tertentu dengan grafik lonjakan polusi yang sangat ekstrem dibanding hari biasanya. Ini bisa diakibatkan oleh kondisi kemacetan luar biasa, cuaca dengan minim angin (polutan terperangkap), atau asap dari kebakaran lahan musiman.</p></li>
-</ol>
+<section id="analisis-data-anomali-data-quality-assessment">
+<h2>2.4 Analisis Data Anomali (Data Quality Assessment)<a class="headerlink" href="#analisis-data-anomali-data-quality-assessment" title="Link to this heading">#</a></h2>
+<p>Dalam proses <em>crawling</em> dan eksplorasi data (<em>Exploratory Data Analysis</em>), ditemukan beberapa data “aneh” yang wajar terjadi pada observasi satelit optik. Berikut adalah tiga jenis anomali yang teridentifikasi beserta strategi penanganannya:</p>
+<section id="a-missing-values-data-kosong-nan">
+<h3>a. Missing Values (Data Kosong/NaN)<a class="headerlink" href="#a-missing-values-data-kosong-nan" title="Link to this heading">#</a></h3>
+<p><strong>Deskripsi:</strong> Terdapat beberapa hari di mana satelit gagal merekam nilai konsentrasi NO2 yang valid.</p>
+<p><strong>Penyebab:</strong> Fenomena alam, yaitu instrumen satelit optik terhalang oleh formasi <strong>awan tebal</strong>, sehingga sensor tidak dapat menembus atmosfer hingga ke permukaan tanah/laut.</p>
+<p><strong>Penanganan:</strong> Dilakukan proses <strong>interpolasi linear</strong> (<em>linear interpolation</em>) untuk mengisi nilai yang hilang berdasarkan tren data pada hari-hari di sekitarnya.</p>
+</section>
+<section id="b-nilai-negatif">
+<h3>b. Nilai Negatif<a class="headerlink" href="#b-nilai-negatif" title="Link to this heading">#</a></h3>
+<p><strong>Deskripsi:</strong> Pada ringkasan statistik awal, ditemukan beberapa nilai konsentrasi NO2 yang berada di bawah angka nol (negatif).</p>
+<p><strong>Penyebab:</strong> Secara fisika, polutan tidak mungkin memiliki nilai konsentrasi negatif. Anomali ini muncul akibat <em>noise</em> (gangguan sinyal) pada spektrometer satelit ketika membaca level konsentrasi yang sangat rendah (mendekati nol).</p>
+<p><strong>Penanganan:</strong> Dilakukan proses <em><strong>clipping</strong></em> (pemotongan nilai) sehingga seluruh nilai negatif diubah menjadi 0, karena secara fisis nilai konsentrasi minimum yang mungkin adalah nol.</p>
+</section>
+<section id="c-spike-ekstrem-lonjakan-tajam">
+<h3>c. Spike Ekstrem (Lonjakan Tajam)<a class="headerlink" href="#c-spike-ekstrem-lonjakan-tajam" title="Link to this heading">#</a></h3>
+<p><strong>Deskripsi:</strong> Terdapat hari-hari tertentu dengan lonjakan nilai polusi yang sangat ekstrem dibandingkan hari-hari biasanya.</p>
+<p><strong>Penyebab yang Mungkin:</strong></p>
+<ul class="simple">
+<li><p>Kondisi kemacetan lalu lintas luar biasa di sekitar jembatan.</p></li>
+<li><p>Kondisi cuaca dengan angin minim, sehingga polutan terperangkap di suatu area (<em>stagnasi atmosfer</em>).</p></li>
+<li><p>Asap kiriman dari kebakaran lahan atau hutan musiman di wilayah sekitar.</p></li>
+</ul>
+<p><strong>Penanganan:</strong> Berbeda dengan dua anomali sebelumnya, nilai spike ekstrem <strong>tidak dihapus</strong> dari dataset karena berpotensi mencerminkan kejadian nyata (bukan galat sensor). Nilai-nilai ini tetap dipertahankan untuk keperluan analisis, namun diberi perhatian khusus melalui perhitungan <strong>rata-rata bergerak (<em>Moving Average</em>)</strong> pada tahap visualisasi, agar tren jangka panjang tetap dapat terbaca dengan jelas tanpa terdistorsi oleh fluktuasi harian yang tajam.</p>
+</section>
 </section>
 <section id="visualisasi-akhir-time-series">
-<h2>Visualisasi Akhir (Time Series)<a class="headerlink" href="#visualisasi-akhir-time-series" title="Link to this heading">#</a></h2>
-<p>Berikut adalah grafik deret waktu (<em>time-series</em>) yang merepresentasikan fluktuasi kualitas udara di kawasan Jembatan Suramadu selama 1 tahun terakhir:</p>
+<h2>2.5 Visualisasi Akhir (Time Series)<a class="headerlink" href="#visualisasi-akhir-time-series" title="Link to this heading">#</a></h2>
+<p>Berikut adalah grafik deret waktu (<em>time-series</em>) yang merepresentasikan fluktuasi kualitas udara di kawasan Jembatan Suramadu selama satu tahun terakhir:</p>
 <p><img alt="Grafik Tren Polusi NO2 Suramadu" src="grafik_no2.png" /></p>
 <p><em>(Garis merah muda menunjukkan data mentah harian, sedangkan garis biru menunjukkan data rata-rata bergerak (Moving Average 7 Hari) untuk memperjelas tren utama).</em></p>
 </section>
@@ -484,10 +524,20 @@ NO2 adalah gas beracun berwarna coklat kemerahan dengan bau yang tajam dan menye
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">Deskripsi Polutan</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">Eksplorasi Fitur (Dataset)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#apakah-ada-data-aneh-anomali">Apakah Ada Data Aneh (Anomali)?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">Visualisasi Akhir (Time Series)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tentang-satelit-sentinel-5p">2.1 Tentang Satelit Sentinel-5P</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deskripsi-polutan">2.2 Deskripsi Polutan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-co-karbon-monoksida">Apa itu CO (Karbon Monoksida)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apa-itu-no2-nitrogen-dioksida">Apa itu NO2 (Nitrogen Dioksida)?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksplorasi-fitur-dataset">2.3 Eksplorasi Fitur (Dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-data-anomali-data-quality-assessment">2.4 Analisis Data Anomali (Data Quality Assessment)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-missing-values-data-kosong-nan">a. Missing Values (Data Kosong/NaN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-nilai-negatif">b. Nilai Negatif</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-spike-ekstrem-lonjakan-tajam">c. Spike Ekstrem (Lonjakan Tajam)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-akhir-time-series">2.5 Visualisasi Akhir (Time Series)</a></li>
 </ul>
   </nav></div>
 
