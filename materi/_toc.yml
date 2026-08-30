@@ -1,0 +1,5 @@
+format: jb-book
+root: intro
+chapters:
+- file: business_understanding
+- file: data_understanding
