@@ -66,6 +66,6 @@ Dalam proses *crawling* dan eksplorasi data (*Exploratory Data Analysis*), ditem
 
 Berikut adalah grafik deret waktu (*time-series*) yang merepresentasikan fluktuasi kualitas udara di kawasan Jembatan Suramadu selama satu tahun terakhir:
 
-![Grafik Tren Polusi NO2 Suramadu](grafik_no2.png)
+![Grafik Tren Polusi NO2 Suramadu](output.png)
 
 *(Garis merah muda menunjukkan data mentah harian, sedangkan garis biru menunjukkan data rata-rata bergerak (Moving Average 7 Hari) untuk memperjelas tren utama).*
