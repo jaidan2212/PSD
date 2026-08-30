@@ -411,7 +411,7 @@ document.write(`
 <li><p><strong>Temuan Utama:</strong> Boxplot menunjukkan bahwa mayoritas konsentrasi NO2 harian berada pada rentang interkuartil (IQR) 15–25 µg/m³, dengan nilai median berada di sekitar 19–20 µg/m³. Rentang wajar data (<em>whisker</em>) memanjang hingga sekitar 40 µg/m³. Namun, teridentifikasi sejumlah outlier — hari-hari dengan konsentrasi ekstrem antara ~46 µg/m³ hingga mendekati 68 µg/m³ — yang berada jauh di atas rentang wajar tersebut.</p></li>
 <li><p><strong>Interpretasi Ilmiah:</strong> Secara umum, pola distribusi ini mengindikasikan bahwa kualitas udara di kawasan Suramadu berada pada level moderat pada kondisi normal harian, yang konsisten dengan aktivitas lalu lintas rutin. Akan tetapi, kemunculan outlier yang jauh melampaui batas wajar tidak dapat dijelaskan oleh aktivitas rutin semata. Sebagaimana telah diuraikan pada bab <em>Data Understanding</em>, lonjakan ekstrem semacam ini umumnya berasosiasi dengan kejadian episodik — seperti kemacetan luar biasa, stagnasi atmosfer akibat kecepatan angin yang sangat rendah (sehingga polutan terperangkap di suatu area), atau asap kiriman dari kebakaran lahan musiman. Temuan ini menegaskan pentingnya sistem pemantauan yang mampu mendeteksi kejadian episodik semacam ini secara <em>real-time</em>, bukan hanya rata-rata jangka panjang.</p></li>
 </ul>
-<p><img alt="Distribusi &amp; Deteksi Outlier Konsentrasi NO2" src="no2_2.webp" /></p>
+<p><img alt="Distribusi &amp; Deteksi Outlier" src="_images/no2.png" /></p>
 </section>
 <section id="perbandingan-musim-kemarau-vs-musim-hujan">
 <h2>3.2 Perbandingan Musim Kemarau vs Musim Hujan<a class="headerlink" href="#perbandingan-musim-kemarau-vs-musim-hujan" title="Link to this heading">#</a></h2>
@@ -426,7 +426,7 @@ document.write(`
 <p>Kombinasi dari absennya proses pencucian alami dan kondisi atmosfer yang lebih stagnan inilah yang menyebabkan akumulasi polutan NO2 jauh lebih tinggi selama musim kemarau.</p>
 </li>
 </ul>
-<p><img alt="Rata-rata Konsentrasi NO2: Musim Kemarau vs Musim Hujan" src="musim_2.webp" /></p>
+<p><img alt="Perbandingan Musim" src="_images/musim.png" /></p>
 </section>
 <section id="tren-bulanan-dan-pola-musiman-sepanjang-tahun">
 <h2>3.3 Tren Bulanan dan Pola Musiman Sepanjang Tahun<a class="headerlink" href="#tren-bulanan-dan-pola-musiman-sepanjang-tahun" title="Link to this heading">#</a></h2>
@@ -434,7 +434,7 @@ document.write(`
 <li><p><strong>Temuan Utama:</strong> Grafik deret waktu bulanan memperlihatkan pola yang jelas mengikuti siklus musim. Konsentrasi NO2 terendah tercatat pada bulan Januari 2026 (sekitar 13 µg/m³), kemudian tren terus meningkat secara bertahap hingga mencapai puncaknya pada bulan Juli 2026 (sekitar 28,6 µg/m³). Konsentrasi rata-rata bulanan tercatat secara konsisten melampaui garis standar aman WHO (25 µg/m³) pada empat bulan, yaitu September 2025, Juni 2026, Juli 2026, dan Agustus 2026 — seluruhnya berada pada rentang musim kemarau — sementara bulan-bulan musim hujan (Oktober 2025–Mei 2026) secara konsisten berada di bawah ambang batas tersebut.</p></li>
 <li><p><strong>Interpretasi Ilmiah:</strong> Pola ini sejalan dan memperkuat temuan pada sub-bab sebelumnya. Puncak polusi pada bulan Juli bertepatan dengan puncak musim kemarau di Indonesia, ketika massa udara kering dan minim curah hujan mendominasi wilayah selatan khatulistiwa. Selain minimnya efek pencucian oleh hujan, periode ini juga sering berhimpitan dengan musim kebakaran lahan dan hutan (karhutla) musiman di berbagai wilayah Indonesia, yang berpotensi menyumbang polutan tambahan melalui transportasi asap regional (<em>transboundary haze</em>), meskipun kontribusi pasti dari faktor ini memerlukan kajian lebih lanjut dengan data kebakaran lahan aktual. Menariknya, data juga menunjukkan bahwa bulan September 2025 — sebagai bagian akhir musim kemarau tahun sebelumnya — turut mencatatkan nilai di atas ambang aman, mengindikasikan bahwa pola siklik musiman ini konsisten terjadi dan bukan sekadar kebetulan satu periode.</p></li>
 </ul>
-<p><img alt="Tren Rata-rata Bulanan Konsentrasi NO2 (Sep 2025 - Ags 2026)" src="konsentrasi_2.webp" /></p>
+<p><img alt="Tren Rata-rata Bulanan" src="_images/konsentrasi.png" /></p>
 </section>
 <section id="tingkat-kepatuhan-terhadap-standar-aman-who">
 <h2>3.4 Tingkat Kepatuhan terhadap Standar Aman WHO<a class="headerlink" href="#tingkat-kepatuhan-terhadap-standar-aman-who" title="Link to this heading">#</a></h2>
@@ -442,7 +442,7 @@ document.write(`
 <li><p><strong>Temuan Utama:</strong> Secara agregat selama satu tahun periode pengamatan, <strong>72,6%</strong> hari tercatat berada dalam batas aman standar WHO (25 µg/m³/24 jam), sedangkan <strong>27,4%</strong> hari — atau setara dengan sekitar 100 hari dalam setahun — tercatat melampaui ambang batas tersebut.</p></li>
 <li><p><strong>Interpretasi Ilmiah:</strong> Meskipun secara mayoritas kondisi udara berada dalam kategori aman, proporsi 27,4% hari tidak aman merupakan angka yang tidak dapat diabaikan, terutama karena distribusinya tidak merata sepanjang tahun melainkan terkonsentrasi pada bulan-bulan musim kemarau (Juni–September). Artinya, masyarakat yang beraktivitas secara rutin di kawasan Suramadu menghadapi risiko paparan polusi kumulatif yang jauh lebih tinggi selama periode tersebut dibandingkan rata-rata tahunan. Kondisi ini relevan dengan risiko kesehatan jangka panjang yang telah dibahas pada bab <em>Business Understanding</em>, khususnya bagi kelompok rentan seperti anak-anak, lansia, dan penderita gangguan pernapasan kronis.</p></li>
 </ul>
-<p>![Persentase Hari Melebihi Standar Aman WHO (25 µg/m³/24 jam)](standar aman_2.webp)</p>
+<p><img alt="Persentase Hari Melebihi Standar Aman" src="_images/standar_aman.png" /></p>
 </section>
 <section id="sintesis-temuan">
 <h2>3.5 Sintesis Temuan<a class="headerlink" href="#sintesis-temuan" title="Link to this heading">#</a></h2>
