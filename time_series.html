@@ -1,0 +1,619 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'time_series';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Ftime_series.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/time_series.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#migrasi-data-ke-aiven-postgresql-via-dbeaver">1. Migrasi Data ke Aiven PostgreSQL (via DBeaver)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuatan-struktur-tabel-di-aiven">1.1. Pembuatan Struktur Tabel di Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-dbeaver-dengan-aiven">1.2. Menghubungkan DBeaver dengan Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-data-ke-dbeaver">1.3. Import Data ke DBeaver</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrasi-dan-pengolahan-time-series-di-knime">2. Integrasi dan Pengolahan Time Series di KNIME</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-aiven-ke-knime">Menghubungkan Aiven ke KNIME</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">3. Kesimpulan &amp; Hasil Pre-processing</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="analisis-time-series-persiapan-data-polutan-no2-suramadu">
+<h1>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu<a class="headerlink" href="#analisis-time-series-persiapan-data-polutan-no2-suramadu" title="Link to this heading">#</a></h1>
+<p>Dalam proyek ini, kita menggunakan data historis kualitas udara, khususnya konsentrasi gas Nitrogen Dioksida (NO2), yang direkam berdasarkan urutan waktu. Sebelum melakukan pemodelan dan peramalan tren time series, data mentah dikelola di dalam cloud database agar proses penarikan data ke sistem analitik menjadi lebih efisien dan terpusat.</p>
+<p>Dokumen ini mencakup alur lengkap mulai dari migrasi data awal hingga pengolahan dasar menggunakan KNIME Analytics Platform.</p>
+<section id="migrasi-data-ke-aiven-postgresql-via-dbeaver">
+<h2>1. Migrasi Data ke Aiven PostgreSQL (via DBeaver)<a class="headerlink" href="#migrasi-data-ke-aiven-postgresql-via-dbeaver" title="Link to this heading">#</a></h2>
+<p>Tahap pertama bertujuan untuk memindahkan data historis NO2 ke dalam layanan cloud database Aiven (project <code class="docutils literal notranslate"><span class="pre">zaidannabil2212-b12</span></code>, service <code class="docutils literal notranslate"><span class="pre">pg-3c8d907f</span></code>) agar siap diakses secara daring dari berbagai platform, termasuk DBeaver dan KNIME.</p>
+<section id="pembuatan-struktur-tabel-di-aiven">
+<h3>1.1. Pembuatan Struktur Tabel di Aiven<a class="headerlink" href="#pembuatan-struktur-tabel-di-aiven" title="Link to this heading">#</a></h3>
+<p>Langkah pertama sebelum memasukkan data adalah membuat penampung datanya, yaitu sebuah tabel. Karena ini adalah analisis runtun waktu, kolom waktu (<code class="docutils literal notranslate"><span class="pre">Tanggal</span></code>) wajib didefinisikan dengan tipe data yang mendukung informasi zona waktu, yaitu <code class="docutils literal notranslate"><span class="pre">TIMESTAMPTZ</span></code>.</p>
+<p>Melalui fitur PG Studio di dashboard Aiven, tabel dibuat dengan menjalankan query SQL berikut pada source <code class="docutils literal notranslate"><span class="pre">defaultdb</span></code> dan schema <code class="docutils literal notranslate"><span class="pre">public</span></code>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">kualitas_udara_no2_lengkap</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">SERIAL</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Tanggal</span><span class="w"> </span><span class="n">TIMESTAMPTZ</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NO2</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NO2_Clean</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NO2_Moving_Avg</span><span class="w"> </span><span class="n">DOUBLE</span><span class="w"> </span><span class="k">PRECISION</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Tabel ini dirancang tidak hanya menyimpan nilai NO2 mentah, tapi juga dua kolom turunan yang sudah disiapkan sejak tahap awal:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NO2_Clean</span></code>: nilai NO2 setelah melalui proses pembersihan data (penanganan outlier/nilai kosong).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NO2_Moving_Avg</span></code>: nilai rata-rata bergerak (moving average) dari NO2, digunakan untuk menghaluskan tren jangka pendek.</p></li>
+</ul>
+<p>Selain tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code> ini, terdapat juga tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2</span></code> yang menyimpan data mentah sebelum diperkaya dengan kolom-kolom turunan tersebut.</p>
+<p><img alt="Pembuatan Tabel di Aiven" src="_images/gambar1-pembuatan-tabel-aiven.jpeg" />
+<em>Keterangan: Tampilan PG Studio di Aiven saat query <code class="docutils literal notranslate"><span class="pre">CREATE</span> <span class="pre">TABLE</span> <span class="pre">kualitas_udara_no2_lengkap</span></code> dijalankan.</em></p>
+</section>
+<section id="menghubungkan-dbeaver-dengan-aiven">
+<h3>1.2. Menghubungkan DBeaver dengan Aiven<a class="headerlink" href="#menghubungkan-dbeaver-dengan-aiven" title="Link to this heading">#</a></h3>
+<p>Agar data dapat dikelola dan diimpor dengan mudah dari komputer lokal, DBeaver dihubungkan ke database Aiven di cloud.</p>
+<p>Langkah-langkah koneksi:</p>
+<ol class="arabic simple">
+<li><p>Di DBeaver, klik <strong>New Database Connection</strong> dan pilih <strong>PostgreSQL</strong>.</p></li>
+<li><p>Masukkan parameter koneksi yang didapatkan dari halaman <strong>Overview</strong> di dashboard Aiven, meliputi:</p>
+<ul class="simple">
+<li><p><strong>Host</strong>: <code class="docutils literal notranslate"><span class="pre">pg-3c8d907f-zaidannabil2212-b12.d.aivencloud.com</span></code></p></li>
+<li><p><strong>Port</strong>: Port PostgreSQL dari Aiven.</p></li>
+<li><p><strong>Database</strong>: <code class="docutils literal notranslate"><span class="pre">defaultdb</span></code></p></li>
+<li><p><strong>Username &amp; Password</strong>: kredensial <code class="docutils literal notranslate"><span class="pre">avnadmin</span></code> dari Aiven.</p></li>
+</ul>
+</li>
+<li><p>Penting: buka tab SSL atau Driver Properties, pastikan parameter <code class="docutils literal notranslate"><span class="pre">sslmode</span></code> diatur menjadi <code class="docutils literal notranslate"><span class="pre">require</span></code>. Ini wajib dilakukan agar DBeaver dapat terhubung ke Aiven yang mewajibkan koneksi aman menggunakan SSL.</p></li>
+<li><p>Klik <strong>Test Connection</strong> untuk memastikan koneksi berhasil, lalu klik <strong>Finish</strong>.</p></li>
+</ol>
+</section>
+<section id="import-data-ke-dbeaver">
+<h3>1.3. Import Data ke DBeaver<a class="headerlink" href="#import-data-ke-dbeaver" title="Link to this heading">#</a></h3>
+<p>Setelah DBeaver berhasil terhubung ke Aiven, tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code> sudah terlihat di skema <code class="docutils literal notranslate"><span class="pre">public</span></code> (defaultdb &gt; Schemas &gt; public &gt; Tables), berdampingan dengan tabel mentah <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2</span></code>.</p>
+<p><img alt="Data di DBeaver" src="_images/gambar2-data-dbeaver.jpeg" />
+<em>Keterangan: Tampilan DBeaver dengan data <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code> yang berhasil ditarik, memperlihatkan kolom <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">tanggal</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, dan <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>.</em></p>
+<p>Verifikasi jumlah baris data dapat dilakukan dengan menjalankan query SQL berikut:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">kualitas_udara_no2_lengkap</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Hasilnya menunjukkan total <strong>185 baris data</strong> telah berhasil diunggah dan tersimpan dengan aman di cloud database Aiven.</p>
+</section>
+</section>
+<section id="integrasi-dan-pengolahan-time-series-di-knime">
+<h2>2. Integrasi dan Pengolahan Time Series di KNIME<a class="headerlink" href="#integrasi-dan-pengolahan-time-series-di-knime" title="Link to this heading">#</a></h2>
+<p>Setelah data siap dan tersimpan dengan aman di cloud database Aiven, tahapan selanjutnya adalah menarik data tersebut ke ruang kerja lokal (KNIME Analytics Platform) untuk pra-pemrosesan dan eksplorasi data.</p>
+<section id="menghubungkan-aiven-ke-knime">
+<h3>Menghubungkan Aiven ke KNIME<a class="headerlink" href="#menghubungkan-aiven-ke-knime" title="Link to this heading">#</a></h3>
+<p>Proses menghubungkan KNIME ke Aiven pada prinsipnya mirip dengan menghubungkan DBeaver. Alur koneksinya (workflow) dibangun menggunakan empat node utama secara berurutan:</p>
+<p><strong>PostgreSQL Connector</strong>: Diatur menggunakan detail host, database, dan kredensial server Aiven:</p>
+<ul class="simple">
+<li><p>Hostname: <code class="docutils literal notranslate"><span class="pre">pg-3c8d907f-zaidannabil2212-b12.d.aivencloud.com</span></code></p></li>
+<li><p>Database name: <code class="docutils literal notranslate"><span class="pre">defaultdb</span></code></p></li>
+<li><p>Authentication type: Username and Password, dengan kredensial <code class="docutils literal notranslate"><span class="pre">avnadmin</span></code></p></li>
+</ul>
+<p>Sama seperti pada DBeaver, opsi <code class="docutils literal notranslate"><span class="pre">sslmode=require</span></code> perlu diaktifkan (melalui <strong>Show advanced settings</strong>) agar node dapat terhubung, karena Aiven menuntut koneksi SSL.</p>
+<p><img alt="Konfigurasi PostgreSQL Connector" src="_images/gambar3-postgresql-connector.jpeg" />
+<em>Keterangan: Jendela konfigurasi node PostgreSQL Connector di KNIME, tempat hostname dan kredensial database Aiven dimasukkan.</em></p>
+<p><strong>DB Table Selector</strong>: Diarahkan ke skema <code class="docutils literal notranslate"><span class="pre">public</span></code> untuk menyeleksi tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code>. Preview data langsung menampilkan 5 kolom (<code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">tanggal</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code>), dengan kolom <code class="docutils literal notranslate"><span class="pre">tanggal</span></code> sudah otomatis dikenali KNIME sebagai tipe <strong>Date&amp;time (Zoned)</strong> — bukan sekadar teks — berkat tipe <code class="docutils literal notranslate"><span class="pre">TIMESTAMPTZ</span></code> yang sudah didefinisikan sejak dari database.</p>
+<p><img alt="DB Table Selector" src="_images/gambar4-db-table-selector.jpeg" />
+<em>Keterangan: Keseluruhan workflow KNIME beserta cuplikan hasil pemilihan tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code>.</em></p>
+<p><strong>DB Reader</strong>: Mengeksekusi penarikan data dari database ke dalam memori KNIME agar siap diolah lebih lanjut. Node ini tidak memerlukan konfigurasi tambahan (“This node requires no configuration”) dan berhasil menarik seluruh <strong>185 baris, 5 kolom</strong> data NO2 ke dalam KNIME.</p>
+<p><img alt="Hasil DB Reader" src="_images/gambar5-db-reader.jpeg" />
+<em>Keterangan: Cuplikan data NO2 yang berhasil ditarik ke dalam KNIME melalui node DB Reader. Nilai NO2 pada preview ini tertampil sebagai “0” karena pembulatan tampilan default KNIME — nilai aslinya berada pada orde 10⁻⁵, sebagaimana terlihat pada node sebelumnya.</em></p>
+<p><strong>Statistics</strong>: Node ini ditambahkan setelah DB Reader dan berfungsi sebagai langkah awal yang krusial untuk Eksplorasi Data (EDA). Alih-alih mengecek kolom satu per satu, node Statistics secara otomatis memproses seluruh kolom numerik (<code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code>) secara bersamaan dan menghasilkan ringkasan statistik deskriptif. Beberapa temuan penting dari output node ini:</p>
+<ul class="simple">
+<li><p><strong>No. missings &amp; No. NaNs = 0</strong> pada seluruh kolom NO2, mengonfirmasi bahwa data historis NO2 sudah lengkap tanpa kekosongan data.</p></li>
+<li><p><strong>Min, Max, Mean, Std. deviation</strong> pada kolom <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>, dan <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code> tertampil sebagai “0” — bukan berarti nilainya benar-benar nol, melainkan efek pembulatan tampilan karena konsentrasi NO2 memang berada pada skala yang sangat kecil (orde 10⁻⁵). Hal ini juga tercermin dari <strong>Overall sum</strong> yang hanya sebesar 0,01 untuk ketiga kolom tersebut.</p></li>
+<li><p><strong>Skewness dan Kurtosis</strong> (bersifat tanpa satuan) tetap menampilkan nilai yang informatif: <code class="docutils literal notranslate"><span class="pre">no2</span></code> dan <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code> sama-sama memiliki skewness 2,577 dan kurtosis 8,787 — identik satu sama lain, menandakan tidak ada outlier yang perlu dikoreksi lebih lanjut pada proses cleaning. Sementara itu, <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code> memiliki skewness 0,711 dan kurtosis -0,37, jauh lebih landai, sesuai fungsinya untuk menghaluskan fluktuasi tren jangka pendek.</p></li>
+<li><p>Kolom <code class="docutils literal notranslate"><span class="pre">id</span></code> menunjukkan statistik sebagai penomor baris biasa: rentang 1–185, mean 93, dengan total keseluruhan (overall sum) 17.205.</p></li>
+</ul>
+<p><img alt="Ringkasan Statistik" src="_images/gambar6-statistics-summary.jpeg" />
+<em>Keterangan: Output tabel dari node Statistics yang merangkum perhitungan statistik deskriptif untuk seluruh kolom NO2 secara bersamaan dalam satu tampilan.</em></p>
+</section>
+</section>
+<section id="kesimpulan-hasil-pre-processing">
+<h2>3. Kesimpulan &amp; Hasil Pre-processing<a class="headerlink" href="#kesimpulan-hasil-pre-processing" title="Link to this heading">#</a></h2>
+<p>Dari tahapan pengumpulan data ke database cloud (Aiven) hingga proses integrasi di dalam KNIME, kita telah berhasil mempersiapkan data mentah menjadi himpunan data (dataset) runtun waktu NO2 yang berkualitas tinggi. Berikut adalah rangkuman dari hasil pre-processing ini:</p>
+<ul class="simple">
+<li><p><strong>Sentralisasi Data yang Aman</strong>: Data historis NO2 Gresik kini tersimpan dengan aman di Aiven PostgreSQL (project <code class="docutils literal notranslate"><span class="pre">zaidannabil2212-b12</span></code>) dan diakses menggunakan enkripsi SSL, memungkinkan kolaborasi atau penarikan data dari berbagai platform (DBeaver, KNIME) kapan saja tanpa harus memindahkan file CSV secara manual.</p></li>
+<li><p><strong>Kualitas Data Terjamin (Bebas Missing Value)</strong>: Berkat node Statistics di KNIME, terkonfirmasi bahwa tidak ada nilai yang hilang (missing) maupun NaN pada seluruh 185 baris data NO2, sehingga rangkaian waktu (time series) sekarang menjadi utuh dan tidak terputus.</p></li>
+<li><p><strong>Kolom Turunan Sudah Tersedia</strong>: Tabel <code class="docutils literal notranslate"><span class="pre">kualitas_udara_no2_lengkap</span></code> sudah dilengkapi kolom <code class="docutils literal notranslate"><span class="pre">NO2_Clean</span></code> (hasil pembersihan data) dan <code class="docutils literal notranslate"><span class="pre">NO2_Moving_Avg</span></code> (rata-rata bergerak) sejak tahap penyimpanan di database, sehingga workflow KNIME saat ini berfokus pada integrasi dan validasi kualitas data, bukan pembersihan ulang dari awal.</p></li>
+<li><p><strong>Format Waktu yang Valid</strong>: Penggunaan tipe <code class="docutils literal notranslate"><span class="pre">TIMESTAMPTZ</span></code> pada kolom <code class="docutils literal notranslate"><span class="pre">Tanggal</span></code> di database membuat KNIME secara otomatis mengenalinya sebagai tipe <strong>Date&amp;time (Zoned)</strong>, memastikan urutan kronologis data tetap konsisten tanpa perlu konversi manual dari string.</p></li>
+<li><p><strong>Siap untuk Analisis Lanjutan</strong>: Dengan selesainya tahap integrasi dan validasi kualitas data ini, dataset NO2 sudah berada dalam kondisi yang bersih, konsisten, dan terstruktur. Data ini kini sepenuhnya siap digunakan untuk tugas machine learning seperti pemodelan peramalan (forecasting) konsentrasi NO2 di periode mendatang.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#migrasi-data-ke-aiven-postgresql-via-dbeaver">1. Migrasi Data ke Aiven PostgreSQL (via DBeaver)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuatan-struktur-tabel-di-aiven">1.1. Pembuatan Struktur Tabel di Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-dbeaver-dengan-aiven">1.2. Menghubungkan DBeaver dengan Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#import-data-ke-dbeaver">1.3. Import Data ke DBeaver</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#integrasi-dan-pengolahan-time-series-di-knime">2. Integrasi dan Pengolahan Time Series di KNIME</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-aiven-ke-knime">Menghubungkan Aiven ke KNIME</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">3. Kesimpulan &amp; Hasil Pre-processing</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
