@@ -1,4 +1,4 @@
-# Analisis Time Series: Persiapan Data Polutan NO2 Suramadu
+# Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik
 
 Dalam proyek ini, kita menggunakan data historis kualitas udara, khususnya konsentrasi gas Nitrogen Dioksida (NO2), yang direkam berdasarkan urutan waktu. Sebelum melakukan pemodelan dan peramalan tren time series, data mentah dikelola di dalam cloud database agar proses penarikan data ke sistem analitik menjadi lebih efisien dan terpusat.
 
@@ -103,7 +103,197 @@ Sama seperti pada DBeaver, opsi `sslmode=require` perlu diaktifkan (melalui **Sh
 ![Ringkasan Statistik](./gambar6-statistics-summary.jpeg)
 *Keterangan: Output tabel dari node Statistics yang merangkum perhitungan statistik deskriptif untuk seluruh kolom NO2 secara bersamaan dalam satu tampilan.*
 
-## 3. Kesimpulan & Hasil Pre-processing
+## 3. Penjelasan Detail Setiap Fitur pada Node Statistics (Rumus & Contoh Perhitungan)
+
+Bagian ini menjelaskan secara rinci setiap ukuran statistik yang dihasilkan oleh node **Statistics** di KNIME, lengkap dengan rumus dan contoh perhitungan manual. Sebagai ilustrasi, contoh perhitungan di bawah ini menggunakan **5 data pertama** dari kolom `no2` (dalam satuan ×10⁻⁵ agar mudah dihitung):
+
+| i | Tanggal | Nilai NO2 (xᵢ, ×10⁻⁵) |
+|---|---------|----------------------|
+| 1 | 2025-01-03 | 5,82991 |
+| 2 | 2025-01-06 | 9,93093 |
+| 3 | 2025-01-07 | 10,31252 |
+| 4 | 2025-01-09 | 7,52217 |
+| 5 | 2025-01-18 | 5,89405 |
+
+dengan jumlah data n = 5. Nilai asli xᵢ = angka pada tabel × 10⁻⁵ (misalnya x₁ = 0,0000582991).
+
+> **Catatan**: hasil pada contoh manual ini hanya untuk mengilustrasikan *cara kerja* setiap rumus. Nilai sebenarnya yang tampil pada node Statistics di KNIME (lihat Gambar 6) dihitung dari keseluruhan **185 baris data**, sehingga angkanya berbeda dari contoh 5 data ini — perbedaan ini akan disinggung di tiap sub-bagian.
+
+### 3.1 Minimum (Min)
+
+**Penjelasan**: Nilai terkecil pada kolom data. Berguna untuk mendeteksi anomali, misalnya memastikan tidak ada konsentrasi polutan yang bernilai negatif.
+
+**Rumus**: `Min(x) = nilai terkecil di antara x₁, x₂, ..., xₙ`
+
+**Contoh perhitungan**: Dari kelima data (5,82991; 9,93093; 10,31252; 7,52217; 5,89405), nilai terkecil adalah **5,82991 (×10⁻⁵)** pada tanggal 2025-01-03.
+
+### 3.2 Maximum (Max)
+
+**Penjelasan**: Nilai terbesar pada kolom data, digunakan untuk mendeteksi outlier di sisi atas.
+
+**Rumus**: `Max(x) = nilai terbesar di antara x₁, x₂, ..., xₙ`
+
+**Contoh perhitungan**: Nilai terbesar dari kelima data adalah **10,31252 (×10⁻⁵)** pada tanggal 2025-01-07.
+
+### 3.3 Mean (Rata-rata)
+
+**Penjelasan**: Nilai rata-rata aritmetika seluruh data, menggambarkan tingkat dasar (baseline) konsentrasi NO2 secara umum.
+
+**Rumus**:
+```
+x̄ = ( Σ xᵢ ) / n
+```
+
+**Contoh perhitungan**:
+```
+Σxᵢ = 5,82991 + 9,93093 + 10,31252 + 7,52217 + 5,89405 = 39,48958
+x̄  = 39,48958 / 5 = 7,89792 (×10⁻⁵)
+```
+
+### 3.4 Overall Sum (Jumlah Keseluruhan)
+
+**Penjelasan**: Total penjumlahan seluruh nilai pada kolom, tanpa dibagi jumlah data. Berguna melihat akumulasi total, misalnya total "beban" NO2 selama periode pengamatan.
+
+**Rumus**: `Sum = Σ xᵢ = x₁ + x₂ + ... + xₙ`
+
+**Contoh perhitungan**: `Sum = 39,48958 (×10⁻⁵)`. Karena skala NO2 sangat kecil, pada 185 baris data penuh, Overall sum yang tampil di KNIME hanya sebesar **0,01** untuk kolom `no2`, `no2_clean`, maupun `no2_moving_avg` — konsisten karena rata-rata tiap titik data memang hanya berorde 10⁻⁵.
+
+### 3.5 Variance (Varians)
+
+**Penjelasan**: Mengukur seberapa jauh data tersebar dari nilai rata-ratanya. Semakin besar variansnya, semakin bervariasi/tersebar datanya.
+
+**Rumus** (varians sampel, pembagi n−1 — konvensi umum pada software statistik termasuk KNIME):
+```
+S² = Σ(xᵢ − x̄)² / (n − 1)
+```
+
+**Contoh perhitungan**:
+
+| i | xᵢ | xᵢ − x̄ | (xᵢ − x̄)² |
+|---|-----|---------|------------|
+| 1 | 5,82991  | −2,06801 | 4,27665 |
+| 2 | 9,93093  |  2,03301 | 4,13315 |
+| 3 | 10,31252 |  2,41460 | 5,83031 |
+| 4 | 7,52217  | −0,37575 | 0,14119 |
+| 5 | 5,89405  | −2,00387 | 4,01548 |
+
+```
+Σ(xᵢ − x̄)² = 18,39677
+S² = 18,39677 / (5 − 1) = 18,39677 / 4 = 4,59919 (×10⁻¹⁰)
+```
+
+### 3.6 Standard Deviation (Simpangan Baku)
+
+**Penjelasan**: Akar kuadrat dari varians. Satuannya sama dengan data asli sehingga lebih mudah diinterpretasikan dibanding varians.
+
+**Rumus**:
+```
+S = √S²
+```
+
+**Contoh perhitungan**:
+```
+S = √4,59919 = 2,14457 (×10⁻⁵)
+```
+
+### 3.7 Skewness (Kemencengan)
+
+**Penjelasan**: Mengukur ketidaksimetrisan (asimetri) bentuk distribusi data. Skewness positif → ekor distribusi lebih panjang ke kanan; skewness negatif → ekor lebih panjang ke kiri; skewness ≈ 0 → distribusi cenderung simetris. Nilai ini **tidak bergantung pada skala data** (dimensionless), sehingga tetap bermakna meski nilai NO2 berskala sangat kecil — inilah sebabnya kolom skewness pada Gambar 6 tetap menampilkan angka informatif (2,577) walau kolom Min/Max/Mean tampak "0".
+
+**Rumus**:
+```
+Skewness = [ (1/n) Σ(xᵢ − x̄)³ ] / [ (1/n) Σ(xᵢ − x̄)² ]^(3/2)
+```
+
+**Contoh perhitungan** (melanjutkan tabel deviasi):
+
+| i | (xᵢ − x̄)³ |
+|---|------------|
+| 1 | −8,84414 |
+| 2 | 8,40274  |
+| 3 | 14,07790 |
+| 4 | −0,05305 |
+| 5 | −8,04648 |
+
+```
+Σ(xᵢ − x̄)³ = 5,53697
+m₃ = 5,53697 / 5 = 1,10739
+m₂ = 18,39677 / 5 = 3,67935   (varians populasi, pembagi n)
+m₂^1,5 = 3,67935 × √3,67935 ≈ 7,05770
+
+Skewness ≈ 1,10739 / 7,05770 ≈ 0,157
+```
+
+Pada contoh 5 data ini skewness ≈ 0,157 (sedikit menceng ke kanan). Angka ini berbeda dari hasil node Statistics KNIME untuk kolom `no2` pada 185 baris penuh (skewness = 2,577) karena dihitung dari jumlah dan sebaran data yang jauh lebih besar — namun cara/rumus perhitungannya persis sama.
+
+### 3.8 Kurtosis (Keruncingan)
+
+**Penjelasan**: Mengukur seberapa "runcing" atau "landai" bentuk distribusi dibanding distribusi normal, sekaligus seberapa berat ekornya (potensi kemunculan nilai ekstrem/outlier). KNIME melaporkan *excess kurtosis* (kurtosis dikurangi 3), di mana distribusi normal bernilai 0; nilai positif tinggi (seperti 8,787 pada kolom `no2`) menandakan ekor tebal/banyak outlier potensial, sedangkan nilai negatif (seperti −1,2 pada kolom `id`) menandakan distribusi lebih landai dibanding normal.
+
+**Rumus**:
+```
+Kurtosis = [ (1/n) Σ(xᵢ − x̄)⁴ ] / [ (1/n) Σ(xᵢ − x̄)² ]² − 3
+```
+
+**Contoh perhitungan**:
+
+| i | (xᵢ − x̄)⁴ |
+|---|------------|
+| 1 | 18,28973 |
+| 2 | 17,08290 |
+| 3 | 33,99254 |
+| 4 | 0,01993  |
+| 5 | 16,12407 |
+
+```
+Σ(xᵢ − x̄)⁴ = 85,50917
+m₄ = 85,50917 / 5 = 17,10183
+m₂² = 3,67935² ≈ 13,53766
+
+Kurtosis = (17,10183 / 13,53766) − 3 ≈ 1,263 − 3 ≈ −1,737
+```
+
+Sama seperti skewness, nilai kurtosis pada contoh 5 data ini (≈ −1,737) berbeda dari hasil KNIME pada 185 baris data (kurtosis `no2` = 8,787) karena skala dan sebaran datanya jauh lebih besar dan kompleks pada dataset penuh.
+
+### 3.9 Median
+
+**Penjelasan**: Nilai tengah data setelah diurutkan. Jika jumlah data ganjil, median adalah nilai tepat di tengah; jika genap, median adalah rata-rata dua nilai tengah. Median lebih tahan (robust) terhadap outlier dibanding mean.
+
+**Rumus**:
+```
+n ganjil : Median = x pada posisi (n+1)/2 (setelah diurutkan)
+n genap  : Median = [ x(n/2) + x(n/2 + 1) ] / 2
+```
+
+**Contoh perhitungan**: Urutkan kelima data: 5,82991 ; 5,89405 ; 7,52217 ; 9,93093 ; 10,31252. Karena n = 5 (ganjil), median = data ke-3 = **7,52217 (×10⁻⁵)**.
+
+> Catatan: pada workflow ini opsi **"Calculate median values"** di node Statistics sengaja **tidak dicentang** (lihat konfigurasi pada Gambar 6), karena perhitungan median mengharuskan seluruh data diurutkan terlebih dahulu (computationally expensive), sehingga dilewati agar eksekusi lebih cepat.
+
+### 3.10 No. of Missings (Jumlah Nilai Hilang)
+
+**Penjelasan**: Jumlah baris yang nilainya kosong/tidak terisi (missing) pada kolom tersebut. Penting untuk menentukan perlu-tidaknya strategi imputasi (misalnya interpolasi linear).
+
+**Rumus**: `Missing count = banyaknya xᵢ yang bernilai NULL/kosong`
+
+**Contoh perhitungan**: Pada kelima data contoh tidak ada nilai kosong (Missing count = 0). Ini konsisten dengan hasil node Statistics pada keseluruhan 185 baris data NO2 (`no2`, `no2_clean`, `no2_moving_avg`), yang semuanya menunjukkan **No. missings = 0**.
+
+### 3.11 No. of NaNs
+
+**Penjelasan**: Jumlah nilai berstatus "Not a Number" — biasanya muncul akibat operasi matematis yang tidak valid (misalnya 0 dibagi 0). Berbeda dengan missing value (kosong), NaN tetaplah nilai numerik, hanya saja tidak terdefinisi.
+
+**Rumus**: `NaN count = banyaknya xᵢ berstatus NaN`
+
+**Contoh perhitungan**: Kelima data contoh tidak memiliki NaN. Hasil node Statistics juga menunjukkan **No. NaNs = 0** untuk seluruh kolom NO2, menandakan tidak ada kesalahan komputasi pada data.
+
+### 3.12 No. of +∞s dan No. of −∞s (Nilai Tak Hingga)
+
+**Penjelasan**: Menghitung berapa banyak nilai bernilai tak hingga positif (+∞) atau tak hingga negatif (−∞), yang biasanya muncul akibat kesalahan perhitungan (misalnya pembagian oleh nol). Penting dipantau untuk memastikan tidak ada kesalahan numerik pada data.
+
+**Rumus**: `+∞ count = banyaknya xᵢ = +∞` ; `−∞ count = banyaknya xᵢ = −∞`
+
+**Contoh perhitungan**: Tidak ada nilai tak hingga pada kelima data contoh. Hasil node Statistics pada seluruh dataset NO2 juga menunjukkan **No. +∞s = 0** dan **No. −∞s = 0**, menandakan data bersih dari kesalahan numerik semacam ini.
+
+## 4. Kesimpulan & Hasil Pre-processing
 
 Dari tahapan pengumpulan data ke database cloud (Aiven) hingga proses integrasi di dalam KNIME, kita telah berhasil mempersiapkan data mentah menjadi himpunan data (dataset) runtun waktu NO2 yang berkualitas tinggi. Berikut adalah rangkuman dari hasil pre-processing ini:
 

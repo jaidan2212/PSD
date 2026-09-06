@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+    <title>Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
   
   
   
@@ -182,7 +182,7 @@
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Analisis Time Series: Persiapan Data Polutan NO2 Suramadu</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
 </ul>
@@ -370,7 +370,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu</h1>
+    <h1>Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -390,7 +390,22 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-aiven-ke-knime">Menghubungkan Aiven ke KNIME</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">3. Kesimpulan &amp; Hasil Pre-processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-detail-setiap-fitur-pada-node-statistics-rumus-contoh-perhitungan">3. Penjelasan Detail Setiap Fitur pada Node Statistics (Rumus &amp; Contoh Perhitungan)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-min">3.1 Minimum (Min)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-max">3.2 Maximum (Max)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-rata-rata">3.3 Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-sum-jumlah-keseluruhan">3.4 Overall Sum (Jumlah Keseluruhan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-varians">3.5 Variance (Varians)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-deviation-simpangan-baku">3.6 Standard Deviation (Simpangan Baku)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skewness-kemencengan">3.7 Skewness (Kemencengan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kurtosis-keruncingan">3.8 Kurtosis (Keruncingan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#median">3.9 Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-missings-jumlah-nilai-hilang">3.10 No. of Missings (Jumlah Nilai Hilang)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-nans">3.11 No. of NaNs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-s-dan-no-of-s-nilai-tak-hingga">3.12 No. of +∞s dan No. of −∞s (Nilai Tak Hingga)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">4. Kesimpulan &amp; Hasil Pre-processing</a></li>
 </ul>
             </nav>
         </div>
@@ -402,8 +417,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="analisis-time-series-persiapan-data-polutan-no2-suramadu">
-<h1>Analisis Time Series: Persiapan Data Polutan NO2 Suramadu<a class="headerlink" href="#analisis-time-series-persiapan-data-polutan-no2-suramadu" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="analisis-time-series-persiapan-data-kualitas-udara-no2-gresik">
+<h1>Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik<a class="headerlink" href="#analisis-time-series-persiapan-data-kualitas-udara-no2-gresik" title="Link to this heading">#</a></h1>
 <p>Dalam proyek ini, kita menggunakan data historis kualitas udara, khususnya konsentrasi gas Nitrogen Dioksida (NO2), yang direkam berdasarkan urutan waktu. Sebelum melakukan pemodelan dan peramalan tren time series, data mentah dikelola di dalam cloud database agar proses penarikan data ke sistem analitik menjadi lebih efisien dan terpusat.</p>
 <p>Dokumen ini mencakup alur lengkap mulai dari migrasi data awal hingga pengolahan dasar menggunakan KNIME Analytics Platform.</p>
 <section id="migrasi-data-ke-aiven-postgresql-via-dbeaver">
@@ -493,8 +508,256 @@ document.write(`
 <em>Keterangan: Output tabel dari node Statistics yang merangkum perhitungan statistik deskriptif untuk seluruh kolom NO2 secara bersamaan dalam satu tampilan.</em></p>
 </section>
 </section>
+<section id="penjelasan-detail-setiap-fitur-pada-node-statistics-rumus-contoh-perhitungan">
+<h2>3. Penjelasan Detail Setiap Fitur pada Node Statistics (Rumus &amp; Contoh Perhitungan)<a class="headerlink" href="#penjelasan-detail-setiap-fitur-pada-node-statistics-rumus-contoh-perhitungan" title="Link to this heading">#</a></h2>
+<p>Bagian ini menjelaskan secara rinci setiap ukuran statistik yang dihasilkan oleh node <strong>Statistics</strong> di KNIME, lengkap dengan rumus dan contoh perhitungan manual. Sebagai ilustrasi, contoh perhitungan di bawah ini menggunakan <strong>5 data pertama</strong> dari kolom <code class="docutils literal notranslate"><span class="pre">no2</span></code> (dalam satuan ×10⁻⁵ agar mudah dihitung):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>i</p></th>
+<th class="head"><p>Tanggal</p></th>
+<th class="head"><p>Nilai NO2 (xᵢ, ×10⁻⁵)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>2025-01-03</p></td>
+<td><p>5,82991</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>2025-01-06</p></td>
+<td><p>9,93093</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>2025-01-07</p></td>
+<td><p>10,31252</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>2025-01-09</p></td>
+<td><p>7,52217</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>2025-01-18</p></td>
+<td><p>5,89405</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>dengan jumlah data n = 5. Nilai asli xᵢ = angka pada tabel × 10⁻⁵ (misalnya x₁ = 0,0000582991).</p>
+<blockquote>
+<div><p><strong>Catatan</strong>: hasil pada contoh manual ini hanya untuk mengilustrasikan <em>cara kerja</em> setiap rumus. Nilai sebenarnya yang tampil pada node Statistics di KNIME (lihat Gambar 6) dihitung dari keseluruhan <strong>185 baris data</strong>, sehingga angkanya berbeda dari contoh 5 data ini — perbedaan ini akan disinggung di tiap sub-bagian.</p>
+</div></blockquote>
+<section id="minimum-min">
+<h3>3.1 Minimum (Min)<a class="headerlink" href="#minimum-min" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Nilai terkecil pada kolom data. Berguna untuk mendeteksi anomali, misalnya memastikan tidak ada konsentrasi polutan yang bernilai negatif.</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">Min(x)</span> <span class="pre">=</span> <span class="pre">nilai</span> <span class="pre">terkecil</span> <span class="pre">di</span> <span class="pre">antara</span> <span class="pre">x₁,</span> <span class="pre">x₂,</span> <span class="pre">...,</span> <span class="pre">xₙ</span></code></p>
+<p><strong>Contoh perhitungan</strong>: Dari kelima data (5,82991; 9,93093; 10,31252; 7,52217; 5,89405), nilai terkecil adalah <strong>5,82991 (×10⁻⁵)</strong> pada tanggal 2025-01-03.</p>
+</section>
+<section id="maximum-max">
+<h3>3.2 Maximum (Max)<a class="headerlink" href="#maximum-max" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Nilai terbesar pada kolom data, digunakan untuk mendeteksi outlier di sisi atas.</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">Max(x)</span> <span class="pre">=</span> <span class="pre">nilai</span> <span class="pre">terbesar</span> <span class="pre">di</span> <span class="pre">antara</span> <span class="pre">x₁,</span> <span class="pre">x₂,</span> <span class="pre">...,</span> <span class="pre">xₙ</span></code></p>
+<p><strong>Contoh perhitungan</strong>: Nilai terbesar dari kelima data adalah <strong>10,31252 (×10⁻⁵)</strong> pada tanggal 2025-01-07.</p>
+</section>
+<section id="mean-rata-rata">
+<h3>3.3 Mean (Rata-rata)<a class="headerlink" href="#mean-rata-rata" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Nilai rata-rata aritmetika seluruh data, menggambarkan tingkat dasar (baseline) konsentrasi NO2 secara umum.</p>
+<p><strong>Rumus</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x̄</span> <span class="o">=</span> <span class="p">(</span> <span class="n">Σ</span> <span class="n">xᵢ</span> <span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Σxᵢ = 5,82991 + 9,93093 + 10,31252 + 7,52217 + 5,89405 = 39,48958
+x̄  = 39,48958 / 5 = 7,89792 (×10⁻⁵)
+</pre></div>
+</div>
+</section>
+<section id="overall-sum-jumlah-keseluruhan">
+<h3>3.4 Overall Sum (Jumlah Keseluruhan)<a class="headerlink" href="#overall-sum-jumlah-keseluruhan" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Total penjumlahan seluruh nilai pada kolom, tanpa dibagi jumlah data. Berguna melihat akumulasi total, misalnya total “beban” NO2 selama periode pengamatan.</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">Sum</span> <span class="pre">=</span> <span class="pre">Σ</span> <span class="pre">xᵢ</span> <span class="pre">=</span> <span class="pre">x₁</span> <span class="pre">+</span> <span class="pre">x₂</span> <span class="pre">+</span> <span class="pre">...</span> <span class="pre">+</span> <span class="pre">xₙ</span></code></p>
+<p><strong>Contoh perhitungan</strong>: <code class="docutils literal notranslate"><span class="pre">Sum</span> <span class="pre">=</span> <span class="pre">39,48958</span> <span class="pre">(×10⁻⁵)</span></code>. Karena skala NO2 sangat kecil, pada 185 baris data penuh, Overall sum yang tampil di KNIME hanya sebesar <strong>0,01</strong> untuk kolom <code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>, maupun <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code> — konsisten karena rata-rata tiap titik data memang hanya berorde 10⁻⁵.</p>
+</section>
+<section id="variance-varians">
+<h3>3.5 Variance (Varians)<a class="headerlink" href="#variance-varians" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Mengukur seberapa jauh data tersebar dari nilai rata-ratanya. Semakin besar variansnya, semakin bervariasi/tersebar datanya.</p>
+<p><strong>Rumus</strong> (varians sampel, pembagi n−1 — konvensi umum pada software statistik termasuk KNIME):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>S² = Σ(xᵢ − x̄)² / (n − 1)
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong>:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>i</p></th>
+<th class="head"><p>xᵢ</p></th>
+<th class="head"><p>xᵢ − x̄</p></th>
+<th class="head"><p>(xᵢ − x̄)²</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>5,82991</p></td>
+<td><p>−2,06801</p></td>
+<td><p>4,27665</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>9,93093</p></td>
+<td><p>2,03301</p></td>
+<td><p>4,13315</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>10,31252</p></td>
+<td><p>2,41460</p></td>
+<td><p>5,83031</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>7,52217</p></td>
+<td><p>−0,37575</p></td>
+<td><p>0,14119</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>5,89405</p></td>
+<td><p>−2,00387</p></td>
+<td><p>4,01548</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Σ(xᵢ − x̄)² = 18,39677
+S² = 18,39677 / (5 − 1) = 18,39677 / 4 = 4,59919 (×10⁻¹⁰)
+</pre></div>
+</div>
+</section>
+<section id="standard-deviation-simpangan-baku">
+<h3>3.6 Standard Deviation (Simpangan Baku)<a class="headerlink" href="#standard-deviation-simpangan-baku" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Akar kuadrat dari varians. Satuannya sama dengan data asli sehingga lebih mudah diinterpretasikan dibanding varians.</p>
+<p><strong>Rumus</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>S = √S²
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>S = √4,59919 = 2,14457 (×10⁻⁵)
+</pre></div>
+</div>
+</section>
+<section id="skewness-kemencengan">
+<h3>3.7 Skewness (Kemencengan)<a class="headerlink" href="#skewness-kemencengan" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Mengukur ketidaksimetrisan (asimetri) bentuk distribusi data. Skewness positif → ekor distribusi lebih panjang ke kanan; skewness negatif → ekor lebih panjang ke kiri; skewness ≈ 0 → distribusi cenderung simetris. Nilai ini <strong>tidak bergantung pada skala data</strong> (dimensionless), sehingga tetap bermakna meski nilai NO2 berskala sangat kecil — inilah sebabnya kolom skewness pada Gambar 6 tetap menampilkan angka informatif (2,577) walau kolom Min/Max/Mean tampak “0”.</p>
+<p><strong>Rumus</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Skewness = [ (1/n) Σ(xᵢ − x̄)³ ] / [ (1/n) Σ(xᵢ − x̄)² ]^(3/2)
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong> (melanjutkan tabel deviasi):</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>i</p></th>
+<th class="head"><p>(xᵢ − x̄)³</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>−8,84414</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>8,40274</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>14,07790</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>−0,05305</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>−8,04648</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Σ(xᵢ − x̄)³ = 5,53697
+m₃ = 5,53697 / 5 = 1,10739
+m₂ = 18,39677 / 5 = 3,67935   (varians populasi, pembagi n)
+m₂^1,5 = 3,67935 × √3,67935 ≈ 7,05770
+
+Skewness ≈ 1,10739 / 7,05770 ≈ 0,157
+</pre></div>
+</div>
+<p>Pada contoh 5 data ini skewness ≈ 0,157 (sedikit menceng ke kanan). Angka ini berbeda dari hasil node Statistics KNIME untuk kolom <code class="docutils literal notranslate"><span class="pre">no2</span></code> pada 185 baris penuh (skewness = 2,577) karena dihitung dari jumlah dan sebaran data yang jauh lebih besar — namun cara/rumus perhitungannya persis sama.</p>
+</section>
+<section id="kurtosis-keruncingan">
+<h3>3.8 Kurtosis (Keruncingan)<a class="headerlink" href="#kurtosis-keruncingan" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Mengukur seberapa “runcing” atau “landai” bentuk distribusi dibanding distribusi normal, sekaligus seberapa berat ekornya (potensi kemunculan nilai ekstrem/outlier). KNIME melaporkan <em>excess kurtosis</em> (kurtosis dikurangi 3), di mana distribusi normal bernilai 0; nilai positif tinggi (seperti 8,787 pada kolom <code class="docutils literal notranslate"><span class="pre">no2</span></code>) menandakan ekor tebal/banyak outlier potensial, sedangkan nilai negatif (seperti −1,2 pada kolom <code class="docutils literal notranslate"><span class="pre">id</span></code>) menandakan distribusi lebih landai dibanding normal.</p>
+<p><strong>Rumus</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Kurtosis = [ (1/n) Σ(xᵢ − x̄)⁴ ] / [ (1/n) Σ(xᵢ − x̄)² ]² − 3
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong>:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>i</p></th>
+<th class="head"><p>(xᵢ − x̄)⁴</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>18,28973</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>17,08290</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>33,99254</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>0,01993</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>16,12407</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Σ(xᵢ − x̄)⁴ = 85,50917
+m₄ = 85,50917 / 5 = 17,10183
+m₂² = 3,67935² ≈ 13,53766
+
+Kurtosis = (17,10183 / 13,53766) − 3 ≈ 1,263 − 3 ≈ −1,737
+</pre></div>
+</div>
+<p>Sama seperti skewness, nilai kurtosis pada contoh 5 data ini (≈ −1,737) berbeda dari hasil KNIME pada 185 baris data (kurtosis <code class="docutils literal notranslate"><span class="pre">no2</span></code> = 8,787) karena skala dan sebaran datanya jauh lebih besar dan kompleks pada dataset penuh.</p>
+</section>
+<section id="median">
+<h3>3.9 Median<a class="headerlink" href="#median" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Nilai tengah data setelah diurutkan. Jika jumlah data ganjil, median adalah nilai tepat di tengah; jika genap, median adalah rata-rata dua nilai tengah. Median lebih tahan (robust) terhadap outlier dibanding mean.</p>
+<p><strong>Rumus</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">n</span> <span class="n">ganjil</span> <span class="p">:</span> <span class="n">Median</span> <span class="o">=</span> <span class="n">x</span> <span class="n">pada</span> <span class="n">posisi</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="p">(</span><span class="n">setelah</span> <span class="n">diurutkan</span><span class="p">)</span>
+<span class="n">n</span> <span class="n">genap</span>  <span class="p">:</span> <span class="n">Median</span> <span class="o">=</span> <span class="p">[</span> <span class="n">x</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><strong>Contoh perhitungan</strong>: Urutkan kelima data: 5,82991 ; 5,89405 ; 7,52217 ; 9,93093 ; 10,31252. Karena n = 5 (ganjil), median = data ke-3 = <strong>7,52217 (×10⁻⁵)</strong>.</p>
+<blockquote>
+<div><p>Catatan: pada workflow ini opsi <strong>“Calculate median values”</strong> di node Statistics sengaja <strong>tidak dicentang</strong> (lihat konfigurasi pada Gambar 6), karena perhitungan median mengharuskan seluruh data diurutkan terlebih dahulu (computationally expensive), sehingga dilewati agar eksekusi lebih cepat.</p>
+</div></blockquote>
+</section>
+<section id="no-of-missings-jumlah-nilai-hilang">
+<h3>3.10 No. of Missings (Jumlah Nilai Hilang)<a class="headerlink" href="#no-of-missings-jumlah-nilai-hilang" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Jumlah baris yang nilainya kosong/tidak terisi (missing) pada kolom tersebut. Penting untuk menentukan perlu-tidaknya strategi imputasi (misalnya interpolasi linear).</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">Missing</span> <span class="pre">count</span> <span class="pre">=</span> <span class="pre">banyaknya</span> <span class="pre">xᵢ</span> <span class="pre">yang</span> <span class="pre">bernilai</span> <span class="pre">NULL/kosong</span></code></p>
+<p><strong>Contoh perhitungan</strong>: Pada kelima data contoh tidak ada nilai kosong (Missing count = 0). Ini konsisten dengan hasil node Statistics pada keseluruhan 185 baris data NO2 (<code class="docutils literal notranslate"><span class="pre">no2</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_clean</span></code>, <code class="docutils literal notranslate"><span class="pre">no2_moving_avg</span></code>), yang semuanya menunjukkan <strong>No. missings = 0</strong>.</p>
+</section>
+<section id="no-of-nans">
+<h3>3.11 No. of NaNs<a class="headerlink" href="#no-of-nans" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Jumlah nilai berstatus “Not a Number” — biasanya muncul akibat operasi matematis yang tidak valid (misalnya 0 dibagi 0). Berbeda dengan missing value (kosong), NaN tetaplah nilai numerik, hanya saja tidak terdefinisi.</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">NaN</span> <span class="pre">count</span> <span class="pre">=</span> <span class="pre">banyaknya</span> <span class="pre">xᵢ</span> <span class="pre">berstatus</span> <span class="pre">NaN</span></code></p>
+<p><strong>Contoh perhitungan</strong>: Kelima data contoh tidak memiliki NaN. Hasil node Statistics juga menunjukkan <strong>No. NaNs = 0</strong> untuk seluruh kolom NO2, menandakan tidak ada kesalahan komputasi pada data.</p>
+</section>
+<section id="no-of-s-dan-no-of-s-nilai-tak-hingga">
+<h3>3.12 No. of +∞s dan No. of −∞s (Nilai Tak Hingga)<a class="headerlink" href="#no-of-s-dan-no-of-s-nilai-tak-hingga" title="Link to this heading">#</a></h3>
+<p><strong>Penjelasan</strong>: Menghitung berapa banyak nilai bernilai tak hingga positif (+∞) atau tak hingga negatif (−∞), yang biasanya muncul akibat kesalahan perhitungan (misalnya pembagian oleh nol). Penting dipantau untuk memastikan tidak ada kesalahan numerik pada data.</p>
+<p><strong>Rumus</strong>: <code class="docutils literal notranslate"><span class="pre">+∞</span> <span class="pre">count</span> <span class="pre">=</span> <span class="pre">banyaknya</span> <span class="pre">xᵢ</span> <span class="pre">=</span> <span class="pre">+∞</span></code> ; <code class="docutils literal notranslate"><span class="pre">−∞</span> <span class="pre">count</span> <span class="pre">=</span> <span class="pre">banyaknya</span> <span class="pre">xᵢ</span> <span class="pre">=</span> <span class="pre">−∞</span></code></p>
+<p><strong>Contoh perhitungan</strong>: Tidak ada nilai tak hingga pada kelima data contoh. Hasil node Statistics pada seluruh dataset NO2 juga menunjukkan <strong>No. +∞s = 0</strong> dan <strong>No. −∞s = 0</strong>, menandakan data bersih dari kesalahan numerik semacam ini.</p>
+</section>
+</section>
 <section id="kesimpulan-hasil-pre-processing">
-<h2>3. Kesimpulan &amp; Hasil Pre-processing<a class="headerlink" href="#kesimpulan-hasil-pre-processing" title="Link to this heading">#</a></h2>
+<h2>4. Kesimpulan &amp; Hasil Pre-processing<a class="headerlink" href="#kesimpulan-hasil-pre-processing" title="Link to this heading">#</a></h2>
 <p>Dari tahapan pengumpulan data ke database cloud (Aiven) hingga proses integrasi di dalam KNIME, kita telah berhasil mempersiapkan data mentah menjadi himpunan data (dataset) runtun waktu NO2 yang berkualitas tinggi. Berikut adalah rangkuman dari hasil pre-processing ini:</p>
 <ul class="simple">
 <li><p><strong>Sentralisasi Data yang Aman</strong>: Data historis NO2 Gresik kini tersimpan dengan aman di Aiven PostgreSQL (project <code class="docutils literal notranslate"><span class="pre">zaidannabil2212-b12</span></code>) dan diakses menggunakan enkripsi SSL, memungkinkan kolaborasi atau penarikan data dari berbagai platform (DBeaver, KNIME) kapan saja tanpa harus memindahkan file CSV secara manual.</p></li>
@@ -580,7 +843,22 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-aiven-ke-knime">Menghubungkan Aiven ke KNIME</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">3. Kesimpulan &amp; Hasil Pre-processing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-detail-setiap-fitur-pada-node-statistics-rumus-contoh-perhitungan">3. Penjelasan Detail Setiap Fitur pada Node Statistics (Rumus &amp; Contoh Perhitungan)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#minimum-min">3.1 Minimum (Min)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#maximum-max">3.2 Maximum (Max)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mean-rata-rata">3.3 Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-sum-jumlah-keseluruhan">3.4 Overall Sum (Jumlah Keseluruhan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variance-varians">3.5 Variance (Varians)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standard-deviation-simpangan-baku">3.6 Standard Deviation (Simpangan Baku)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skewness-kemencengan">3.7 Skewness (Kemencengan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kurtosis-keruncingan">3.8 Kurtosis (Keruncingan)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#median">3.9 Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-missings-jumlah-nilai-hilang">3.10 No. of Missings (Jumlah Nilai Hilang)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-nans">3.11 No. of NaNs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#no-of-s-dan-no-of-s-nilai-tak-hingga">3.12 No. of +∞s dan No. of −∞s (Nilai Tak Hingga)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-hasil-pre-processing">4. Kesimpulan &amp; Hasil Pre-processing</a></li>
 </ul>
   </nav></div>
 
