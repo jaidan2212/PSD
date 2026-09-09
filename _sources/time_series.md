@@ -1,4 +1,4 @@
-# Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Gresik
+# Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu
 
 Dalam proyek ini, kita menggunakan data historis kualitas udara, khususnya konsentrasi gas Nitrogen Dioksida (NO2), yang direkam berdasarkan urutan waktu. Sebelum melakukan pemodelan dan peramalan tren time series, data mentah dikelola di dalam cloud database agar proses penarikan data ke sistem analitik menjadi lebih efisien dan terpusat.
 
