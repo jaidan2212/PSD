@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '2_database_dan_analisis';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Exploratory Data Analysis (EDA)" href="eda.html" />
+    <link rel="prev" title="Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur Time-Series NO2" href="1_pengumpulan_data.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2F2_database_dan_analisis.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/2_database_dan_analisis.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">2.1 Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sentralisasi-data-dengan-aiven-postgresql">2.2 Sentralisasi Data dengan Aiven PostgreSQL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manajemen-database-via-dbeaver">2.3 Manajemen Database via DBeaver</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-dbeaver-ke-aiven">2.3.1 Menghubungkan DBeaver ke Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuatan-tabel">2.3.2 Pembuatan Tabel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#impor-data-ke-dalam-tabel">2.3.3 Impor Data ke dalam Tabel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-statistik-dengan-knime-analytics-platform">2.4 Analisis Statistik dengan KNIME Analytics Platform</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-node">2.4.1 Alur Node</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifikasi-melalui-node-statistics">2.4.2 Verifikasi melalui Node Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">2.5 Kesimpulan</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bab-2-sentralisasi-data-manajemen-database-dan-analisis-statistik-deskriptif">
+<h1>Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif<a class="headerlink" href="#bab-2-sentralisasi-data-manajemen-database-dan-analisis-statistik-deskriptif" title="Link to this heading">#</a></h1>
+<section id="pendahuluan">
+<h2>2.1 Pendahuluan<a class="headerlink" href="#pendahuluan" title="Link to this heading">#</a></h2>
+<p>Pada <strong>Bab 1</strong>, kita telah berhasil melalui tahapan preprocessing data konsentrasi NO2 di Kecamatan Kamal — mulai dari deteksi outlier menggunakan metode IQR, imputasi nilai hilang melalui interpolasi waktu, hingga ekstraksi 68 fitur deret waktu menggunakan TSFEL. Hasil dari seluruh proses tersebut adalah sebuah dataset yang bersih, konsisten, dan siap digunakan untuk tahap analisis lebih lanjut.</p>
+<p>Namun, menyimpan data hasil olahan hanya dalam bentuk berkas lokal (seperti <code class="docutils literal notranslate"><span class="pre">.csv</span></code>) memiliki keterbatasan, terutama dari sisi aksesibilitas dan skalabilitas ketika data perlu diakses oleh berbagai alat analitik secara bersamaan. Oleh karena itu, pada Bab 2 ini, fokus pembahasan bergeser dari <em>data preparation</em> di sisi Python menuju <strong>sentralisasi data</strong> menggunakan <strong>cloud database</strong>, agar proses analitik ke depannya dapat dilakukan secara lebih terpusat, aman, dan efisien. Setelah data tersentralisasi, tahap berikutnya adalah menariknya kembali untuk dieksplorasi secara statistik menggunakan <strong>KNIME Analytics Platform</strong>, sebuah platform <em>no-code/low-code</em> yang banyak digunakan dalam alur kerja analisis data.</p>
+<p>Secara garis besar, alur kerja pada bab ini terbagi menjadi tiga tahapan utama:</p>
+<ol class="arabic simple">
+<li><p>Menyimpan data ke dalam server cloud database (<strong>Aiven PostgreSQL</strong>).</p></li>
+<li><p>Mengelola struktur tabel dan mengimpor data melalui <em>tool</em> <strong>DBeaver</strong>.</p></li>
+<li><p>Menarik data dari cloud dan melakukan analisis statistik deskriptif di <strong>KNIME</strong>.</p></li>
+</ol>
+</section>
+<section id="sentralisasi-data-dengan-aiven-postgresql">
+<h2>2.2 Sentralisasi Data dengan Aiven PostgreSQL<a class="headerlink" href="#sentralisasi-data-dengan-aiven-postgresql" title="Link to this heading">#</a></h2>
+<p>Untuk kebutuhan penyimpanan data secara terpusat, digunakan layanan <strong>Aiven</strong>, sebuah platform <em>Database-as-a-Service</em> (DBaaS) yang menyediakan instans <strong>PostgreSQL</strong> terkelola di cloud. Pemilihan Aiven didasarkan pada kemudahan provisioning server, dukungan koneksi aman secara <em>default</em>, serta antarmuka dashboard yang memudahkan pemantauan data tanpa perlu mengelola infrastruktur server secara manual.</p>
+<p>Setelah instans database berhasil dibuat, Aiven menyediakan fitur <strong>PG Studio</strong>, yaitu antarmuka berbasis web bawaan yang memungkinkan kita menjalankan kueri dan memverifikasi isi tabel langsung dari dashboard, tanpa perlu <em>tool</em> tambahan. Fitur inilah yang digunakan untuk melakukan pengecekan awal, memastikan koneksi ke server cloud berjalan normal dan siap menerima data.</p>
+<div class="note admonition">
+<p class="admonition-title">Verifikasi Data di Dashboard Aiven</p>
+<p>[Sematkan gambar PG Studio Aiven di sini]</p>
+</div>
+</section>
+<section id="manajemen-database-via-dbeaver">
+<h2>2.3 Manajemen Database via DBeaver<a class="headerlink" href="#manajemen-database-via-dbeaver" title="Link to this heading">#</a></h2>
+<p>Setelah server database cloud siap, langkah selanjutnya adalah membangun struktur tabel dan mengisi data ke dalamnya. Untuk keperluan ini, digunakan <strong>DBeaver</strong>, sebuah aplikasi <em>database management tool</em> yang mendukung koneksi ke berbagai jenis database, termasuk PostgreSQL.</p>
+<section id="menghubungkan-dbeaver-ke-aiven">
+<h3>2.3.1 Menghubungkan DBeaver ke Aiven<a class="headerlink" href="#menghubungkan-dbeaver-ke-aiven" title="Link to this heading">#</a></h3>
+<p>Koneksi antara DBeaver dan server Aiven dikonfigurasi menggunakan kredensial (<em>host</em>, <em>port</em>, <em>username</em>, <em>password</em>) yang disediakan oleh dashboard Aiven. Satu hal yang bersifat <strong>wajib</strong> dalam konfigurasi ini adalah pengaturan parameter koneksi:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sslmode</span><span class="o">=</span><span class="n">require</span>
+</pre></div>
+</div>
+<p>Parameter ini memastikan bahwa seluruh komunikasi antara <em>client</em> (DBeaver) dan server database dienkripsi menggunakan SSL/TLS. Tanpa pengaturan ini, sebagian besar layanan cloud database — termasuk Aiven — akan menolak permintaan koneksi demi menjaga keamanan data yang berpindah melalui jaringan publik.</p>
+</section>
+<section id="pembuatan-tabel">
+<h3>2.3.2 Pembuatan Tabel<a class="headerlink" href="#pembuatan-tabel" title="Link to this heading">#</a></h3>
+<p>Setelah koneksi berhasil terjalin, langkah berikutnya adalah membuat wadah tabel yang akan menampung data hasil preprocessing dari Bab 1. Struktur tabel dirancang agar sesuai dengan format data yang telah dihasilkan sebelumnya, yaitu kolom <code class="docutils literal notranslate"><span class="pre">Tanggal</span></code> bertipe <code class="docutils literal notranslate"><span class="pre">TIMESTAMP</span></code> dan kolom <code class="docutils literal notranslate"><span class="pre">NO2</span></code> bertipe <code class="docutils literal notranslate"><span class="pre">NUMERIC</span></code> agar presisi desimal tetap terjaga.</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">data_no2_kamal</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="ss">&quot;Tanggal&quot;</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="p">,</span>
+<span class="w">    </span><span class="ss">&quot;NO2&quot;</span><span class="w"> </span><span class="nb">NUMERIC</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>Perintah SQL di atas dieksekusi langsung melalui SQL Editor pada DBeaver yang telah terhubung ke server Aiven.</p>
+<div class="note admonition">
+<p class="admonition-title">Eksekusi Perintah SQL</p>
+<p>[Sematkan gambar eksekusi SQL di DBeaver di sini]</p>
+</div>
+</section>
+<section id="impor-data-ke-dalam-tabel">
+<h3>2.3.3 Impor Data ke dalam Tabel<a class="headerlink" href="#impor-data-ke-dalam-tabel" title="Link to this heading">#</a></h3>
+<p>Setelah tabel <code class="docutils literal notranslate"><span class="pre">data_no2_kamal</span></code> berhasil dibuat, tahap selanjutnya adalah mengimpor berkas hasil ekstraksi fitur dari Bab 1 (<code class="docutils literal notranslate"><span class="pre">.csv</span></code>) ke dalam tabel tersebut menggunakan fitur <em>import</em> bawaan DBeaver. Proses ini memetakan setiap kolom pada berkas CSV ke kolom yang bersesuaian pada tabel, sehingga seluruh baris data dapat masuk dengan struktur yang konsisten.</p>
+<div class="note admonition">
+<p class="admonition-title">Tabel Setelah Diisi Data</p>
+<p>[Sematkan gambar tabel DBeaver yang sudah terisi data di sini]</p>
+</div>
+</section>
+</section>
+<section id="analisis-statistik-dengan-knime-analytics-platform">
+<h2>2.4 Analisis Statistik dengan KNIME Analytics Platform<a class="headerlink" href="#analisis-statistik-dengan-knime-analytics-platform" title="Link to this heading">#</a></h2>
+<p>Dengan data yang telah tersentralisasi di Aiven PostgreSQL, tahap berikutnya adalah menariknya kembali untuk dieksplorasi secara statistik menggunakan <strong>KNIME Analytics Platform</strong>. KNIME dipilih karena pendekatan <em>workflow</em>-nya yang berbasis node, sehingga setiap tahapan proses — mulai dari koneksi database hingga perhitungan statistik — dapat divisualisasikan secara jelas sebagai alur kerja yang runtut.</p>
+<section id="alur-node">
+<h3>2.4.1 Alur Node<a class="headerlink" href="#alur-node" title="Link to this heading">#</a></h3>
+<p>Untuk menarik data dari cloud database ke dalam KNIME, digunakan rangkaian empat node berikut secara berurutan:</p>
+<ol class="arabic simple">
+<li><p><strong>PostgreSQL Connector</strong> — membangun koneksi ke server Aiven PostgreSQL.</p></li>
+<li><p><strong>DB Table Selector</strong> — memilih tabel target, yaitu <code class="docutils literal notranslate"><span class="pre">data_no2_kamal</span></code>.</p></li>
+<li><p><strong>DB Reader</strong> — mengeksekusi pembacaan data dari tabel terpilih ke dalam <em>workflow</em> KNIME.</p></li>
+<li><p><strong>Statistics</strong> — menghitung ringkasan statistik deskriptif dari data yang telah dibaca.</p></li>
+</ol>
+<div class="note admonition">
+<p class="admonition-title">Hasil DB Reader</p>
+<p>[Sematkan gambar DB Reader KNIME di sini]</p>
+</div>
+<p>Salah satu hal menarik yang teramati pada node <strong>DB Reader</strong> adalah tampilan nilai NO2 yang desimalnya sangat kecil (misalnya <code class="docutils literal notranslate"><span class="pre">0.00008...</span></code>). Pada tampilan tabel di KNIME, nilai semacam ini seringkali terlihat <strong>dibulatkan secara otomatis menjadi <code class="docutils literal notranslate"><span class="pre">0</span></code></strong>. Fenomena ini murni bersifat <strong>kosmetik pada level tampilan</strong> — KNIME secara <em>default</em> membatasi jumlah digit desimal yang ditampilkan pada tabel agar lebar kolom tetap ringkas dan mudah dibaca. Penting untuk digarisbawahi bahwa <strong>data asli tidak hilang maupun berubah</strong>; nilai presisi penuh tetap tersimpan secara utuh di belakang layar dan akan tetap digunakan pada setiap perhitungan berikutnya.</p>
+</section>
+<section id="verifikasi-melalui-node-statistics">
+<h3>2.4.2 Verifikasi melalui Node Statistics<a class="headerlink" href="#verifikasi-melalui-node-statistics" title="Link to this heading">#</a></h3>
+<p>Bukti bahwa data presisi tinggi tersebut tetap diproses secara utuh dapat dilihat pada keluaran node <strong>Statistics</strong>. Node ini menghitung berbagai ukuran statistik deskriptif seperti <em>Mean</em>, <em>Standard Deviation</em>, <em>Skewness</em>, dan <em>Kurtosis</em> dari kolom NO2.</p>
+<div class="note admonition">
+<p class="admonition-title">Ringkasan Statistik Deskriptif</p>
+<p>[Sematkan gambar Statistics Table KNIME di sini]</p>
+</div>
+<p>Nilai-nilai <em>Mean</em>, <em>Skewness</em>, dan <em>Kurtosis</em> yang dihasilkan pada node ini menunjukkan hasil dengan presisi tinggi hingga banyak digit di belakang koma. Hal ini membuktikan bahwa meskipun tampilan pada node <strong>DB Reader</strong> terlihat membulatkan angka desimal kecil menjadi <code class="docutils literal notranslate"><span class="pre">0</span></code>, mesin komputasi di balik layar tetap mengolah nilai numerik tersebut secara utuh dan akurat, sehingga hasil analisis statistik yang diperoleh tetap dapat diandalkan.</p>
+</section>
+</section>
+<section id="kesimpulan">
+<h2>2.5 Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Bab ini menutup rangkaian alur kerja integrasi data yang dimulai dari persiapan dan ekstraksi fitur di <strong>Python</strong> pada Bab 1, dilanjutkan dengan sentralisasi data ke <strong>Aiven PostgreSQL</strong>, pengelolaan struktur dan pengisian data melalui <strong>DBeaver</strong> dengan koneksi yang diamankan lewat <code class="docutils literal notranslate"><span class="pre">sslmode=require</span></code>, hingga akhirnya dieksplorasi secara statistik menggunakan <strong>KNIME Analytics Platform</strong>. Keberhasilan integrasi lintas <em>tool</em> ini membuktikan bahwa data hasil olahan tidak hanya bersih secara struktur, tetapi juga tetap terjaga presisinya di sepanjang alur — dari file lokal, tersimpan di cloud, hingga siap dianalisis lebih lanjut pada tahap pemodelan berikutnya.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="1_pengumpulan_data.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="eda.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">3. Exploratory Data Analysis (EDA)</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan">2.1 Pendahuluan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sentralisasi-data-dengan-aiven-postgresql">2.2 Sentralisasi Data dengan Aiven PostgreSQL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#manajemen-database-via-dbeaver">2.3 Manajemen Database via DBeaver</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menghubungkan-dbeaver-ke-aiven">2.3.1 Menghubungkan DBeaver ke Aiven</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuatan-tabel">2.3.2 Pembuatan Tabel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#impor-data-ke-dalam-tabel">2.3.3 Impor Data ke dalam Tabel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-statistik-dengan-knime-analytics-platform">2.4 Analisis Statistik dengan KNIME Analytics Platform</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-node">2.4.1 Alur Node</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verifikasi-melalui-node-statistics">2.4.2 Verifikasi melalui Node Statistics</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">2.5 Kesimpulan</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
