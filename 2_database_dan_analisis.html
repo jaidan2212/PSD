@@ -426,7 +426,7 @@ document.write(`
 <p>Setelah instans database berhasil dibuat, Aiven menyediakan fitur <strong>PG Studio</strong>, yaitu antarmuka berbasis web bawaan yang memungkinkan kita menjalankan kueri dan memverifikasi isi tabel langsung dari dashboard, tanpa perlu <em>tool</em> tambahan. Fitur inilah yang digunakan untuk melakukan pengecekan awal, memastikan koneksi ke server cloud berjalan normal dan siap menerima data.</p>
 <div class="note admonition">
 <p class="admonition-title">Verifikasi Data di Dashboard Aiven</p>
-<p>[Sematkan gambar PG Studio Aiven di sini]</p>
+<p><img alt="PG Studio Aiven" src="_images/aiven.jpeg" /></p>
 </div>
 </section>
 <section id="manajemen-database-via-dbeaver">
@@ -452,7 +452,7 @@ document.write(`
 <p>Perintah SQL di atas dieksekusi langsung melalui SQL Editor pada DBeaver yang telah terhubung ke server Aiven.</p>
 <div class="note admonition">
 <p class="admonition-title">Eksekusi Perintah SQL</p>
-<p>[Sematkan gambar eksekusi SQL di DBeaver di sini]</p>
+<p><img alt="Eksekusi SQL DBeaver" src="_images/dbeaverdb.jpeg" /></p>
 </div>
 </section>
 <section id="impor-data-ke-dalam-tabel">
@@ -460,7 +460,7 @@ document.write(`
 <p>Setelah tabel <code class="docutils literal notranslate"><span class="pre">data_no2_kamal</span></code> berhasil dibuat, tahap selanjutnya adalah mengimpor berkas hasil ekstraksi fitur dari Bab 1 (<code class="docutils literal notranslate"><span class="pre">.csv</span></code>) ke dalam tabel tersebut menggunakan fitur <em>import</em> bawaan DBeaver. Proses ini memetakan setiap kolom pada berkas CSV ke kolom yang bersesuaian pada tabel, sehingga seluruh baris data dapat masuk dengan struktur yang konsisten.</p>
 <div class="note admonition">
 <p class="admonition-title">Tabel Setelah Diisi Data</p>
-<p>[Sematkan gambar tabel DBeaver yang sudah terisi data di sini]</p>
+<p><img alt="Eksekusi SQL DBeaver" src="_images/dbeaverdb.jpeg" /></p>
 </div>
 </section>
 </section>
@@ -478,7 +478,7 @@ document.write(`
 </ol>
 <div class="note admonition">
 <p class="admonition-title">Hasil DB Reader</p>
-<p>[Sematkan gambar DB Reader KNIME di sini]</p>
+<p><img alt="DB Reader KNIME" src="_images/knime2.jpeg" /></p>
 </div>
 <p>Salah satu hal menarik yang teramati pada node <strong>DB Reader</strong> adalah tampilan nilai NO2 yang desimalnya sangat kecil (misalnya <code class="docutils literal notranslate"><span class="pre">0.00008...</span></code>). Pada tampilan tabel di KNIME, nilai semacam ini seringkali terlihat <strong>dibulatkan secara otomatis menjadi <code class="docutils literal notranslate"><span class="pre">0</span></code></strong>. Fenomena ini murni bersifat <strong>kosmetik pada level tampilan</strong> — KNIME secara <em>default</em> membatasi jumlah digit desimal yang ditampilkan pada tabel agar lebar kolom tetap ringkas dan mudah dibaca. Penting untuk digarisbawahi bahwa <strong>data asli tidak hilang maupun berubah</strong>; nilai presisi penuh tetap tersimpan secara utuh di belakang layar dan akan tetap digunakan pada setiap perhitungan berikutnya.</p>
 </section>
@@ -487,7 +487,7 @@ document.write(`
 <p>Bukti bahwa data presisi tinggi tersebut tetap diproses secara utuh dapat dilihat pada keluaran node <strong>Statistics</strong>. Node ini menghitung berbagai ukuran statistik deskriptif seperti <em>Mean</em>, <em>Standard Deviation</em>, <em>Skewness</em>, dan <em>Kurtosis</em> dari kolom NO2.</p>
 <div class="note admonition">
 <p class="admonition-title">Ringkasan Statistik Deskriptif</p>
-<p>[Sematkan gambar Statistics Table KNIME di sini]</p>
+<p><img alt="Statistics Table KNIME" src="_images/knime3.jpeg" /></p>
 </div>
 <p>Nilai-nilai <em>Mean</em>, <em>Skewness</em>, dan <em>Kurtosis</em> yang dihasilkan pada node ini menunjukkan hasil dengan presisi tinggi hingga banyak digit di belakang koma. Hal ini membuktikan bahwa meskipun tampilan pada node <strong>DB Reader</strong> terlihat membulatkan angka desimal kecil menjadi <code class="docutils literal notranslate"><span class="pre">0</span></code>, mesin komputasi di balik layar tetap mengolah nilai numerik tersebut secara utuh dan akurat, sehingga hasil analisis statistik yang diperoleh tetap dapat diandalkan.</p>
 </section>

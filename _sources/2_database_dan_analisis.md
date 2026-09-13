@@ -20,7 +20,7 @@ Setelah instans database berhasil dibuat, Aiven menyediakan fitur **PG Studio**,
 
 ```{admonition} Verifikasi Data di Dashboard Aiven
 :class: note
-[Sematkan gambar PG Studio Aiven di sini]
+![PG Studio Aiven](aiven.jpeg)
 ```
 
 ## 2.3 Manajemen Database via DBeaver
@@ -52,7 +52,7 @@ Perintah SQL di atas dieksekusi langsung melalui SQL Editor pada DBeaver yang te
 
 ```{admonition} Eksekusi Perintah SQL
 :class: note
-[Sematkan gambar eksekusi SQL di DBeaver di sini]
+![Eksekusi SQL DBeaver](dbeaverdb.jpeg)
 ```
 
 ### 2.3.3 Impor Data ke dalam Tabel
@@ -61,7 +61,7 @@ Setelah tabel `data_no2_kamal` berhasil dibuat, tahap selanjutnya adalah mengimp
 
 ```{admonition} Tabel Setelah Diisi Data
 :class: note
-[Sematkan gambar tabel DBeaver yang sudah terisi data di sini]
+![Eksekusi SQL DBeaver](dbeaverdb.jpeg)
 ```
 
 ## 2.4 Analisis Statistik dengan KNIME Analytics Platform
@@ -79,7 +79,8 @@ Untuk menarik data dari cloud database ke dalam KNIME, digunakan rangkaian empat
 
 ```{admonition} Hasil DB Reader
 :class: note
-[Sematkan gambar DB Reader KNIME di sini]
+:class: note
+![DB Reader KNIME](knime2.jpeg)
 ```
 
 Salah satu hal menarik yang teramati pada node **DB Reader** adalah tampilan nilai NO2 yang desimalnya sangat kecil (misalnya `0.00008...`). Pada tampilan tabel di KNIME, nilai semacam ini seringkali terlihat **dibulatkan secara otomatis menjadi `0`**. Fenomena ini murni bersifat **kosmetik pada level tampilan** — KNIME secara *default* membatasi jumlah digit desimal yang ditampilkan pada tabel agar lebar kolom tetap ringkas dan mudah dibaca. Penting untuk digarisbawahi bahwa **data asli tidak hilang maupun berubah**; nilai presisi penuh tetap tersimpan secara utuh di belakang layar dan akan tetap digunakan pada setiap perhitungan berikutnya.
@@ -90,7 +91,7 @@ Bukti bahwa data presisi tinggi tersebut tetap diproses secara utuh dapat diliha
 
 ```{admonition} Ringkasan Statistik Deskriptif
 :class: note
-[Sematkan gambar Statistics Table KNIME di sini]
+![Statistics Table KNIME](knime3.jpeg)
 ```
 
 Nilai-nilai *Mean*, *Skewness*, dan *Kurtosis* yang dihasilkan pada node ini menunjukkan hasil dengan presisi tinggi hingga banyak digit di belakang koma. Hal ini membuktikan bahwa meskipun tampilan pada node **DB Reader** terlihat membulatkan angka desimal kecil menjadi `0`, mesin komputasi di balik layar tetap mengolah nilai numerik tersebut secara utuh dan akurat, sehingga hasil analisis statistik yang diperoleh tetap dapat diandalkan.
