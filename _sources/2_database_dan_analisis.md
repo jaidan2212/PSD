@@ -61,7 +61,7 @@ Setelah tabel `data_no2_kamal` berhasil dibuat, tahap selanjutnya adalah mengimp
 
 ```{admonition} Tabel Setelah Diisi Data
 :class: note
-![Eksekusi SQL DBeaver](dbeaverdb.jpeg)
+![Tabel Data DBeaver](dbeaverdata.jpeg)
 ```
 
 ## 2.4 Analisis Statistik dengan KNIME Analytics Platform
@@ -78,7 +78,6 @@ Untuk menarik data dari cloud database ke dalam KNIME, digunakan rangkaian empat
 4. **Statistics** — menghitung ringkasan statistik deskriptif dari data yang telah dibaca.
 
 ```{admonition} Hasil DB Reader
-:class: note
 :class: note
 ![DB Reader KNIME](knime2.jpeg)
 ```
