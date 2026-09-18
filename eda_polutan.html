@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'eda_polutan';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -187,6 +189,7 @@
 <li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
 </ul>
 
     </div>
@@ -382,6 +385,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data-melalui-google-earth-engine-gee">1.1 Pengumpulan Data melalui Google Earth Engine (GEE)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-dan-cakupan-data">Sumber dan Cakupan Data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-piksel-kosong-akibat-tutupan-awan">Tantangan: Piksel Kosong akibat Tutupan Awan</a></li>
@@ -402,6 +406,31 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan-awal-dari-eksplorasi-visual">1.4 Temuan Awal dari Eksplorasi Visual</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-dan-keterbatasan">1.5 Catatan dan Keterbatasan</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ekstraksi-fitur-diperlukan">2.1 Mengapa Ekstraksi Fitur Diperlukan?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notasi-yang-digunakan">2.2 Notasi yang Digunakan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empat-fitur-domain-statistik">2.3 Empat Fitur Domain Statistik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-mean-rata-rata">a. Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-median-nilai-tengah">b. Median (Nilai Tengah)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-maximum-nilai-tertinggi">c. Maximum (Nilai Tertinggi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-standard-deviation-standar-deviasi">d. Standard Deviation (Standar Deviasi)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual">2.4 Simulasi Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-perhitungan-mean">Langkah 1 — Perhitungan Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-perhitungan-median">Langkah 2 — Perhitungan Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-perhitungan-maximum">Langkah 3 — Perhitungan Maximum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-perhitungan-standar-deviasi">Langkah 4 — Perhitungan Standar Deviasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-perhitungan-manual">Ringkasan Hasil Perhitungan Manual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -543,6 +572,318 @@ document.write(`
 <p>Dengan catatan tersebut, dataset hasil tahap ini dinilai telah memenuhi syarat untuk dilanjutkan ke tahap analisis berikutnya.</p>
 </section>
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">
+<h1>Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL<a class="headerlink" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel" title="Link to this heading">#</a></h1>
+<p>Pada bagian sebelumnya, deret waktu harian ketiga polutan telah dibersihkan dan divisualisasikan. Langkah berikutnya adalah mengubah deret waktu tersebut menjadi representasi numerik yang dapat dipelajari oleh algoritma <em>machine learning</em>, melalui proses <strong>ekstraksi fitur</strong> menggunakan pustaka <strong>TSFEL (Time Series Feature Extraction Library)</strong>.</p>
+<p>Sebelum menjalankan proses ekstraksi 68 fitur secara otomatis, bagian ini terlebih dahulu membedah <strong>landasan matematis</strong> di balik fitur-fitur tersebut. Tujuannya adalah memastikan bahwa pustaka yang digunakan tidak diperlakukan sebagai <em>black box</em>, melainkan sebagai alat yang perilakunya dipahami dan dapat diverifikasi secara mandiri.</p>
+<hr class="docutils" />
+<section id="mengapa-ekstraksi-fitur-diperlukan">
+<h2>2.1 Mengapa Ekstraksi Fitur Diperlukan?<a class="headerlink" href="#mengapa-ekstraksi-fitur-diperlukan" title="Link to this heading">#</a></h2>
+<p>Data deret waktu memiliki karakteristik yang berbeda dari data tabular konvensional. Pada data tabular, satu baris merepresentasikan satu entitas dengan sejumlah atribut tetap. Pada deret waktu, satu entitas justru direpresentasikan oleh <strong>ratusan hingga ribuan titik observasi berurutan</strong> yang saling bergantung secara temporal.</p>
+<p>Hal ini menimbulkan beberapa persoalan mendasar:</p>
+<ul class="simple">
+<li><p><strong>Ketidaksesuaian format.</strong> Sebagian besar algoritma <em>machine learning</em> klasik (SVM, Random Forest, KNN, Regresi Logistik) mensyaratkan input berupa vektor fitur berdimensi tetap. Deret waktu mentah dengan panjang yang bervariasi tidak dapat langsung dimasukkan ke dalam model tersebut.</p></li>
+<li><p><strong>Dimensionalitas tinggi dan redundansi.</strong> Memperlakukan setiap hari sebagai satu kolom fitur akan menghasilkan ruang fitur berdimensi sangat tinggi, sementara nilai antar hari yang berdekatan cenderung sangat berkorelasi sehingga informasinya tumpang tindih.</p></li>
+<li><p><strong>Informasi pola yang tersembunyi.</strong> Nilai konsentrasi pada satu hari tertentu kurang bermakna bila dilihat sendirian. Yang lebih informatif justru <strong>perilaku agregat</strong> dari sekelompok hari: seberapa tinggi rata-ratanya, seberapa besar gejolaknya, dan berapa puncak tertingginya.</p></li>
+</ul>
+<p>Ekstraksi fitur menjawab persoalan tersebut dengan cara <strong>meringkas sebuah segmen deret waktu (<em>window</em>) menjadi sekumpulan nilai skalar</strong> yang merangkum karakteristiknya. Secara formal, proses ini adalah pemetaan:</p>
+<div class="math notranslate nohighlight">
+\[
+f : \mathbb{R}^{N} \longrightarrow \mathbb{R}
+\]</div>
+<p>yaitu sebuah fungsi yang menerima segmen deret waktu sepanjang <span class="math notranslate nohighlight">\(N\)</span> titik observasi dan mengembalikan satu nilai skalar tunggal. Dengan menerapkan sejumlah fungsi <span class="math notranslate nohighlight">\(f_1, f_2, \dots, f_k\)</span> yang berbeda pada segmen yang sama, diperoleh vektor fitur:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{v} = \left[ f_1(X),\; f_2(X),\; \dots,\; f_k(X) \right]
+\]</div>
+<p>Vektor inilah yang menjadi satu baris pada dataset tabular final, siap digunakan sebagai input model.</p>
+<p>TSFEL mengelompokkan fitur-fiturnya ke dalam tiga domain utama: <strong>statistik</strong> (distribusi nilai), <strong>temporal</strong> (perilaku terhadap waktu), dan <strong>spektral</strong> (kandungan frekuensi). Pembahasan pada bagian ini difokuskan pada <strong>empat fitur dari domain statistik</strong> yang paling fundamental dan paling mudah diverifikasi secara manual.</p>
+</section>
+<hr class="docutils" />
+<section id="notasi-yang-digunakan">
+<h2>2.2 Notasi yang Digunakan<a class="headerlink" href="#notasi-yang-digunakan" title="Link to this heading">#</a></h2>
+<p>Agar pembahasan konsisten, berikut notasi yang dipakai di seluruh bagian ini:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X = \{x_1, x_2, x_3, \dots, x_N\}\)</span> — segmen deret waktu konsentrasi polutan</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_i\)</span> — nilai konsentrasi pada observasi ke-<span class="math notranslate nohighlight">\(i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> — jumlah observasi dalam segmen</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{(i)}\)</span> — nilai ke-<span class="math notranslate nohighlight">\(i\)</span> setelah data <strong>diurutkan</strong> dari terkecil ke terbesar (<em>order statistic</em>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="empat-fitur-domain-statistik">
+<h2>2.3 Empat Fitur Domain Statistik<a class="headerlink" href="#empat-fitur-domain-statistik" title="Link to this heading">#</a></h2>
+<section id="a-mean-rata-rata">
+<h3>a. Mean (Rata-rata)<a class="headerlink" href="#a-mean-rata-rata" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Mean adalah pusat massa dari sebaran data, diperoleh dengan menjumlahkan seluruh nilai lalu membaginya dengan banyaknya observasi. Mean merupakan ukuran pemusatan (<em>measure of central tendency</em>) yang paling umum digunakan.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\bar{x} = \frac{1}{N} \sum_{i=1}^{N} x_i
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Mean merepresentasikan <strong>tingkat paparan rata-rata</strong> (<em>baseline exposure</em>) selama periode pengamatan. Dalam kajian kualitas udara, nilai ini penting karena sebagian besar baku mutu lingkungan justru dinyatakan dalam bentuk rata-rata pada rentang waktu tertentu, misalnya rata-rata 24 jam atau rata-rata tahunan. Mean NO₂ yang tinggi pada suatu periode mengindikasikan beban emisi yang persisten, bukan sekadar kejadian sesaat.</p>
+<p><strong>Keterbatasan.</strong> Mean sangat sensitif terhadap nilai ekstrem. Satu hari dengan lonjakan konsentrasi yang sangat tinggi dapat menarik nilai mean ke atas, sehingga memberi kesan paparan yang lebih merata daripada kenyataannya.</p>
+</section>
+<hr class="docutils" />
+<section id="b-median-nilai-tengah">
+<h3>b. Median (Nilai Tengah)<a class="headerlink" href="#b-median-nilai-tengah" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Median adalah nilai yang berada tepat di tengah data setelah seluruh observasi diurutkan. Median membagi sebaran menjadi dua bagian sama besar: 50% data berada di bawahnya dan 50% di atasnya.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\tilde{x} =
+\begin{cases}
+x_{\left(\frac{N+1}{2}\right)}, &amp; \text{jika } N \text{ ganjil} \\[8pt]
+\dfrac{1}{2}\left( x_{\left(\frac{N}{2}\right)} + x_{\left(\frac{N}{2}+1\right)} \right), &amp; \text{jika } N \text{ genap}
+\end{cases}
+\end{split}\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Median menggambarkan <strong>kondisi udara pada hari yang tipikal</strong>, tanpa terdistorsi oleh kejadian luar biasa. Karena bersifat <em>robust</em> terhadap <em>outlier</em>, median menjadi pelengkap penting bagi mean.</p>
+<p>Perbandingan antara keduanya bahkan bersifat diagnostik terhadap bentuk distribusi:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\bar{x} \approx \tilde{x}\)</span> → sebaran relatif simetris; fluktuasi harian berlangsung wajar.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\bar{x} &gt; \tilde{x}\)</span> → sebaran <strong>menceng ke kanan</strong> (<em>right-skewed</em>); mayoritas hari berkondisi baik, namun terdapat beberapa hari dengan lonjakan tajam. Pola ini justru khas pada data NO₂ yang dipengaruhi emisi sesaat dari lalu lintas.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="c-maximum-nilai-tertinggi">
+<h3>c. Maximum (Nilai Tertinggi)<a class="headerlink" href="#c-maximum-nilai-tertinggi" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Maximum adalah nilai terbesar yang tercatat dalam segmen. Berbeda dengan mean dan median yang bersifat agregat, fitur ini merekam satu peristiwa tunggal, yaitu titik puncak dari deret.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+x_{\max} = \max_{1 \le i \le N} \; x_i
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Maximum merepresentasikan <strong>skenario paparan terburuk</strong> (<em>worst-case exposure</em>) pada periode tersebut. Fitur ini memiliki relevansi kesehatan yang berbeda dari mean: paparan akut jangka pendek pada konsentrasi tinggi dapat memicu gangguan pernapasan meskipun rata-rata periodenya masih tergolong aman. Dalam analisis, nilai maximum berguna untuk mendeteksi <strong>episode pencemaran</strong> (<em>pollution episode</em>) yang berpotensi terkait dengan kejadian spesifik seperti kemacetan luar biasa, pembakaran terbuka, atau kondisi meteorologi yang menghambat dispersi polutan.</p>
+</section>
+<hr class="docutils" />
+<section id="d-standard-deviation-standar-deviasi">
+<h3>d. Standard Deviation (Standar Deviasi)<a class="headerlink" href="#d-standard-deviation-standar-deviasi" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Standar deviasi mengukur seberapa jauh nilai-nilai dalam data tersebar di sekitar mean-nya. Nilainya diperoleh dengan menghitung rata-rata kuadrat simpangan terhadap mean (varians), kemudian menarik akarnya agar satuannya kembali sama dengan satuan data asli.</p>
+<p><strong>Rumus matematis (populasi):</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = \sqrt{\frac{1}{N} \sum_{i=1}^{N} \left( x_i - \bar{x} \right)^{2}}
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Standar deviasi mengukur <strong>stabilitas atau volatilitas kualitas udara</strong>. Interpretasinya:</p>
+<ul class="simple">
+<li><p><strong>Nilai kecil</strong> → konsentrasi relatif konstan dari hari ke hari, mengindikasikan sumber emisi yang stabil dan kondisi dispersi atmosfer yang seragam.</p></li>
+<li><p><strong>Nilai besar</strong> → konsentrasi berfluktuasi tajam, mengindikasikan adanya sumber emisi intermiten atau pengaruh faktor meteorologi yang berubah-ubah seperti arah angin dan curah hujan.</p></li>
+</ul>
+<p>Fitur ini sangat diskriminatif karena dua periode dapat memiliki mean yang nyaris identik namun karakter yang sama sekali berbeda: satu periode tenang dan stabil, satu lagi penuh lonjakan yang saling meniadakan ketika dirata-ratakan. Perbedaan tersebut hanya tertangkap oleh ukuran penyebaran.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="simulasi-perhitungan-manual">
+<h2>2.4 Simulasi Perhitungan Manual<a class="headerlink" href="#simulasi-perhitungan-manual" title="Link to this heading">#</a></h2>
+<p>Untuk membuktikan pemahaman atas rumus di atas, berikut simulasi perhitungan menggunakan data sampel fiktif berupa konsentrasi polutan selama 5 hari:</p>
+<div class="math notranslate nohighlight">
+\[
+X = [\,1,\; 3,\; 5,\; 7,\; 9\,], \qquad N = 5
+\]</div>
+<section id="langkah-1-perhitungan-mean">
+<h3>Langkah 1 — Perhitungan Mean<a class="headerlink" href="#langkah-1-perhitungan-mean" title="Link to this heading">#</a></h3>
+<p>Jumlahkan seluruh nilai, lalu bagi dengan jumlah observasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{5} x_i = 1 + 3 + 5 + 7 + 9 = 25
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\bar{x} = \frac{25}{5} = \mathbf{5{,}0}
+\]</div>
+</section>
+<section id="langkah-2-perhitungan-median">
+<h3>Langkah 2 — Perhitungan Median<a class="headerlink" href="#langkah-2-perhitungan-median" title="Link to this heading">#</a></h3>
+<p>Data telah terurut menaik: <span class="math notranslate nohighlight">\([1, 3, 5, 7, 9]\)</span>. Karena <span class="math notranslate nohighlight">\(N = 5\)</span> bernilai <strong>ganjil</strong>, median adalah nilai pada posisi:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{N+1}{2} = \frac{5+1}{2} = 3
+\]</div>
+<p>Nilai pada posisi ke-3 adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{x} = x_{(3)} = \mathbf{5{,}0}
+\]</div>
+<blockquote>
+<div><p><strong>Catatan interpretatif:</strong> pada sampel ini <span class="math notranslate nohighlight">\(\bar{x} = \tilde{x} = 5{,}0\)</span>, yang menandakan distribusi data sempurna simetris. Kondisi ideal semacam ini jarang ditemui pada data polutan riil.</p>
+</div></blockquote>
+</section>
+<section id="langkah-3-perhitungan-maximum">
+<h3>Langkah 3 — Perhitungan Maximum<a class="headerlink" href="#langkah-3-perhitungan-maximum" title="Link to this heading">#</a></h3>
+<p>Telusuri seluruh nilai dan pilih yang terbesar:</p>
+<div class="math notranslate nohighlight">
+\[
+x_{\max} = \max(1, 3, 5, 7, 9) = \mathbf{9{,}0}
+\]</div>
+</section>
+<section id="langkah-4-perhitungan-standar-deviasi">
+<h3>Langkah 4 — Perhitungan Standar Deviasi<a class="headerlink" href="#langkah-4-perhitungan-standar-deviasi" title="Link to this heading">#</a></h3>
+<p><strong>(a) Hitung simpangan setiap nilai terhadap mean <span class="math notranslate nohighlight">\((x_i - \bar{x})\)</span> dan kuadratkan:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p><span class="math notranslate nohighlight">\(i\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(x_i\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(x_i - \bar{x}\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\((x_i - \bar{x})^2\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1 - 5 = -4\)</span></p></td>
+<td class="text-center"><p>16</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>2</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(3 - 5 = -2\)</span></p></td>
+<td class="text-center"><p>4</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>3</p></td>
+<td class="text-center"><p>5</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(5 - 5 = 0\)</span></p></td>
+<td class="text-center"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>4</p></td>
+<td class="text-center"><p>7</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(7 - 5 = 2\)</span></p></td>
+<td class="text-center"><p>4</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>5</p></td>
+<td class="text-center"><p>9</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(9 - 5 = 4\)</span></p></td>
+<td class="text-center"><p>16</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p><strong>Total</strong></p></td>
+<td class="text-center"><p><strong>40</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>(b) Hitung varians</strong> dengan membagi total kuadrat simpangan dengan <span class="math notranslate nohighlight">\(N\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma^{2} = \frac{40}{5} = 8{,}0
+\]</div>
+<p><strong>(c) Tarik akar kuadrat</strong> untuk memperoleh standar deviasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = \sqrt{8} \approx \mathbf{2{,}8284271247}
+\]</div>
+</section>
+<section id="ringkasan-hasil-perhitungan-manual">
+<h3>Ringkasan Hasil Perhitungan Manual<a class="headerlink" href="#ringkasan-hasil-perhitungan-manual" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Fitur</p></th>
+<th class="head text-center"><p>Notasi</p></th>
+<th class="head text-right"><p>Hasil Manual</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\bar{x}\)</span></p></td>
+<td class="text-right"><p>5,0000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Median</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\tilde{x}\)</span></p></td>
+<td class="text-right"><p>5,0000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>Maximum</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(x_{\max}\)</span></p></td>
+<td class="text-right"><p>9,0000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Standard Deviation</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma\)</span></p></td>
+<td class="text-right"><p>2,8284271247</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="catatan-penting-pembagi-n-atau-n-1">
+<h2>2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?<a class="headerlink" href="#catatan-penting-pembagi-n-atau-n-1" title="Link to this heading">#</a></h2>
+<p>Terdapat satu detail teknis yang kerap menjadi sumber perbedaan hasil dan perlu ditegaskan sebelum pembuktian dilakukan. Standar deviasi memiliki dua varian rumus yang berbeda pada penyebutnya:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Varian</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head text-center"><p>Pembagi</p></th>
+<th class="head text-right"><p>Hasil pada sampel <span class="math notranslate nohighlight">\(X\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Populasi</strong> (<span class="math notranslate nohighlight">\(ddof = 0\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sigma = \sqrt{\dfrac{1}{N}\sum (x_i - \bar{x})^2}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(N = 5\)</span></p></td>
+<td class="text-right"><p><span class="math notranslate nohighlight">\(\sqrt{8} \approx 2{,}8284\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sampel</strong> (<span class="math notranslate nohighlight">\(ddof = 1\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(s = \sqrt{\dfrac{1}{N-1}\sum (x_i - \bar{x})^2}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(N - 1 = 4\)</span></p></td>
+<td class="text-right"><p><span class="math notranslate nohighlight">\(\sqrt{10} \approx 3{,}1623\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Varian sampel menggunakan pembagi <span class="math notranslate nohighlight">\(N-1\)</span> (<strong>koreksi Bessel</strong>) untuk menghasilkan estimasi varians populasi yang tidak bias ketika data yang dimiliki hanya berupa sampel dari populasi yang lebih besar.</p>
+<p>Hal ini relevan karena <strong>TSFEL mengimplementasikan fitur standar deviasi dengan memanggil fungsi <code class="docutils literal notranslate"><span class="pre">numpy.std()</span></code> tanpa mengubah parameter bawaannya</strong>, sedangkan nilai default <code class="docutils literal notranslate"><span class="pre">ddof</span></code> pada NumPy adalah <span class="math notranslate nohighlight">\(0\)</span>. Dengan demikian, TSFEL menghitung <strong>standar deviasi populasi</strong>. Sebagai perbandingan, metode <code class="docutils literal notranslate"><span class="pre">.std()</span></code> pada Pandas justru menggunakan default <span class="math notranslate nohighlight">\(ddof = 1\)</span> sehingga akan menghasilkan angka yang berbeda untuk data yang sama persis.</p>
+<p>Oleh karena itu, perhitungan manual pada Langkah 4 sengaja menggunakan pembagi <span class="math notranslate nohighlight">\(N = 5\)</span> agar setara dengan konvensi yang dipakai TSFEL. Kesadaran atas detail semacam inilah yang membedakan penggunaan pustaka secara sadar dari penggunaan secara <em>black box</em>.</p>
+</section>
+<hr class="docutils" />
+<section id="menuju-pembuktian-komputasional">
+<h2>2.6 Menuju Pembuktian Komputasional<a class="headerlink" href="#menuju-pembuktian-komputasional" title="Link to this heading">#</a></h2>
+<p>Keempat nilai pada tabel ringkasan di atas diperoleh sepenuhnya melalui penurunan rumus secara manual, tanpa bantuan pustaka apa pun. Nilai-nilai tersebut kini berfungsi sebagai <strong>kebenaran acuan</strong> (<em>ground truth</em>) untuk tahap verifikasi.</p>
+<p>Pada blok kode berikut, array sampel yang sama, <span class="math notranslate nohighlight">\(X = [1, 3, 5, 7, 9]\)</span>, akan diproses menggunakan algoritma ekstraksi fitur TSFEL. Hasil keluaran pustaka kemudian dibandingkan secara langsung dengan hasil perhitungan manual. Apabila keduanya menghasilkan <strong>nilai yang identik hingga tingkat presisi desimal</strong>, maka terbukti bahwa:</p>
+<ol class="arabic simple">
+<li><p>Pemahaman terhadap formulasi matematis setiap fitur sudah tepat.</p></li>
+<li><p>TSFEL mengimplementasikan definisi statistik baku, bukan varian rumus yang tersembunyi.</p></li>
+<li><p>Ekstraksi 68 fitur pada data polutan riil di bagian selanjutnya dapat dijalankan dengan keyakinan penuh terhadap makna setiap kolom yang dihasilkan.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tsfel</span>
+
+<span class="c1"># 1. Menyiapkan data sampel yang sama persis dengan perhitungan manual</span>
+<span class="c1"># X = [1, 3, 5, 7, 9]</span>
+<span class="n">data_contoh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+
+<span class="c1"># 2. Mendefinisikan konfigurasi TSFEL (hanya 4 fitur statistik ini yang diekstrak)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;statistical&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Mean&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Median&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Max&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Standard deviation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># 3. Melakukan Ekstraksi menggunakan TSFEL</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mengekstrak fitur menggunakan TSFEL...&quot;</span><span class="p">)</span>
+<span class="n">hasil_tsfel</span> <span class="o">=</span> <span class="n">tsfel</span><span class="o">.</span><span class="n">time_series_features_extractor</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">data_contoh</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 4. Menampilkan Perbandingan Output Manual vs Algoritma</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== PEMBUKTIAN MANUAL VS TSFEL ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rata-rata (Mean)    | Manual: 5.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Median              | Manual: 5.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Median&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nilai Max           | Manual: 9.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Max&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Standar Deviasi     | Manual: 2.828  | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Standard deviation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Output:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Mengekstrak fitur menggunakan TSFEL...
+
+=== PEMBUKTIAN MANUAL VS TSFEL ===
+Rata-rata (Mean)    | Manual: 5.0    | TSFEL: 5.0
+Median              | Manual: 5.0    | TSFEL: 5.0
+Nilai Max           | Manual: 9.0    | TSFEL: 9.0
+Standar Deviasi     | Manual: 2.828  | TSFEL: 2.828
+</pre></div>
+</div>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -599,6 +940,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data-melalui-google-earth-engine-gee">1.1 Pengumpulan Data melalui Google Earth Engine (GEE)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-dan-cakupan-data">Sumber dan Cakupan Data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-piksel-kosong-akibat-tutupan-awan">Tantangan: Piksel Kosong akibat Tutupan Awan</a></li>
@@ -619,6 +961,31 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan-awal-dari-eksplorasi-visual">1.4 Temuan Awal dari Eksplorasi Visual</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-dan-keterbatasan">1.5 Catatan dan Keterbatasan</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ekstraksi-fitur-diperlukan">2.1 Mengapa Ekstraksi Fitur Diperlukan?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notasi-yang-digunakan">2.2 Notasi yang Digunakan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empat-fitur-domain-statistik">2.3 Empat Fitur Domain Statistik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-mean-rata-rata">a. Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-median-nilai-tengah">b. Median (Nilai Tengah)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-maximum-nilai-tertinggi">c. Maximum (Nilai Tertinggi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-standard-deviation-standar-deviasi">d. Standard Deviation (Standar Deviasi)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual">2.4 Simulasi Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-perhitungan-mean">Langkah 1 — Perhitungan Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-perhitungan-median">Langkah 2 — Perhitungan Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-perhitungan-maximum">Langkah 3 — Perhitungan Maximum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-perhitungan-standar-deviasi">Langkah 4 — Perhitungan Standar Deviasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-perhitungan-manual">Ringkasan Hasil Perhitungan Manual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+</ul>
+
   </nav></div>
 
 </div></div>
