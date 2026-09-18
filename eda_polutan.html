@@ -190,6 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
 
+
 </ul>
 
     </div>
@@ -427,6 +428,38 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing">3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-standardisasi-bersifat-wajib">3.2 Mengapa Standardisasi Bersifat Wajib?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permasalahan-heterogenitas-skala-antar-fitur">Permasalahan: Heterogenitas Skala Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-k-means">Dampak pada K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-pca">Dampak pada PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-transformasi-z-score">Solusi: Transformasi <em>Z-score</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-reduksi-dimensi-diperlukan">3.3 Mengapa Reduksi Dimensi Diperlukan?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-kutukan-dimensionalitas-curse-of-dimensionality">a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-multikolinearitas-antar-fitur-tsfel">b. Multikolinearitas Antar Fitur TSFEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-makna-principal-component">3.4 Memahami Makna <em>Principal Component</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-sumbu-baru-ditentukan">Bagaimana Sumbu Baru Ditentukan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proporsi-varians-yang-dipertahankan">Proporsi Varians yang Dipertahankan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-arah-tanda-komponen-bersifat-arbitrer">Catatan: Arah Tanda Komponen Bersifat Arbitrer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-struktur-klaster">3.5 Interpretasi Struktur Klaster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-0-biru-rezim-emisi-dasar">Klaster 0 (Biru) — Rezim Emisi Dasar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-2-hijau-kelompok-anomali">Klaster 2 (Hijau) — Kelompok Anomali</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-metodologis-dan-keterbatasan">3.6 Catatan Metodologis dan Keterbatasan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">3.7 Kesimpulan</a></li>
 </ul>
 </li>
 </ul>
@@ -884,6 +917,277 @@ Standar Deviasi     | Manual: 2.828  | TSFEL: 2.828
 </div>
 </section>
 </section>
+<section class="tex2jax_ignore mathjax_ignore" id="bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">
+<h1>Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering<a class="headerlink" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering" title="Link to this heading">#</a></h1>
+<p>Setelah landasan matematis ekstraksi fitur diverifikasi pada bagian sebelumnya, tahap ini menerapkan TSFEL pada data polutan riil dan melanjutkannya ke analisis <em>unsupervised learning</em>. Tujuan akhirnya adalah mengidentifikasi <strong>pola-pola rezim emisi</strong> yang secara alami terbentuk dalam data, tanpa menggunakan label yang ditentukan sebelumnya.</p>
+<p>Alur pemrosesan pada bagian ini terdiri atas empat tahap berurutan: <em>windowing</em> → standardisasi → reduksi dimensi → pengelompokan.</p>
+<hr class="docutils" />
+<section id="dari-deret-waktu-ke-matriks-fitur-strategi-windowing">
+<h2>3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em><a class="headerlink" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing" title="Link to this heading">#</a></h2>
+<p>Ekstraksi fitur tidak diterapkan pada keseluruhan deret waktu sekaligus, karena hal itu hanya akan menghasilkan <strong>satu baris sampel</strong> dan tidak memungkinkan analisis pengelompokan. Sebagai gantinya, deret waktu dipotong menjadi segmen-segmen berurutan menggunakan teknik <em><strong>windowing</strong></em> dengan <code class="docutils literal notranslate"><span class="pre">window_size</span> <span class="pre">=</span> <span class="pre">14</span></code>.</p>
+<p><strong>Rasionalisasi pemilihan jendela 14 hari:</strong></p>
+<ul class="simple">
+<li><p><strong>Kecukupan statistik.</strong> Setiap jendela harus memuat titik observasi yang memadai agar fitur statistik seperti standar deviasi, kurtosis, dan <em>skewness</em> dapat dihitung secara stabil. Jendela yang terlalu pendek menghasilkan estimasi yang bergejolak dan tidak dapat diandalkan.</p></li>
+<li><p><strong>Relevansi periodik.</strong> Rentang 14 hari setara dengan dua siklus mingguan penuh, sehingga mampu menangkap kontras antara hari kerja dan akhir pekan — pola yang sangat relevan pada polutan berbasis transportasi seperti NO₂.</p></li>
+<li><p><strong>Resolusi temporal yang memadai.</strong> Jendela yang terlalu panjang akan meratakan (<em>smoothing out</em>) episode pencemaran jangka pendek dan mengurangi jumlah sampel secara drastis.</p></li>
+</ul>
+<p>Karena parameter <code class="docutils literal notranslate"><span class="pre">overlap</span></code> dibiarkan pada nilai bawaan (nol), setiap jendela bersifat <strong>saling lepas</strong> (<em>non-overlapping</em>). Pilihan ini penting secara metodologis: jendela yang bertumpang tindih akan berbagi observasi yang sama sehingga menciptakan ketergantungan artifisial antar sampel, yang pada gilirannya membuat klaster tampak lebih kohesif daripada kenyataannya.</p>
+<p>Hasil transformasi ini adalah <strong>matriks fitur</strong> berbentuk:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{X} \in \mathbb{R}^{n \times p}, \qquad p = 68
+\]</div>
+<p>dengan <span class="math notranslate nohighlight">\(n\)</span> adalah jumlah jendela yang terbentuk dan <span class="math notranslate nohighlight">\(p = 68\)</span> adalah jumlah fitur per jendela. Deret waktu yang semula bersifat sekuensial kini telah berubah menjadi <strong>data tabular konvensional</strong>, di mana setiap baris merepresentasikan “karakter dua mingguan” dari kualitas udara.</p>
+</section>
+<hr class="docutils" />
+<section id="mengapa-standardisasi-bersifat-wajib">
+<h2>3.2 Mengapa Standardisasi Bersifat Wajib?<a class="headerlink" href="#mengapa-standardisasi-bersifat-wajib" title="Link to this heading">#</a></h2>
+<section id="permasalahan-heterogenitas-skala-antar-fitur">
+<h3>Permasalahan: Heterogenitas Skala Antar Fitur<a class="headerlink" href="#permasalahan-heterogenitas-skala-antar-fitur" title="Link to this heading">#</a></h3>
+<p>Ke-68 fitur yang dihasilkan TSFEL berasal dari tiga domain berbeda dan memiliki <strong>satuan serta rentang nilai yang sangat tidak seragam</strong>. Sebagai ilustrasi pada data NO₂:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jenis Fitur</p></th>
+<th class="head"><p>Orde Nilai Tipikal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean, Median, Max (mol/m²)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{-4}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Variance (mol²/m⁴)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{-9}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Entropy, Autocorrelation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{0}\)</span> (rentang 0–1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Zero Crossing Rate, jumlah puncak</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{0}\)</span> hingga <span class="math notranslate nohighlight">\(10^{1}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Spectral energy / FFT magnitude</p></td>
+<td><p>dapat mencapai <span class="math notranslate nohighlight">\(\sim 10^{2}\)</span> ke atas</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Rentang perbedaan yang mencapai <strong>lebih dari sepuluh orde magnitudo</strong> ini menimbulkan konsekuensi serius bagi kedua algoritma yang digunakan.</p>
+</section>
+<section id="dampak-pada-k-means">
+<h3>Dampak pada K-Means<a class="headerlink" href="#dampak-pada-k-means" title="Link to this heading">#</a></h3>
+<p>K-Means bekerja dengan meminimalkan jumlah kuadrat jarak Euklides antara setiap titik dan pusat klasternya:</p>
+<div class="math notranslate nohighlight">
+\[
+J = \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \left\lVert \mathbf{x}_i - \boldsymbol{\mu}_k \right\rVert^{2}
+\]</div>
+<p>Dalam perhitungan jarak Euklides, kontribusi setiap fitur bersifat <strong>aditif dan proporsional terhadap besaran nilainya</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+d(\mathbf{a}, \mathbf{b}) = \sqrt{\sum_{j=1}^{p} (a_j - b_j)^2}
+\]</div>
+<p>Tanpa standardisasi, selisih pada fitur berorde <span class="math notranslate nohighlight">\(10^{2}\)</span> akan menghasilkan kontribusi kuadrat yang jauh lebih besar dibandingkan selisih pada fitur berorde <span class="math notranslate nohighlight">\(10^{-4}\)</span>. Akibatnya, <strong>struktur klaster praktis ditentukan oleh satu atau dua fitur berskala besar saja</strong>, sementara informasi dari puluhan fitur lain menjadi tidak berpengaruh sama sekali. Ini bukan sekadar bias, melainkan kegagalan metodologis: algoritma seolah-olah memproses 68 fitur, padahal secara efektif hanya membaca segelintir di antaranya.</p>
+</section>
+<section id="dampak-pada-pca">
+<h3>Dampak pada PCA<a class="headerlink" href="#dampak-pada-pca" title="Link to this heading">#</a></h3>
+<p>Persoalan pada PCA bersifat lebih fundamental. PCA mencari arah dalam ruang fitur yang <strong>memaksimalkan varians</strong>. Namun varians adalah besaran yang <strong>bergantung pada satuan pengukuran</strong> — mengubah satuan dari mol/m² menjadi µmol/m² akan melipatgandakan variansnya secara kuadratik tanpa mengubah informasi apa pun yang terkandung di dalamnya.</p>
+<p>Konsekuensinya, PCA pada data tanpa standardisasi akan menempatkan komponen utama pertamanya searah dengan fitur yang <strong>kebetulan</strong> memiliki satuan terbesar, bukan fitur yang paling informatif. Komponen yang dihasilkan menjadi artefak dari pilihan satuan, bukan cerminan struktur data.</p>
+</section>
+<section id="solusi-transformasi-z-score">
+<h3>Solusi: Transformasi <em>Z-score</em><a class="headerlink" href="#solusi-transformasi-z-score" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> menerapkan transformasi berikut pada setiap kolom fitur <span class="math notranslate nohighlight">\(j\)</span> secara independen:</p>
+<div class="math notranslate nohighlight">
+\[
+z_{ij} = \frac{x_{ij} - \mu_j}{\sigma_j}
+\]</div>
+<p>dengan <span class="math notranslate nohighlight">\(\mu_j\)</span> dan <span class="math notranslate nohighlight">\(\sigma_j\)</span> masing-masing adalah rata-rata dan standar deviasi kolom tersebut. Setelah transformasi, <strong>seluruh fitur memiliki rata-rata nol dan standar deviasi satu</strong>, sehingga menjadi tidak berdimensi (<em>dimensionless</em>) dan berkontribusi secara setara terhadap perhitungan jarak maupun varians. Dengan demikian, yang dibandingkan antar jendela bukan lagi besaran absolut, melainkan <strong>posisi relatif setiap jendela terhadap keseluruhan dataset</strong>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="mengapa-reduksi-dimensi-diperlukan">
+<h2>3.3 Mengapa Reduksi Dimensi Diperlukan?<a class="headerlink" href="#mengapa-reduksi-dimensi-diperlukan" title="Link to this heading">#</a></h2>
+<p>Standardisasi menyelesaikan masalah skala, tetapi tidak menyelesaikan masalah <strong>dimensionalitas</strong>. Terdapat tiga alasan teknis mengapa PCA diterapkan sebelum pengelompokan.</p>
+<section id="a-kutukan-dimensionalitas-curse-of-dimensionality">
+<h3>a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)<a class="headerlink" href="#a-kutukan-dimensionalitas-curse-of-dimensionality" title="Link to this heading">#</a></h3>
+<p>Fenomena yang paling merugikan K-Means pada ruang berdimensi tinggi adalah <strong>konsentrasi jarak</strong> (<em>distance concentration</em>). Seiring bertambahnya dimensi <span class="math notranslate nohighlight">\(p\)</span>, jarak Euklides antara titik terdekat dan titik terjauh dari suatu titik acuan cenderung menjadi semakin seragam:</p>
+<div class="math notranslate nohighlight">
+\[
+\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} \longrightarrow 0
+\]</div>
+<p>Ketika semua titik berjarak “hampir sama” satu sama lain, konsep kemiripan kehilangan daya bedanya. K-Means yang sepenuhnya bergantung pada jarak Euklides akan menghasilkan partisi yang nyaris arbitrer. Dengan <span class="math notranslate nohighlight">\(p = 68\)</span>, risiko ini sudah sangat nyata.</p>
+</section>
+<section id="b-multikolinearitas-antar-fitur-tsfel">
+<h3>b. Multikolinearitas Antar Fitur TSFEL<a class="headerlink" href="#b-multikolinearitas-antar-fitur-tsfel" title="Link to this heading">#</a></h3>
+<p>Ke-68 fitur TSFEL <strong>tidak saling bebas</strong>. Banyak di antaranya mengukur aspek yang secara matematis berkaitan erat, misalnya:</p>
+<ul class="simple">
+<li><p><em>Mean</em> dan <em>Median</em> (keduanya ukuran pemusatan)</p></li>
+<li><p><em>Standard Deviation</em>, <em>Variance</em>, dan <em>Root Mean Square</em> (secara aljabar saling terkait langsung)</p></li>
+<li><p><em>Max</em>, <em>Min</em>, dan <em>Peak-to-peak distance</em></p></li>
+<li><p>Berbagai statistik spektral yang diturunkan dari transformasi Fourier yang sama</p></li>
+</ul>
+<p>Pada ruang fitur asli, redundansi ini menyebabkan <strong>satu konsep tunggal dihitung berkali-kali</strong>, sehingga bobotnya menjadi berlebihan dalam perhitungan jarak. PCA mengatasi hal ini secara elegan: karena komponen utama disusun saling <strong>ortogonal</strong>, fitur-fitur yang berkorelasi tinggi otomatis terlipat menjadi satu arah komponen yang sama.</p>
+</section>
+<section id="c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">
+<h3>c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi<a class="headerlink" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi" title="Link to this heading">#</a></h3>
+<p>Komponen-komponen awal menangkap variasi struktural yang dominan, sementara komponen-komponen akhir umumnya memuat derau pengukuran. Membuang komponen minor karenanya berfungsi sebagai <strong>penapis derau</strong>. Selain itu, reduksi menjadi dua dimensi adalah satu-satunya cara agar struktur data dapat diperiksa secara visual pada bidang datar — sesuatu yang mustahil dilakukan pada ruang berdimensi 68.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="memahami-makna-principal-component">
+<h2>3.4 Memahami Makna <em>Principal Component</em><a class="headerlink" href="#memahami-makna-principal-component" title="Link to this heading">#</a></h2>
+<section id="pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">
+<h3>PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear<a class="headerlink" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear" title="Link to this heading">#</a></h3>
+<p>Kesalahpahaman yang paling umum adalah menganggap PC1 sebagai “fitur terpenting yang terpilih”. Anggapan tersebut keliru. <strong>PCA tidak melakukan seleksi fitur, melainkan konstruksi sumbu baru.</strong></p>
+<p>Setiap komponen utama merupakan <strong>kombinasi linear berbobot dari seluruh 68 fitur yang telah distandardisasi</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{PC}_k = w_{k1} z_1 + w_{k2} z_2 + w_{k3} z_3 + \dots + w_{k,68} z_{68} = \sum_{j=1}^{68} w_{kj} \, z_j
+\]</div>
+<p>Koefisien <span class="math notranslate nohighlight">\(w_{kj}\)</span> disebut <em><strong>loading</strong></em>, yaitu besar kontribusi fitur ke-<span class="math notranslate nohighlight">\(j\)</span> terhadap komponen ke-<span class="math notranslate nohighlight">\(k\)</span>. Dengan demikian, setiap titik pada scatter plot tetap membawa jejak dari seluruh 68 fitur, hanya saja informasinya telah dipadatkan ke dalam dua koordinat.</p>
+</section>
+<section id="bagaimana-sumbu-baru-ditentukan">
+<h3>Bagaimana Sumbu Baru Ditentukan<a class="headerlink" href="#bagaimana-sumbu-baru-ditentukan" title="Link to this heading">#</a></h3>
+<p>Secara formal, PCA melakukan <strong>dekomposisi eigen</strong> terhadap matriks kovarians dari data terstandardisasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{C} = \frac{1}{n-1} \mathbf{Z}^{\top} \mathbf{Z}, \qquad \mathbf{C}\mathbf{v}_k = \lambda_k \mathbf{v}_k
+\]</div>
+<ul class="simple">
+<li><p><strong>Vektor eigen</strong> <span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> menentukan <strong>arah</strong> komponen utama ke-<span class="math notranslate nohighlight">\(k\)</span> (yaitu himpunan <em>loading</em>-nya).</p></li>
+<li><p><strong>Nilai eigen</strong> <span class="math notranslate nohighlight">\(\lambda_k\)</span> menyatakan <strong>besar varians</strong> yang dijelaskan oleh arah tersebut.</p></li>
+</ul>
+<p>Komponen diurutkan secara menurun berdasarkan nilai eigennya, sehingga berlaku dua sifat penting:</p>
+<ol class="arabic simple">
+<li><p><strong>PC1 adalah arah dengan varians terbesar</strong> dalam data, yakni sumbu di mana sampel-sampel paling terbentang dan paling mudah dibedakan satu sama lain.</p></li>
+<li><p><strong>PC2 ortogonal terhadap PC1</strong> (<span class="math notranslate nohighlight">\(\mathbf{v}_1 \perp \mathbf{v}_2\)</span>) dan menangkap varians terbesar berikutnya dari sisa informasi yang belum terjelaskan. Karena ortogonal, PC2 memuat informasi yang <strong>sepenuhnya tidak tumpang tindih</strong> dengan PC1.</p></li>
+</ol>
+</section>
+<section id="proporsi-varians-yang-dipertahankan">
+<h3>Proporsi Varians yang Dipertahankan<a class="headerlink" href="#proporsi-varians-yang-dipertahankan" title="Link to this heading">#</a></h3>
+<p>Ukuran seberapa banyak informasi yang berhasil dipertahankan dinyatakan oleh:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Explained Variance Ratio} = \frac{\lambda_1 + \lambda_2}{\sum_{k=1}^{p} \lambda_k}
+\]</div>
+<blockquote>
+<div><p><strong>Nilai pada analisis ini:</strong> <em>[isi dengan keluaran variabel <code class="docutils literal notranslate"><span class="pre">varians</span></code> dari sel kode]</em> %</p>
+</div></blockquote>
+<p>Angka ini merupakan <strong>syarat validitas utama</strong> bagi seluruh interpretasi visual yang dilakukan setelahnya, dengan pedoman umum sebagai berikut:</p>
+<ul class="simple">
+<li><p><strong>&gt; 70%</strong> — proyeksi dua dimensi merepresentasikan struktur data dengan baik; interpretasi visual dapat dipercaya.</p></li>
+<li><p><strong>50–70%</strong> — representasi cukup memadai, namun sebagian struktur tidak tergambarkan pada bidang ini.</p></li>
+<li><p><strong>&lt; 50%</strong> — lebih dari separuh informasi hilang. Jarak visual antar titik berpotensi menyesatkan, dan kesimpulan harus disampaikan dengan kehati-hatian tinggi.</p></li>
+</ul>
+</section>
+<section id="catatan-arah-tanda-komponen-bersifat-arbitrer">
+<h3>Catatan: Arah Tanda Komponen Bersifat Arbitrer<a class="headerlink" href="#catatan-arah-tanda-komponen-bersifat-arbitrer" title="Link to this heading">#</a></h3>
+<p>Satu sifat PCA yang wajib diperhatikan saat menafsirkan grafik: <strong>tanda dari vektor eigen tidak unik</strong>. Jika <span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> adalah solusi valid, maka <span class="math notranslate nohighlight">\(-\mathbf{v}_k\)</span> juga solusi valid dengan nilai eigen yang identik. Implikasinya, <strong>PC1 bernilai positif tidak secara otomatis berarti “polusi tinggi”</strong>. Arah interpretasi hanya dapat ditetapkan dengan memeriksa <em>loading</em> (<code class="docutils literal notranslate"><span class="pre">pca.components_</span></code>) atau dengan menelusuri kembali nilai asli dari jendela-jendela yang berada di ujung sumbu.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interpretasi-struktur-klaster">
+<h2>3.5 Interpretasi Struktur Klaster<a class="headerlink" href="#interpretasi-struktur-klaster" title="Link to this heading">#</a></h2>
+<p>K-Means dijalankan dengan <span class="math notranslate nohighlight">\(K = 3\)</span> pada koordinat hasil PCA. Berikut karakterisasi ketiga kelompok berdasarkan posisinya pada grafik.</p>
+<section id="klaster-0-biru-rezim-emisi-dasar">
+<h3>Klaster 0 (Biru) — Rezim Emisi Dasar<a class="headerlink" href="#klaster-0-biru-rezim-emisi-dasar" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (−3,5 ; −1,0)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sebaran PC1</p></td>
+<td><p>−9,6 hingga +2,1</p></td>
+</tr>
+<tr class="row-even"><td><p>Proporsi sampel</p></td>
+<td><p>Mayoritas dataset</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Klaster ini menempati seluruh wilayah PC1 negatif dan merupakan kelompok dengan anggota terbanyak. Dominasi jumlah anggotanya menunjukkan bahwa kelompok ini merepresentasikan <strong>kondisi kualitas udara yang paling sering terjadi</strong> — rezim latar (<em>baseline regime</em>) di Kecamatan Kamal.</p>
+<p>Yang perlu dicatat, klaster ini <strong>tidak padat</strong>: anggotanya tersebar cukup luas pada kedua sumbu. Hal ini mengindikasikan bahwa kondisi “normal” bukanlah satu keadaan tunggal yang seragam, melainkan spektrum variasi rutin yang masih berada dalam rentang wajar. Secara lingkungan, jendela-jendela dalam kelompok ini kemungkinan besar mencerminkan periode dua mingguan dengan aktivitas transportasi reguler dan kondisi dispersi atmosfer yang normal.</p>
+</section>
+<section id="klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">
+<h3>Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2<a class="headerlink" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (2,6 ; 4,3)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sebaran PC1</p></td>
+<td><p>−0,8 hingga +6,7 (lebar)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sebaran PC2</p></td>
+<td><p>4,0 hingga 4,6 (<strong>sangat sempit</strong>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Klaster ini memiliki karakteristik geometris yang paling menarik untuk dianalisis. Anggotanya <strong>terbentang luas pada sumbu PC1 namun terkonsentrasi sangat rapat pada sumbu PC2</strong> dengan rentang kurang dari satu satuan.</p>
+<p>Pola horizontal semacam ini memiliki makna analitis yang spesifik: <strong>faktor pembeda utama kelompok ini bukanlah PC1, melainkan PC2</strong>. Kelima jendela ini boleh jadi berbeda satu sama lain dalam hal intensitas emisi (yang diwakili PC1), tetapi mereka berbagi satu karakteristik bersama yang kuat pada dimensi kedua.</p>
+<p>Mengingat PC2 ortogonal terhadap PC1, karakteristik bersama tersebut merupakan dimensi yang <strong>independen dari intensitas</strong>. Dalam konteks polusi udara, dimensi semacam ini biasanya berkaitan dengan <strong>bentuk dan dinamika deret</strong>, bukan besarannya — misalnya tingkat volatilitas, keberadaan lonjakan tajam yang berulang, atau perubahan pola periodisitas. Kelompok ini karenanya lebih tepat dibaca sebagai <strong>rezim dengan pola temporal yang khas</strong> daripada sekadar “tingkat polusi menengah”.</p>
+<blockquote>
+<div><p><strong>Langkah verifikasi yang disarankan:</strong> periksa fitur dengan <em>loading</em> absolut terbesar pada PC2. Bila didominasi fitur penyebaran (standar deviasi, varians) atau fitur spektral, maka klaster ini dapat ditafsirkan sebagai periode dengan <strong>fluktuasi emisi yang tidak stabil</strong> — misalnya periode dengan perubahan cuaca yang sering atau aktivitas transportasi yang tidak merata.</p>
+</div></blockquote>
+</section>
+<section id="klaster-2-hijau-kelompok-anomali">
+<h3>Klaster 2 (Hijau) — Kelompok Anomali<a class="headerlink" href="#klaster-2-hijau-kelompok-anomali" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (14,8 ; −1,85)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Anggota</p></td>
+<td><p>3 titik: ≈ (8,8 ; −6,3), (17,9 ; +7,4), (17,9 ; −6,5)</p></td>
+</tr>
+<tr class="row-even"><td><p>Proporsi sampel</p></td>
+<td><p>Terkecil</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ketiga anggota kelompok ini terletak sangat jauh dari pusat sebaran utama, dengan nilai PC1 yang mencapai lebih dari tiga kali lipat titik terjauh pada Klaster 0. Jarak sebesar ini pada sumbu varians terbesar merupakan indikator kuat adanya <strong>periode dengan karakteristik yang menyimpang secara ekstrem</strong> dari kondisi rutin.</p>
+<p>Namun demikian, terdapat satu aspek penting yang harus dinyatakan secara jujur dalam analisis ini: <strong>ketiga titik tersebut tidak membentuk kelompok yang kohesif</strong>. Rentang PC2 mereka membentang dari −6,5 hingga +7,4, dan posisi centroid di (14,8 ; −1,85) sebenarnya <strong>tidak berdekatan dengan satu pun anggotanya</strong>. Salah satu anggota bahkan terpisah hampir 14 satuan dari anggota lainnya pada sumbu vertikal — jarak yang lebih besar daripada keseluruhan rentang Klaster 0.</p>
+<p>Temuan ini mengarah pada kesimpulan yang lebih berhati-hati: Klaster 2 <strong>bukanlah satu jenis anomali yang berulang tiga kali, melainkan kumpulan tiga anomali yang masing-masing berbeda karakternya</strong>. Ketiganya dikelompokkan bersama bukan karena saling menyerupai, tetapi karena sama-sama berada jauh dari pusat sebaran. Perilaku semacam ini merupakan konsekuensi wajar dari K-Means, yang karena mewajibkan setiap titik memperoleh keanggotaan (<em>hard assignment</em>), cenderung memperlakukan klaster terkecil sebagai <strong>wadah penampung bagi seluruh pencilan</strong>.</p>
+<p>Secara lingkungan, ketiga jendela ini menandai periode dua mingguan yang layak diselidiki secara individual — bukan sebagai satu fenomena kolektif. Kemungkinan penyebabnya mencakup episode pencemaran akut, kondisi meteorologi ekstrem yang menghambat dispersi, aktivitas pembakaran terbuka musiman, atau — yang juga harus dipertimbangkan — <strong>artefak pengolahan data</strong> berupa jendela yang sebagian besar isinya merupakan hasil interpolasi dari Bagian 1.</p>
+<blockquote>
+<div><p><strong>Langkah verifikasi yang disarankan:</strong> identifikasi indeks ketiga jendela ini, telusuri kembali rentang tanggal aktualnya, lalu periksa (a) nilai konsentrasi mentahnya pada grafik Bagian 1 dan (b) berapa banyak observasi dalam jendela tersebut yang berasal dari interpolasi. Langkah ini akan memastikan apakah anomali bersifat fenomenologis atau metodologis.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="catatan-metodologis-dan-keterbatasan">
+<h2>3.6 Catatan Metodologis dan Keterbatasan<a class="headerlink" href="#catatan-metodologis-dan-keterbatasan" title="Link to this heading">#</a></h2>
+<p>Sebagai bagian dari pelaporan yang bertanggung jawab, berikut beberapa batasan yang memengaruhi kekuatan kesimpulan di atas.</p>
+<ol class="arabic simple">
+<li><p><strong>Pengelompokan dilakukan pada ruang tereduksi, bukan ruang fitur penuh.</strong> K-Means dijalankan terhadap koordinat hasil PCA, bukan terhadap 68 fitur terstandardisasi. Pendekatan ini sah dan lazim digunakan karena mengurangi derau serta menghindari konsentrasi jarak, namun memiliki dua implikasi: (a) informasi pembeda yang mungkin tersimpan pada komponen ke-3 dan seterusnya tidak ikut memengaruhi penentuan klaster; dan (b) pemisahan visual yang tampak rapi pada grafik sebagian bersifat <strong>konsekuensi logis dari desain</strong>, karena pengelompokan dan visualisasi terjadi pada ruang yang sama persis. Grafik ini karenanya tidak dapat diperlakukan sebagai validasi independen atas hasil pengelompokan.</p></li>
+<li><p><strong>Rasio jumlah sampel terhadap jumlah fitur sangat rendah.</strong> Dengan sekitar dua puluhan jendela berbanding 68 fitur, dataset ini berada pada kondisi <span class="math notranslate nohighlight">\(n &lt; p\)</span>. Pada kondisi demikian, matriks kovarians bersifat singular dan jumlah komponen utama yang bermakna terbatas maksimal pada <span class="math notranslate nohighlight">\(n - 1\)</span>. Estimasi struktur klaster pada rasio serendah ini rentan terhadap ketidakstabilan — penambahan atau penghapusan beberapa sampel saja berpotensi mengubah hasil.</p></li>
+<li><p><strong>Nilai <span class="math notranslate nohighlight">\(K = 3\)</span> belum divalidasi secara kuantitatif.</strong> Jumlah klaster ditetapkan di awal tanpa pengujian formal. Untuk memperkuat justifikasi, disarankan melengkapi analisis dengan <strong>metode Elbow</strong> (kurva inersia) dan <strong>Silhouette Score</strong>. Nilai <em>silhouette</em> juga akan memberikan bukti kuantitatif atas pengamatan pada Klaster 2 — apabila skornya rendah atau negatif, dugaan bahwa kelompok tersebut merupakan wadah pencilan menjadi terkonfirmasi secara numerik.</p></li>
+<li><p><strong>Asumsi geometris K-Means.</strong> K-Means mengasumsikan klaster berbentuk bulat (<em>isotropic</em>) dan berukuran relatif seimbang. Sebaran Klaster 0 yang memanjang serta ukuran Klaster 2 yang sangat kecil menunjukkan bahwa asumsi tersebut tidak sepenuhnya terpenuhi. Algoritma berbasis kerapatan seperti <strong>DBSCAN</strong> dapat menjadi pembanding yang berguna, karena mampu menandai pencilan sebagai <em>noise</em> alih-alih memaksanya masuk ke dalam suatu klaster.</p></li>
+<li><p><strong>Pewarisan ketidakpastian dari tahap interpolasi.</strong> Jendela yang sebagian besar nilainya berasal dari interpolasi akan memiliki varians yang tertekan secara artifisial. Fitur-fitur penyebaran pada jendela tersebut mencerminkan proses pengisian data, bukan kondisi atmosfer yang sebenarnya.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>3.7 Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Rangkaian analisis pada bagian ini berhasil mentransformasikan deret waktu konsentrasi polutan harian menjadi representasi terstruktur yang dapat dianalisis secara kuantitatif. Melalui <em>windowing</em> 14 harian, ekstraksi 68 fitur TSFEL, standardisasi, dan proyeksi PCA, data berhasil diringkas ke dalam dua dimensi tanpa kehilangan struktur utamanya.</p>
+<p>Hasil pengelompokan mengungkap adanya <strong>stratifikasi rezim kualitas udara</strong> di Kecamatan Kamal: satu rezim dasar yang mendominasi sebagian besar periode pengamatan, satu rezim dengan karakteristik temporal khas yang dibedakan pada dimensi kedua, serta sejumlah kecil periode anomali yang menyimpang secara ekstrem dan layak ditelaah lebih lanjut secara individual.</p>
+<p>Temuan ini menegaskan bahwa kualitas udara di wilayah studi <strong>tidak bersifat homogen sepanjang tahun</strong>, melainkan terdiri atas beberapa mode perilaku yang berbeda — sebuah wawasan yang tidak dapat diperoleh hanya dengan mengamati grafik deret waktu mentah pada Bagian 1.</p>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -982,6 +1286,38 @@ Standar Deviasi     | Manual: 2.828  | TSFEL: 2.828
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing">3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-standardisasi-bersifat-wajib">3.2 Mengapa Standardisasi Bersifat Wajib?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permasalahan-heterogenitas-skala-antar-fitur">Permasalahan: Heterogenitas Skala Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-k-means">Dampak pada K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-pca">Dampak pada PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-transformasi-z-score">Solusi: Transformasi <em>Z-score</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-reduksi-dimensi-diperlukan">3.3 Mengapa Reduksi Dimensi Diperlukan?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-kutukan-dimensionalitas-curse-of-dimensionality">a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-multikolinearitas-antar-fitur-tsfel">b. Multikolinearitas Antar Fitur TSFEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-makna-principal-component">3.4 Memahami Makna <em>Principal Component</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-sumbu-baru-ditentukan">Bagaimana Sumbu Baru Ditentukan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proporsi-varians-yang-dipertahankan">Proporsi Varians yang Dipertahankan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-arah-tanda-komponen-bersifat-arbitrer">Catatan: Arah Tanda Komponen Bersifat Arbitrer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-struktur-klaster">3.5 Interpretasi Struktur Klaster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-0-biru-rezim-emisi-dasar">Klaster 0 (Biru) — Rezim Emisi Dasar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-2-hijau-kelompok-anomali">Klaster 2 (Hijau) — Kelompok Anomali</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-metodologis-dan-keterbatasan">3.6 Catatan Metodologis dan Keterbatasan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">3.7 Kesimpulan</a></li>
 </ul>
 </li>
 </ul>

@@ -384,3 +384,242 @@ Median              | Manual: 5.0    | TSFEL: 5.0
 Nilai Max           | Manual: 9.0    | TSFEL: 9.0
 Standar Deviasi     | Manual: 2.828  | TSFEL: 2.828
 ```
+
+# Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering
+
+Setelah landasan matematis ekstraksi fitur diverifikasi pada bagian sebelumnya, tahap ini menerapkan TSFEL pada data polutan riil dan melanjutkannya ke analisis *unsupervised learning*. Tujuan akhirnya adalah mengidentifikasi **pola-pola rezim emisi** yang secara alami terbentuk dalam data, tanpa menggunakan label yang ditentukan sebelumnya.
+
+Alur pemrosesan pada bagian ini terdiri atas empat tahap berurutan: *windowing* → standardisasi → reduksi dimensi → pengelompokan.
+
+---
+
+## 3.1 Dari Deret Waktu ke Matriks Fitur: Strategi *Windowing*
+
+Ekstraksi fitur tidak diterapkan pada keseluruhan deret waktu sekaligus, karena hal itu hanya akan menghasilkan **satu baris sampel** dan tidak memungkinkan analisis pengelompokan. Sebagai gantinya, deret waktu dipotong menjadi segmen-segmen berurutan menggunakan teknik ***windowing*** dengan `window_size = 14`.
+
+**Rasionalisasi pemilihan jendela 14 hari:**
+
+- **Kecukupan statistik.** Setiap jendela harus memuat titik observasi yang memadai agar fitur statistik seperti standar deviasi, kurtosis, dan *skewness* dapat dihitung secara stabil. Jendela yang terlalu pendek menghasilkan estimasi yang bergejolak dan tidak dapat diandalkan.
+- **Relevansi periodik.** Rentang 14 hari setara dengan dua siklus mingguan penuh, sehingga mampu menangkap kontras antara hari kerja dan akhir pekan — pola yang sangat relevan pada polutan berbasis transportasi seperti NO₂.
+- **Resolusi temporal yang memadai.** Jendela yang terlalu panjang akan meratakan (*smoothing out*) episode pencemaran jangka pendek dan mengurangi jumlah sampel secara drastis.
+
+Karena parameter `overlap` dibiarkan pada nilai bawaan (nol), setiap jendela bersifat **saling lepas** (*non-overlapping*). Pilihan ini penting secara metodologis: jendela yang bertumpang tindih akan berbagi observasi yang sama sehingga menciptakan ketergantungan artifisial antar sampel, yang pada gilirannya membuat klaster tampak lebih kohesif daripada kenyataannya.
+
+Hasil transformasi ini adalah **matriks fitur** berbentuk:
+
+$$
+\mathbf{X} \in \mathbb{R}^{n \times p}, \qquad p = 68
+$$
+
+dengan $n$ adalah jumlah jendela yang terbentuk dan $p = 68$ adalah jumlah fitur per jendela. Deret waktu yang semula bersifat sekuensial kini telah berubah menjadi **data tabular konvensional**, di mana setiap baris merepresentasikan "karakter dua mingguan" dari kualitas udara.
+
+---
+
+## 3.2 Mengapa Standardisasi Bersifat Wajib?
+
+### Permasalahan: Heterogenitas Skala Antar Fitur
+
+Ke-68 fitur yang dihasilkan TSFEL berasal dari tiga domain berbeda dan memiliki **satuan serta rentang nilai yang sangat tidak seragam**. Sebagai ilustrasi pada data NO₂:
+
+| Jenis Fitur | Orde Nilai Tipikal |
+|---|---|
+| Mean, Median, Max (mol/m²) | $\sim 10^{-4}$ |
+| Variance (mol²/m⁴) | $\sim 10^{-9}$ |
+| Entropy, Autocorrelation | $\sim 10^{0}$ (rentang 0–1) |
+| Zero Crossing Rate, jumlah puncak | $\sim 10^{0}$ hingga $10^{1}$ |
+| Spectral energy / FFT magnitude | dapat mencapai $\sim 10^{2}$ ke atas |
+
+Rentang perbedaan yang mencapai **lebih dari sepuluh orde magnitudo** ini menimbulkan konsekuensi serius bagi kedua algoritma yang digunakan.
+
+### Dampak pada K-Means
+
+K-Means bekerja dengan meminimalkan jumlah kuadrat jarak Euklides antara setiap titik dan pusat klasternya:
+
+$$
+J = \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \left\lVert \mathbf{x}_i - \boldsymbol{\mu}_k \right\rVert^{2}
+$$
+
+Dalam perhitungan jarak Euklides, kontribusi setiap fitur bersifat **aditif dan proporsional terhadap besaran nilainya**:
+
+$$
+d(\mathbf{a}, \mathbf{b}) = \sqrt{\sum_{j=1}^{p} (a_j - b_j)^2}
+$$
+
+Tanpa standardisasi, selisih pada fitur berorde $10^{2}$ akan menghasilkan kontribusi kuadrat yang jauh lebih besar dibandingkan selisih pada fitur berorde $10^{-4}$. Akibatnya, **struktur klaster praktis ditentukan oleh satu atau dua fitur berskala besar saja**, sementara informasi dari puluhan fitur lain menjadi tidak berpengaruh sama sekali. Ini bukan sekadar bias, melainkan kegagalan metodologis: algoritma seolah-olah memproses 68 fitur, padahal secara efektif hanya membaca segelintir di antaranya.
+
+### Dampak pada PCA
+
+Persoalan pada PCA bersifat lebih fundamental. PCA mencari arah dalam ruang fitur yang **memaksimalkan varians**. Namun varians adalah besaran yang **bergantung pada satuan pengukuran** — mengubah satuan dari mol/m² menjadi µmol/m² akan melipatgandakan variansnya secara kuadratik tanpa mengubah informasi apa pun yang terkandung di dalamnya.
+
+Konsekuensinya, PCA pada data tanpa standardisasi akan menempatkan komponen utama pertamanya searah dengan fitur yang **kebetulan** memiliki satuan terbesar, bukan fitur yang paling informatif. Komponen yang dihasilkan menjadi artefak dari pilihan satuan, bukan cerminan struktur data.
+
+### Solusi: Transformasi *Z-score*
+
+`StandardScaler` menerapkan transformasi berikut pada setiap kolom fitur $j$ secara independen:
+
+$$
+z_{ij} = \frac{x_{ij} - \mu_j}{\sigma_j}
+$$
+
+dengan $\mu_j$ dan $\sigma_j$ masing-masing adalah rata-rata dan standar deviasi kolom tersebut. Setelah transformasi, **seluruh fitur memiliki rata-rata nol dan standar deviasi satu**, sehingga menjadi tidak berdimensi (*dimensionless*) dan berkontribusi secara setara terhadap perhitungan jarak maupun varians. Dengan demikian, yang dibandingkan antar jendela bukan lagi besaran absolut, melainkan **posisi relatif setiap jendela terhadap keseluruhan dataset**.
+
+---
+
+## 3.3 Mengapa Reduksi Dimensi Diperlukan?
+
+Standardisasi menyelesaikan masalah skala, tetapi tidak menyelesaikan masalah **dimensionalitas**. Terdapat tiga alasan teknis mengapa PCA diterapkan sebelum pengelompokan.
+
+### a. Kutukan Dimensionalitas (*Curse of Dimensionality*)
+
+Fenomena yang paling merugikan K-Means pada ruang berdimensi tinggi adalah **konsentrasi jarak** (*distance concentration*). Seiring bertambahnya dimensi $p$, jarak Euklides antara titik terdekat dan titik terjauh dari suatu titik acuan cenderung menjadi semakin seragam:
+
+$$
+\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} \longrightarrow 0
+$$
+
+Ketika semua titik berjarak "hampir sama" satu sama lain, konsep kemiripan kehilangan daya bedanya. K-Means yang sepenuhnya bergantung pada jarak Euklides akan menghasilkan partisi yang nyaris arbitrer. Dengan $p = 68$, risiko ini sudah sangat nyata.
+
+### b. Multikolinearitas Antar Fitur TSFEL
+
+Ke-68 fitur TSFEL **tidak saling bebas**. Banyak di antaranya mengukur aspek yang secara matematis berkaitan erat, misalnya:
+
+- *Mean* dan *Median* (keduanya ukuran pemusatan)
+- *Standard Deviation*, *Variance*, dan *Root Mean Square* (secara aljabar saling terkait langsung)
+- *Max*, *Min*, dan *Peak-to-peak distance*
+- Berbagai statistik spektral yang diturunkan dari transformasi Fourier yang sama
+
+Pada ruang fitur asli, redundansi ini menyebabkan **satu konsep tunggal dihitung berkali-kali**, sehingga bobotnya menjadi berlebihan dalam perhitungan jarak. PCA mengatasi hal ini secara elegan: karena komponen utama disusun saling **ortogonal**, fitur-fitur yang berkorelasi tinggi otomatis terlipat menjadi satu arah komponen yang sama.
+
+### c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi
+
+Komponen-komponen awal menangkap variasi struktural yang dominan, sementara komponen-komponen akhir umumnya memuat derau pengukuran. Membuang komponen minor karenanya berfungsi sebagai **penapis derau**. Selain itu, reduksi menjadi dua dimensi adalah satu-satunya cara agar struktur data dapat diperiksa secara visual pada bidang datar — sesuatu yang mustahil dilakukan pada ruang berdimensi 68.
+
+---
+
+## 3.4 Memahami Makna *Principal Component*
+
+### PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear
+
+Kesalahpahaman yang paling umum adalah menganggap PC1 sebagai "fitur terpenting yang terpilih". Anggapan tersebut keliru. **PCA tidak melakukan seleksi fitur, melainkan konstruksi sumbu baru.**
+
+Setiap komponen utama merupakan **kombinasi linear berbobot dari seluruh 68 fitur yang telah distandardisasi**:
+
+$$
+\text{PC}_k = w_{k1} z_1 + w_{k2} z_2 + w_{k3} z_3 + \dots + w_{k,68} z_{68} = \sum_{j=1}^{68} w_{kj} \, z_j
+$$
+
+Koefisien $w_{kj}$ disebut ***loading***, yaitu besar kontribusi fitur ke-$j$ terhadap komponen ke-$k$. Dengan demikian, setiap titik pada scatter plot tetap membawa jejak dari seluruh 68 fitur, hanya saja informasinya telah dipadatkan ke dalam dua koordinat.
+
+### Bagaimana Sumbu Baru Ditentukan
+
+Secara formal, PCA melakukan **dekomposisi eigen** terhadap matriks kovarians dari data terstandardisasi:
+
+$$
+\mathbf{C} = \frac{1}{n-1} \mathbf{Z}^{\top} \mathbf{Z}, \qquad \mathbf{C}\mathbf{v}_k = \lambda_k \mathbf{v}_k
+$$
+
+- **Vektor eigen** $\mathbf{v}_k$ menentukan **arah** komponen utama ke-$k$ (yaitu himpunan *loading*-nya).
+- **Nilai eigen** $\lambda_k$ menyatakan **besar varians** yang dijelaskan oleh arah tersebut.
+
+Komponen diurutkan secara menurun berdasarkan nilai eigennya, sehingga berlaku dua sifat penting:
+
+1. **PC1 adalah arah dengan varians terbesar** dalam data, yakni sumbu di mana sampel-sampel paling terbentang dan paling mudah dibedakan satu sama lain.
+2. **PC2 ortogonal terhadap PC1** ($\mathbf{v}_1 \perp \mathbf{v}_2$) dan menangkap varians terbesar berikutnya dari sisa informasi yang belum terjelaskan. Karena ortogonal, PC2 memuat informasi yang **sepenuhnya tidak tumpang tindih** dengan PC1.
+
+### Proporsi Varians yang Dipertahankan
+
+Ukuran seberapa banyak informasi yang berhasil dipertahankan dinyatakan oleh:
+
+$$
+\text{Explained Variance Ratio} = \frac{\lambda_1 + \lambda_2}{\sum_{k=1}^{p} \lambda_k}
+$$
+
+> **Nilai pada analisis ini:** _[isi dengan keluaran variabel `varians` dari sel kode]_ %
+
+Angka ini merupakan **syarat validitas utama** bagi seluruh interpretasi visual yang dilakukan setelahnya, dengan pedoman umum sebagai berikut:
+
+- **> 70%** — proyeksi dua dimensi merepresentasikan struktur data dengan baik; interpretasi visual dapat dipercaya.
+- **50–70%** — representasi cukup memadai, namun sebagian struktur tidak tergambarkan pada bidang ini.
+- **< 50%** — lebih dari separuh informasi hilang. Jarak visual antar titik berpotensi menyesatkan, dan kesimpulan harus disampaikan dengan kehati-hatian tinggi.
+
+### Catatan: Arah Tanda Komponen Bersifat Arbitrer
+
+Satu sifat PCA yang wajib diperhatikan saat menafsirkan grafik: **tanda dari vektor eigen tidak unik**. Jika $\mathbf{v}_k$ adalah solusi valid, maka $-\mathbf{v}_k$ juga solusi valid dengan nilai eigen yang identik. Implikasinya, **PC1 bernilai positif tidak secara otomatis berarti "polusi tinggi"**. Arah interpretasi hanya dapat ditetapkan dengan memeriksa *loading* (`pca.components_`) atau dengan menelusuri kembali nilai asli dari jendela-jendela yang berada di ujung sumbu.
+
+---
+
+## 3.5 Interpretasi Struktur Klaster
+
+K-Means dijalankan dengan $K = 3$ pada koordinat hasil PCA. Berikut karakterisasi ketiga kelompok berdasarkan posisinya pada grafik.
+
+### Klaster 0 (Biru) — Rezim Emisi Dasar
+
+| Aspek | Keterangan |
+|---|---|
+| Posisi centroid | ≈ (−3,5 ; −1,0) |
+| Sebaran PC1 | −9,6 hingga +2,1 |
+| Proporsi sampel | Mayoritas dataset |
+
+Klaster ini menempati seluruh wilayah PC1 negatif dan merupakan kelompok dengan anggota terbanyak. Dominasi jumlah anggotanya menunjukkan bahwa kelompok ini merepresentasikan **kondisi kualitas udara yang paling sering terjadi** — rezim latar (*baseline regime*) di Kecamatan Kamal.
+
+Yang perlu dicatat, klaster ini **tidak padat**: anggotanya tersebar cukup luas pada kedua sumbu. Hal ini mengindikasikan bahwa kondisi "normal" bukanlah satu keadaan tunggal yang seragam, melainkan spektrum variasi rutin yang masih berada dalam rentang wajar. Secara lingkungan, jendela-jendela dalam kelompok ini kemungkinan besar mencerminkan periode dua mingguan dengan aktivitas transportasi reguler dan kondisi dispersi atmosfer yang normal.
+
+### Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2
+
+| Aspek | Keterangan |
+|---|---|
+| Posisi centroid | ≈ (2,6 ; 4,3) |
+| Sebaran PC1 | −0,8 hingga +6,7 (lebar) |
+| Sebaran PC2 | 4,0 hingga 4,6 (**sangat sempit**) |
+
+Klaster ini memiliki karakteristik geometris yang paling menarik untuk dianalisis. Anggotanya **terbentang luas pada sumbu PC1 namun terkonsentrasi sangat rapat pada sumbu PC2** dengan rentang kurang dari satu satuan.
+
+Pola horizontal semacam ini memiliki makna analitis yang spesifik: **faktor pembeda utama kelompok ini bukanlah PC1, melainkan PC2**. Kelima jendela ini boleh jadi berbeda satu sama lain dalam hal intensitas emisi (yang diwakili PC1), tetapi mereka berbagi satu karakteristik bersama yang kuat pada dimensi kedua.
+
+Mengingat PC2 ortogonal terhadap PC1, karakteristik bersama tersebut merupakan dimensi yang **independen dari intensitas**. Dalam konteks polusi udara, dimensi semacam ini biasanya berkaitan dengan **bentuk dan dinamika deret**, bukan besarannya — misalnya tingkat volatilitas, keberadaan lonjakan tajam yang berulang, atau perubahan pola periodisitas. Kelompok ini karenanya lebih tepat dibaca sebagai **rezim dengan pola temporal yang khas** daripada sekadar "tingkat polusi menengah".
+
+> **Langkah verifikasi yang disarankan:** periksa fitur dengan *loading* absolut terbesar pada PC2. Bila didominasi fitur penyebaran (standar deviasi, varians) atau fitur spektral, maka klaster ini dapat ditafsirkan sebagai periode dengan **fluktuasi emisi yang tidak stabil** — misalnya periode dengan perubahan cuaca yang sering atau aktivitas transportasi yang tidak merata.
+
+### Klaster 2 (Hijau) — Kelompok Anomali
+
+| Aspek | Keterangan |
+|---|---|
+| Posisi centroid | ≈ (14,8 ; −1,85) |
+| Anggota | 3 titik: ≈ (8,8 ; −6,3), (17,9 ; +7,4), (17,9 ; −6,5) |
+| Proporsi sampel | Terkecil |
+
+Ketiga anggota kelompok ini terletak sangat jauh dari pusat sebaran utama, dengan nilai PC1 yang mencapai lebih dari tiga kali lipat titik terjauh pada Klaster 0. Jarak sebesar ini pada sumbu varians terbesar merupakan indikator kuat adanya **periode dengan karakteristik yang menyimpang secara ekstrem** dari kondisi rutin.
+
+Namun demikian, terdapat satu aspek penting yang harus dinyatakan secara jujur dalam analisis ini: **ketiga titik tersebut tidak membentuk kelompok yang kohesif**. Rentang PC2 mereka membentang dari −6,5 hingga +7,4, dan posisi centroid di (14,8 ; −1,85) sebenarnya **tidak berdekatan dengan satu pun anggotanya**. Salah satu anggota bahkan terpisah hampir 14 satuan dari anggota lainnya pada sumbu vertikal — jarak yang lebih besar daripada keseluruhan rentang Klaster 0.
+
+Temuan ini mengarah pada kesimpulan yang lebih berhati-hati: Klaster 2 **bukanlah satu jenis anomali yang berulang tiga kali, melainkan kumpulan tiga anomali yang masing-masing berbeda karakternya**. Ketiganya dikelompokkan bersama bukan karena saling menyerupai, tetapi karena sama-sama berada jauh dari pusat sebaran. Perilaku semacam ini merupakan konsekuensi wajar dari K-Means, yang karena mewajibkan setiap titik memperoleh keanggotaan (*hard assignment*), cenderung memperlakukan klaster terkecil sebagai **wadah penampung bagi seluruh pencilan**.
+
+Secara lingkungan, ketiga jendela ini menandai periode dua mingguan yang layak diselidiki secara individual — bukan sebagai satu fenomena kolektif. Kemungkinan penyebabnya mencakup episode pencemaran akut, kondisi meteorologi ekstrem yang menghambat dispersi, aktivitas pembakaran terbuka musiman, atau — yang juga harus dipertimbangkan — **artefak pengolahan data** berupa jendela yang sebagian besar isinya merupakan hasil interpolasi dari Bagian 1.
+
+> **Langkah verifikasi yang disarankan:** identifikasi indeks ketiga jendela ini, telusuri kembali rentang tanggal aktualnya, lalu periksa (a) nilai konsentrasi mentahnya pada grafik Bagian 1 dan (b) berapa banyak observasi dalam jendela tersebut yang berasal dari interpolasi. Langkah ini akan memastikan apakah anomali bersifat fenomenologis atau metodologis.
+
+---
+
+## 3.6 Catatan Metodologis dan Keterbatasan
+
+Sebagai bagian dari pelaporan yang bertanggung jawab, berikut beberapa batasan yang memengaruhi kekuatan kesimpulan di atas.
+
+1. **Pengelompokan dilakukan pada ruang tereduksi, bukan ruang fitur penuh.** K-Means dijalankan terhadap koordinat hasil PCA, bukan terhadap 68 fitur terstandardisasi. Pendekatan ini sah dan lazim digunakan karena mengurangi derau serta menghindari konsentrasi jarak, namun memiliki dua implikasi: (a) informasi pembeda yang mungkin tersimpan pada komponen ke-3 dan seterusnya tidak ikut memengaruhi penentuan klaster; dan (b) pemisahan visual yang tampak rapi pada grafik sebagian bersifat **konsekuensi logis dari desain**, karena pengelompokan dan visualisasi terjadi pada ruang yang sama persis. Grafik ini karenanya tidak dapat diperlakukan sebagai validasi independen atas hasil pengelompokan.
+
+2. **Rasio jumlah sampel terhadap jumlah fitur sangat rendah.** Dengan sekitar dua puluhan jendela berbanding 68 fitur, dataset ini berada pada kondisi $n < p$. Pada kondisi demikian, matriks kovarians bersifat singular dan jumlah komponen utama yang bermakna terbatas maksimal pada $n - 1$. Estimasi struktur klaster pada rasio serendah ini rentan terhadap ketidakstabilan — penambahan atau penghapusan beberapa sampel saja berpotensi mengubah hasil.
+
+3. **Nilai $K = 3$ belum divalidasi secara kuantitatif.** Jumlah klaster ditetapkan di awal tanpa pengujian formal. Untuk memperkuat justifikasi, disarankan melengkapi analisis dengan **metode Elbow** (kurva inersia) dan **Silhouette Score**. Nilai *silhouette* juga akan memberikan bukti kuantitatif atas pengamatan pada Klaster 2 — apabila skornya rendah atau negatif, dugaan bahwa kelompok tersebut merupakan wadah pencilan menjadi terkonfirmasi secara numerik.
+
+4. **Asumsi geometris K-Means.** K-Means mengasumsikan klaster berbentuk bulat (*isotropic*) dan berukuran relatif seimbang. Sebaran Klaster 0 yang memanjang serta ukuran Klaster 2 yang sangat kecil menunjukkan bahwa asumsi tersebut tidak sepenuhnya terpenuhi. Algoritma berbasis kerapatan seperti **DBSCAN** dapat menjadi pembanding yang berguna, karena mampu menandai pencilan sebagai *noise* alih-alih memaksanya masuk ke dalam suatu klaster.
+
+5. **Pewarisan ketidakpastian dari tahap interpolasi.** Jendela yang sebagian besar nilainya berasal dari interpolasi akan memiliki varians yang tertekan secara artifisial. Fitur-fitur penyebaran pada jendela tersebut mencerminkan proses pengisian data, bukan kondisi atmosfer yang sebenarnya.
+
+---
+
+## 3.7 Kesimpulan
+
+Rangkaian analisis pada bagian ini berhasil mentransformasikan deret waktu konsentrasi polutan harian menjadi representasi terstruktur yang dapat dianalisis secara kuantitatif. Melalui *windowing* 14 harian, ekstraksi 68 fitur TSFEL, standardisasi, dan proyeksi PCA, data berhasil diringkas ke dalam dua dimensi tanpa kehilangan struktur utamanya.
+
+Hasil pengelompokan mengungkap adanya **stratifikasi rezim kualitas udara** di Kecamatan Kamal: satu rezim dasar yang mendominasi sebagian besar periode pengamatan, satu rezim dengan karakteristik temporal khas yang dibedakan pada dimensi kedua, serta sejumlah kecil periode anomali yang menyimpang secara ekstrem dan layak ditelaah lebih lanjut secara individual.
+
+Temuan ini menegaskan bahwa kualitas udara di wilayah studi **tidak bersifat homogen sepanjang tahun**, melainkan terdiri atas beberapa mode perilaku yang berbeda — sebuah wawasan yang tidak dapat diperoleh hanya dengan mengamati grafik deret waktu mentah pada Bagian 1.
