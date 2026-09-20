@@ -424,7 +424,15 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-dan-pengujian-menggunakan-knime">8. Implementasi dan Pengujian menggunakan KNIME</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengantar-implementasi">Pengantar Implementasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-workflow-knime">Alur Workflow KNIME</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-k-means-68-fitur-asli">Skenario 1: K-Means (68 Fitur Asli)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-pca-37-komponen-k-means">Skenario 2: PCA 37 Komponen &amp; K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-visual">Kesimpulan Visual</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -878,6 +886,55 @@ Silhouette = 0.8547
 <strong>68 Fitur = <span class="math notranslate nohighlight">\(k=3\)</span></strong></p>
 <p>↓</p>
 <p><strong>Perbandingan Kualitas Cluster Skenario PCA vs. 68 Fitur Asli</strong></p>
+<hr class="docutils" />
+<section id="implementasi-dan-pengujian-menggunakan-knime">
+<h3>8. Implementasi dan Pengujian menggunakan KNIME<a class="headerlink" href="#implementasi-dan-pengujian-menggunakan-knime" title="Link to this heading">#</a></h3>
+</section>
+<section id="pengantar-implementasi">
+<h3>Pengantar Implementasi<a class="headerlink" href="#pengantar-implementasi" title="Link to this heading">#</a></h3>
+<p>Sebagai tahap validasi terhadap proses <em>Machine Learning</em> yang sebelumnya dilakukan menggunakan <strong>Python dengan library Scikit-Learn</strong>, implementasi clustering juga dilakukan menggunakan <strong>KNIME Analytics Platform</strong>. KNIME digunakan untuk membangun <em>workflow</em> analisis secara visual sehingga setiap tahapan <em>preprocessing</em>, reduksi dimensi, <em>clustering</em>, dan evaluasi dapat diamati secara lebih terstruktur.</p>
+<p>Implementasi ini menggunakan dataset yang sama, yaitu data hasil ekstraksi fitur TSFEL dari tiga jenis polutan <strong>CO, NO2, dan SO2</strong>. Dua skenario <em>clustering</em> yang sebelumnya dianalisis menggunakan Python kemudian direplikasi pada KNIME, yaitu <strong>clustering menggunakan 68 fitur asli</strong> dan <strong>clustering setelah reduksi dimensi PCA menjadi 37 komponen</strong>.</p>
+</section>
+<section id="alur-workflow-knime">
+<h3>Alur Workflow KNIME<a class="headerlink" href="#alur-workflow-knime" title="Link to this heading">#</a></h3>
+<p>Workflow KNIME diawali dengan proses pembacaan ketiga dataset menggunakan node <strong>CSV Reader</strong>. Masing-masing node digunakan untuk memuat data fitur dari polutan <strong>CO</strong>, <strong>NO2</strong>, dan <strong>SO2</strong>.</p>
+<p>Ketiga dataset yang telah dibaca kemudian digabungkan menggunakan node <strong>Concatenate</strong>. Proses ini menghasilkan satu dataset yang berisi seluruh observasi dari ketiga polutan sehingga dapat diproses secara bersamaan dalam tahap <em>clustering</em>.</p>
+<p>Selanjutnya, data hasil penggabungan dinormalisasi menggunakan node <strong>Normalizer</strong> dengan metode <strong>Z-Score</strong>. Normalisasi ini dilakukan untuk menyamakan skala antarfitur sebelum proses perhitungan jarak pada K-Means dan sebelum proses PCA.</p>
+<p>Pada tahap normalisasi, kolom <strong><code class="docutils literal notranslate"><span class="pre">id</span></code></strong> dikecualikan dari proses perhitungan. Kolom tersebut merupakan identitas observasi dan bukan merupakan karakteristik data yang digunakan untuk menentukan kemiripan antarobservasi. Apabila kolom <code class="docutils literal notranslate"><span class="pre">id</span></code> ikut digunakan, variasi nilainya dapat memengaruhi perhitungan jarak dan berpotensi menjadi <em>noise</em> dalam proses <em>clustering</em>.</p>
+<p>Setelah proses normalisasi selesai, aliran data kemudian <strong>dipecah menjadi dua cabang eksperimen</strong>, yaitu:</p>
+<ul class="simple">
+<li><p><strong>Cabang atas:</strong> menggunakan seluruh <strong>68 fitur asli</strong> secara langsung untuk K-Means.</p></li>
+<li><p><strong>Cabang bawah:</strong> melakukan <strong>reduksi dimensi menggunakan PCA menjadi 37 komponen</strong>, kemudian hasilnya digunakan sebagai input K-Means.</p></li>
+</ul>
+<p><img alt="Workflow KNIME" src="path_ke_gambar_1.png" /></p>
+<p><strong>Gambar 1. Workflow implementasi clustering menggunakan KNIME Analytics Platform</strong></p>
+<p>Workflow tersebut menunjukkan bahwa kedua skenario menggunakan data hasil penggabungan dan normalisasi yang sama. Perbedaan utama terletak pada tahap transformasi data sebelum proses <em>clustering</em>, yaitu apakah data langsung digunakan dalam bentuk 68 fitur atau terlebih dahulu direduksi menggunakan PCA.</p>
+</section>
+<section id="skenario-1-k-means-68-fitur-asli">
+<h3>Skenario 1: K-Means (68 Fitur Asli)<a class="headerlink" href="#skenario-1-k-means-68-fitur-asli" title="Link to this heading">#</a></h3>
+<p>Pada cabang atas, data yang telah melalui proses <strong>Normalizer</strong> langsung diteruskan ke node <strong>k-Means</strong> tanpa reduksi dimensi. Dengan demikian, seluruh <strong>68 fitur asli</strong> tetap digunakan sebagai dasar perhitungan jarak dan pembentukan <em>cluster</em>.</p>
+<p>Parameter jumlah <em>cluster</em> pada node <strong>k-Means</strong> ditetapkan sebesar <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong>. Pemilihan konfigurasi ini mengikuti hasil evaluasi sebelumnya menggunakan Silhouette Score, di mana <span class="math notranslate nohighlight">\(k=2\)</span> menghasilkan nilai silhouette tertinggi pada analisis Python.</p>
+<p>Hasil <em>clustering</em> kemudian dievaluasi menggunakan node <strong>Silhouette Coefficient</strong>. Pada konfigurasi evaluasi tersebut, kolom <strong><code class="docutils literal notranslate"><span class="pre">Cluster</span></code></strong> digunakan sebagai kolom hasil <em>clustering</em> yang menjadi dasar perhitungan silhouette. Sementara itu, kolom <strong><code class="docutils literal notranslate"><span class="pre">id</span></code></strong> tidak digunakan dalam perhitungan karena hanya berfungsi sebagai identitas observasi.</p>
+<p>Evaluasi ini digunakan untuk mengetahui seberapa baik observasi berada dalam <em>cluster</em>-nya masing-masing dibandingkan dengan <em>cluster</em> lainnya. Semakin tinggi nilai koefisien silhouette, semakin baik pemisahan relatif antar-<em>cluster</em> berdasarkan representasi data yang digunakan.</p>
+<p><img alt="Skor Silhouette Asli" src="path_ke_gambar_2.png" /></p>
+<p><strong>Gambar 2. Hasil evaluasi Silhouette Coefficient pada 68 fitur asli</strong></p>
+<p>Berdasarkan hasil implementasi pada KNIME, nilai <strong>Mean Silhouette Coefficient</strong> pada cabang data 68 fitur dapat diamati melalui hasil keluaran node <strong>Silhouette Coefficient</strong>. Nilai tersebut digunakan sebagai pembanding terhadap hasil perhitungan yang sebelumnya diperoleh menggunakan Python.</p>
+</section>
+<section id="skenario-2-pca-37-komponen-k-means">
+<h3>Skenario 2: PCA 37 Komponen &amp; K-Means<a class="headerlink" href="#skenario-2-pca-37-komponen-k-means" title="Link to this heading">#</a></h3>
+<p>Pada cabang bawah, data hasil normalisasi terlebih dahulu diproses menggunakan node <strong>PCA</strong>. Konfigurasi PCA ditetapkan pada <strong>Fixed Dimensions = 37</strong>, sehingga 68 fitur asli ditransformasikan menjadi <strong>37 komponen utama</strong>.</p>
+<p>Reduksi dimensi ini bertujuan menghasilkan representasi data dengan jumlah dimensi yang lebih rendah tetapi tetap mempertahankan struktur utama data yang digunakan dalam analisis. Output dari node PCA kemudian diteruskan ke node <strong>k-Means</strong> dengan jumlah <em>cluster</em> yang sama, yaitu <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong>.</p>
+<p>Setelah proses <em>clustering</em> selesai, hasilnya dievaluasi menggunakan node <strong>Silhouette Coefficient</strong>. Evaluasi dilakukan dengan prinsip yang sama seperti pada skenario pertama, yaitu menggunakan hasil <strong><code class="docutils literal notranslate"><span class="pre">Cluster</span></code></strong> sebagai pembagian kelompok dan tidak menggunakan <strong><code class="docutils literal notranslate"><span class="pre">id</span></code></strong> sebagai variabel perhitungan.</p>
+<p>Dengan demikian, skenario kedua memungkinkan dilakukan perbandingan langsung antara <em>clustering</em> pada <strong>37 komponen PCA</strong> dengan <em>clustering</em> pada <strong>68 fitur asli</strong>.</p>
+<p><img alt="Skor Silhouette PCA" src="path_ke_gambar_3.png" /></p>
+<p><strong>Gambar 3. Hasil evaluasi Silhouette Coefficient pada data hasil PCA 37 komponen</strong></p>
+<p>Hasil keluaran node <strong>Silhouette Coefficient</strong> menunjukkan nilai rata-rata silhouette dari observasi yang telah dikelompokkan oleh K-Means. Nilai ini kemudian dapat dibandingkan dengan hasil pada skenario 68 fitur asli untuk melihat konsistensi kualitas <em>clustering</em>.</p>
+</section>
+<section id="kesimpulan-visual">
+<h3>Kesimpulan Visual<a class="headerlink" href="#kesimpulan-visual" title="Link to this heading">#</a></h3>
+<p>Berdasarkan workflow yang dirancang, <strong>KNIME Analytics Platform berhasil mengeksekusi kedua skenario clustering secara terstruktur</strong>, mulai dari pembacaan tiga dataset polutan, penggabungan data, normalisasi, hingga proses K-Means dan evaluasi menggunakan Silhouette Coefficient.</p>
+<p>Implementasi visual pada KNIME juga menunjukkan bahwa baik <strong>68 fitur asli</strong> maupun data yang telah direduksi menjadi <strong>37 komponen PCA</strong> dapat digunakan sebagai input K-Means dengan <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> dan dievaluasi menggunakan metode silhouette. Dengan demikian, workflow KNIME dapat digunakan sebagai <strong>validasi tambahan</strong> terhadap proses <em>Machine Learning</em> yang sebelumnya telah dilakukan menggunakan Python dan Scikit-Learn.</p>
+</section>
 </section>
 </section>
 
@@ -968,7 +1025,15 @@ Silhouette = 0.8547
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-dan-pengujian-menggunakan-knime">8. Implementasi dan Pengujian menggunakan KNIME</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pengantar-implementasi">Pengantar Implementasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-workflow-knime">Alur Workflow KNIME</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-k-means-68-fitur-asli">Skenario 1: K-Means (68 Fitur Asli)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-pca-37-komponen-k-means">Skenario 2: PCA 37 Komponen &amp; K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan-visual">Kesimpulan Visual</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

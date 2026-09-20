@@ -332,3 +332,72 @@ Secara keseluruhan, tahapan analisis pada Bagian 3 dapat diringkas sebagai berik
 ↓
 
 **Perbandingan Kualitas Cluster Skenario PCA vs. 68 Fitur Asli**
+
+---
+
+### 8. Implementasi dan Pengujian menggunakan KNIME
+
+### Pengantar Implementasi
+
+Sebagai tahap validasi terhadap proses *Machine Learning* yang sebelumnya dilakukan menggunakan **Python dengan library Scikit-Learn**, implementasi clustering juga dilakukan menggunakan **KNIME Analytics Platform**. KNIME digunakan untuk membangun *workflow* analisis secara visual sehingga setiap tahapan *preprocessing*, reduksi dimensi, *clustering*, dan evaluasi dapat diamati secara lebih terstruktur.
+
+Implementasi ini menggunakan dataset yang sama, yaitu data hasil ekstraksi fitur TSFEL dari tiga jenis polutan **CO, NO2, dan SO2**. Dua skenario *clustering* yang sebelumnya dianalisis menggunakan Python kemudian direplikasi pada KNIME, yaitu **clustering menggunakan 68 fitur asli** dan **clustering setelah reduksi dimensi PCA menjadi 37 komponen**.
+
+### Alur Workflow KNIME
+
+Workflow KNIME diawali dengan proses pembacaan ketiga dataset menggunakan node **CSV Reader**. Masing-masing node digunakan untuk memuat data fitur dari polutan **CO**, **NO2**, dan **SO2**.
+
+Ketiga dataset yang telah dibaca kemudian digabungkan menggunakan node **Concatenate**. Proses ini menghasilkan satu dataset yang berisi seluruh observasi dari ketiga polutan sehingga dapat diproses secara bersamaan dalam tahap *clustering*.
+
+Selanjutnya, data hasil penggabungan dinormalisasi menggunakan node **Normalizer** dengan metode **Z-Score**. Normalisasi ini dilakukan untuk menyamakan skala antarfitur sebelum proses perhitungan jarak pada K-Means dan sebelum proses PCA.
+
+Pada tahap normalisasi, kolom **`id`** dikecualikan dari proses perhitungan. Kolom tersebut merupakan identitas observasi dan bukan merupakan karakteristik data yang digunakan untuk menentukan kemiripan antarobservasi. Apabila kolom `id` ikut digunakan, variasi nilainya dapat memengaruhi perhitungan jarak dan berpotensi menjadi *noise* dalam proses *clustering*.
+
+Setelah proses normalisasi selesai, aliran data kemudian **dipecah menjadi dua cabang eksperimen**, yaitu:
+
+* **Cabang atas:** menggunakan seluruh **68 fitur asli** secara langsung untuk K-Means.
+* **Cabang bawah:** melakukan **reduksi dimensi menggunakan PCA menjadi 37 komponen**, kemudian hasilnya digunakan sebagai input K-Means.
+
+![Workflow KNIME](path_ke_gambar_1.png)
+
+**Gambar 1. Workflow implementasi clustering menggunakan KNIME Analytics Platform**
+
+Workflow tersebut menunjukkan bahwa kedua skenario menggunakan data hasil penggabungan dan normalisasi yang sama. Perbedaan utama terletak pada tahap transformasi data sebelum proses *clustering*, yaitu apakah data langsung digunakan dalam bentuk 68 fitur atau terlebih dahulu direduksi menggunakan PCA.
+
+### Skenario 1: K-Means (68 Fitur Asli)
+
+Pada cabang atas, data yang telah melalui proses **Normalizer** langsung diteruskan ke node **k-Means** tanpa reduksi dimensi. Dengan demikian, seluruh **68 fitur asli** tetap digunakan sebagai dasar perhitungan jarak dan pembentukan *cluster*.
+
+Parameter jumlah *cluster* pada node **k-Means** ditetapkan sebesar **$k=2$**. Pemilihan konfigurasi ini mengikuti hasil evaluasi sebelumnya menggunakan Silhouette Score, di mana $k=2$ menghasilkan nilai silhouette tertinggi pada analisis Python.
+
+Hasil *clustering* kemudian dievaluasi menggunakan node **Silhouette Coefficient**. Pada konfigurasi evaluasi tersebut, kolom **`Cluster`** digunakan sebagai kolom hasil *clustering* yang menjadi dasar perhitungan silhouette. Sementara itu, kolom **`id`** tidak digunakan dalam perhitungan karena hanya berfungsi sebagai identitas observasi.
+
+Evaluasi ini digunakan untuk mengetahui seberapa baik observasi berada dalam *cluster*-nya masing-masing dibandingkan dengan *cluster* lainnya. Semakin tinggi nilai koefisien silhouette, semakin baik pemisahan relatif antar-*cluster* berdasarkan representasi data yang digunakan.
+
+![Skor Silhouette Asli](path_ke_gambar_2.png)
+
+**Gambar 2. Hasil evaluasi Silhouette Coefficient pada 68 fitur asli**
+
+Berdasarkan hasil implementasi pada KNIME, nilai **Mean Silhouette Coefficient** pada cabang data 68 fitur dapat diamati melalui hasil keluaran node **Silhouette Coefficient**. Nilai tersebut digunakan sebagai pembanding terhadap hasil perhitungan yang sebelumnya diperoleh menggunakan Python.
+
+### Skenario 2: PCA 37 Komponen & K-Means
+
+Pada cabang bawah, data hasil normalisasi terlebih dahulu diproses menggunakan node **PCA**. Konfigurasi PCA ditetapkan pada **Fixed Dimensions = 37**, sehingga 68 fitur asli ditransformasikan menjadi **37 komponen utama**.
+
+Reduksi dimensi ini bertujuan menghasilkan representasi data dengan jumlah dimensi yang lebih rendah tetapi tetap mempertahankan struktur utama data yang digunakan dalam analisis. Output dari node PCA kemudian diteruskan ke node **k-Means** dengan jumlah *cluster* yang sama, yaitu **$k=2$**.
+
+Setelah proses *clustering* selesai, hasilnya dievaluasi menggunakan node **Silhouette Coefficient**. Evaluasi dilakukan dengan prinsip yang sama seperti pada skenario pertama, yaitu menggunakan hasil **`Cluster`** sebagai pembagian kelompok dan tidak menggunakan **`id`** sebagai variabel perhitungan.
+
+Dengan demikian, skenario kedua memungkinkan dilakukan perbandingan langsung antara *clustering* pada **37 komponen PCA** dengan *clustering* pada **68 fitur asli**.
+
+![Skor Silhouette PCA](path_ke_gambar_3.png)
+
+**Gambar 3. Hasil evaluasi Silhouette Coefficient pada data hasil PCA 37 komponen**
+
+Hasil keluaran node **Silhouette Coefficient** menunjukkan nilai rata-rata silhouette dari observasi yang telah dikelompokkan oleh K-Means. Nilai ini kemudian dapat dibandingkan dengan hasil pada skenario 68 fitur asli untuk melihat konsistensi kualitas *clustering*.
+
+### Kesimpulan Visual
+
+Berdasarkan workflow yang dirancang, **KNIME Analytics Platform berhasil mengeksekusi kedua skenario clustering secara terstruktur**, mulai dari pembacaan tiga dataset polutan, penggabungan data, normalisasi, hingga proses K-Means dan evaluasi menggunakan Silhouette Coefficient.
+
+Implementasi visual pada KNIME juga menunjukkan bahwa baik **68 fitur asli** maupun data yang telah direduksi menjadi **37 komponen PCA** dapat digunakan sebagai input K-Means dengan **$k=2$** dan dievaluasi menggunakan metode silhouette. Dengan demikian, workflow KNIME dapat digunakan sebagai **validasi tambahan** terhadap proses *Machine Learning* yang sebelumnya telah dilakukan menggunakan Python dan Scikit-Learn.
