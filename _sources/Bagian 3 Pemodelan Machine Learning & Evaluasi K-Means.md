@@ -358,7 +358,7 @@ Setelah proses normalisasi selesai, aliran data kemudian **dipecah menjadi dua c
 * **Cabang atas:** menggunakan seluruh **68 fitur asli** secara langsung untuk K-Means.
 * **Cabang bawah:** melakukan **reduksi dimensi menggunakan PCA menjadi 37 komponen**, kemudian hasilnya digunakan sebagai input K-Means.
 
-![Workflow KNIME](path_ke_gambar_1.png)
+![Workflow KNIME](./path_ke_gambar_1.png)
 
 **Gambar 1. Workflow implementasi clustering menggunakan KNIME Analytics Platform**
 
@@ -374,7 +374,7 @@ Hasil *clustering* kemudian dievaluasi menggunakan node **Silhouette Coefficient
 
 Evaluasi ini digunakan untuk mengetahui seberapa baik observasi berada dalam *cluster*-nya masing-masing dibandingkan dengan *cluster* lainnya. Semakin tinggi nilai koefisien silhouette, semakin baik pemisahan relatif antar-*cluster* berdasarkan representasi data yang digunakan.
 
-![Skor Silhouette Asli](path_ke_gambar_2.png)
+![Skor Silhouette Asli](./path_ke_gambar_2.png)
 
 **Gambar 2. Hasil evaluasi Silhouette Coefficient pada 68 fitur asli**
 
@@ -390,7 +390,7 @@ Setelah proses *clustering* selesai, hasilnya dievaluasi menggunakan node **Silh
 
 Dengan demikian, skenario kedua memungkinkan dilakukan perbandingan langsung antara *clustering* pada **37 komponen PCA** dengan *clustering* pada **68 fitur asli**.
 
-![Skor Silhouette PCA](path_ke_gambar_3.png)
+![Skor Silhouette PCA](./path_ke_gambar_3.png)
 
 **Gambar 3. Hasil evaluasi Silhouette Coefficient pada data hasil PCA 37 komponen**
 
