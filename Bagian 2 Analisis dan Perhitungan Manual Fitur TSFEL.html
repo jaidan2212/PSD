@@ -1,0 +1,1135 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu) &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Bagian 2 Analisis dan Perhitungan Manual Fitur TSFEL';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html" />
+    <link rel="prev" title="Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan" href="eda_polutan.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2FBagian 2 Analisis dan Perhitungan Manual Fitur TSFEL.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Bagian 2 Analisis dan Perhitungan Manual Fitur TSFEL.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teori-dasar">1. Teori Dasar</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-diff">1.1 Fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-pada-data-kualitas-udara">Interpretasi pada Data Kualitas Udara</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-frequency">1.2 Fitur <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretasi pada Data Kualitas Udara</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-coret-coretan">2. Perhitungan Manual (Coret-coretan)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-median-diff">2.1 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-selisih-antar-titik">Langkah 1 — Menghitung selisih antar titik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-mengurutkan-nilai-selisih">Langkah 2 — Mengurutkan nilai selisih</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menentukan-median">Langkah 3 — Menentukan median</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-median-frequency">2.2 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-sinyal-awal">Langkah 1 — Sinyal awal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-mengubah-sinyal-dari-domain-waktu-ke-domain-frekuensi">Langkah 2 — Mengubah sinyal dari domain waktu ke domain frekuensi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-magnitudo-fft">Langkah 3 — Menghitung magnitudo FFT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-magnitudo-kumulatif">Langkah 4 — Menghitung magnitudo kumulatif</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-5-menentukan-batas-50">Langkah 5 — Menentukan batas 50%</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-6-menentukan-frekuensi-median">Langkah 6 — Menentukan frekuensi median</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuktian-dengan-python">3. Pembuktian dengan Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel-tugas-individu">
+<h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)<a class="headerlink" href="#bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel-tugas-individu" title="Link to this heading">#</a></h1>
+<section id="teori-dasar">
+<h2>1. Teori Dasar<a class="headerlink" href="#teori-dasar" title="Link to this heading">#</a></h2>
+<section id="fitur-median-diff">
+<h3>1.1 Fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code><a class="headerlink" href="#fitur-median-diff" title="Link to this heading">#</a></h3>
+<p>Fitur <strong><code class="docutils literal notranslate"><span class="pre">median_diff(signal)</span></code></strong> merupakan fitur pada <strong>domain temporal</strong> yang menghitung nilai median dari selisih antara dua titik data yang berurutan pada suatu sinyal <em>time-series</em>. Secara matematis, selisih antar data dapat dituliskan sebagai:</p>
+<div class="math notranslate nohighlight">
+\[
+d_i = x_{i+1} - x_i
+\]</div>
+<p>dengan:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x_i\)</span> = nilai sinyal pada titik ke-<span class="math notranslate nohighlight">\(i\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(d_i\)</span> = selisih antara dua titik yang berurutan.</p></li>
+<li><p><span class="math notranslate nohighlight">\(n\)</span> = jumlah titik data.</p></li>
+</ul>
+<p>Selanjutnya, seluruh nilai selisih tersebut diurutkan dan dicari nilai tengahnya atau <strong>median</strong>.</p>
+<p>Secara umum:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{median\_diff} = \operatorname{median}(x_{i+1}-x_i)
+\]</div>
+<p>Implementasi TSFEL menggunakan operasi <code class="docutils literal notranslate"><span class="pre">np.diff(signal)</span></code> untuk memperoleh selisih antar titik, kemudian menggunakan <code class="docutils literal notranslate"><span class="pre">np.median()</span></code> untuk mendapatkan nilai mediannya.</p>
+</section>
+<section id="interpretasi-pada-data-kualitas-udara">
+<h3>Interpretasi pada Data Kualitas Udara<a class="headerlink" href="#interpretasi-pada-data-kualitas-udara" title="Link to this heading">#</a></h3>
+<p>Pada data kualitas udara, fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code> dapat digunakan untuk menggambarkan <strong>perubahan tipikal atau perubahan tengah</strong> konsentrasi suatu polutan dari satu pengamatan ke pengamatan berikutnya.</p>
+<p>Untuk polutan <strong>CO (Karbon Monoksida)</strong>:</p>
+<ul class="simple">
+<li><p>Nilai <code class="docutils literal notranslate"><span class="pre">median_diff</span></code> <strong>positif</strong> menunjukkan bahwa perubahan konsentrasi CO secara tipikal cenderung meningkat.</p></li>
+<li><p>Nilai <code class="docutils literal notranslate"><span class="pre">median_diff</span></code> <strong>negatif</strong> menunjukkan kecenderungan penurunan.</p></li>
+<li><p>Nilai yang mendekati <strong>0</strong> menunjukkan bahwa perubahan antar pengamatan relatif kecil atau cenderung stabil.</p></li>
+</ul>
+<p>Kelebihan penggunaan median adalah sifatnya yang relatif tidak mudah dipengaruhi oleh satu perubahan yang sangat besar dibandingkan dengan penggunaan rata-rata (<em>mean</em>).</p>
+</section>
+<hr class="docutils" />
+<section id="fitur-median-frequency">
+<h3>1.2 Fitur <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code><a class="headerlink" href="#fitur-median-frequency" title="Link to this heading">#</a></h3>
+<p>Fitur <strong><code class="docutils literal notranslate"><span class="pre">median_frequency(signal,</span> <span class="pre">fs)</span></code></strong> merupakan fitur pada <strong>domain frekuensi</strong> yang digunakan untuk menentukan frekuensi yang membagi akumulasi magnitudo spektrum menjadi sekitar <strong>50% bagian di bawahnya dan 50% bagian di atasnya</strong>.</p>
+<p>Dalam implementasi TSFEL, sinyal terlebih dahulu diubah dari <strong>domain waktu</strong> ke <strong>domain frekuensi</strong> menggunakan <em>Fast Fourier Transform</em> (FFT). TSFEL menggunakan magnitudo dari hasil FFT:</p>
+<div class="math notranslate nohighlight">
+\[
+F_k = |\operatorname{FFT}(x)_k|
+\]</div>
+<p>Kemudian dilakukan perhitungan frekuensi yang bersesuaian dengan setiap komponen FFT:</p>
+<div class="math notranslate nohighlight">
+\[
+f_k = \operatorname{rfftfreq}(N, d=1/fs)
+\]</div>
+<p>Selanjutnya, nilai magnitudo dijumlahkan secara kumulatif:</p>
+<div class="math notranslate nohighlight">
+\[
+C_k = \sum_{i=0}^{k}F_i
+\]</div>
+<p>Frekuensi median ditentukan sebagai frekuensi pertama yang memenuhi:</p>
+<div class="math notranslate nohighlight">
+\[
+C_k &gt; 0.50 \times C_{\text{total}}
+\]</div>
+<p>Dengan demikian:</p>
+<div class="math notranslate nohighlight">
+\[
+f_{\text{median}} = f_k
+\]</div>
+<p>TSFEL secara spesifik mendokumentasikan <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code> sebagai fitur yang mencari <strong>50% dari total spektrum menggunakan cumulative sum (cumsum)</strong>. Implementasinya menggunakan magnitudo FFT, bukan kuadrat magnitudo FFT.</p>
+</section>
+<section id="id1">
+<h3>Interpretasi pada Data Kualitas Udara<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>Pada data <em>time-series</em> kualitas udara, <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code> menggambarkan <strong>distribusi perubahan sinyal CO pada domain frekuensi</strong>.</p>
+<p>Jika nilai median frequency relatif rendah, sebagian besar magnitudo spektrum berada pada frekuensi rendah. Hal ini dapat menunjukkan bahwa perubahan konsentrasi CO lebih banyak terjadi secara perlahan.</p>
+<p>Sebaliknya, nilai median frequency yang lebih tinggi menunjukkan bahwa distribusi spektrum relatif lebih banyak berada pada frekuensi yang lebih tinggi, yang berkaitan dengan perubahan sinyal yang lebih cepat.</p>
+<p>Perlu diperhatikan bahwa nilai fitur ini sangat bergantung pada <strong>frekuensi sampling (<code class="docutils literal notranslate"><span class="pre">fs</span></code>)</strong> dan panjang data yang digunakan.</p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="perhitungan-manual-coret-coretan">
+<h1>2. Perhitungan Manual (Coret-coretan)<a class="headerlink" href="#perhitungan-manual-coret-coretan" title="Link to this heading">#</a></h1>
+<p>Data sampel konsentrasi <strong>CO (Karbon Monoksida)</strong> yang digunakan adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+signal = [0.021,\ 0.025,\ 0.024,\ 0.029,\ 0.031]
+\]</div>
+<p>Jumlah data:</p>
+<div class="math notranslate nohighlight">
+\[
+N = 5
+\]</div>
+<p>Frekuensi sampling yang digunakan:</p>
+<div class="math notranslate nohighlight">
+\[
+fs = 1
+\]</div>
+<hr class="docutils" />
+<section id="perhitungan-manual-median-diff">
+<h2>2.1 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_diff</span></code><a class="headerlink" href="#perhitungan-manual-median-diff" title="Link to this heading">#</a></h2>
+<section id="langkah-1-menghitung-selisih-antar-titik">
+<h3>Langkah 1 — Menghitung selisih antar titik<a class="headerlink" href="#langkah-1-menghitung-selisih-antar-titik" title="Link to this heading">#</a></h3>
+<p>Selisih setiap dua titik yang berurutan dihitung menggunakan:</p>
+<div class="math notranslate nohighlight">
+\[
+d_i = x_{i+1}-x_i
+\]</div>
+<p>Data:</p>
+<div class="math notranslate nohighlight">
+\[
+[0.021,\ 0.025,\ 0.024,\ 0.029,\ 0.031]
+\]</div>
+<p>Maka:</p>
+<p><strong>Selisih pertama:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+d_1 = 0.025 - 0.021 = 0.004
+\]</div>
+<p><strong>Selisih kedua:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+d_2 = 0.024 - 0.025 = -0.001
+\]</div>
+<p><strong>Selisih ketiga:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+d_3 = 0.029 - 0.024 = 0.005
+\]</div>
+<p><strong>Selisih keempat:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+d_4 = 0.031 - 0.029 = 0.002
+\]</div>
+<p>Sehingga diperoleh:</p>
+<div class="math notranslate nohighlight">
+\[
+d = [0.004,\ -0.001,\ 0.005,\ 0.002]
+\]</div>
+</section>
+<section id="langkah-2-mengurutkan-nilai-selisih">
+<h3>Langkah 2 — Mengurutkan nilai selisih<a class="headerlink" href="#langkah-2-mengurutkan-nilai-selisih" title="Link to this heading">#</a></h3>
+<p>Nilai selisih kemudian diurutkan dari yang terkecil hingga terbesar:</p>
+<div class="math notranslate nohighlight">
+\[
+[-0.001,\ 0.002,\ 0.004,\ 0.005]
+\]</div>
+</section>
+<section id="langkah-3-menentukan-median">
+<h3>Langkah 3 — Menentukan median<a class="headerlink" href="#langkah-3-menentukan-median" title="Link to this heading">#</a></h3>
+<p>Karena terdapat <strong>4 nilai</strong>, median merupakan rata-rata dari dua nilai yang berada di tengah:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Median} =
+\frac{0.002+0.004}{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\text{Median} = \frac{0.006}{2}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\boxed{\text{median\_diff}=0.003}
+\]</div>
+<p>Jadi, hasil perhitungan manual fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code> adalah:</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">0.003</span></code></strong></p>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="perhitungan-manual-median-frequency">
+<h1>2.2 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code><a class="headerlink" href="#perhitungan-manual-median-frequency" title="Link to this heading">#</a></h1>
+<p>Perhitungan FFT secara manual dapat menjadi panjang apabila dilakukan menggunakan persamaan kompleks untuk setiap frekuensi. Oleh karena itu, proses berikut menjelaskan <strong>alur matematis yang dilakukan oleh algoritma TSFEL</strong> secara bertahap.</p>
+<section id="langkah-1-sinyal-awal">
+<h2>Langkah 1 — Sinyal awal<a class="headerlink" href="#langkah-1-sinyal-awal" title="Link to this heading">#</a></h2>
+<p>Digunakan sinyal:</p>
+<div class="math notranslate nohighlight">
+\[
+x=[0.021,\ 0.025,\ 0.024,\ 0.029,\ 0.031]
+\]</div>
+<p>dengan:</p>
+<div class="math notranslate nohighlight">
+\[
+N=5
+\]</div>
+<p>dan:</p>
+<div class="math notranslate nohighlight">
+\[
+fs=1
+\]</div>
+<hr class="docutils" />
+</section>
+<section id="langkah-2-mengubah-sinyal-dari-domain-waktu-ke-domain-frekuensi">
+<h2>Langkah 2 — Mengubah sinyal dari domain waktu ke domain frekuensi<a class="headerlink" href="#langkah-2-mengubah-sinyal-dari-domain-waktu-ke-domain-frekuensi" title="Link to this heading">#</a></h2>
+<p>Transformasi dilakukan menggunakan <strong>Fast Fourier Transform (FFT)</strong>.</p>
+<p>Secara umum, DFT dapat dituliskan:</p>
+<div class="math notranslate nohighlight">
+\[
+X_k = \sum_{n=0}^{N-1}x_n e^{-j2\pi kn/N}
+\]</div>
+<p>FFT merupakan algoritma yang digunakan untuk menghitung transformasi tersebut secara lebih efisien.</p>
+<p>TSFEL kemudian mengambil magnitudo dari hasil FFT:</p>
+<div class="math notranslate nohighlight">
+\[
+F_k=|X_k|
+\]</div>
+<p>Untuk sinyal dengan <span class="math notranslate nohighlight">\(N=5\)</span>, <code class="docutils literal notranslate"><span class="pre">rfft</span></code> menghasilkan frekuensi:</p>
+<div class="math notranslate nohighlight">
+\[
+f=[0,\ 0.2,\ 0.4]
+\]</div>
+<p>Dengan <span class="math notranslate nohighlight">\(fs=1\)</span>, resolusi frekuensinya adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+\Delta f=\frac{fs}{N}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\Delta f=\frac{1}{5}=0.2
+\]</div>
+<hr class="docutils" />
+</section>
+<section id="langkah-3-menghitung-magnitudo-fft">
+<h2>Langkah 3 — Menghitung magnitudo FFT<a class="headerlink" href="#langkah-3-menghitung-magnitudo-fft" title="Link to this heading">#</a></h2>
+<p>Untuk data:</p>
+<div class="math notranslate nohighlight">
+\[
+[0.021,\ 0.025,\ 0.024,\ 0.029,\ 0.031]
+\]</div>
+<p>magnitudo FFT yang diperoleh secara numerik adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+F \approx
+[0.130000,\ 0.009780,\ 0.008022]
+\]</div>
+<p>Sehingga pasangan frekuensi dan magnitudonya adalah:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>Frekuensi</p></th>
+<th class="head text-right"><p>Magnitudo FFT</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>0.0</p></td>
+<td class="text-right"><p>0.130000</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>0.2</p></td>
+<td class="text-right"><p>0.009780</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>0.4</p></td>
+<td class="text-right"><p>0.008022</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p><strong>Catatan:</strong> Pada implementasi <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code> TSFEL, yang dijumlahkan adalah <strong>magnitudo FFT</strong>, yaitu <span class="math notranslate nohighlight">\(|FFT|\)</span>. Jadi, tidak dilakukan pengkuadratan magnitudo menjadi <span class="math notranslate nohighlight">\(|FFT|^2\)</span> pada fitur ini.</p>
+</div></blockquote>
+<hr class="docutils" />
+</section>
+<section id="langkah-4-menghitung-magnitudo-kumulatif">
+<h2>Langkah 4 — Menghitung magnitudo kumulatif<a class="headerlink" href="#langkah-4-menghitung-magnitudo-kumulatif" title="Link to this heading">#</a></h2>
+<p>Magnitudo kemudian dijumlahkan secara kumulatif (<em>cumulative sum</em>):</p>
+<div class="math notranslate nohighlight">
+\[
+C_0=0.130000
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_1=0.130000+0.009780
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_1\approx0.139780
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_2=0.139780+0.008022
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+C_2\approx0.147802
+\]</div>
+<p>Sehingga:</p>
+<div class="math notranslate nohighlight">
+\[
+C=[0.130000,\ 0.139780,\ 0.147802]
+\]</div>
+<p>Total magnitudo:</p>
+<div class="math notranslate nohighlight">
+\[
+C_{\text{total}}\approx0.147802
+\]</div>
+<hr class="docutils" />
+</section>
+<section id="langkah-5-menentukan-batas-50">
+<h2>Langkah 5 — Menentukan batas 50%<a class="headerlink" href="#langkah-5-menentukan-batas-50" title="Link to this heading">#</a></h2>
+<p>Median frequency menggunakan batas 50% dari total magnitudo:</p>
+<div class="math notranslate nohighlight">
+\[
+0.50\times C_{\text{total}}
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+=0.50\times0.147802
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\approx0.073901
+\]</div>
+<p>Jadi, batas median adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+\boxed{0.073901}
+\]</div>
+<hr class="docutils" />
+</section>
+<section id="langkah-6-menentukan-frekuensi-median">
+<h2>Langkah 6 — Menentukan frekuensi median<a class="headerlink" href="#langkah-6-menentukan-frekuensi-median" title="Link to this heading">#</a></h2>
+<p>Sekarang bandingkan magnitudo kumulatif dengan batas 50%:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>Frekuensi</p></th>
+<th class="head text-right"><p>Magnitudo</p></th>
+<th class="head text-right"><p>Kumulatif</p></th>
+<th class="head text-center"><p>Melewati 50%?</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>0.0</p></td>
+<td class="text-right"><p>0.130000</p></td>
+<td class="text-right"><p>0.130000</p></td>
+<td class="text-center"><p><strong>Ya</strong></p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>0.2</p></td>
+<td class="text-right"><p>0.009780</p></td>
+<td class="text-right"><p>0.139780</p></td>
+<td class="text-center"><p>Ya</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>0.4</p></td>
+<td class="text-right"><p>0.008022</p></td>
+<td class="text-right"><p>0.147802</p></td>
+<td class="text-center"><p>Ya</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Pada frekuensi pertama, yaitu:</p>
+<div class="math notranslate nohighlight">
+\[
+f=0
+\]</div>
+<p>nilai kumulatif sudah lebih besar daripada 50% total magnitudo:</p>
+<div class="math notranslate nohighlight">
+\[
+0.130000 &gt; 0.073901
+\]</div>
+<p>Oleh karena itu:</p>
+<div class="math notranslate nohighlight">
+\[
+\boxed{\text{median\_frequency}=0.0}
+\]</div>
+<p>Jadi, berdasarkan algoritma yang digunakan TSFEL, hasil <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code> untuk data sampel tersebut adalah:</p>
+<p><strong><code class="docutils literal notranslate"><span class="pre">0.0</span></code></strong></p>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="pembuktian-dengan-python">
+<h1>3. Pembuktian dengan Python<a class="headerlink" href="#pembuktian-dengan-python" title="Link to this heading">#</a></h1>
+<p>Pembuktian dilakukan menggunakan <strong>NumPy</strong>, <strong>SciPy</strong>, dan <strong>TSFEL</strong>. NumPy digunakan untuk pengolahan array dan perhitungan numerik, SciPy digunakan untuk membantu proses FFT secara independen, sedangkan TSFEL digunakan untuk menghitung fitur menggunakan fungsi aslinya.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.fft</span><span class="w"> </span><span class="kn">import</span> <span class="n">rfft</span><span class="p">,</span> <span class="n">rfftfreq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tsfel.feature_extraction.features</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tsfel_features</span>
+
+<span class="c1"># ============================================================</span>
+<span class="c1"># DATA SAMPEL</span>
+<span class="c1"># ============================================================</span>
+
+<span class="n">signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.021</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.024</span><span class="p">,</span> <span class="mf">0.029</span><span class="p">,</span> <span class="mf">0.031</span><span class="p">])</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===================================================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DATA SAMPEL CO&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===================================================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Signal :&quot;</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fs     :&quot;</span><span class="p">,</span> <span class="n">fs</span><span class="p">)</span>
+
+
+<span class="c1"># ============================================================</span>
+<span class="c1"># 1. PEMBUKTIAN median_diff</span>
+<span class="c1"># ============================================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===================================================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1. PEMBUKTIAN FITUR median_diff&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===================================================&quot;</span><span class="p">)</span>
+
+<span class="c1"># ----- PERHITUNGAN MANUAL -----</span>
+
+<span class="c1"># Menghitung selisih antar titik yang berurutan</span>
+<span class="n">diff_manual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+<span class="c1"># Mengurutkan nilai difference</span>
+<span class="n">diff_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">diff_manual</span><span class="p">)</span>
+
+<span class="c1"># Menghitung median</span>
+<span class="n">hasil_manual_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">diff_manual</span><span class="p">)</span>
+
+<span class="c1"># ----- PERHITUNGAN TSFEL -----</span>
+
+<span class="n">hasil_tsfel_diff</span> <span class="o">=</span> <span class="n">tsfel_features</span><span class="o">.</span><span class="n">median_diff</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sinyal asli       :&quot;</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference        :&quot;</span><span class="p">,</span> <span class="n">diff_manual</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference urut   :&quot;</span><span class="p">,</span> <span class="n">diff_sorted</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasil Manual      : </span><span class="si">{</span><span class="n">hasil_manual_diff</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasil TSFEL       : </span><span class="si">{</span><span class="n">hasil_tsfel_diff</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Status            :&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SAMA PERSIS&quot;</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span>
+        <span class="n">hasil_manual_diff</span><span class="p">,</span>
+        <span class="n">hasil_tsfel_diff</span>
+    <span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;BERBEDA&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================</span>
+<span class="c1"># 2. PEMBUKTIAN median_frequency</span>
+<span class="c1"># ============================================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===================================================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2. PEMBUKTIAN FITUR median_frequency&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===================================================&quot;</span><span class="p">)</span>
+
+<span class="c1"># ----- PERHITUNGAN MANUAL SESUAI ALGORITMA TSFEL -----</span>
+
+<span class="c1"># FFT sinyal</span>
+<span class="n">fft_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">rfft</span><span class="p">(</span><span class="n">signal</span><span class="p">))</span>
+
+<span class="c1"># Deret frekuensi</span>
+<span class="n">freqs</span> <span class="o">=</span> <span class="n">rfftfreq</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">signal</span><span class="p">),</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">fs</span><span class="p">)</span>
+
+<span class="c1"># Magnitudo kumulatif</span>
+<span class="n">cum_magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">fft_values</span><span class="p">)</span>
+
+<span class="c1"># Total magnitudo</span>
+<span class="n">total_magnitude</span> <span class="o">=</span> <span class="n">cum_magnitude</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Batas 50%</span>
+<span class="n">threshold</span> <span class="o">=</span> <span class="n">total_magnitude</span> <span class="o">*</span> <span class="mf">0.50</span>
+
+<span class="c1"># Mencari indeks pertama yang melewati 50%</span>
+<span class="n">median_freq_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+    <span class="n">cum_magnitude</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+<span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Frekuensi median</span>
+<span class="n">hasil_manual_freq</span> <span class="o">=</span> <span class="n">freqs</span><span class="p">[</span><span class="n">median_freq_index</span><span class="p">]</span>
+
+
+<span class="c1"># ----- PERHITUNGAN TSFEL -----</span>
+
+<span class="n">hasil_tsfel_freq</span> <span class="o">=</span> <span class="n">tsfel_features</span><span class="o">.</span><span class="n">median_frequency</span><span class="p">(</span>
+    <span class="n">signal</span><span class="p">,</span>
+    <span class="n">fs</span><span class="o">=</span><span class="n">fs</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ----- MENAMPILKAN HASIL -----</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Deret Frekuensi   :&quot;</span><span class="p">,</span> <span class="n">freqs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Magnitudo FFT     :&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">fft_values</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Magnitudo Kumulatif:&quot;</span><span class="p">,</span>
+      <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">cum_magnitude</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Magnitudo   : </span><span class="si">{</span><span class="n">total_magnitude</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Batas 50%         : </span><span class="si">{</span><span class="n">threshold</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasil Manual      : </span><span class="si">{</span><span class="n">hasil_manual_freq</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Hasil TSFEL       : </span><span class="si">{</span><span class="n">hasil_tsfel_freq</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot;Status            :&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SAMA PERSIS&quot;</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span>
+        <span class="n">hasil_manual_freq</span><span class="p">,</span>
+        <span class="n">hasil_tsfel_freq</span>
+    <span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;BERBEDA&quot;</span>
+<span class="p">)</span>
+
+
+<span class="c1"># ============================================================</span>
+<span class="c1"># KESIMPULAN PEMBUKTIAN</span>
+<span class="c1"># ============================================================</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">===================================================&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KESIMPULAN&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;===================================================&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;median_diff      : </span><span class="si">{</span><span class="n">hasil_manual_diff</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;== </span><span class="si">{</span><span class="n">hasil_tsfel_diff</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;median_frequency : </span><span class="si">{</span><span class="n">hasil_manual_freq</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> &quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;== </span><span class="si">{</span><span class="n">hasil_tsfel_freq</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="hasil-yang-diharapkan">
+<h2>Hasil yang Diharapkan<a class="headerlink" href="#hasil-yang-diharapkan" title="Link to this heading">#</a></h2>
+<p>Berdasarkan perhitungan manual dan implementasi algoritma TSFEL, diperoleh:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Fitur</p></th>
+<th class="head text-right"><p>Hasil Manual</p></th>
+<th class="head text-right"><p>Hasil TSFEL</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">median_diff</span></code></p></td>
+<td class="text-right"><p><strong>0.00300</strong></p></td>
+<td class="text-right"><p><strong>0.00300</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></p></td>
+<td class="text-right"><p><strong>0.00000</strong></p></td>
+<td class="text-right"><p><strong>0.00000</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Dengan demikian, kedua hasil perhitungan manual dapat dibuktikan konsisten dengan fungsi yang tersedia pada TSFEL untuk data sampel yang digunakan.</p>
+<section id="kesimpulan">
+<h3>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<p>Berdasarkan analisis yang telah dilakukan, fitur <strong><code class="docutils literal notranslate"><span class="pre">median_diff</span></code></strong> digunakan untuk mengukur perubahan tengah dari nilai sinyal antar titik waktu yang berurutan. Pada data CO, fitur ini menghasilkan nilai <strong>0.003</strong>, yang menunjukkan bahwa perubahan tengah konsentrasi CO antar pengamatan adalah sebesar 0.003 satuan.</p>
+<p>Sementara itu, fitur <strong><code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></strong> bekerja pada domain frekuensi dengan melakukan transformasi FFT, mengambil magnitudo spektrum, menghitung akumulasi magnitudo, kemudian menentukan frekuensi ketika akumulasi tersebut melewati 50% dari total magnitudo. Pada data sampel CO dengan <span class="math notranslate nohighlight">\(fs=1\)</span>, diperoleh nilai <strong>0.0 Hz</strong>.</p>
+<p>Hasil perhitungan manual untuk kedua fitur tersebut sesuai dengan hasil yang diberikan oleh fungsi TSFEL, sehingga proses perhitungan dapat digunakan sebagai pembuktian matematis terhadap implementasi fitur pada library TSFEL.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="eda_polutan.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teori-dasar">1. Teori Dasar</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-diff">1.1 Fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-pada-data-kualitas-udara">Interpretasi pada Data Kualitas Udara</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-frequency">1.2 Fitur <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Interpretasi pada Data Kualitas Udara</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-coret-coretan">2. Perhitungan Manual (Coret-coretan)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-median-diff">2.1 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-selisih-antar-titik">Langkah 1 — Menghitung selisih antar titik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-mengurutkan-nilai-selisih">Langkah 2 — Mengurutkan nilai selisih</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menentukan-median">Langkah 3 — Menentukan median</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-median-frequency">2.2 Perhitungan Manual <code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-sinyal-awal">Langkah 1 — Sinyal awal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-mengubah-sinyal-dari-domain-waktu-ke-domain-frekuensi">Langkah 2 — Mengubah sinyal dari domain waktu ke domain frekuensi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-magnitudo-fft">Langkah 3 — Menghitung magnitudo FFT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-magnitudo-kumulatif">Langkah 4 — Menghitung magnitudo kumulatif</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-5-menentukan-batas-50">Langkah 5 — Menentukan batas 50%</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-6-menentukan-frekuensi-median">Langkah 6 — Menentukan frekuensi median</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuktian-dengan-python">3. Pembuktian dengan Python</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

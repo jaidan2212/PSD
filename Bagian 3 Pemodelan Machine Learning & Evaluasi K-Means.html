@@ -1,0 +1,1009 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Bagian 3 Pemodelan Machine Learning & Evaluasi K-Means';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a></li>
+
+
+
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2FBagian 3 Pemodelan Machine Learning & Evaluasi K-Means.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Bagian 3 Pemodelan Machine Learning & Evaluasi K-Means.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bagian 3: Pemodelan Machine Learning & Evaluasi K-Means</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-dan-standarisasi-data">1. Penggabungan dan Standarisasi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-data-polutan">Penggabungan Data Polutan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standarisasi-data">Standarisasi Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-reduksi-dimensi-pca-37-k-means">2. Skenario 1: Reduksi Dimensi (PCA 37) &amp; K-Means</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penerapan-principal-component-analysis-pca">Penerapan Principal Component Analysis (PCA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-menggunakan-k-means">Clustering Menggunakan K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 1 untuk Setiap Nilai k</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-1">Interpretasi Metode Elbow Skenario 1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-k-means-pada-68-fitur-asli">3. Skenario 2: K-Means pada 68 Fitur Asli</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-pada-data-berdimensi-tinggi">Clustering pada Data Berdimensi Tinggi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-high-dimensional-data">Tantangan High-Dimensional Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 2 untuk Setiap Nilai k</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-2">Interpretasi Metode Elbow Skenario 2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-kedua-skenario">4. Perbandingan Hasil Kedua Skenario</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-ringkasan-nilai-terbaik">Tabel Ringkasan Nilai Terbaik</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-interpretasi">5. Metrik Evaluasi &amp; Interpretasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow">Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-score">Silhouette Score</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#template-kesimpulan">Template Kesimpulan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bagian-3-pemodelan-machine-learning-evaluasi-k-means">
+<h1>Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means<a class="headerlink" href="#bagian-3-pemodelan-machine-learning-evaluasi-k-means" title="Link to this heading">#</a></h1>
+<section id="penggabungan-dan-standarisasi-data">
+<h2>1. Penggabungan dan Standarisasi Data<a class="headerlink" href="#penggabungan-dan-standarisasi-data" title="Link to this heading">#</a></h2>
+<section id="penggabungan-data-polutan">
+<h3>Penggabungan Data Polutan<a class="headerlink" href="#penggabungan-data-polutan" title="Link to this heading">#</a></h3>
+<p>Pada tahap ini, tiga dataset hasil ekstraksi fitur TSFEL, yaitu <strong>CO</strong>, <strong>NO2</strong>, dan <strong>SO2</strong>, digabungkan menjadi satu dataset menggunakan proses <em>concatenation</em>. Penggabungan dilakukan agar seluruh data dari satu kelas analisis dapat diproses dan dianalisis secara bersamaan menggunakan algoritma <em>clustering</em>.</p>
+<p>Ketiga dataset tersebut memiliki karakteristik fitur yang sama, yaitu berupa fitur-fitur statistik dan karakteristik <em>time series</em> yang telah diekstraksi menggunakan TSFEL. Dengan menggabungkannya, data dapat dipandang sebagai satu kesatuan observasi yang memiliki <strong>68 fitur</strong> yang sama untuk setiap sampel.</p>
+<p>Proses penggabungan juga memungkinkan K-Means untuk mencari pola atau struktur kelompok berdasarkan <strong>kesamaan karakteristik fitur</strong>, bukan berdasarkan asal polutan. Dengan demikian, proses clustering tetap bersifat <strong>unsupervised learning</strong>, karena label polutan tidak digunakan sebagai variabel yang menentukan pembentukan cluster.</p>
+<p>Pada implementasinya, kolom non-numerik maupun kolom identitas seperti nomor atau NIM tidak digunakan sebagai fitur clustering. Label polutan juga hanya dapat digunakan sebagai informasi pendukung atau visualisasi dan <strong>tidak menjadi input utama K-Means</strong>.</p>
+</section>
+<section id="standarisasi-data">
+<h3>Standarisasi Data<a class="headerlink" href="#standarisasi-data" title="Link to this heading">#</a></h3>
+<p>Sebelum melakukan PCA maupun K-Means, data dinormalisasi menggunakan <strong>StandardScaler</strong>. Tahap ini penting karena 68 fitur yang dihasilkan dari TSFEL dapat memiliki <strong>skala, satuan, dan rentang nilai yang berbeda</strong>.</p>
+<p>Standardisasi mengubah setiap fitur sehingga memiliki karakteristik statistik yang relatif seragam, yaitu:</p>
+<ul class="simple">
+<li><p><strong>Mean mendekati 0</strong></p></li>
+<li><p><strong>Standar deviasi mendekati 1</strong></p></li>
+</ul>
+<p>Secara konseptual, proses standardisasi dilakukan dengan persamaan:</p>
+<div class="math notranslate nohighlight">
+\[
+z = \frac{x-\mu}{\sigma}
+\]</div>
+<p>dengan:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(x\)</span> = nilai asli suatu fitur,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu\)</span> = rata-rata fitur,</p></li>
+<li><p><span class="math notranslate nohighlight">\(\sigma\)</span> = standar deviasi fitur,</p></li>
+<li><p><span class="math notranslate nohighlight">\(z\)</span> = nilai fitur setelah standardisasi.</p></li>
+</ul>
+<p>Standardisasi menjadi penting karena <strong>PCA dan K-Means sama-sama sensitif terhadap skala data</strong>. PCA menentukan arah komponen berdasarkan variasi data, sedangkan K-Means menentukan kedekatan antar-observasi berdasarkan jarak. Apabila fitur tertentu mempunyai rentang nilai jauh lebih besar dibandingkan fitur lainnya, fitur tersebut dapat memberikan pengaruh yang terlalu besar terhadap hasil analisis.</p>
+<p>Oleh karena itu, data yang telah digabungkan terlebih dahulu distandarisasi sebelum digunakan pada kedua skenario clustering.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="skenario-1-reduksi-dimensi-pca-37-k-means">
+<h2>2. Skenario 1: Reduksi Dimensi (PCA 37) &amp; K-Means<a class="headerlink" href="#skenario-1-reduksi-dimensi-pca-37-k-means" title="Link to this heading">#</a></h2>
+<section id="penerapan-principal-component-analysis-pca">
+<h3>Penerapan Principal Component Analysis (PCA)<a class="headerlink" href="#penerapan-principal-component-analysis-pca" title="Link to this heading">#</a></h3>
+<p>Pada skenario pertama, data yang semula memiliki <strong>68 fitur</strong> direduksi menggunakan <strong>Principal Component Analysis (PCA)</strong> menjadi <strong>37 komponen utama</strong>.</p>
+<p>PCA merupakan metode reduksi dimensi yang bertujuan mengubah sejumlah fitur asli menjadi sejumlah komponen baru yang lebih ringkas. Komponen-komponen tersebut dibentuk sebagai kombinasi linear dari fitur awal dan diurutkan berdasarkan jumlah variasi data yang dapat dijelaskannya.</p>
+<p>Dalam penelitian ini, penggunaan PCA dari <strong>68 fitur menjadi 37 komponen</strong> bertujuan untuk mengurangi kompleksitas dimensi data sebelum dilakukan clustering.</p>
+<p>Beberapa tujuan penerapan PCA adalah:</p>
+<ul class="simple">
+<li><p>Mengurangi jumlah dimensi data sehingga proses clustering menjadi lebih sederhana.</p></li>
+<li><p>Mengurangi redundansi informasi dari fitur-fitur yang memiliki korelasi.</p></li>
+<li><p>Mempertahankan informasi atau variasi utama yang terdapat pada data.</p></li>
+<li><p>Membantu mengurangi pengaruh fitur yang kurang informatif terhadap proses clustering.</p></li>
+<li><p>Membentuk representasi data yang lebih efisien untuk digunakan oleh K-Means.</p></li>
+</ul>
+<p>Dengan demikian, data hasil transformasi PCA tetap merepresentasikan karakteristik utama dari 68 fitur awal, tetapi menggunakan ruang dimensi yang lebih rendah, yaitu <strong>37 komponen utama</strong>.</p>
+</section>
+<section id="clustering-menggunakan-k-means">
+<h3>Clustering Menggunakan K-Means<a class="headerlink" href="#clustering-menggunakan-k-means" title="Link to this heading">#</a></h3>
+<p>Setelah proses PCA selesai, hasil transformasi 37 komponen digunakan sebagai input algoritma <strong>K-Means Clustering</strong>.</p>
+<p>K-Means bekerja dengan cara membagi data ke dalam sejumlah cluster berdasarkan kedekatan data terhadap pusat cluster (<em>centroid</em>). Setiap observasi akan ditempatkan pada cluster yang centroid-nya memiliki jarak paling dekat terhadap observasi tersebut.</p>
+<p>Namun, salah satu persoalan penting dalam K-Means adalah menentukan <strong>jumlah cluster (<span class="math notranslate nohighlight">\(k\)</span>)</strong> yang sesuai. Oleh karena itu, pada penelitian ini digunakan beberapa nilai <span class="math notranslate nohighlight">\(k\)</span>, yaitu <strong>2 sampai 10</strong>, kemudian setiap nilai dievaluasi menggunakan <strong>Inertia</strong> dan <strong>Silhouette Score</strong>.</p>
+</section>
+<section id="hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">
+<h3>Hasil Evaluasi Skenario 1 untuk Setiap Nilai k<a class="headerlink" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k" title="Link to this heading">#</a></h3>
+<p>Hasil pengujian K-Means pada data PCA dilakukan untuk sembilan nilai jumlah cluster, yaitu <strong><span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span></strong>. Setiap nilai <span class="math notranslate nohighlight">\(k\)</span> menghasilkan nilai <strong>Inertia</strong> dan <strong>Silhouette Score</strong> yang berbeda.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
+<th class="head text-right"><p>Inertia PCA (37 Komponen)</p></th>
+<th class="head text-right"><p>Silhouette Score PCA</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>2</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>5</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>6</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>7</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>8</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>9</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>10</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Berdasarkan tabel tersebut, <strong>nilai Inertia secara umum akan semakin menurun seiring bertambahnya jumlah cluster</strong>. Hal ini terjadi karena semakin banyak centroid yang digunakan, semakin dekat data terhadap centroid masing-masing.</p>
+<p>Meskipun demikian, penurunan inertia tersebut tidak dapat digunakan secara langsung untuk menyatakan bahwa jumlah cluster yang lebih besar selalu lebih baik. Oleh sebab itu, diperlukan analisis terhadap bentuk grafik Elbow serta Silhouette Score.</p>
+<p>Nilai <strong>Silhouette Score tertinggi</strong> pada Skenario 1 diperoleh pada:</p>
+<blockquote>
+<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span> dengan Silhouette Score = [isi nilai]</strong></p>
+</div></blockquote>
+<p>Nilai tersebut digunakan sebagai salah satu dasar untuk menentukan jumlah cluster yang memiliki pemisahan relatif paling baik pada ruang PCA.</p>
+</section>
+<section id="interpretasi-metode-elbow-skenario-1">
+<h3>Interpretasi Metode Elbow Skenario 1<a class="headerlink" href="#interpretasi-metode-elbow-skenario-1" title="Link to this heading">#</a></h3>
+<p>Pada grafik Elbow Skenario 1, nilai inertia diamati dari <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Penentuan titik <em>elbow</em> dilakukan dengan mengamati lokasi ketika penurunan inertia mulai melandai.</p>
+<p>Berdasarkan hasil pengamatan grafik, titik <em>elbow</em> diperkirakan berada pada:</p>
+<blockquote>
+<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span></strong></p>
+</div></blockquote>
+<p>Hasil ini kemudian dibandingkan dengan nilai Silhouette Score. Apabila titik <em>elbow</em> dan nilai silhouette tertinggi menunjuk pada nilai <span class="math notranslate nohighlight">\(k\)</span> yang sama atau berdekatan, maka hasil evaluasi dari kedua metode tersebut memberikan indikasi yang lebih konsisten mengenai struktur cluster.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="skenario-2-k-means-pada-68-fitur-asli">
+<h2>3. Skenario 2: K-Means pada 68 Fitur Asli<a class="headerlink" href="#skenario-2-k-means-pada-68-fitur-asli" title="Link to this heading">#</a></h2>
+<section id="clustering-pada-data-berdimensi-tinggi">
+<h3>Clustering pada Data Berdimensi Tinggi<a class="headerlink" href="#clustering-pada-data-berdimensi-tinggi" title="Link to this heading">#</a></h3>
+<p>Pada skenario kedua, proses clustering dilakukan langsung menggunakan seluruh <strong>68 fitur asli</strong> setelah data distandarisasi, tanpa melalui proses PCA.</p>
+<p>Skenario ini digunakan sebagai pembanding terhadap skenario pertama. Dengan cara ini, dapat diamati apakah reduksi dimensi menggunakan PCA memberikan perubahan terhadap kualitas hasil clustering.</p>
+<p>Pada skenario ini, K-Means bekerja langsung pada ruang fitur berdimensi tinggi. Setiap data direpresentasikan menggunakan seluruh 68 fitur dan jarak antar-data dihitung berdasarkan keseluruhan dimensi tersebut.</p>
+<p>Pendekatan ini memiliki keuntungan karena <strong>tidak melakukan reduksi terhadap representasi fitur</strong>, sehingga seluruh fitur asli tetap digunakan dalam proses clustering.</p>
+<p>Namun, penggunaan dimensi yang lebih tinggi juga dapat menimbulkan beberapa tantangan.</p>
+</section>
+<section id="tantangan-high-dimensional-data">
+<h3>Tantangan High-Dimensional Data<a class="headerlink" href="#tantangan-high-dimensional-data" title="Link to this heading">#</a></h3>
+<p>Salah satu konsep penting pada data berdimensi tinggi adalah <strong>curse of dimensionality</strong>. Ketika jumlah dimensi bertambah, ruang data menjadi semakin kompleks dan hubungan jarak antar-observasi dapat menjadi kurang informatif.</p>
+<p>Dalam konteks K-Means, kondisi tersebut dapat menyebabkan beberapa permasalahan, seperti:</p>
+<ul class="simple">
+<li><p>Perhitungan jarak menjadi lebih kompleks karena melibatkan banyak dimensi.</p></li>
+<li><p>Fitur yang redundan atau kurang informatif tetap ikut memengaruhi proses clustering.</p></li>
+<li><p>Perbedaan jarak antar-observasi dapat menjadi kurang jelas pada ruang berdimensi tinggi.</p></li>
+<li><p>Struktur cluster yang sebenarnya dapat lebih sulit ditemukan dibandingkan pada representasi dengan dimensi yang lebih rendah.</p></li>
+</ul>
+<p>Oleh karena itu, skenario 2 digunakan untuk mengetahui apakah mempertahankan seluruh <strong>68 fitur asli</strong> memberikan struktur cluster yang lebih baik atau justru menghasilkan cluster yang lebih sulit dipisahkan dibandingkan data hasil PCA.</p>
+<p>Penting untuk diperhatikan bahwa penggunaan 68 fitur asli <strong>tidak otomatis berarti hasil clustering lebih buruk</strong>. Kualitas cluster tetap perlu ditentukan berdasarkan metrik evaluasi yang diperoleh dari data.</p>
+</section>
+<section id="hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">
+<h3>Hasil Evaluasi Skenario 2 untuk Setiap Nilai k<a class="headerlink" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k" title="Link to this heading">#</a></h3>
+<p>Sama seperti Skenario 1, pada Skenario 2 dilakukan pengujian K-Means untuk nilai <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Setiap konfigurasi dievaluasi menggunakan Inertia dan Silhouette Score.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
+<th class="head text-right"><p>Inertia Asli (68 Fitur)</p></th>
+<th class="head text-right"><p>Silhouette Score Asli</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>2</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>5</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>6</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>7</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>8</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>9</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>10</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td><p>[interpretasi]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Berdasarkan hasil tersebut, <strong>nilai Inertia pada Skenario 2 juga diharapkan menurun ketika jumlah cluster bertambah</strong>. Penentuan jumlah cluster tidak hanya didasarkan pada inertia, tetapi juga mempertimbangkan Silhouette Score dan bentuk grafik Elbow.</p>
+<p>Nilai <strong>Silhouette Score tertinggi</strong> pada Skenario 2 diperoleh pada:</p>
+<blockquote>
+<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span> dengan Silhouette Score = [isi nilai]</strong></p>
+</div></blockquote>
+<p>Nilai tersebut menjadi salah satu indikator jumlah cluster dengan struktur internal terbaik pada representasi 68 fitur asli.</p>
+</section>
+<section id="interpretasi-metode-elbow-skenario-2">
+<h3>Interpretasi Metode Elbow Skenario 2<a class="headerlink" href="#interpretasi-metode-elbow-skenario-2" title="Link to this heading">#</a></h3>
+<p>Berdasarkan grafik Elbow pada Skenario 2, titik ketika penurunan inertia mulai melandai berada pada sekitar:</p>
+<blockquote>
+<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span></strong></p>
+</div></blockquote>
+<p>Hasil ini dibandingkan dengan nilai Silhouette Score pada masing-masing <span class="math notranslate nohighlight">\(k\)</span> untuk melihat konsistensi hasil evaluasi.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="perbandingan-hasil-kedua-skenario">
+<h2>4. Perbandingan Hasil Kedua Skenario<a class="headerlink" href="#perbandingan-hasil-kedua-skenario" title="Link to this heading">#</a></h2>
+<p>Untuk memberikan gambaran yang lebih jelas, hasil seluruh percobaan dapat dirangkum dalam satu tabel perbandingan berikut.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
+<th class="head text-right"><p>Inertia PCA</p></th>
+<th class="head text-right"><p>Silhouette PCA</p></th>
+<th class="head text-right"><p>Inertia 68 Fitur</p></th>
+<th class="head text-right"><p>Silhouette 68 Fitur</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>2</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>5</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>6</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>7</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>8</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>9</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>10</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Dari tabel tersebut dapat dilakukan analisis <strong>per nilai <span class="math notranslate nohighlight">\(k\)</span></strong>, bukan hanya membandingkan nilai terbaik. Analisis ini penting karena dapat menunjukkan bagaimana perubahan jumlah cluster memengaruhi kualitas clustering pada kedua representasi data.</p>
+<p>Sebagai contoh, apabila pada <span class="math notranslate nohighlight">\(k=[x]\)</span> Skenario PCA mempunyai Silhouette Score lebih tinggi daripada Skenario fitur asli, maka pada konfigurasi jumlah cluster tersebut data hasil PCA menunjukkan pemisahan cluster yang lebih baik berdasarkan metrik silhouette.</p>
+<p>Sebaliknya, apabila pada <span class="math notranslate nohighlight">\(k=[y]\)</span> Skenario fitur asli menghasilkan Silhouette Score yang lebih tinggi, maka pada jumlah cluster tersebut representasi 68 fitur asli memberikan struktur cluster yang lebih baik menurut metrik yang sama.</p>
+<section id="tabel-ringkasan-nilai-terbaik">
+<h3>Tabel Ringkasan Nilai Terbaik<a class="headerlink" href="#tabel-ringkasan-nilai-terbaik" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter Evaluasi</p></th>
+<th class="head text-right"><p>PCA 37 Komponen</p></th>
+<th class="head text-right"><p>68 Fitur Asli</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(k\)</span> dengan Silhouette tertinggi</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Silhouette Score tertinggi</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(k\)</span> berdasarkan Elbow</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+<tr class="row-odd"><td><p>Inertia pada <span class="math notranslate nohighlight">\(k\)</span> terpilih</p></td>
+<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>[isi]</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Tabel tersebut digunakan untuk merangkum hasil utama sebelum memasuki tahap pembahasan.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="metrik-evaluasi-interpretasi">
+<h2>5. Metrik Evaluasi &amp; Interpretasi<a class="headerlink" href="#metrik-evaluasi-interpretasi" title="Link to this heading">#</a></h2>
+<section id="metode-elbow">
+<h3>Metode Elbow<a class="headerlink" href="#metode-elbow" title="Link to this heading">#</a></h3>
+<p>Metode <strong>Elbow</strong> digunakan dengan mengamati nilai <strong>Inertia</strong> atau <em>Within-Cluster Sum of Squares (WCSS)</em>.</p>
+<p>Inertia menggambarkan total jarak kuadrat antara setiap data dengan centroid cluster tempat data tersebut berada. Secara umum, semakin besar jumlah cluster, nilai inertia akan semakin kecil.</p>
+<p>Namun, penambahan cluster tidak selalu memberikan peningkatan yang berarti. Oleh karena itu, metode Elbow mencari titik perubahan atau <strong>“siku” (<em>elbow</em>)</strong>, yaitu ketika penurunan inertia mulai tidak terlalu signifikan.</p>
+<p>Secara konseptual:</p>
+<blockquote>
+<div><p>Titik <em>elbow</em> dapat digunakan sebagai indikasi jumlah cluster yang relatif sesuai karena penambahan cluster setelah titik tersebut memberikan pengurangan inertia yang semakin kecil.</p>
+</div></blockquote>
+<p>Metode Elbow digunakan sebagai <strong>indikator struktur internal cluster</strong>, bukan sebagai satu-satunya dasar penentuan nilai <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</section>
+<section id="silhouette-score">
+<h3>Silhouette Score<a class="headerlink" href="#silhouette-score" title="Link to this heading">#</a></h3>
+<p>Selain Inertia, penelitian ini menggunakan <strong>Silhouette Score</strong> sebagai metrik evaluasi kualitas cluster.</p>
+<p>Silhouette Score mengukur seberapa baik sebuah observasi berada di dalam cluster-nya sendiri dibandingkan dengan cluster lainnya. Nilai silhouette berada pada rentang:</p>
+<div class="math notranslate nohighlight">
+\[
+-1 \leq S \leq 1
+\]</div>
+<p>Interpretasinya secara umum adalah:</p>
+<ul class="simple">
+<li><p>Nilai mendekati <strong>1</strong> menunjukkan data berada cukup dekat dengan cluster-nya sendiri dan cukup jauh dari cluster lain.</p></li>
+<li><p>Nilai mendekati <strong>0</strong> menunjukkan adanya kedekatan atau tumpang tindih antar-cluster.</p></li>
+<li><p>Nilai negatif menunjukkan bahwa suatu data berpotensi lebih dekat dengan cluster lain dibandingkan cluster tempat data tersebut ditempatkan.</p></li>
+</ul>
+<p>Dalam penelitian ini, <strong>nilai Silhouette Score yang lebih tinggi menunjukkan struktur cluster yang secara internal lebih kompak dan lebih terpisah</strong>.</p>
+<p>Oleh karena itu, nilai <span class="math notranslate nohighlight">\(k\)</span> dapat dibandingkan berdasarkan skor silhouette tertinggi, kemudian hasil tersebut dapat dianalisis bersama grafik Elbow untuk memperoleh gambaran yang lebih lengkap mengenai struktur cluster.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>6. Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<section id="template-kesimpulan">
+<h3>Template Kesimpulan<a class="headerlink" href="#template-kesimpulan" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>Berdasarkan hasil clustering menggunakan algoritma K-Means, dilakukan perbandingan antara dua skenario, yaitu <strong>Skenario 1 menggunakan PCA dengan 37 komponen</strong> dan <strong>Skenario 2 menggunakan seluruh 68 fitur asli</strong>.</p>
+<p>Pada Skenario 1, pengujian dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Berdasarkan hasil evaluasi, nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong> dengan nilai <strong>[isi]</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong>.</p>
+<p>Pada Skenario 2, pengujian juga dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong> dengan nilai <strong>[isi]</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong>.</p>
+<p>Berdasarkan perbandingan kedua skenario, Silhouette Score maksimum pada Skenario 1 adalah <strong>[isi]</strong>, sedangkan pada Skenario 2 adalah <strong>[isi]</strong>. Perbedaan tersebut menunjukkan bahwa <strong>[isi berdasarkan hasil: representasi PCA / 68 fitur asli]</strong> menghasilkan struktur cluster yang lebih baik berdasarkan metrik silhouette.</p>
+<p>Apabila Silhouette Score pada Skenario 1 lebih tinggi dibandingkan Skenario 2, maka secara akademis dapat dikatakan bahwa <strong>representasi data setelah reduksi dimensi menggunakan PCA menghasilkan struktur cluster yang lebih baik menurut metrik silhouette</strong>. Hal tersebut menunjukkan bahwa pada data hasil penelitian ini, 37 komponen PCA mampu memberikan representasi yang menghasilkan <strong>cluster yang relatif lebih kompak di dalam kelompok dan lebih terpisah antar-kelompok</strong> dibandingkan penggunaan langsung 68 fitur asli.</p>
+<p>Sebaliknya, apabila Silhouette Score pada Skenario 2 lebih tinggi, maka hasil tersebut menunjukkan bahwa penggunaan seluruh fitur asli memberikan struktur cluster yang lebih baik berdasarkan metrik silhouette, sehingga reduksi dimensi ke 37 komponen tidak memberikan peningkatan kualitas cluster pada dataset tersebut.</p>
+<p>Dengan demikian, kualitas clustering dalam penelitian ini ditentukan berdasarkan <strong>hasil evaluasi empiris</strong>, bukan hanya berdasarkan jumlah fitur. PCA dapat membantu menyederhanakan representasi data, tetapi efektivitasnya terhadap clustering tetap harus dibuktikan melalui metrik seperti <strong>Inertia dan Silhouette Score</strong>.</p>
+</div></blockquote>
+</section>
+<section id="makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">
+<h3>Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi<a class="headerlink" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi" title="Link to this heading">#</a></h3>
+<p>Apabila hasil penelitian menunjukkan:</p>
+<div class="math notranslate nohighlight">
+\[
+Silhouette_{PCA} &gt; Silhouette_{Asli}
+\]</div>
+<p>maka interpretasinya adalah bahwa <strong>data hasil reduksi PCA memiliki kualitas pemisahan cluster yang lebih baik menurut Silhouette Score</strong>.</p>
+<p>Secara akademis, kondisi tersebut dapat menunjukkan bahwa reduksi dimensi berhasil mempertahankan atau menonjolkan struktur utama data yang relevan untuk clustering, sekaligus mengurangi pengaruh variasi atau fitur yang kurang membantu proses pemisahan kelompok.</p>
+<p>Dengan kata lain, PCA pada dataset tersebut tidak hanya mengurangi jumlah dimensi dari <strong>68 menjadi 37</strong>, tetapi juga menghasilkan representasi yang pada evaluasi K-Means memiliki <strong>kohesi intra-cluster yang lebih baik dan separasi antar-cluster yang lebih jelas</strong>.</p>
+<p>Namun, kesimpulan tersebut tetap harus dibatasi pada <strong>dataset, proses preprocessing, dan metode evaluasi yang digunakan dalam penelitian ini</strong>. Nilai Silhouette yang lebih tinggi menunjukkan kualitas struktur cluster yang lebih baik berdasarkan metrik tersebut, tetapi tidak secara otomatis membuktikan bahwa PCA selalu lebih baik untuk seluruh dataset atau seluruh permasalahan clustering.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="ringkasan-alur-analisis">
+<h2>7. Ringkasan Alur Analisis<a class="headerlink" href="#ringkasan-alur-analisis" title="Link to this heading">#</a></h2>
+<p>Secara keseluruhan, tahapan analisis pada Bagian 3 dapat diringkas sebagai berikut:</p>
+<p><strong>Penggabungan Data CO + NO2 + SO2</strong>
+↓
+<strong>Seleksi Fitur Numerik (68 Fitur)</strong>
+↓
+<strong>Standardisasi Menggunakan StandardScaler</strong>
+↓
+<strong>Data Dibagi Menjadi Dua Skenario</strong></p>
+<p><strong>Skenario 1:</strong>
+68 Fitur → <strong>PCA 37 Komponen</strong> → K-Means → Evaluasi <span class="math notranslate nohighlight">\(k=2\)</span> s.d. <span class="math notranslate nohighlight">\(10\)</span></p>
+<p><strong>Skenario 2:</strong>
+68 Fitur → <strong>K-Means Langsung</strong> → Evaluasi <span class="math notranslate nohighlight">\(k=2\)</span> s.d. <span class="math notranslate nohighlight">\(10\)</span></p>
+<p>↓</p>
+<p><strong>Perbandingan Inertia dan Silhouette Score pada Setiap Nilai <span class="math notranslate nohighlight">\(k\)</span></strong></p>
+<p>↓</p>
+<p><strong>Identifikasi <span class="math notranslate nohighlight">\(k\)</span> berdasarkan Elbow dan Silhouette Score</strong></p>
+<p>↓</p>
+<p><strong>Perbandingan Kualitas Cluster Skenario PCA vs. 68 Fitur Asli</strong></p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-dan-standarisasi-data">1. Penggabungan dan Standarisasi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penggabungan-data-polutan">Penggabungan Data Polutan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#standarisasi-data">Standarisasi Data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-reduksi-dimensi-pca-37-k-means">2. Skenario 1: Reduksi Dimensi (PCA 37) &amp; K-Means</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penerapan-principal-component-analysis-pca">Penerapan Principal Component Analysis (PCA)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-menggunakan-k-means">Clustering Menggunakan K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 1 untuk Setiap Nilai k</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-1">Interpretasi Metode Elbow Skenario 1</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-k-means-pada-68-fitur-asli">3. Skenario 2: K-Means pada 68 Fitur Asli</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-pada-data-berdimensi-tinggi">Clustering pada Data Berdimensi Tinggi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-high-dimensional-data">Tantangan High-Dimensional Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 2 untuk Setiap Nilai k</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-2">Interpretasi Metode Elbow Skenario 2</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-kedua-skenario">4. Perbandingan Hasil Kedua Skenario</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-ringkasan-nilai-terbaik">Tabel Ringkasan Nilai Terbaik</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-interpretasi">5. Metrik Evaluasi &amp; Interpretasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow">Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-score">Silhouette Score</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#template-kesimpulan">Template Kesimpulan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
