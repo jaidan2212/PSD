@@ -62,7 +62,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'Bagian 3 Pemodelan Machine Learning & Evaluasi K-Means';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html" />
+    <link rel="prev" title="Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -191,7 +191,8 @@
 <li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
 
 
-<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
 
 
 
@@ -399,31 +400,30 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-reduksi-dimensi-pca-37-k-means">2. Skenario 1: Reduksi Dimensi (PCA 37) &amp; K-Means</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penerapan-principal-component-analysis-pca">Penerapan Principal Component Analysis (PCA)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-menggunakan-k-means">Clustering Menggunakan K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-jumlah-cluster-dengan-metode-elbow">Menentukan Jumlah Cluster dengan Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-jumlah-cluster-dengan-silhouette-score">Menentukan Jumlah Cluster dengan Silhouette Score</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 1 untuk Setiap Nilai k</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-1">Interpretasi Metode Elbow Skenario 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-skenario-1">Ringkasan Hasil Skenario 1</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-k-means-pada-68-fitur-asli">3. Skenario 2: K-Means pada 68 Fitur Asli</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-pada-data-berdimensi-tinggi">Clustering pada Data Berdimensi Tinggi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-high-dimensional-data">Tantangan High-Dimensional Data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 2 untuk Setiap Nilai k</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-2">Interpretasi Metode Elbow Skenario 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-skenario-2">Ringkasan Hasil Skenario 2</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-kedua-skenario">4. Perbandingan Hasil Kedua Skenario</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-ringkasan-nilai-terbaik">Tabel Ringkasan Nilai Terbaik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-hasil">Interpretasi Hasil</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-interpretasi">5. Metrik Evaluasi &amp; Interpretasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-dan-interpretasi">5. Metrik Evaluasi dan Interpretasi</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow">Metode Elbow</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-score">Silhouette Score</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#template-kesimpulan">Template Kesimpulan</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
 </ul>
             </nav>
@@ -495,82 +495,107 @@ z = \frac{x-\mu}{\sigma}
 <p>K-Means bekerja dengan cara membagi data ke dalam sejumlah cluster berdasarkan kedekatan data terhadap pusat cluster (<em>centroid</em>). Setiap observasi akan ditempatkan pada cluster yang centroid-nya memiliki jarak paling dekat terhadap observasi tersebut.</p>
 <p>Namun, salah satu persoalan penting dalam K-Means adalah menentukan <strong>jumlah cluster (<span class="math notranslate nohighlight">\(k\)</span>)</strong> yang sesuai. Oleh karena itu, pada penelitian ini digunakan beberapa nilai <span class="math notranslate nohighlight">\(k\)</span>, yaitu <strong>2 sampai 10</strong>, kemudian setiap nilai dievaluasi menggunakan <strong>Inertia</strong> dan <strong>Silhouette Score</strong>.</p>
 </section>
+<section id="menentukan-jumlah-cluster-dengan-metode-elbow">
+<h3>Menentukan Jumlah Cluster dengan Metode Elbow<a class="headerlink" href="#menentukan-jumlah-cluster-dengan-metode-elbow" title="Link to this heading">#</a></h3>
+<p>Metode <strong>Elbow</strong> digunakan dengan mengamati nilai <strong>Inertia</strong> atau <em>Within-Cluster Sum of Squares (WCSS)</em>.</p>
+<p>Inertia menggambarkan total jarak kuadrat antara setiap data dengan centroid cluster tempat data tersebut berada. Secara umum, semakin besar jumlah cluster, nilai inertia akan semakin kecil.</p>
+<p>Namun, penambahan cluster tidak selalu memberikan peningkatan yang berarti. Oleh karena itu, metode Elbow mencari titik perubahan atau <strong>“siku” (<em>elbow</em>)</strong>, yaitu ketika penurunan inertia mulai tidak terlalu signifikan.</p>
+<p>Secara konseptual:</p>
+<blockquote>
+<div><p>Titik <em>elbow</em> dapat digunakan sebagai indikasi jumlah cluster yang relatif sesuai karena penambahan cluster setelah titik tersebut memberikan pengurangan inertia yang semakin kecil.</p>
+</div></blockquote>
+<p>Metode Elbow digunakan sebagai <strong>indikator struktur internal cluster</strong>, bukan sebagai satu-satunya dasar penentuan nilai <span class="math notranslate nohighlight">\(k\)</span>.</p>
+</section>
+<section id="menentukan-jumlah-cluster-dengan-silhouette-score">
+<h3>Menentukan Jumlah Cluster dengan Silhouette Score<a class="headerlink" href="#menentukan-jumlah-cluster-dengan-silhouette-score" title="Link to this heading">#</a></h3>
+<p>Selain Inertia, penelitian ini menggunakan <strong>Silhouette Score</strong> sebagai metrik evaluasi kualitas cluster.</p>
+<p>Silhouette Score mengukur seberapa baik sebuah observasi berada di dalam cluster-nya sendiri dibandingkan dengan cluster lainnya. Nilai silhouette berada pada rentang:</p>
+<div class="math notranslate nohighlight">
+\[
+-1 \leq S \leq 1
+\]</div>
+<p>Interpretasinya secara umum adalah:</p>
+<ul class="simple">
+<li><p>Nilai mendekati <strong>1</strong> menunjukkan data berada cukup dekat dengan cluster-nya sendiri dan cukup jauh dari cluster lain.</p></li>
+<li><p>Nilai mendekati <strong>0</strong> menunjukkan adanya kedekatan atau tumpang tindih antar-cluster.</p></li>
+<li><p>Nilai negatif menunjukkan bahwa suatu data berpotensi lebih dekat dengan cluster lain dibandingkan cluster tempat data tersebut ditempatkan.</p></li>
+</ul>
+<p>Dalam penelitian ini, <strong>nilai Silhouette Score yang lebih tinggi menunjukkan struktur cluster yang secara internal lebih kompak dan lebih terpisah</strong>.</p>
+<p>Oleh karena itu, nilai <span class="math notranslate nohighlight">\(k\)</span> dapat dibandingkan berdasarkan skor silhouette tertinggi, kemudian hasil tersebut dapat dianalisis bersama grafik Elbow untuk memperoleh gambaran yang lebih lengkap mengenai struktur cluster.</p>
+</section>
 <section id="hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">
 <h3>Hasil Evaluasi Skenario 1 untuk Setiap Nilai k<a class="headerlink" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k" title="Link to this heading">#</a></h3>
-<p>Hasil pengujian K-Means pada data PCA dilakukan untuk sembilan nilai jumlah cluster, yaitu <strong><span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span></strong>. Setiap nilai <span class="math notranslate nohighlight">\(k\)</span> menghasilkan nilai <strong>Inertia</strong> dan <strong>Silhouette Score</strong> yang berbeda.</p>
+<p>Pengujian K-Means pada data hasil PCA dilakukan untuk sembilan nilai jumlah cluster, yaitu <strong><span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span></strong>. Hasil evaluasi Inertia dan Silhouette Score ditunjukkan pada tabel berikut.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
-<th class="head text-right"><p>Inertia PCA (37 Komponen)</p></th>
-<th class="head text-right"><p>Silhouette Score PCA</p></th>
-<th class="head"><p>Keterangan</p></th>
+<tr class="row-odd"><th class="head text-right"><p><strong>k</strong></p></th>
+<th class="head text-right"><p><strong>Inertia PCA (37 Komponen)</strong></p></th>
+<th class="head text-right"><p><strong>Silhouette Score PCA</strong></p></th>
+<th class="head"><p><strong>Keterangan</strong></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-right"><p>2</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>4172.48</p></td>
+<td class="text-right"><p>0.8547</p></td>
+<td><p>Nilai Silhouette tertinggi, pemisahan terbaik secara matematis</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>3</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>2987.90</p></td>
+<td class="text-right"><p>0.2847</p></td>
+<td><p>Penurunan Inertia signifikan (titik Elbow)</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>4</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>2209.98</p></td>
+<td class="text-right"><p>0.3172</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>5</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1697.20</p></td>
+<td class="text-right"><p>0.3232</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>6</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1500.97</p></td>
+<td class="text-right"><p>0.3181</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>7</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1389.70</p></td>
+<td class="text-right"><p>0.3019</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>8</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1317.07</p></td>
+<td class="text-right"><p>0.2765</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>9</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1212.19</p></td>
+<td class="text-right"><p>0.2500</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>10</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1178.04</p></td>
+<td class="text-right"><p>0.1717</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Berdasarkan tabel tersebut, <strong>nilai Inertia secara umum akan semakin menurun seiring bertambahnya jumlah cluster</strong>. Hal ini terjadi karena semakin banyak centroid yang digunakan, semakin dekat data terhadap centroid masing-masing.</p>
-<p>Meskipun demikian, penurunan inertia tersebut tidak dapat digunakan secara langsung untuk menyatakan bahwa jumlah cluster yang lebih besar selalu lebih baik. Oleh sebab itu, diperlukan analisis terhadap bentuk grafik Elbow serta Silhouette Score.</p>
-<p>Nilai <strong>Silhouette Score tertinggi</strong> pada Skenario 1 diperoleh pada:</p>
-<blockquote>
-<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span> dengan Silhouette Score = [isi nilai]</strong></p>
-</div></blockquote>
-<p>Nilai tersebut digunakan sebagai salah satu dasar untuk menentukan jumlah cluster yang memiliki pemisahan relatif paling baik pada ruang PCA.</p>
+<p>Berdasarkan tabel tersebut, nilai Inertia mengalami penurunan seiring bertambahnya jumlah cluster. Penurunan paling besar terjadi dari <strong><span class="math notranslate nohighlight">\(k=2\)</span> ke <span class="math notranslate nohighlight">\(k=3\)</span></strong>, yaitu dari <strong>4172.48 menjadi 2987.90</strong>. Setelah itu, penurunan Inertia relatif semakin kecil sehingga <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong> dapat dipandang sebagai titik <em>elbow</em> berdasarkan pengamatan grafik.</p>
+<p>Sementara itu, nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong>, yaitu sebesar <strong>0.8547</strong>. Nilai tersebut menunjukkan bahwa konfigurasi dua cluster mempunyai tingkat kekompakan dan keterpisahan cluster yang paling tinggi dibandingkan nilai <span class="math notranslate nohighlight">\(k\)</span> lainnya pada skenario PCA.</p>
+<p>Menariknya, meskipun nilai Silhouette pada <strong><span class="math notranslate nohighlight">\(k=5\)</span></strong> mencapai <strong>0.3232</strong>, nilai tersebut tetap jauh lebih rendah dibandingkan nilai pada <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong>. Hal ini menunjukkan bahwa penambahan jumlah cluster tidak menghasilkan pemisahan yang lebih baik berdasarkan Silhouette Score.</p>
 </section>
-<section id="interpretasi-metode-elbow-skenario-1">
-<h3>Interpretasi Metode Elbow Skenario 1<a class="headerlink" href="#interpretasi-metode-elbow-skenario-1" title="Link to this heading">#</a></h3>
-<p>Pada grafik Elbow Skenario 1, nilai inertia diamati dari <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Penentuan titik <em>elbow</em> dilakukan dengan mengamati lokasi ketika penurunan inertia mulai melandai.</p>
-<p>Berdasarkan hasil pengamatan grafik, titik <em>elbow</em> diperkirakan berada pada:</p>
-<blockquote>
-<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span></strong></p>
-</div></blockquote>
-<p>Hasil ini kemudian dibandingkan dengan nilai Silhouette Score. Apabila titik <em>elbow</em> dan nilai silhouette tertinggi menunjuk pada nilai <span class="math notranslate nohighlight">\(k\)</span> yang sama atau berdekatan, maka hasil evaluasi dari kedua metode tersebut memberikan indikasi yang lebih konsisten mengenai struktur cluster.</p>
+<section id="ringkasan-hasil-skenario-1">
+<h3>Ringkasan Hasil Skenario 1<a class="headerlink" href="#ringkasan-hasil-skenario-1" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Nilai Silhouette Score tertinggi:</strong> <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> dengan <strong>0.8547</strong></p></li>
+<li><p><strong>Titik Elbow:</strong> sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong></p></li>
+<li><p><strong>Inertia pada <span class="math notranslate nohighlight">\(k=2\)</span>:</strong> <strong>4172.48</strong></p></li>
+<li><p><strong>Silhouette pada <span class="math notranslate nohighlight">\(k=3\)</span>:</strong> <strong>0.2847</strong></p></li>
+</ul>
+<p>Dengan demikian, berdasarkan <strong>Silhouette Score</strong>, konfigurasi <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> memberikan kualitas clustering terbaik pada Skenario 1. Sementara itu, metode Elbow memberikan indikasi sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>. Perbedaan hasil dari kedua metode ini menunjukkan bahwa penentuan jumlah cluster perlu mempertimbangkan lebih dari satu metrik evaluasi.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -599,245 +624,232 @@ z = \frac{x-\mu}{\sigma}
 </section>
 <section id="hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">
 <h3>Hasil Evaluasi Skenario 2 untuk Setiap Nilai k<a class="headerlink" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k" title="Link to this heading">#</a></h3>
-<p>Sama seperti Skenario 1, pada Skenario 2 dilakukan pengujian K-Means untuk nilai <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Setiap konfigurasi dievaluasi menggunakan Inertia dan Silhouette Score.</p>
+<p>Pada Skenario 2, K-Means diuji menggunakan sembilan nilai jumlah cluster, yaitu <strong><span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span></strong>. Hasil evaluasi Inertia dan Silhouette Score ditunjukkan pada tabel berikut.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
-<th class="head text-right"><p>Inertia Asli (68 Fitur)</p></th>
-<th class="head text-right"><p>Silhouette Score Asli</p></th>
-<th class="head"><p>Keterangan</p></th>
+<tr class="row-odd"><th class="head text-right"><p><strong>k</strong></p></th>
+<th class="head text-right"><p><strong>Inertia Asli (68 Fitur)</strong></p></th>
+<th class="head text-right"><p><strong>Silhouette Score Asli</strong></p></th>
+<th class="head"><p><strong>Keterangan</strong></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-right"><p>2</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>4172.55</p></td>
+<td class="text-right"><p>0.8547</p></td>
+<td><p>Nilai Silhouette tertinggi, pemisahan terbaik secara matematis</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>3</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>2987.98</p></td>
+<td class="text-right"><p>0.2847</p></td>
+<td><p>Penurunan Inertia signifikan (titik Elbow)</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>4</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>2210.05</p></td>
+<td class="text-right"><p>0.3172</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>5</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1697.28</p></td>
+<td class="text-right"><p>0.3232</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>6</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1501.05</p></td>
+<td class="text-right"><p>0.3181</p></td>
+<td><p>Pemisahan mulai tumpang tindih</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>7</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1389.78</p></td>
+<td class="text-right"><p>0.3019</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>8</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1317.14</p></td>
+<td class="text-right"><p>0.2765</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>9</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1212.27</p></td>
+<td class="text-right"><p>0.2500</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>10</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td><p>[interpretasi]</p></td>
+<td class="text-right"><p>1114.08</p></td>
+<td class="text-right"><p>0.2617</p></td>
+<td><p>Banyak <em>cluster</em> tidak informatif</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Berdasarkan hasil tersebut, <strong>nilai Inertia pada Skenario 2 juga diharapkan menurun ketika jumlah cluster bertambah</strong>. Penentuan jumlah cluster tidak hanya didasarkan pada inertia, tetapi juga mempertimbangkan Silhouette Score dan bentuk grafik Elbow.</p>
-<p>Nilai <strong>Silhouette Score tertinggi</strong> pada Skenario 2 diperoleh pada:</p>
-<blockquote>
-<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span> dengan Silhouette Score = [isi nilai]</strong></p>
-</div></blockquote>
-<p>Nilai tersebut menjadi salah satu indikator jumlah cluster dengan struktur internal terbaik pada representasi 68 fitur asli.</p>
+<p>Berdasarkan tabel tersebut, nilai Inertia juga mengalami penurunan seiring bertambahnya jumlah cluster. Penurunan yang paling besar terlihat dari <strong><span class="math notranslate nohighlight">\(k=2\)</span> ke <span class="math notranslate nohighlight">\(k=3\)</span></strong>, yaitu dari <strong>4172.55 menjadi 2987.98</strong>, sehingga berdasarkan pengamatan grafik, <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong> diperkirakan sebagai titik <em>elbow</em>.</p>
+<p>Untuk Silhouette Score, nilai tertinggi juga diperoleh pada <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong>, yaitu sebesar <strong>0.8547</strong>. Dengan demikian, konfigurasi dua cluster menghasilkan pemisahan relatif paling baik pada data 68 fitur asli berdasarkan metrik silhouette.</p>
+<p>Pada nilai <span class="math notranslate nohighlight">\(k\)</span> yang lebih tinggi, Silhouette Score berada pada kisaran yang jauh lebih rendah. Nilai tertinggi setelah <span class="math notranslate nohighlight">\(k=2\)</span> terdapat pada <strong><span class="math notranslate nohighlight">\(k=5\)</span></strong>, yaitu <strong>0.3232</strong>, sedangkan pada <strong><span class="math notranslate nohighlight">\(k=10\)</span></strong> nilainya sebesar <strong>0.2617</strong>.</p>
 </section>
-<section id="interpretasi-metode-elbow-skenario-2">
-<h3>Interpretasi Metode Elbow Skenario 2<a class="headerlink" href="#interpretasi-metode-elbow-skenario-2" title="Link to this heading">#</a></h3>
-<p>Berdasarkan grafik Elbow pada Skenario 2, titik ketika penurunan inertia mulai melandai berada pada sekitar:</p>
-<blockquote>
-<div><p><strong><span class="math notranslate nohighlight">\(k = [isi nilai k]\)</span></strong></p>
-</div></blockquote>
-<p>Hasil ini dibandingkan dengan nilai Silhouette Score pada masing-masing <span class="math notranslate nohighlight">\(k\)</span> untuk melihat konsistensi hasil evaluasi.</p>
+<section id="ringkasan-hasil-skenario-2">
+<h3>Ringkasan Hasil Skenario 2<a class="headerlink" href="#ringkasan-hasil-skenario-2" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Nilai Silhouette Score tertinggi:</strong> <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> dengan <strong>0.8547</strong></p></li>
+<li><p><strong>Titik Elbow:</strong> sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong></p></li>
+<li><p><strong>Inertia pada <span class="math notranslate nohighlight">\(k=2\)</span>:</strong> <strong>4172.55</strong></p></li>
+<li><p><strong>Silhouette pada <span class="math notranslate nohighlight">\(k=3\)</span>:</strong> <strong>0.2847</strong></p></li>
+</ul>
+<p>Dengan demikian, berdasarkan Silhouette Score, konfigurasi <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> memberikan kualitas clustering terbaik pada Skenario 2, sedangkan metode Elbow menunjukkan indikasi sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="perbandingan-hasil-kedua-skenario">
 <h2>4. Perbandingan Hasil Kedua Skenario<a class="headerlink" href="#perbandingan-hasil-kedua-skenario" title="Link to this heading">#</a></h2>
-<p>Untuk memberikan gambaran yang lebih jelas, hasil seluruh percobaan dapat dirangkum dalam satu tabel perbandingan berikut.</p>
+<p>Untuk memberikan gambaran yang lebih jelas, hasil seluruh percobaan dari kedua skenario dirangkum dalam tabel berikut.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head text-right"><p><span class="math notranslate nohighlight">\(k\)</span></p></th>
-<th class="head text-right"><p>Inertia PCA</p></th>
-<th class="head text-right"><p>Silhouette PCA</p></th>
-<th class="head text-right"><p>Inertia 68 Fitur</p></th>
-<th class="head text-right"><p>Silhouette 68 Fitur</p></th>
+<tr class="row-odd"><th class="head text-right"><p><strong>k</strong></p></th>
+<th class="head text-right"><p><strong>Inertia PCA</strong></p></th>
+<th class="head text-right"><p><strong>Silhouette PCA</strong></p></th>
+<th class="head text-right"><p><strong>Inertia 68 Fitur</strong></p></th>
+<th class="head text-right"><p><strong>Silhouette 68 Fitur</strong></p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td class="text-right"><p>2</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>4172.48</p></td>
+<td class="text-right"><p>0.8547</p></td>
+<td class="text-right"><p>4172.55</p></td>
+<td class="text-right"><p>0.8547</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>3</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>2987.90</p></td>
+<td class="text-right"><p>0.2847</p></td>
+<td class="text-right"><p>2987.98</p></td>
+<td class="text-right"><p>0.2847</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>4</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>2209.98</p></td>
+<td class="text-right"><p>0.3172</p></td>
+<td class="text-right"><p>2210.05</p></td>
+<td class="text-right"><p>0.3172</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>5</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1697.20</p></td>
+<td class="text-right"><p>0.3232</p></td>
+<td class="text-right"><p>1697.28</p></td>
+<td class="text-right"><p>0.3232</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>6</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1500.97</p></td>
+<td class="text-right"><p>0.3181</p></td>
+<td class="text-right"><p>1501.05</p></td>
+<td class="text-right"><p>0.3181</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>7</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1389.70</p></td>
+<td class="text-right"><p>0.3019</p></td>
+<td class="text-right"><p>1389.78</p></td>
+<td class="text-right"><p>0.3019</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>8</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1317.07</p></td>
+<td class="text-right"><p>0.2765</p></td>
+<td class="text-right"><p>1317.14</p></td>
+<td class="text-right"><p>0.2765</p></td>
 </tr>
 <tr class="row-odd"><td class="text-right"><p>9</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1212.19</p></td>
+<td class="text-right"><p>0.2500</p></td>
+<td class="text-right"><p>1212.27</p></td>
+<td class="text-right"><p>0.2500</p></td>
 </tr>
 <tr class="row-even"><td class="text-right"><p>10</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<td class="text-right"><p>1178.04</p></td>
+<td class="text-right"><p>0.1717</p></td>
+<td class="text-right"><p>1114.08</p></td>
+<td class="text-right"><p>0.2617</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Dari tabel tersebut dapat dilakukan analisis <strong>per nilai <span class="math notranslate nohighlight">\(k\)</span></strong>, bukan hanya membandingkan nilai terbaik. Analisis ini penting karena dapat menunjukkan bagaimana perubahan jumlah cluster memengaruhi kualitas clustering pada kedua representasi data.</p>
-<p>Sebagai contoh, apabila pada <span class="math notranslate nohighlight">\(k=[x]\)</span> Skenario PCA mempunyai Silhouette Score lebih tinggi daripada Skenario fitur asli, maka pada konfigurasi jumlah cluster tersebut data hasil PCA menunjukkan pemisahan cluster yang lebih baik berdasarkan metrik silhouette.</p>
-<p>Sebaliknya, apabila pada <span class="math notranslate nohighlight">\(k=[y]\)</span> Skenario fitur asli menghasilkan Silhouette Score yang lebih tinggi, maka pada jumlah cluster tersebut representasi 68 fitur asli memberikan struktur cluster yang lebih baik menurut metrik yang sama.</p>
+<p>Berdasarkan tabel perbandingan, terlihat bahwa nilai <strong>Silhouette Score Skenario 1 dan Skenario 2 identik hingga empat angka di belakang koma pada seluruh nilai <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=9\)</span></strong>, sedangkan pada <span class="math notranslate nohighlight">\(k=10\)</span> terdapat perbedaan, yaitu <strong>0.1717</strong> pada Skenario PCA dan <strong>0.2617</strong> pada Skenario 68 fitur asli.</p>
+<p>Perbedaan Inertia antara kedua skenario juga relatif kecil pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=9\)</span>. Hal ini menunjukkan bahwa, berdasarkan metrik evaluasi yang diperoleh, kedua representasi data menghasilkan struktur clustering yang sangat mirip untuk sebagian besar konfigurasi jumlah cluster.</p>
 <section id="tabel-ringkasan-nilai-terbaik">
 <h3>Tabel Ringkasan Nilai Terbaik<a class="headerlink" href="#tabel-ringkasan-nilai-terbaik" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Parameter Evaluasi</p></th>
-<th class="head text-right"><p>PCA 37 Komponen</p></th>
-<th class="head text-right"><p>68 Fitur Asli</p></th>
+<tr class="row-odd"><th class="head"><p><strong>Parameter Evaluasi</strong></p></th>
+<th class="head text-right"><p><strong>PCA 37 Komponen</strong></p></th>
+<th class="head text-right"><p><strong>68 Fitur Asli</strong></p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(k\)</span> dengan Silhouette tertinggi</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<tr class="row-even"><td><p><strong><span class="math notranslate nohighlight">\(k\)</span> dengan Silhouette tertinggi</strong></p></td>
+<td class="text-right"><p>2</p></td>
+<td class="text-right"><p>2</p></td>
 </tr>
-<tr class="row-odd"><td><p>Silhouette Score tertinggi</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<tr class="row-odd"><td><p><strong>Silhouette Score tertinggi</strong></p></td>
+<td class="text-right"><p>0.8547</p></td>
+<td class="text-right"><p>0.8547</p></td>
 </tr>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(k\)</span> berdasarkan Elbow</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<tr class="row-even"><td><p><strong><span class="math notranslate nohighlight">\(k\)</span> berdasarkan Elbow</strong></p></td>
+<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>3</p></td>
 </tr>
-<tr class="row-odd"><td><p>Inertia pada <span class="math notranslate nohighlight">\(k\)</span> terpilih</p></td>
-<td class="text-right"><p>[isi]</p></td>
-<td class="text-right"><p>[isi]</p></td>
+<tr class="row-odd"><td><p><strong>Inertia pada <span class="math notranslate nohighlight">\(k\)</span> terpilih (<span class="math notranslate nohighlight">\(k=2\)</span>)</strong></p></td>
+<td class="text-right"><p>4172.48</p></td>
+<td class="text-right"><p>4172.55</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Tabel tersebut digunakan untuk merangkum hasil utama sebelum memasuki tahap pembahasan.</p>
+</section>
+<section id="interpretasi-hasil">
+<h3>Interpretasi Hasil<a class="headerlink" href="#interpretasi-hasil" title="Link to this heading">#</a></h3>
+<p>Hasil evaluasi menunjukkan bahwa kedua skenario menghasilkan <strong>Silhouette Score maksimum yang sama</strong>, yaitu <strong>0.8547 pada <span class="math notranslate nohighlight">\(k=2\)</span></strong>. Berdasarkan metrik silhouette, tidak terdapat perbedaan kualitas pemisahan cluster antara representasi PCA 37 komponen dan representasi 68 fitur asli pada konfigurasi tersebut.</p>
+<p>Pada metode Elbow, kedua skenario juga menunjukkan indikasi titik <em>elbow</em> pada sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>. Dengan demikian, kedua metode evaluasi memberikan pola yang relatif serupa pada kedua skenario, meskipun terdapat perbedaan antara rekomendasi berdasarkan Silhouette Score (<span class="math notranslate nohighlight">\(k=2\)</span>) dan indikasi Elbow (<span class="math notranslate nohighlight">\(k=3\)</span>).</p>
+<p>Apabila tujuan utama adalah memilih konfigurasi berdasarkan <strong>Silhouette Score tertinggi</strong>, maka hasil penelitian ini menunjukkan bahwa <strong><span class="math notranslate nohighlight">\(k=2\)</span> merupakan konfigurasi terbaik secara matematis untuk kedua skenario</strong>.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="metrik-evaluasi-interpretasi">
-<h2>5. Metrik Evaluasi &amp; Interpretasi<a class="headerlink" href="#metrik-evaluasi-interpretasi" title="Link to this heading">#</a></h2>
+<section id="metrik-evaluasi-dan-interpretasi">
+<h2>5. Metrik Evaluasi dan Interpretasi<a class="headerlink" href="#metrik-evaluasi-dan-interpretasi" title="Link to this heading">#</a></h2>
 <section id="metode-elbow">
 <h3>Metode Elbow<a class="headerlink" href="#metode-elbow" title="Link to this heading">#</a></h3>
 <p>Metode <strong>Elbow</strong> digunakan dengan mengamati nilai <strong>Inertia</strong> atau <em>Within-Cluster Sum of Squares (WCSS)</em>.</p>
 <p>Inertia menggambarkan total jarak kuadrat antara setiap data dengan centroid cluster tempat data tersebut berada. Secara umum, semakin besar jumlah cluster, nilai inertia akan semakin kecil.</p>
-<p>Namun, penambahan cluster tidak selalu memberikan peningkatan yang berarti. Oleh karena itu, metode Elbow mencari titik perubahan atau <strong>“siku” (<em>elbow</em>)</strong>, yaitu ketika penurunan inertia mulai tidak terlalu signifikan.</p>
-<p>Secara konseptual:</p>
-<blockquote>
-<div><p>Titik <em>elbow</em> dapat digunakan sebagai indikasi jumlah cluster yang relatif sesuai karena penambahan cluster setelah titik tersebut memberikan pengurangan inertia yang semakin kecil.</p>
-</div></blockquote>
-<p>Metode Elbow digunakan sebagai <strong>indikator struktur internal cluster</strong>, bukan sebagai satu-satunya dasar penentuan nilai <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<p>Berdasarkan hasil penelitian:</p>
+<ul class="simple">
+<li><p>Pada <strong>PCA 37 komponen</strong>, Inertia turun dari <strong>4172.48 (<span class="math notranslate nohighlight">\(k=2\)</span>)</strong> menjadi <strong>2987.90 (<span class="math notranslate nohighlight">\(k=3\)</span>)</strong>.</p></li>
+<li><p>Pada <strong>68 fitur asli</strong>, Inertia turun dari <strong>4172.55 (<span class="math notranslate nohighlight">\(k=2\)</span>)</strong> menjadi <strong>2987.98 (<span class="math notranslate nohighlight">\(k=3\)</span>)</strong>.</p></li>
+</ul>
+<p>Penurunan yang cukup besar tersebut menjadi dasar pengamatan bahwa titik <em>elbow</em> berada di sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong> pada kedua skenario.</p>
+<p>Namun, metode Elbow tidak menunjukkan bahwa <span class="math notranslate nohighlight">\(k=3\)</span> secara otomatis merupakan jumlah cluster terbaik. Hasil tersebut perlu dipertimbangkan bersama metrik lain, khususnya Silhouette Score.</p>
 </section>
 <section id="silhouette-score">
 <h3>Silhouette Score<a class="headerlink" href="#silhouette-score" title="Link to this heading">#</a></h3>
-<p>Selain Inertia, penelitian ini menggunakan <strong>Silhouette Score</strong> sebagai metrik evaluasi kualitas cluster.</p>
-<p>Silhouette Score mengukur seberapa baik sebuah observasi berada di dalam cluster-nya sendiri dibandingkan dengan cluster lainnya. Nilai silhouette berada pada rentang:</p>
+<p>Silhouette Score digunakan untuk mengukur seberapa baik suatu observasi berada dalam cluster-nya sendiri dibandingkan dengan cluster lainnya.</p>
+<p>Pada penelitian ini, nilai tertinggi diperoleh pada:</p>
 <div class="math notranslate nohighlight">
 \[
--1 \leq S \leq 1
+k = 2
 \]</div>
-<p>Interpretasinya secara umum adalah:</p>
-<ul class="simple">
-<li><p>Nilai mendekati <strong>1</strong> menunjukkan data berada cukup dekat dengan cluster-nya sendiri dan cukup jauh dari cluster lain.</p></li>
-<li><p>Nilai mendekati <strong>0</strong> menunjukkan adanya kedekatan atau tumpang tindih antar-cluster.</p></li>
-<li><p>Nilai negatif menunjukkan bahwa suatu data berpotensi lebih dekat dengan cluster lain dibandingkan cluster tempat data tersebut ditempatkan.</p></li>
-</ul>
-<p>Dalam penelitian ini, <strong>nilai Silhouette Score yang lebih tinggi menunjukkan struktur cluster yang secara internal lebih kompak dan lebih terpisah</strong>.</p>
-<p>Oleh karena itu, nilai <span class="math notranslate nohighlight">\(k\)</span> dapat dibandingkan berdasarkan skor silhouette tertinggi, kemudian hasil tersebut dapat dianalisis bersama grafik Elbow untuk memperoleh gambaran yang lebih lengkap mengenai struktur cluster.</p>
+<p>dengan:</p>
+<div class="math notranslate nohighlight">
+\[
+Silhouette = 0.8547
+\]</div>
+<p>baik pada <strong>PCA 37 komponen</strong> maupun pada <strong>68 fitur asli</strong>.</p>
+<p>Nilai yang relatif tinggi tersebut menunjukkan bahwa pada <span class="math notranslate nohighlight">\(k=2\)</span>, data mempunyai struktur cluster yang relatif <strong>kompak di dalam cluster</strong> dan <strong>terpisah dengan baik antar-cluster</strong> berdasarkan metrik silhouette.</p>
 </section>
 </section>
 <hr class="docutils" />
 <section id="kesimpulan">
 <h2>6. Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
-<section id="template-kesimpulan">
-<h3>Template Kesimpulan<a class="headerlink" href="#template-kesimpulan" title="Link to this heading">#</a></h3>
-<blockquote>
-<div><p>Berdasarkan hasil clustering menggunakan algoritma K-Means, dilakukan perbandingan antara dua skenario, yaitu <strong>Skenario 1 menggunakan PCA dengan 37 komponen</strong> dan <strong>Skenario 2 menggunakan seluruh 68 fitur asli</strong>.</p>
-<p>Pada Skenario 1, pengujian dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Berdasarkan hasil evaluasi, nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong> dengan nilai <strong>[isi]</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong>.</p>
-<p>Pada Skenario 2, pengujian juga dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong> dengan nilai <strong>[isi]</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=[isi]\)</span></strong>.</p>
-<p>Berdasarkan perbandingan kedua skenario, Silhouette Score maksimum pada Skenario 1 adalah <strong>[isi]</strong>, sedangkan pada Skenario 2 adalah <strong>[isi]</strong>. Perbedaan tersebut menunjukkan bahwa <strong>[isi berdasarkan hasil: representasi PCA / 68 fitur asli]</strong> menghasilkan struktur cluster yang lebih baik berdasarkan metrik silhouette.</p>
-<p>Apabila Silhouette Score pada Skenario 1 lebih tinggi dibandingkan Skenario 2, maka secara akademis dapat dikatakan bahwa <strong>representasi data setelah reduksi dimensi menggunakan PCA menghasilkan struktur cluster yang lebih baik menurut metrik silhouette</strong>. Hal tersebut menunjukkan bahwa pada data hasil penelitian ini, 37 komponen PCA mampu memberikan representasi yang menghasilkan <strong>cluster yang relatif lebih kompak di dalam kelompok dan lebih terpisah antar-kelompok</strong> dibandingkan penggunaan langsung 68 fitur asli.</p>
-<p>Sebaliknya, apabila Silhouette Score pada Skenario 2 lebih tinggi, maka hasil tersebut menunjukkan bahwa penggunaan seluruh fitur asli memberikan struktur cluster yang lebih baik berdasarkan metrik silhouette, sehingga reduksi dimensi ke 37 komponen tidak memberikan peningkatan kualitas cluster pada dataset tersebut.</p>
-<p>Dengan demikian, kualitas clustering dalam penelitian ini ditentukan berdasarkan <strong>hasil evaluasi empiris</strong>, bukan hanya berdasarkan jumlah fitur. PCA dapat membantu menyederhanakan representasi data, tetapi efektivitasnya terhadap clustering tetap harus dibuktikan melalui metrik seperti <strong>Inertia dan Silhouette Score</strong>.</p>
-</div></blockquote>
-</section>
-<section id="makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">
-<h3>Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi<a class="headerlink" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi" title="Link to this heading">#</a></h3>
-<p>Apabila hasil penelitian menunjukkan:</p>
-<div class="math notranslate nohighlight">
-\[
-Silhouette_{PCA} &gt; Silhouette_{Asli}
-\]</div>
-<p>maka interpretasinya adalah bahwa <strong>data hasil reduksi PCA memiliki kualitas pemisahan cluster yang lebih baik menurut Silhouette Score</strong>.</p>
-<p>Secara akademis, kondisi tersebut dapat menunjukkan bahwa reduksi dimensi berhasil mempertahankan atau menonjolkan struktur utama data yang relevan untuk clustering, sekaligus mengurangi pengaruh variasi atau fitur yang kurang membantu proses pemisahan kelompok.</p>
-<p>Dengan kata lain, PCA pada dataset tersebut tidak hanya mengurangi jumlah dimensi dari <strong>68 menjadi 37</strong>, tetapi juga menghasilkan representasi yang pada evaluasi K-Means memiliki <strong>kohesi intra-cluster yang lebih baik dan separasi antar-cluster yang lebih jelas</strong>.</p>
-<p>Namun, kesimpulan tersebut tetap harus dibatasi pada <strong>dataset, proses preprocessing, dan metode evaluasi yang digunakan dalam penelitian ini</strong>. Nilai Silhouette yang lebih tinggi menunjukkan kualitas struktur cluster yang lebih baik berdasarkan metrik tersebut, tetapi tidak secara otomatis membuktikan bahwa PCA selalu lebih baik untuk seluruh dataset atau seluruh permasalahan clustering.</p>
-</section>
+<p>Berdasarkan hasil clustering menggunakan algoritma K-Means, dilakukan perbandingan antara dua skenario, yaitu <strong>Skenario 1 menggunakan PCA dengan 37 komponen</strong> dan <strong>Skenario 2 menggunakan seluruh 68 fitur asli</strong>.</p>
+<p>Pada Skenario 1, pengujian dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Berdasarkan hasil evaluasi, nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> dengan nilai <strong>0.8547</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>.</p>
+<p>Pada Skenario 2, pengujian juga dilakukan pada <span class="math notranslate nohighlight">\(k=2\)</span> hingga <span class="math notranslate nohighlight">\(k=10\)</span>. Nilai Silhouette Score tertinggi diperoleh pada <strong><span class="math notranslate nohighlight">\(k=2\)</span></strong> dengan nilai <strong>0.8547</strong>, sedangkan titik <em>elbow</em> berdasarkan grafik Inertia juga berada pada sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>.</p>
+<p>Berdasarkan perbandingan kedua skenario, Silhouette Score maksimum pada Skenario 1 adalah <strong>0.8547</strong>, sedangkan pada Skenario 2 juga sebesar <strong>0.8547</strong>. Dengan demikian, berdasarkan metrik silhouette, <strong>kedua representasi menghasilkan kualitas pemisahan cluster yang sama pada <span class="math notranslate nohighlight">\(k=2\)</span></strong>.</p>
+<p>Hasil tersebut menunjukkan bahwa penggunaan PCA dari 68 fitur menjadi 37 komponen <strong>tidak menyebabkan penurunan kualitas clustering berdasarkan Silhouette Score maksimum</strong>. Dengan kata lain, pada dataset dan proses pengolahan yang digunakan dalam penelitian ini, representasi PCA mampu menghasilkan kualitas pemisahan cluster yang setara dengan penggunaan seluruh 68 fitur asli menurut metrik tersebut.</p>
+<p>Meskipun demikian, pernyataan bahwa PCA <strong>mempertahankan seluruh informasi atau variansi</strong> dari 68 fitur sebaiknya tidak langsung disimpulkan hanya dari hasil Silhouette Score. Untuk menyatakan hal tersebut secara kuantitatif, diperlukan informasi tambahan mengenai <strong>explained variance ratio</strong> dari 37 komponen PCA.</p>
+<p>Dari sisi representasi data, PCA menggunakan <strong>37 dimensi</strong>, sedangkan skenario tanpa reduksi menggunakan <strong>68 dimensi</strong>. Oleh karena itu, apabila kualitas clustering tetap sama menurut Silhouette Score, penggunaan representasi berdimensi lebih rendah dapat dipertimbangkan untuk analisis berikutnya karena mempunyai representasi fitur yang lebih ringkas. Namun, perlu diingat bahwa proses PCA sendiri merupakan tahap tambahan sebelum clustering.</p>
+<p>Secara keseluruhan, hasil penelitian menunjukkan bahwa <strong><span class="math notranslate nohighlight">\(k=2\)</span> menghasilkan Silhouette Score tertinggi pada kedua skenario</strong>, sedangkan metode Elbow menunjukkan titik perubahan sekitar <strong><span class="math notranslate nohighlight">\(k=3\)</span></strong>. Perbedaan antara hasil kedua metode tersebut menunjukkan bahwa pemilihan jumlah cluster perlu mempertimbangkan beberapa indikator evaluasi dan karakteristik tujuan analisis.</p>
 </section>
 <hr class="docutils" />
 <section id="ringkasan-alur-analisis">
@@ -857,7 +869,13 @@ Silhouette_{PCA} &gt; Silhouette_{Asli}
 <p>↓</p>
 <p><strong>Perbandingan Inertia dan Silhouette Score pada Setiap Nilai <span class="math notranslate nohighlight">\(k\)</span></strong></p>
 <p>↓</p>
-<p><strong>Identifikasi <span class="math notranslate nohighlight">\(k\)</span> berdasarkan Elbow dan Silhouette Score</strong></p>
+<p><strong>Hasil Silhouette Tertinggi:</strong>
+<strong>PCA = <span class="math notranslate nohighlight">\(k=2\)</span>, Score = 0.8547</strong>
+<strong>68 Fitur = <span class="math notranslate nohighlight">\(k=2\)</span>, Score = 0.8547</strong></p>
+<p>↓</p>
+<p><strong>Indikasi Elbow:</strong>
+<strong>PCA = <span class="math notranslate nohighlight">\(k=3\)</span></strong>
+<strong>68 Fitur = <span class="math notranslate nohighlight">\(k=3\)</span></strong></p>
 <p>↓</p>
 <p><strong>Perbandingan Kualitas Cluster Skenario PCA vs. 68 Fitur Asli</strong></p>
 </section>
@@ -899,7 +917,7 @@ Silhouette_{PCA} &gt; Silhouette_{Asli}
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</p>
+        <p class="prev-next-title">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</p>
       </div>
     </a>
 </div>
@@ -926,31 +944,30 @@ Silhouette_{PCA} &gt; Silhouette_{Asli}
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-1-reduksi-dimensi-pca-37-k-means">2. Skenario 1: Reduksi Dimensi (PCA 37) &amp; K-Means</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#penerapan-principal-component-analysis-pca">Penerapan Principal Component Analysis (PCA)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-menggunakan-k-means">Clustering Menggunakan K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-jumlah-cluster-dengan-metode-elbow">Menentukan Jumlah Cluster dengan Metode Elbow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#menentukan-jumlah-cluster-dengan-silhouette-score">Menentukan Jumlah Cluster dengan Silhouette Score</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-1-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 1 untuk Setiap Nilai k</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-1">Interpretasi Metode Elbow Skenario 1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-skenario-1">Ringkasan Hasil Skenario 1</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#skenario-2-k-means-pada-68-fitur-asli">3. Skenario 2: K-Means pada 68 Fitur Asli</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#clustering-pada-data-berdimensi-tinggi">Clustering pada Data Berdimensi Tinggi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-high-dimensional-data">Tantangan High-Dimensional Data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-skenario-2-untuk-setiap-nilai-k">Hasil Evaluasi Skenario 2 untuk Setiap Nilai k</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-metode-elbow-skenario-2">Interpretasi Metode Elbow Skenario 2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-skenario-2">Ringkasan Hasil Skenario 2</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-hasil-kedua-skenario">4. Perbandingan Hasil Kedua Skenario</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-ringkasan-nilai-terbaik">Tabel Ringkasan Nilai Terbaik</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-hasil">Interpretasi Hasil</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-interpretasi">5. Metrik Evaluasi &amp; Interpretasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrik-evaluasi-dan-interpretasi">5. Metrik Evaluasi dan Interpretasi</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metode-elbow">Metode Elbow</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-score">Silhouette Score</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#template-kesimpulan">Template Kesimpulan</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-akademis-jika-silhouette-skenario-pca-lebih-tinggi">Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">6. Kesimpulan</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-alur-analisis">7. Ringkasan Alur Analisis</a></li>
 </ul>
   </nav></div>

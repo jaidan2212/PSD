@@ -68,41 +68,70 @@ K-Means bekerja dengan cara membagi data ke dalam sejumlah cluster berdasarkan k
 
 Namun, salah satu persoalan penting dalam K-Means adalah menentukan **jumlah cluster ($k$)** yang sesuai. Oleh karena itu, pada penelitian ini digunakan beberapa nilai $k$, yaitu **2 sampai 10**, kemudian setiap nilai dievaluasi menggunakan **Inertia** dan **Silhouette Score**.
 
+### Menentukan Jumlah Cluster dengan Metode Elbow
+
+Metode **Elbow** digunakan dengan mengamati nilai **Inertia** atau *Within-Cluster Sum of Squares (WCSS)*.
+
+Inertia menggambarkan total jarak kuadrat antara setiap data dengan centroid cluster tempat data tersebut berada. Secara umum, semakin besar jumlah cluster, nilai inertia akan semakin kecil.
+
+Namun, penambahan cluster tidak selalu memberikan peningkatan yang berarti. Oleh karena itu, metode Elbow mencari titik perubahan atau **"siku" (*elbow*)**, yaitu ketika penurunan inertia mulai tidak terlalu signifikan.
+
+Secara konseptual:
+
+> Titik *elbow* dapat digunakan sebagai indikasi jumlah cluster yang relatif sesuai karena penambahan cluster setelah titik tersebut memberikan pengurangan inertia yang semakin kecil.
+
+Metode Elbow digunakan sebagai **indikator struktur internal cluster**, bukan sebagai satu-satunya dasar penentuan nilai $k$.
+
+### Menentukan Jumlah Cluster dengan Silhouette Score
+
+Selain Inertia, penelitian ini menggunakan **Silhouette Score** sebagai metrik evaluasi kualitas cluster.
+
+Silhouette Score mengukur seberapa baik sebuah observasi berada di dalam cluster-nya sendiri dibandingkan dengan cluster lainnya. Nilai silhouette berada pada rentang:
+
+$$
+-1 \leq S \leq 1
+$$
+
+Interpretasinya secara umum adalah:
+
+* Nilai mendekati **1** menunjukkan data berada cukup dekat dengan cluster-nya sendiri dan cukup jauh dari cluster lain.
+* Nilai mendekati **0** menunjukkan adanya kedekatan atau tumpang tindih antar-cluster.
+* Nilai negatif menunjukkan bahwa suatu data berpotensi lebih dekat dengan cluster lain dibandingkan cluster tempat data tersebut ditempatkan.
+
+Dalam penelitian ini, **nilai Silhouette Score yang lebih tinggi menunjukkan struktur cluster yang secara internal lebih kompak dan lebih terpisah**.
+
+Oleh karena itu, nilai $k$ dapat dibandingkan berdasarkan skor silhouette tertinggi, kemudian hasil tersebut dapat dianalisis bersama grafik Elbow untuk memperoleh gambaran yang lebih lengkap mengenai struktur cluster.
+
 ### Hasil Evaluasi Skenario 1 untuk Setiap Nilai k
 
-Hasil pengujian K-Means pada data PCA dilakukan untuk sembilan nilai jumlah cluster, yaitu **$k=2$ hingga $k=10$**. Setiap nilai $k$ menghasilkan nilai **Inertia** dan **Silhouette Score** yang berbeda.
+Pengujian K-Means pada data hasil PCA dilakukan untuk sembilan nilai jumlah cluster, yaitu **$k=2$ hingga $k=10$**. Hasil evaluasi Inertia dan Silhouette Score ditunjukkan pada tabel berikut.
 
-| $k$ | Inertia PCA (37 Komponen) | Silhouette Score PCA | Keterangan     |
-| --: | ------------------------: | -------------------: | -------------- |
-|   2 |                     [isi] |                [isi] | [interpretasi] |
-|   3 |                     [isi] |                [isi] | [interpretasi] |
-|   4 |                     [isi] |                [isi] | [interpretasi] |
-|   5 |                     [isi] |                [isi] | [interpretasi] |
-|   6 |                     [isi] |                [isi] | [interpretasi] |
-|   7 |                     [isi] |                [isi] | [interpretasi] |
-|   8 |                     [isi] |                [isi] | [interpretasi] |
-|   9 |                     [isi] |                [isi] | [interpretasi] |
-|  10 |                     [isi] |                [isi] | [interpretasi] |
+| **k** | **Inertia PCA (37 Komponen)** | **Silhouette Score PCA** | **Keterangan**                                                 |
+| ----: | ----------------------------: | -----------------------: | -------------------------------------------------------------- |
+|     2 |                       4172.48 |                   0.8547 | Nilai Silhouette tertinggi, pemisahan terbaik secara matematis |
+|     3 |                       2987.90 |                   0.2847 | Penurunan Inertia signifikan (titik Elbow)                     |
+|     4 |                       2209.98 |                   0.3172 | Pemisahan mulai tumpang tindih                                 |
+|     5 |                       1697.20 |                   0.3232 | Pemisahan mulai tumpang tindih                                 |
+|     6 |                       1500.97 |                   0.3181 | Pemisahan mulai tumpang tindih                                 |
+|     7 |                       1389.70 |                   0.3019 | Banyak *cluster* tidak informatif                              |
+|     8 |                       1317.07 |                   0.2765 | Banyak *cluster* tidak informatif                              |
+|     9 |                       1212.19 |                   0.2500 | Banyak *cluster* tidak informatif                              |
+|    10 |                       1178.04 |                   0.1717 | Banyak *cluster* tidak informatif                              |
 
-Berdasarkan tabel tersebut, **nilai Inertia secara umum akan semakin menurun seiring bertambahnya jumlah cluster**. Hal ini terjadi karena semakin banyak centroid yang digunakan, semakin dekat data terhadap centroid masing-masing.
+Berdasarkan tabel tersebut, nilai Inertia mengalami penurunan seiring bertambahnya jumlah cluster. Penurunan paling besar terjadi dari **$k=2$ ke $k=3$**, yaitu dari **4172.48 menjadi 2987.90**. Setelah itu, penurunan Inertia relatif semakin kecil sehingga **$k=3$** dapat dipandang sebagai titik *elbow* berdasarkan pengamatan grafik.
 
-Meskipun demikian, penurunan inertia tersebut tidak dapat digunakan secara langsung untuk menyatakan bahwa jumlah cluster yang lebih besar selalu lebih baik. Oleh sebab itu, diperlukan analisis terhadap bentuk grafik Elbow serta Silhouette Score.
+Sementara itu, nilai Silhouette Score tertinggi diperoleh pada **$k=2$**, yaitu sebesar **0.8547**. Nilai tersebut menunjukkan bahwa konfigurasi dua cluster mempunyai tingkat kekompakan dan keterpisahan cluster yang paling tinggi dibandingkan nilai $k$ lainnya pada skenario PCA.
 
-Nilai **Silhouette Score tertinggi** pada Skenario 1 diperoleh pada:
+Menariknya, meskipun nilai Silhouette pada **$k=5$** mencapai **0.3232**, nilai tersebut tetap jauh lebih rendah dibandingkan nilai pada **$k=2$**. Hal ini menunjukkan bahwa penambahan jumlah cluster tidak menghasilkan pemisahan yang lebih baik berdasarkan Silhouette Score.
 
-> **$k = [isi nilai k]$ dengan Silhouette Score = [isi nilai]**
+### Ringkasan Hasil Skenario 1
 
-Nilai tersebut digunakan sebagai salah satu dasar untuk menentukan jumlah cluster yang memiliki pemisahan relatif paling baik pada ruang PCA.
+* **Nilai Silhouette Score tertinggi:** **$k=2$** dengan **0.8547**
+* **Titik Elbow:** sekitar **$k=3$**
+* **Inertia pada $k=2$:** **4172.48**
+* **Silhouette pada $k=3$:** **0.2847**
 
-### Interpretasi Metode Elbow Skenario 1
-
-Pada grafik Elbow Skenario 1, nilai inertia diamati dari $k=2$ hingga $k=10$. Penentuan titik *elbow* dilakukan dengan mengamati lokasi ketika penurunan inertia mulai melandai.
-
-Berdasarkan hasil pengamatan grafik, titik *elbow* diperkirakan berada pada:
-
-> **$k = [isi nilai k]$**
-
-Hasil ini kemudian dibandingkan dengan nilai Silhouette Score. Apabila titik *elbow* dan nilai silhouette tertinggi menunjuk pada nilai $k$ yang sama atau berdekatan, maka hasil evaluasi dari kedua metode tersebut memberikan indikasi yang lebih konsisten mengenai struktur cluster.
+Dengan demikian, berdasarkan **Silhouette Score**, konfigurasi **$k=2$** memberikan kualitas clustering terbaik pada Skenario 1. Sementara itu, metode Elbow memberikan indikasi sekitar **$k=3$**. Perbedaan hasil dari kedua metode ini menunjukkan bahwa penentuan jumlah cluster perlu mempertimbangkan lebih dari satu metrik evaluasi.
 
 ---
 
@@ -137,74 +166,77 @@ Penting untuk diperhatikan bahwa penggunaan 68 fitur asli **tidak otomatis berar
 
 ### Hasil Evaluasi Skenario 2 untuk Setiap Nilai k
 
-Sama seperti Skenario 1, pada Skenario 2 dilakukan pengujian K-Means untuk nilai $k=2$ hingga $k=10$. Setiap konfigurasi dievaluasi menggunakan Inertia dan Silhouette Score.
+Pada Skenario 2, K-Means diuji menggunakan sembilan nilai jumlah cluster, yaitu **$k=2$ hingga $k=10$**. Hasil evaluasi Inertia dan Silhouette Score ditunjukkan pada tabel berikut.
 
-| $k$ | Inertia Asli (68 Fitur) | Silhouette Score Asli | Keterangan     |
-| --: | ----------------------: | --------------------: | -------------- |
-|   2 |                   [isi] |                 [isi] | [interpretasi] |
-|   3 |                   [isi] |                 [isi] | [interpretasi] |
-|   4 |                   [isi] |                 [isi] | [interpretasi] |
-|   5 |                   [isi] |                 [isi] | [interpretasi] |
-|   6 |                   [isi] |                 [isi] | [interpretasi] |
-|   7 |                   [isi] |                 [isi] | [interpretasi] |
-|   8 |                   [isi] |                 [isi] | [interpretasi] |
-|   9 |                   [isi] |                 [isi] | [interpretasi] |
-|  10 |                   [isi] |                 [isi] | [interpretasi] |
+| **k** | **Inertia Asli (68 Fitur)** | **Silhouette Score Asli** | **Keterangan**                                                 |
+| ----: | --------------------------: | ------------------------: | -------------------------------------------------------------- |
+|     2 |                     4172.55 |                    0.8547 | Nilai Silhouette tertinggi, pemisahan terbaik secara matematis |
+|     3 |                     2987.98 |                    0.2847 | Penurunan Inertia signifikan (titik Elbow)                     |
+|     4 |                     2210.05 |                    0.3172 | Pemisahan mulai tumpang tindih                                 |
+|     5 |                     1697.28 |                    0.3232 | Pemisahan mulai tumpang tindih                                 |
+|     6 |                     1501.05 |                    0.3181 | Pemisahan mulai tumpang tindih                                 |
+|     7 |                     1389.78 |                    0.3019 | Banyak *cluster* tidak informatif                              |
+|     8 |                     1317.14 |                    0.2765 | Banyak *cluster* tidak informatif                              |
+|     9 |                     1212.27 |                    0.2500 | Banyak *cluster* tidak informatif                              |
+|    10 |                     1114.08 |                    0.2617 | Banyak *cluster* tidak informatif                              |
 
-Berdasarkan hasil tersebut, **nilai Inertia pada Skenario 2 juga diharapkan menurun ketika jumlah cluster bertambah**. Penentuan jumlah cluster tidak hanya didasarkan pada inertia, tetapi juga mempertimbangkan Silhouette Score dan bentuk grafik Elbow.
+Berdasarkan tabel tersebut, nilai Inertia juga mengalami penurunan seiring bertambahnya jumlah cluster. Penurunan yang paling besar terlihat dari **$k=2$ ke $k=3$**, yaitu dari **4172.55 menjadi 2987.98**, sehingga berdasarkan pengamatan grafik, **$k=3$** diperkirakan sebagai titik *elbow*.
 
-Nilai **Silhouette Score tertinggi** pada Skenario 2 diperoleh pada:
+Untuk Silhouette Score, nilai tertinggi juga diperoleh pada **$k=2$**, yaitu sebesar **0.8547**. Dengan demikian, konfigurasi dua cluster menghasilkan pemisahan relatif paling baik pada data 68 fitur asli berdasarkan metrik silhouette.
 
-> **$k = [isi nilai k]$ dengan Silhouette Score = [isi nilai]**
+Pada nilai $k$ yang lebih tinggi, Silhouette Score berada pada kisaran yang jauh lebih rendah. Nilai tertinggi setelah $k=2$ terdapat pada **$k=5$**, yaitu **0.3232**, sedangkan pada **$k=10$** nilainya sebesar **0.2617**.
 
-Nilai tersebut menjadi salah satu indikator jumlah cluster dengan struktur internal terbaik pada representasi 68 fitur asli.
+### Ringkasan Hasil Skenario 2
 
-### Interpretasi Metode Elbow Skenario 2
+* **Nilai Silhouette Score tertinggi:** **$k=2$** dengan **0.8547**
+* **Titik Elbow:** sekitar **$k=3$**
+* **Inertia pada $k=2$:** **4172.55**
+* **Silhouette pada $k=3$:** **0.2847**
 
-Berdasarkan grafik Elbow pada Skenario 2, titik ketika penurunan inertia mulai melandai berada pada sekitar:
-
-> **$k = [isi nilai k]$**
-
-Hasil ini dibandingkan dengan nilai Silhouette Score pada masing-masing $k$ untuk melihat konsistensi hasil evaluasi.
+Dengan demikian, berdasarkan Silhouette Score, konfigurasi **$k=2$** memberikan kualitas clustering terbaik pada Skenario 2, sedangkan metode Elbow menunjukkan indikasi sekitar **$k=3$**.
 
 ---
 
 ## 4. Perbandingan Hasil Kedua Skenario
 
-Untuk memberikan gambaran yang lebih jelas, hasil seluruh percobaan dapat dirangkum dalam satu tabel perbandingan berikut.
+Untuk memberikan gambaran yang lebih jelas, hasil seluruh percobaan dari kedua skenario dirangkum dalam tabel berikut.
 
-| $k$ | Inertia PCA | Silhouette PCA | Inertia 68 Fitur | Silhouette 68 Fitur |
-| --: | ----------: | -------------: | ---------------: | ------------------: |
-|   2 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   3 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   4 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   5 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   6 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   7 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   8 |       [isi] |          [isi] |            [isi] |               [isi] |
-|   9 |       [isi] |          [isi] |            [isi] |               [isi] |
-|  10 |       [isi] |          [isi] |            [isi] |               [isi] |
+| **k** | **Inertia PCA** | **Silhouette PCA** | **Inertia 68 Fitur** | **Silhouette 68 Fitur** |
+| ----: | --------------: | -----------------: | -------------------: | ----------------------: |
+|     2 |         4172.48 |             0.8547 |              4172.55 |                  0.8547 |
+|     3 |         2987.90 |             0.2847 |              2987.98 |                  0.2847 |
+|     4 |         2209.98 |             0.3172 |              2210.05 |                  0.3172 |
+|     5 |         1697.20 |             0.3232 |              1697.28 |                  0.3232 |
+|     6 |         1500.97 |             0.3181 |              1501.05 |                  0.3181 |
+|     7 |         1389.70 |             0.3019 |              1389.78 |                  0.3019 |
+|     8 |         1317.07 |             0.2765 |              1317.14 |                  0.2765 |
+|     9 |         1212.19 |             0.2500 |              1212.27 |                  0.2500 |
+|    10 |         1178.04 |             0.1717 |              1114.08 |                  0.2617 |
 
-Dari tabel tersebut dapat dilakukan analisis **per nilai $k$**, bukan hanya membandingkan nilai terbaik. Analisis ini penting karena dapat menunjukkan bagaimana perubahan jumlah cluster memengaruhi kualitas clustering pada kedua representasi data.
+Berdasarkan tabel perbandingan, terlihat bahwa nilai **Silhouette Score Skenario 1 dan Skenario 2 identik hingga empat angka di belakang koma pada seluruh nilai $k=2$ hingga $k=9$**, sedangkan pada $k=10$ terdapat perbedaan, yaitu **0.1717** pada Skenario PCA dan **0.2617** pada Skenario 68 fitur asli.
 
-Sebagai contoh, apabila pada $k=[x]$ Skenario PCA mempunyai Silhouette Score lebih tinggi daripada Skenario fitur asli, maka pada konfigurasi jumlah cluster tersebut data hasil PCA menunjukkan pemisahan cluster yang lebih baik berdasarkan metrik silhouette.
-
-Sebaliknya, apabila pada $k=[y]$ Skenario fitur asli menghasilkan Silhouette Score yang lebih tinggi, maka pada jumlah cluster tersebut representasi 68 fitur asli memberikan struktur cluster yang lebih baik menurut metrik yang sama.
+Perbedaan Inertia antara kedua skenario juga relatif kecil pada $k=2$ hingga $k=9$. Hal ini menunjukkan bahwa, berdasarkan metrik evaluasi yang diperoleh, kedua representasi data menghasilkan struktur clustering yang sangat mirip untuk sebagian besar konfigurasi jumlah cluster.
 
 ### Tabel Ringkasan Nilai Terbaik
 
-| Parameter Evaluasi              | PCA 37 Komponen | 68 Fitur Asli |
-| ------------------------------- | --------------: | ------------: |
-| $k$ dengan Silhouette tertinggi |           [isi] |         [isi] |
-| Silhouette Score tertinggi      |           [isi] |         [isi] |
-| $k$ berdasarkan Elbow           |           [isi] |         [isi] |
-| Inertia pada $k$ terpilih       |           [isi] |         [isi] |
+| **Parameter Evaluasi**                | **PCA 37 Komponen** | **68 Fitur Asli** |
+| ------------------------------------- | ------------------: | ----------------: |
+| **$k$ dengan Silhouette tertinggi**   |                   2 |                 2 |
+| **Silhouette Score tertinggi**        |              0.8547 |            0.8547 |
+| **$k$ berdasarkan Elbow**             |                   3 |                 3 |
+| **Inertia pada $k$ terpilih ($k=2$)** |             4172.48 |           4172.55 |
 
-Tabel tersebut digunakan untuk merangkum hasil utama sebelum memasuki tahap pembahasan.
+### Interpretasi Hasil
+
+Hasil evaluasi menunjukkan bahwa kedua skenario menghasilkan **Silhouette Score maksimum yang sama**, yaitu **0.8547 pada $k=2$**. Berdasarkan metrik silhouette, tidak terdapat perbedaan kualitas pemisahan cluster antara representasi PCA 37 komponen dan representasi 68 fitur asli pada konfigurasi tersebut.
+
+Pada metode Elbow, kedua skenario juga menunjukkan indikasi titik *elbow* pada sekitar **$k=3$**. Dengan demikian, kedua metode evaluasi memberikan pola yang relatif serupa pada kedua skenario, meskipun terdapat perbedaan antara rekomendasi berdasarkan Silhouette Score ($k=2$) dan indikasi Elbow ($k=3$).
+
+Apabila tujuan utama adalah memilih konfigurasi berdasarkan **Silhouette Score tertinggi**, maka hasil penelitian ini menunjukkan bahwa **$k=2$ merupakan konfigurasi terbaik secara matematis untuk kedua skenario**.
 
 ---
 
-## 5. Metrik Evaluasi & Interpretasi
+## 5. Metrik Evaluasi dan Interpretasi
 
 ### Metode Elbow
 
@@ -212,69 +244,54 @@ Metode **Elbow** digunakan dengan mengamati nilai **Inertia** atau *Within-Clust
 
 Inertia menggambarkan total jarak kuadrat antara setiap data dengan centroid cluster tempat data tersebut berada. Secara umum, semakin besar jumlah cluster, nilai inertia akan semakin kecil.
 
-Namun, penambahan cluster tidak selalu memberikan peningkatan yang berarti. Oleh karena itu, metode Elbow mencari titik perubahan atau **"siku" (*elbow*)**, yaitu ketika penurunan inertia mulai tidak terlalu signifikan.
+Berdasarkan hasil penelitian:
 
-Secara konseptual:
+* Pada **PCA 37 komponen**, Inertia turun dari **4172.48 ($k=2$)** menjadi **2987.90 ($k=3$)**.
+* Pada **68 fitur asli**, Inertia turun dari **4172.55 ($k=2$)** menjadi **2987.98 ($k=3$)**.
 
-> Titik *elbow* dapat digunakan sebagai indikasi jumlah cluster yang relatif sesuai karena penambahan cluster setelah titik tersebut memberikan pengurangan inertia yang semakin kecil.
+Penurunan yang cukup besar tersebut menjadi dasar pengamatan bahwa titik *elbow* berada di sekitar **$k=3$** pada kedua skenario.
 
-Metode Elbow digunakan sebagai **indikator struktur internal cluster**, bukan sebagai satu-satunya dasar penentuan nilai $k$.
+Namun, metode Elbow tidak menunjukkan bahwa $k=3$ secara otomatis merupakan jumlah cluster terbaik. Hasil tersebut perlu dipertimbangkan bersama metrik lain, khususnya Silhouette Score.
 
 ### Silhouette Score
 
-Selain Inertia, penelitian ini menggunakan **Silhouette Score** sebagai metrik evaluasi kualitas cluster.
+Silhouette Score digunakan untuk mengukur seberapa baik suatu observasi berada dalam cluster-nya sendiri dibandingkan dengan cluster lainnya.
 
-Silhouette Score mengukur seberapa baik sebuah observasi berada di dalam cluster-nya sendiri dibandingkan dengan cluster lainnya. Nilai silhouette berada pada rentang:
+Pada penelitian ini, nilai tertinggi diperoleh pada:
 
 $$
--1 \leq S \leq 1
+k = 2
 $$
 
-Interpretasinya secara umum adalah:
+dengan:
 
-* Nilai mendekati **1** menunjukkan data berada cukup dekat dengan cluster-nya sendiri dan cukup jauh dari cluster lain.
-* Nilai mendekati **0** menunjukkan adanya kedekatan atau tumpang tindih antar-cluster.
-* Nilai negatif menunjukkan bahwa suatu data berpotensi lebih dekat dengan cluster lain dibandingkan cluster tempat data tersebut ditempatkan.
+$$
+Silhouette = 0.8547
+$$
 
-Dalam penelitian ini, **nilai Silhouette Score yang lebih tinggi menunjukkan struktur cluster yang secara internal lebih kompak dan lebih terpisah**.
+baik pada **PCA 37 komponen** maupun pada **68 fitur asli**.
 
-Oleh karena itu, nilai $k$ dapat dibandingkan berdasarkan skor silhouette tertinggi, kemudian hasil tersebut dapat dianalisis bersama grafik Elbow untuk memperoleh gambaran yang lebih lengkap mengenai struktur cluster.
+Nilai yang relatif tinggi tersebut menunjukkan bahwa pada $k=2$, data mempunyai struktur cluster yang relatif **kompak di dalam cluster** dan **terpisah dengan baik antar-cluster** berdasarkan metrik silhouette.
 
 ---
 
 ## 6. Kesimpulan
 
-### Template Kesimpulan
+Berdasarkan hasil clustering menggunakan algoritma K-Means, dilakukan perbandingan antara dua skenario, yaitu **Skenario 1 menggunakan PCA dengan 37 komponen** dan **Skenario 2 menggunakan seluruh 68 fitur asli**.
 
-> Berdasarkan hasil clustering menggunakan algoritma K-Means, dilakukan perbandingan antara dua skenario, yaitu **Skenario 1 menggunakan PCA dengan 37 komponen** dan **Skenario 2 menggunakan seluruh 68 fitur asli**.
->
-> Pada Skenario 1, pengujian dilakukan pada $k=2$ hingga $k=10$. Berdasarkan hasil evaluasi, nilai Silhouette Score tertinggi diperoleh pada **$k=[isi]$** dengan nilai **[isi]**, sedangkan titik *elbow* berdasarkan grafik Inertia berada pada sekitar **$k=[isi]$**.
->
-> Pada Skenario 2, pengujian juga dilakukan pada $k=2$ hingga $k=10$. Nilai Silhouette Score tertinggi diperoleh pada **$k=[isi]$** dengan nilai **[isi]**, sedangkan titik *elbow* berdasarkan grafik Inertia berada pada sekitar **$k=[isi]$**.
->
-> Berdasarkan perbandingan kedua skenario, Silhouette Score maksimum pada Skenario 1 adalah **[isi]**, sedangkan pada Skenario 2 adalah **[isi]**. Perbedaan tersebut menunjukkan bahwa **[isi berdasarkan hasil: representasi PCA / 68 fitur asli]** menghasilkan struktur cluster yang lebih baik berdasarkan metrik silhouette.
->
-> Apabila Silhouette Score pada Skenario 1 lebih tinggi dibandingkan Skenario 2, maka secara akademis dapat dikatakan bahwa **representasi data setelah reduksi dimensi menggunakan PCA menghasilkan struktur cluster yang lebih baik menurut metrik silhouette**. Hal tersebut menunjukkan bahwa pada data hasil penelitian ini, 37 komponen PCA mampu memberikan representasi yang menghasilkan **cluster yang relatif lebih kompak di dalam kelompok dan lebih terpisah antar-kelompok** dibandingkan penggunaan langsung 68 fitur asli.
->
-> Sebaliknya, apabila Silhouette Score pada Skenario 2 lebih tinggi, maka hasil tersebut menunjukkan bahwa penggunaan seluruh fitur asli memberikan struktur cluster yang lebih baik berdasarkan metrik silhouette, sehingga reduksi dimensi ke 37 komponen tidak memberikan peningkatan kualitas cluster pada dataset tersebut.
->
-> Dengan demikian, kualitas clustering dalam penelitian ini ditentukan berdasarkan **hasil evaluasi empiris**, bukan hanya berdasarkan jumlah fitur. PCA dapat membantu menyederhanakan representasi data, tetapi efektivitasnya terhadap clustering tetap harus dibuktikan melalui metrik seperti **Inertia dan Silhouette Score**.
+Pada Skenario 1, pengujian dilakukan pada $k=2$ hingga $k=10$. Berdasarkan hasil evaluasi, nilai Silhouette Score tertinggi diperoleh pada **$k=2$** dengan nilai **0.8547**, sedangkan titik *elbow* berdasarkan grafik Inertia berada pada sekitar **$k=3$**.
 
-### Makna Akademis jika Silhouette Skenario PCA Lebih Tinggi
+Pada Skenario 2, pengujian juga dilakukan pada $k=2$ hingga $k=10$. Nilai Silhouette Score tertinggi diperoleh pada **$k=2$** dengan nilai **0.8547**, sedangkan titik *elbow* berdasarkan grafik Inertia juga berada pada sekitar **$k=3$**.
 
-Apabila hasil penelitian menunjukkan:
+Berdasarkan perbandingan kedua skenario, Silhouette Score maksimum pada Skenario 1 adalah **0.8547**, sedangkan pada Skenario 2 juga sebesar **0.8547**. Dengan demikian, berdasarkan metrik silhouette, **kedua representasi menghasilkan kualitas pemisahan cluster yang sama pada $k=2$**.
 
-$$
-Silhouette_{PCA} > Silhouette_{Asli}
-$$
+Hasil tersebut menunjukkan bahwa penggunaan PCA dari 68 fitur menjadi 37 komponen **tidak menyebabkan penurunan kualitas clustering berdasarkan Silhouette Score maksimum**. Dengan kata lain, pada dataset dan proses pengolahan yang digunakan dalam penelitian ini, representasi PCA mampu menghasilkan kualitas pemisahan cluster yang setara dengan penggunaan seluruh 68 fitur asli menurut metrik tersebut.
 
-maka interpretasinya adalah bahwa **data hasil reduksi PCA memiliki kualitas pemisahan cluster yang lebih baik menurut Silhouette Score**.
+Meskipun demikian, pernyataan bahwa PCA **mempertahankan seluruh informasi atau variansi** dari 68 fitur sebaiknya tidak langsung disimpulkan hanya dari hasil Silhouette Score. Untuk menyatakan hal tersebut secara kuantitatif, diperlukan informasi tambahan mengenai **explained variance ratio** dari 37 komponen PCA.
 
-Secara akademis, kondisi tersebut dapat menunjukkan bahwa reduksi dimensi berhasil mempertahankan atau menonjolkan struktur utama data yang relevan untuk clustering, sekaligus mengurangi pengaruh variasi atau fitur yang kurang membantu proses pemisahan kelompok.
+Dari sisi representasi data, PCA menggunakan **37 dimensi**, sedangkan skenario tanpa reduksi menggunakan **68 dimensi**. Oleh karena itu, apabila kualitas clustering tetap sama menurut Silhouette Score, penggunaan representasi berdimensi lebih rendah dapat dipertimbangkan untuk analisis berikutnya karena mempunyai representasi fitur yang lebih ringkas. Namun, perlu diingat bahwa proses PCA sendiri merupakan tahap tambahan sebelum clustering.
 
-Dengan kata lain, PCA pada dataset tersebut tidak hanya mengurangi jumlah dimensi dari **68 menjadi 37**, tetapi juga menghasilkan representasi yang pada evaluasi K-Means memiliki **kohesi intra-cluster yang lebih baik dan separasi antar-cluster yang lebih jelas**.
-
-Namun, kesimpulan tersebut tetap harus dibatasi pada **dataset, proses preprocessing, dan metode evaluasi yang digunakan dalam penelitian ini**. Nilai Silhouette yang lebih tinggi menunjukkan kualitas struktur cluster yang lebih baik berdasarkan metrik tersebut, tetapi tidak secara otomatis membuktikan bahwa PCA selalu lebih baik untuk seluruh dataset atau seluruh permasalahan clustering.
+Secara keseluruhan, hasil penelitian menunjukkan bahwa **$k=2$ menghasilkan Silhouette Score tertinggi pada kedua skenario**, sedangkan metode Elbow menunjukkan titik perubahan sekitar **$k=3$**. Perbedaan antara hasil kedua metode tersebut menunjukkan bahwa pemilihan jumlah cluster perlu mempertimbangkan beberapa indikator evaluasi dan karakteristik tujuan analisis.
 
 ---
 
@@ -302,7 +319,15 @@ Secara keseluruhan, tahapan analisis pada Bagian 3 dapat diringkas sebagai berik
 
 ↓
 
-**Identifikasi $k$ berdasarkan Elbow dan Silhouette Score**
+**Hasil Silhouette Tertinggi:**
+**PCA = $k=2$, Score = 0.8547**
+**68 Fitur = $k=2$, Score = 0.8547**
+
+↓
+
+**Indikasi Elbow:**
+**PCA = $k=3$**
+**68 Fitur = $k=3$**
 
 ↓
 

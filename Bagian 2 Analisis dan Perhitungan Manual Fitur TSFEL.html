@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu) &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+    <title>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
   
   
   
@@ -192,7 +192,8 @@
 <li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
 
 
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
 
 
 
@@ -382,7 +383,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</h1>
+    <h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -392,7 +393,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teori-dasar">1. Teori Dasar</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-diff">1.1 Fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-pada-data-kualitas-udara">Interpretasi pada Data Kualitas Udara</a></li>
@@ -421,10 +422,39 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuktian-dengan-python">3. Pembuktian dengan Python</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a></li>
 </ul>
 </li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengantar-eda-time-series">1. Pengantar EDA Time Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-membaca-dan-menyiapkan-data">Contoh kode: Membaca dan menyiapkan data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifikasi-anomali-error-sensor">2. Identifikasi Anomali (Error Sensor)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-mengecek-jumlah-error-9999">Contoh kode: Mengecek jumlah error <code class="docutils literal notranslate"><span class="pre">-9999</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strategi-pembersihan-data-imputasi">3. Strategi Pembersihan Data (Imputasi)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengubah-nilai-9999-menjadi-null-nan">3.1 Mengubah Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> Menjadi Null (NaN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-mengubah-9999-menjadi-nan">Contoh kode: Mengubah <code class="docutils literal notranslate"><span class="pre">-9999</span></code> menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-outlier-tambahan-menggunakan-iqr">3.2 Mendeteksi Outlier Tambahan Menggunakan IQR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-deteksi-outlier-menggunakan-iqr">Contoh kode: Deteksi outlier menggunakan IQR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imputasi-menggunakan-time-interpolation">3.3 Imputasi Menggunakan Time Interpolation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-time-interpolation">Contoh kode: Time interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-data">4. Visualisasi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-menyimpan-data-mentah-dan-membuat-data-bersih">Contoh kode: Menyimpan data mentah dan membuat data bersih</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-eda-untuk-setiap-polutan">5. Visualisasi EDA untuk Setiap Polutan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#karbon-monoksida-co"><strong>Karbon Monoksida (CO)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sulfur-dioksida-so2"><strong>Sulfur Dioksida (SO₂)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nitrogen-dioksida-no2"><strong>Nitrogen Dioksida (NO₂)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-visualisasi">6. Interpretasi Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
 </ul>
 </li>
 </ul>
@@ -439,8 +469,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel-tugas-individu">
-<h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)<a class="headerlink" href="#bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel-tugas-individu" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel">
+<h1>Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL<a class="headerlink" href="#bagian-2-analisis-dan-perhitungan-manual-fitur-tsfel" title="Link to this heading">#</a></h1>
 <section id="teori-dasar">
 <h2>1. Teori Dasar<a class="headerlink" href="#teori-dasar" title="Link to this heading">#</a></h2>
 <section id="fitur-median-diff">
@@ -969,12 +999,391 @@ f=0
 </table>
 </div>
 <p>Dengan demikian, kedua hasil perhitungan manual dapat dibuktikan konsisten dengan fungsi yang tersedia pada TSFEL untuk data sampel yang digunakan.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan">
+<h1>Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan<a class="headerlink" href="#bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan" title="Link to this heading">#</a></h1>
+<section id="pengantar-eda-time-series">
+<h2>1. Pengantar EDA Time Series<a class="headerlink" href="#pengantar-eda-time-series" title="Link to this heading">#</a></h2>
+<p><strong>Exploratory Data Analysis (EDA)</strong> pada data <em>time series</em> dilakukan sebagai tahap awal untuk memahami karakteristik, pola, serta kualitas data sebelum digunakan dalam proses pemodelan <em>machine learning</em>. Pada data kualitas udara, EDA digunakan untuk mengamati perubahan konsentrasi polutan dari waktu ke waktu, mengidentifikasi nilai yang tidak wajar, serta memastikan bahwa data memiliki struktur yang sesuai untuk analisis lebih lanjut.</p>
+<p>Polutan yang dianalisis meliputi <strong>Karbon Monoksida (CO)</strong>, <strong>Nitrogen Dioksida (NO₂)</strong>, dan <strong>Sulfur Dioksida (SO₂)</strong>. Karena data memiliki dimensi waktu, urutan pengamatan sangat penting dalam analisis. Oleh karena itu, data perlu diurutkan berdasarkan tanggal sebelum dilakukan proses pembersihan dan analisis.</p>
+<p>Secara umum, tahapan EDA yang dilakukan meliputi:</p>
+<ul class="simple">
+<li><p><strong>Memuat dan memeriksa data</strong> serta memastikan kolom waktu memiliki format yang benar.</p></li>
+<li><p><strong>Mengidentifikasi anomali atau kesalahan pembacaan sensor</strong>.</p></li>
+<li><p><strong>Mendeteksi outlier</strong> menggunakan metode IQR.</p></li>
+<li><p><strong>Melakukan imputasi nilai yang hilang</strong> berdasarkan informasi waktu.</p></li>
+<li><p><strong>Membandingkan data mentah dan data bersih</strong> melalui visualisasi.</p></li>
+</ul>
+<section id="contoh-kode-membaca-dan-menyiapkan-data">
+<h3>Contoh kode: Membaca dan menyiapkan data<a class="headerlink" href="#contoh-kode-membaca-dan-menyiapkan-data" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Mengatur tampilan grafik</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+
+<span class="c1"># Membaca data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data_co_kamal_fix2.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># Menyesuaikan nama kolom tanggal</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Tanggal&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">})</span>
+
+<span class="c1"># Mengubah kolom date menjadi format datetime</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+
+<span class="c1"># Mengurutkan data berdasarkan waktu</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Mengubah nilai polutan menjadi numerik</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span><span class="p">)</span>
+
+<span class="c1"># Melihat informasi awal data</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="identifikasi-anomali-error-sensor">
+<h2>2. Identifikasi Anomali (Error Sensor)<a class="headerlink" href="#identifikasi-anomali-error-sensor" title="Link to this heading">#</a></h2>
+<p>Berdasarkan pemeriksaan terhadap <strong>data mentah</strong>, ditemukan nilai anomali berupa angka <strong><code class="docutils literal notranslate"><span class="pre">-9999</span></code></strong> pada beberapa pengukuran polutan.</p>
+<p>Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> tersebut <strong>bukan merupakan konsentrasi polutan yang sebenarnya</strong>, melainkan kode yang digunakan untuk menunjukkan adanya <strong>error atau kegagalan sensor dalam melakukan pembacaan</strong>.</p>
+<p>Apabila nilai tersebut dibiarkan sebagai nilai numerik biasa, maka akan menyebabkan beberapa permasalahan:</p>
+<ul class="simple">
+<li><p><strong>Mean</strong> menjadi tidak representatif karena nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> sangat jauh dari nilai pengukuran normal.</p></li>
+<li><p><strong>Standard deviation</strong> menjadi terdistorsi karena penyebaran data terlihat jauh lebih besar.</p></li>
+<li><p>Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> dapat dianggap sebagai <strong>outlier ekstrem</strong> oleh metode statistik.</p></li>
+<li><p>Pola <em>time series</em> menjadi tidak natural karena muncul penurunan nilai yang tidak menggambarkan kondisi atmosfer sebenarnya.</p></li>
+</ul>
+<p>Oleh karena itu, sebelum melakukan analisis lebih lanjut, nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> perlu diidentifikasi dan diperlakukan sebagai <strong>data tidak valid</strong>.</p>
+<section id="contoh-kode-mengecek-jumlah-error-9999">
+<h3>Contoh kode: Mengecek jumlah error <code class="docutils literal notranslate"><span class="pre">-9999</span></code><a class="headerlink" href="#contoh-kode-mengecek-jumlah-error-9999" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menghitung jumlah nilai -9999</span>
+<span class="n">jumlah_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9999</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah nilai -9999:&quot;</span><span class="p">,</span> <span class="n">jumlah_error</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Untuk melihat posisi nilai error berdasarkan waktu:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menampilkan data yang memiliki nilai -9999</span>
+<span class="n">data_error</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">9999</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">data_error</span><span class="p">[[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;CO&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Untuk mengetahui persentase data yang mengalami error:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">persentase_error</span> <span class="o">=</span> <span class="p">(</span><span class="n">jumlah_error</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Persentase data error: </span><span class="si">{</span><span class="n">persentase_error</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="strategi-pembersihan-data-imputasi">
+<h2>3. Strategi Pembersihan Data (Imputasi)<a class="headerlink" href="#strategi-pembersihan-data-imputasi" title="Link to this heading">#</a></h2>
+<p>Pembersihan data dilakukan secara bertahap untuk memastikan data yang digunakan pada proses selanjutnya memiliki kualitas yang lebih baik.</p>
+<p>Tahapan utama yang digunakan adalah:</p>
+<p><strong>Data Mentah → Penghapusan Kode Error → Deteksi Outlier IQR → Imputasi Time Interpolation → Data Bersih</strong></p>
+<hr class="docutils" />
+<section id="mengubah-nilai-9999-menjadi-null-nan">
+<h3>3.1 Mengubah Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> Menjadi Null (NaN)<a class="headerlink" href="#mengubah-nilai-9999-menjadi-null-nan" title="Link to this heading">#</a></h3>
+<p>Tahap pertama adalah mengganti nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> dengan <strong><code class="docutils literal notranslate"><span class="pre">NaN</span></code> (<em>Not a Number</em>)</strong>.</p>
+<p>Pengubahan ini bertujuan agar nilai tersebut tidak dianggap sebagai konsentrasi polutan yang valid. Dengan menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, nilai tersebut dapat dikenali sebagai data yang hilang dan kemudian diproses menggunakan metode imputasi.</p>
+</section>
+<section id="contoh-kode-mengubah-9999-menjadi-nan">
+<h3>Contoh kode: Mengubah <code class="docutils literal notranslate"><span class="pre">-9999</span></code> menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code><a class="headerlink" href="#contoh-kode-mengubah-9999-menjadi-nan" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mengubah nilai error -9999 menjadi NaN</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="o">-</span><span class="mi">9999</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="o">-</span><span class="mf">9999.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+<span class="c1"># Mengecek jumlah nilai NaN</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah NaN setelah penggantian error:&quot;</span><span class="p">,</span>
+      <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Setelah proses tersebut, nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> tidak lagi dianggap sebagai nilai pengukuran.</p>
+<p>Untuk memastikan hasilnya:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()][[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;CO&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="mendeteksi-outlier-tambahan-menggunakan-iqr">
+<h3>3.2 Mendeteksi Outlier Tambahan Menggunakan IQR<a class="headerlink" href="#mendeteksi-outlier-tambahan-menggunakan-iqr" title="Link to this heading">#</a></h3>
+<p>Tidak semua data ekstrem berbentuk <code class="docutils literal notranslate"><span class="pre">-9999</span></code>. Oleh karena itu, dilakukan pemeriksaan tambahan menggunakan metode <strong>Interquartile Range (IQR)</strong>.</p>
+<p>IQR dihitung berdasarkan:</p>
+<p><strong>IQR = Q3 − Q1</strong></p>
+<p>dengan:</p>
+<ul class="simple">
+<li><p><strong>Q1</strong> = kuartil pertama atau persentil ke-25.</p></li>
+<li><p><strong>Q3</strong> = kuartil ketiga atau persentil ke-75.</p></li>
+</ul>
+<p>Kemudian ditentukan batas:</p>
+<p><strong>Batas Bawah = Q1 − 1,5 × IQR</strong></p>
+<p><strong>Batas Atas = Q3 + 1,5 × IQR</strong></p>
+<p>Nilai yang berada di luar batas tersebut dianggap sebagai <strong>outlier</strong> dan diubah menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>.</p>
+</section>
+<section id="contoh-kode-deteksi-outlier-menggunakan-iqr">
+<h3>Contoh kode: Deteksi outlier menggunakan IQR<a class="headerlink" href="#contoh-kode-deteksi-outlier-menggunakan-iqr" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menghitung Q1 dan Q3</span>
+<span class="n">Q1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">Q3</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+
+<span class="c1"># Menghitung IQR</span>
+<span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+<span class="c1"># Menentukan batas bawah dan atas</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Q1 =&quot;</span><span class="p">,</span> <span class="n">Q1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Q3 =&quot;</span><span class="p">,</span> <span class="n">Q3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IQR =&quot;</span><span class="p">,</span> <span class="n">IQR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Batas bawah =&quot;</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Batas atas =&quot;</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Selanjutnya, nilai yang berada di luar batas tersebut diubah menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Mendeteksi dan mengubah outlier menjadi NaN</span>
+<span class="n">kondisi_outlier</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span>
+    <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">kondisi_outlier</span><span class="p">,</span> <span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+<span class="c1"># Menghitung jumlah data yang menjadi NaN</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah NaN setelah deteksi outlier:&quot;</span><span class="p">,</span>
+      <span class="n">df</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Tahap ini membuat data ekstrem diperlakukan sama seperti data yang tidak valid, yaitu sebagai nilai yang perlu diestimasi kembali.</p>
+</section>
+<hr class="docutils" />
+<section id="imputasi-menggunakan-time-interpolation">
+<h3>3.3 Imputasi Menggunakan Time Interpolation<a class="headerlink" href="#imputasi-menggunakan-time-interpolation" title="Link to this heading">#</a></h3>
+<p>Setelah nilai error sensor dan outlier diubah menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, dilakukan proses <strong>imputasi berbasis waktu (<em>time interpolation</em>)</strong>.</p>
+<p>Metode ini memanfaatkan informasi waktu untuk memperkirakan nilai yang hilang berdasarkan nilai yang tersedia sebelum dan sesudahnya. Dengan demikian, nilai hasil imputasi tetap mengikuti <strong>tren perubahan data sepanjang waktu</strong>.</p>
+<p>Secara sederhana:</p>
+<p><strong>Nilai sebelum → NaN → Nilai sesudah</strong></p>
+<p>akan menghasilkan:</p>
+<p><strong>Nilai sebelum → Nilai hasil interpolasi → Nilai sesudah</strong></p>
+<p>Pendekatan ini lebih sesuai untuk data <em>time series</em> karena perubahan nilai tidak dianggap berdiri sendiri, tetapi berkaitan dengan waktu pengamatan.</p>
+</section>
+<section id="contoh-kode-time-interpolation">
+<h3>Contoh kode: Time interpolation<a class="headerlink" href="#contoh-kode-time-interpolation" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Menjadikan date sebagai index</span>
+<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span>
+
+<span class="c1"># Melakukan interpolasi berdasarkan waktu</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mengisi NaN yang masih tersisa di awal/akhir data</span>
+<span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+
+<span class="c1"># Mengecek apakah masih ada nilai kosong</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jumlah NaN akhir:&quot;</span><span class="p">,</span> <span class="n">df_clean</span><span class="p">[</span><span class="s1">&#39;CO&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Penggunaan <strong><code class="docutils literal notranslate"><span class="pre">ffill()</span></code></strong> (<em>forward fill</em>) dan <strong><code class="docutils literal notranslate"><span class="pre">bfill()</span></code></strong> (<em>backward fill</em>) dilakukan sebagai langkah tambahan apabila masih terdapat nilai kosong pada bagian awal atau akhir deret waktu yang tidak dapat diinterpolasi dari dua titik waktu.</p>
+<p>Dengan demikian, data akhir diharapkan tidak lagi memiliki nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code>, outlier yang terdeteksi, maupun nilai kosong yang tidak tertangani.</p>
+<hr class="docutils" />
+</section>
+</section>
+<section id="visualisasi-data">
+<h2>4. Visualisasi Data<a class="headerlink" href="#visualisasi-data" title="Link to this heading">#</a></h2>
+<p>Setelah proses pembersihan selesai, dilakukan visualisasi untuk membandingkan <strong>data mentah</strong> dengan <strong>data bersih</strong>.</p>
+<p>Visualisasi tersebut bertujuan untuk memperlihatkan secara langsung perbedaan kondisi data sebelum dan sesudah proses pembersihan, terutama pengaruh nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code>, outlier, serta hasil interpolasi terhadap pola <em>time series</em>.</p>
+<section id="contoh-kode-menyimpan-data-mentah-dan-membuat-data-bersih">
+<h3>Contoh kode: Menyimpan data mentah dan membuat data bersih<a class="headerlink" href="#contoh-kode-menyimpan-data-mentah-dan-membuat-data-bersih" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">clean_polutan</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">target_pollutant</span><span class="p">):</span>
+
+    <span class="c1"># Membaca data</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="c1"># Menyesuaikan nama kolom tanggal</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Tanggal&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;date&#39;</span><span class="p">})</span>
+
+    <span class="c1"># Mengubah date menjadi datetime</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Mengurutkan data berdasarkan waktu</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Mengubah kolom polutan menjadi numerik</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">],</span>
+        <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;coerce&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Menyimpan data mentah</span>
+    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Mengubah -9999 menjadi NaN</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="p">[</span><span class="o">-</span><span class="mi">9999</span><span class="p">,</span> <span class="o">-</span><span class="mf">9999.0</span><span class="p">],</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Menghitung IQR</span>
+    <span class="n">Q1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">Q3</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+    <span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+    <span class="c1"># Mengubah outlier menjadi NaN</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span>
+        <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">),</span>
+        <span class="n">target_pollutant</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="c1"># Time interpolation</span>
+    <span class="n">df_clean</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">df_clean</span><span class="p">,</span> <span class="n">raw_data</span>
+</pre></div>
+</div>
+<p>Kemudian data dapat divisualisasikan sebagai berikut:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plot_eda_polutan</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">target_pollutant</span><span class="p">):</span>
+
+    <span class="c1"># Memanggil proses cleaning</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">df_clean</span><span class="p">,</span> <span class="n">raw_data</span> <span class="o">=</span> <span class="n">clean_polutan</span><span class="p">(</span>
+        <span class="n">file_name</span><span class="p">,</span>
+        <span class="n">target_pollutant</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Membuat dua grafik</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Grafik data mentah</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">],</span>
+        <span class="n">raw_data</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span>
+    <span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;Data Mentah </span><span class="si">{</span><span class="n">target_pollutant</span><span class="si">}</span><span class="s1"> &#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;(Perhatikan anomali sensor di angka -9999)&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+        <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+        <span class="s1">&#39;Konsentrasi&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Grafik data bersih</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">df_clean</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+        <span class="n">df_clean</span><span class="p">[</span><span class="n">target_pollutant</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span>
+    <span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s1">&#39;Data Bersih </span><span class="si">{</span><span class="n">target_pollutant</span><span class="si">}</span><span class="s1"> &#39;</span>
+        <span class="sa">f</span><span class="s1">&#39;(Setelah Pembersihan &amp; Interpolasi Waktu)&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span>
+        <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span>
+        <span class="s1">&#39;Konsentrasi&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
+
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span>
+        <span class="s1">&#39;Tanggal&#39;</span><span class="p">,</span>
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="visualisasi-eda-untuk-setiap-polutan">
+<h2>5. Visualisasi EDA untuk Setiap Polutan<a class="headerlink" href="#visualisasi-eda-untuk-setiap-polutan" title="Link to this heading">#</a></h2>
+<p>Setelah fungsi pembersihan dan visualisasi dibuat, proses dapat diterapkan pada masing-masing polutan.</p>
+<section id="karbon-monoksida-co">
+<h3><strong>Karbon Monoksida (CO)</strong><a class="headerlink" href="#karbon-monoksida-co" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Menampilkan EDA untuk Karbon Monoksida (CO)...&quot;</span><span class="p">)</span>
+
+<span class="n">plot_eda_polutan</span><span class="p">(</span>
+    <span class="s1">&#39;data_co_kamal_fix2.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;CO&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="sulfur-dioksida-so2">
+<h3><strong>Sulfur Dioksida (SO₂)</strong><a class="headerlink" href="#sulfur-dioksida-so2" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Menampilkan EDA untuk Sulfur Dioksida (SO2)...&quot;</span><span class="p">)</span>
+
+<span class="n">plot_eda_polutan</span><span class="p">(</span>
+    <span class="s1">&#39;data_so2_kamal_fix2.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;SO2&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="nitrogen-dioksida-no2">
+<h3><strong>Nitrogen Dioksida (NO₂)</strong><a class="headerlink" href="#nitrogen-dioksida-no2" title="Link to this heading">#</a></h3>
+<p>Apabila file data NO₂ tersedia, analisis dapat dilakukan dengan cara yang sama:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Menampilkan EDA untuk Nitrogen Dioksida (NO2)...&quot;</span><span class="p">)</span>
+
+<span class="n">plot_eda_polutan</span><span class="p">(</span>
+    <span class="s1">&#39;data_no2_kamal_fix2.csv&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;NO2&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+</section>
+</section>
+<section id="interpretasi-visualisasi">
+<h2>6. Interpretasi Visualisasi<a class="headerlink" href="#interpretasi-visualisasi" title="Link to this heading">#</a></h2>
+<p>Grafik hasil EDA digunakan untuk memperlihatkan perubahan pola data sebelum dan sesudah proses <em>data cleaning</em>.</p>
+<p>Pada <strong>grafik data mentah</strong>, nilai error sensor <code class="docutils literal notranslate"><span class="pre">-9999</span></code> dapat terlihat sebagai penurunan ekstrem yang tidak sesuai dengan pola konsentrasi polutan pada waktu tersebut. Nilai tersebut menunjukkan bahwa sensor gagal memberikan pembacaan yang valid.</p>
+<p>Setelah dilakukan proses <strong>penggantian <code class="docutils literal notranslate"><span class="pre">-9999</span></code> menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, deteksi outlier menggunakan IQR, serta interpolasi berbasis waktu</strong>, grafik data bersih diharapkan menunjukkan pola yang lebih kontinu.</p>
+<p>Hasil visualisasi tersebut memberikan gambaran bahwa:</p>
+<ul class="simple">
+<li><p><strong>Anomali sensor tidak lagi diperlakukan sebagai nilai konsentrasi aktual.</strong></p></li>
+<li><p><strong>Nilai ekstrem yang terdeteksi sebagai outlier telah ditangani.</strong></p></li>
+<li><p><strong>Nilai yang hilang diisi berdasarkan hubungan temporal antarobservasi.</strong></p></li>
+<li><p><strong>Pola perubahan konsentrasi polutan dari waktu ke waktu tetap dipertahankan.</strong></p></li>
+</ul>
+<p>Dengan demikian, data yang telah melalui proses pembersihan menjadi lebih sesuai untuk digunakan pada <strong>tahap ekstraksi fitur, analisis lebih lanjut, dan pemodelan Machine Learning</strong>.</p>
+<hr class="docutils" />
+</section>
 <section id="kesimpulan">
-<h3>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<h2>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
 <p>Berdasarkan analisis yang telah dilakukan, fitur <strong><code class="docutils literal notranslate"><span class="pre">median_diff</span></code></strong> digunakan untuk mengukur perubahan tengah dari nilai sinyal antar titik waktu yang berurutan. Pada data CO, fitur ini menghasilkan nilai <strong>0.003</strong>, yang menunjukkan bahwa perubahan tengah konsentrasi CO antar pengamatan adalah sebesar 0.003 satuan.</p>
 <p>Sementara itu, fitur <strong><code class="docutils literal notranslate"><span class="pre">median_frequency</span></code></strong> bekerja pada domain frekuensi dengan melakukan transformasi FFT, mengambil magnitudo spektrum, menghitung akumulasi magnitudo, kemudian menentukan frekuensi ketika akumulasi tersebut melewati 50% dari total magnitudo. Pada data sampel CO dengan <span class="math notranslate nohighlight">\(fs=1\)</span>, diperoleh nilai <strong>0.0 Hz</strong>.</p>
 <p>Hasil perhitungan manual untuk kedua fitur tersebut sesuai dengan hasil yang diberikan oleh fungsi TSFEL, sehingga proses perhitungan dapat digunakan sebagai pembuktian matematis terhadap implementasi fitur pada library TSFEL.</p>
-</section>
 </section>
 </section>
 
@@ -1042,7 +1451,7 @@ f=0
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#teori-dasar">1. Teori Dasar</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fitur-median-diff">1.1 Fitur <code class="docutils literal notranslate"><span class="pre">median_diff</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-pada-data-kualitas-udara">Interpretasi pada Data Kualitas Udara</a></li>
@@ -1071,10 +1480,39 @@ f=0
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#pembuktian-dengan-python">3. Pembuktian dengan Python</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-yang-diharapkan">Hasil yang Diharapkan</a></li>
 </ul>
 </li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengantar-eda-time-series">1. Pengantar EDA Time Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-membaca-dan-menyiapkan-data">Contoh kode: Membaca dan menyiapkan data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identifikasi-anomali-error-sensor">2. Identifikasi Anomali (Error Sensor)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-mengecek-jumlah-error-9999">Contoh kode: Mengecek jumlah error <code class="docutils literal notranslate"><span class="pre">-9999</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strategi-pembersihan-data-imputasi">3. Strategi Pembersihan Data (Imputasi)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengubah-nilai-9999-menjadi-null-nan">3.1 Mengubah Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> Menjadi Null (NaN)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-mengubah-9999-menjadi-nan">Contoh kode: Mengubah <code class="docutils literal notranslate"><span class="pre">-9999</span></code> menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mendeteksi-outlier-tambahan-menggunakan-iqr">3.2 Mendeteksi Outlier Tambahan Menggunakan IQR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-deteksi-outlier-menggunakan-iqr">Contoh kode: Deteksi outlier menggunakan IQR</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#imputasi-menggunakan-time-interpolation">3.3 Imputasi Menggunakan Time Interpolation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-time-interpolation">Contoh kode: Time interpolation</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-data">4. Visualisasi Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#contoh-kode-menyimpan-data-mentah-dan-membuat-data-bersih">Contoh kode: Menyimpan data mentah dan membuat data bersih</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-eda-untuk-setiap-polutan">5. Visualisasi EDA untuk Setiap Polutan</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#karbon-monoksida-co"><strong>Karbon Monoksida (CO)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sulfur-dioksida-so2"><strong>Sulfur Dioksida (SO₂)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#nitrogen-dioksida-no2"><strong>Nitrogen Dioksida (NO₂)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-visualisasi">6. Interpretasi Visualisasi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
 </ul>
 </li>
 </ul>

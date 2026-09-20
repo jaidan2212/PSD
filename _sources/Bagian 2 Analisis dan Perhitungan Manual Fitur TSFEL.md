@@ -1,4 +1,4 @@
-# Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL (Tugas Individu)
+# Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL
 
 ## 1. Teori Dasar
 
@@ -531,6 +531,430 @@ Berdasarkan perhitungan manual dan implementasi algoritma TSFEL, diperoleh:
 
 Dengan demikian, kedua hasil perhitungan manual dapat dibuktikan konsisten dengan fungsi yang tersedia pada TSFEL untuk data sampel yang digunakan.
 
+---
+
+# Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan
+
+### 1. Pengantar EDA Time Series
+
+**Exploratory Data Analysis (EDA)** pada data *time series* dilakukan sebagai tahap awal untuk memahami karakteristik, pola, serta kualitas data sebelum digunakan dalam proses pemodelan *machine learning*. Pada data kualitas udara, EDA digunakan untuk mengamati perubahan konsentrasi polutan dari waktu ke waktu, mengidentifikasi nilai yang tidak wajar, serta memastikan bahwa data memiliki struktur yang sesuai untuk analisis lebih lanjut.
+
+Polutan yang dianalisis meliputi **Karbon Monoksida (CO)**, **Nitrogen Dioksida (NO₂)**, dan **Sulfur Dioksida (SO₂)**. Karena data memiliki dimensi waktu, urutan pengamatan sangat penting dalam analisis. Oleh karena itu, data perlu diurutkan berdasarkan tanggal sebelum dilakukan proses pembersihan dan analisis.
+
+Secara umum, tahapan EDA yang dilakukan meliputi:
+
+* **Memuat dan memeriksa data** serta memastikan kolom waktu memiliki format yang benar.
+* **Mengidentifikasi anomali atau kesalahan pembacaan sensor**.
+* **Mendeteksi outlier** menggunakan metode IQR.
+* **Melakukan imputasi nilai yang hilang** berdasarkan informasi waktu.
+* **Membandingkan data mentah dan data bersih** melalui visualisasi.
+
+#### Contoh kode: Membaca dan menyiapkan data
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Mengatur tampilan grafik
+sns.set_theme(style="whitegrid")
+
+# Membaca data
+df = pd.read_csv('data_co_kamal_fix2.csv')
+
+# Menyesuaikan nama kolom tanggal
+df = df.rename(columns={'Tanggal': 'date', 'time': 'date'})
+
+# Mengubah kolom date menjadi format datetime
+df['date'] = pd.to_datetime(df['date'])
+
+# Mengurutkan data berdasarkan waktu
+df = df.sort_values('date').reset_index(drop=True)
+
+# Mengubah nilai polutan menjadi numerik
+df['CO'] = pd.to_numeric(df['CO'], errors='coerce')
+
+# Melihat informasi awal data
+print(df.head())
+print(df.info())
+```
+
+---
+
+### 2. Identifikasi Anomali (Error Sensor)
+
+Berdasarkan pemeriksaan terhadap **data mentah**, ditemukan nilai anomali berupa angka **`-9999`** pada beberapa pengukuran polutan.
+
+Nilai `-9999` tersebut **bukan merupakan konsentrasi polutan yang sebenarnya**, melainkan kode yang digunakan untuk menunjukkan adanya **error atau kegagalan sensor dalam melakukan pembacaan**.
+
+Apabila nilai tersebut dibiarkan sebagai nilai numerik biasa, maka akan menyebabkan beberapa permasalahan:
+
+* **Mean** menjadi tidak representatif karena nilai `-9999` sangat jauh dari nilai pengukuran normal.
+* **Standard deviation** menjadi terdistorsi karena penyebaran data terlihat jauh lebih besar.
+* Nilai `-9999` dapat dianggap sebagai **outlier ekstrem** oleh metode statistik.
+* Pola *time series* menjadi tidak natural karena muncul penurunan nilai yang tidak menggambarkan kondisi atmosfer sebenarnya.
+
+Oleh karena itu, sebelum melakukan analisis lebih lanjut, nilai `-9999` perlu diidentifikasi dan diperlakukan sebagai **data tidak valid**.
+
+#### Contoh kode: Mengecek jumlah error `-9999`
+
+```python
+# Menghitung jumlah nilai -9999
+jumlah_error = (df['CO'] == -9999).sum()
+
+print("Jumlah nilai -9999:", jumlah_error)
+```
+
+Untuk melihat posisi nilai error berdasarkan waktu:
+
+```python
+# Menampilkan data yang memiliki nilai -9999
+data_error = df[df['CO'] == -9999]
+
+print(data_error[['date', 'CO']].head(10))
+```
+
+Untuk mengetahui persentase data yang mengalami error:
+
+```python
+persentase_error = (jumlah_error / len(df)) * 100
+
+print(f"Persentase data error: {persentase_error:.2f}%")
+```
+
+---
+
+### 3. Strategi Pembersihan Data (Imputasi)
+
+Pembersihan data dilakukan secara bertahap untuk memastikan data yang digunakan pada proses selanjutnya memiliki kualitas yang lebih baik.
+
+Tahapan utama yang digunakan adalah:
+
+**Data Mentah → Penghapusan Kode Error → Deteksi Outlier IQR → Imputasi Time Interpolation → Data Bersih**
+
+---
+
+#### 3.1 Mengubah Nilai `-9999` Menjadi Null (NaN)
+
+Tahap pertama adalah mengganti nilai `-9999` dengan **`NaN` (*Not a Number*)**.
+
+Pengubahan ini bertujuan agar nilai tersebut tidak dianggap sebagai konsentrasi polutan yang valid. Dengan menjadi `NaN`, nilai tersebut dapat dikenali sebagai data yang hilang dan kemudian diproses menggunakan metode imputasi.
+
+#### Contoh kode: Mengubah `-9999` menjadi `NaN`
+
+```python
+# Mengubah nilai error -9999 menjadi NaN
+df['CO'] = df['CO'].replace(-9999, np.nan)
+df['CO'] = df['CO'].replace(-9999.0, np.nan)
+
+# Mengecek jumlah nilai NaN
+print("Jumlah NaN setelah penggantian error:",
+      df['CO'].isna().sum())
+```
+
+Setelah proses tersebut, nilai `-9999` tidak lagi dianggap sebagai nilai pengukuran.
+
+Untuk memastikan hasilnya:
+
+```python
+print(df[df['CO'].isna()][['date', 'CO']].head())
+```
+
+---
+
+#### 3.2 Mendeteksi Outlier Tambahan Menggunakan IQR
+
+Tidak semua data ekstrem berbentuk `-9999`. Oleh karena itu, dilakukan pemeriksaan tambahan menggunakan metode **Interquartile Range (IQR)**.
+
+IQR dihitung berdasarkan:
+
+**IQR = Q3 − Q1**
+
+dengan:
+
+* **Q1** = kuartil pertama atau persentil ke-25.
+* **Q3** = kuartil ketiga atau persentil ke-75.
+
+Kemudian ditentukan batas:
+
+**Batas Bawah = Q1 − 1,5 × IQR**
+
+**Batas Atas = Q3 + 1,5 × IQR**
+
+Nilai yang berada di luar batas tersebut dianggap sebagai **outlier** dan diubah menjadi `NaN`.
+
+#### Contoh kode: Deteksi outlier menggunakan IQR
+
+```python
+# Menghitung Q1 dan Q3
+Q1 = df['CO'].quantile(0.25)
+Q3 = df['CO'].quantile(0.75)
+
+# Menghitung IQR
+IQR = Q3 - Q1
+
+# Menentukan batas bawah dan atas
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+print("Q1 =", Q1)
+print("Q3 =", Q3)
+print("IQR =", IQR)
+print("Batas bawah =", lower_bound)
+print("Batas atas =", upper_bound)
+```
+
+Selanjutnya, nilai yang berada di luar batas tersebut diubah menjadi `NaN`:
+
+```python
+# Mendeteksi dan mengubah outlier menjadi NaN
+kondisi_outlier = (
+    (df['CO'] < lower_bound) |
+    (df['CO'] > upper_bound)
+)
+
+df.loc[kondisi_outlier, 'CO'] = np.nan
+
+# Menghitung jumlah data yang menjadi NaN
+print("Jumlah NaN setelah deteksi outlier:",
+      df['CO'].isna().sum())
+```
+
+Tahap ini membuat data ekstrem diperlakukan sama seperti data yang tidak valid, yaitu sebagai nilai yang perlu diestimasi kembali.
+
+---
+
+#### 3.3 Imputasi Menggunakan Time Interpolation
+
+Setelah nilai error sensor dan outlier diubah menjadi `NaN`, dilakukan proses **imputasi berbasis waktu (*time interpolation*)**.
+
+Metode ini memanfaatkan informasi waktu untuk memperkirakan nilai yang hilang berdasarkan nilai yang tersedia sebelum dan sesudahnya. Dengan demikian, nilai hasil imputasi tetap mengikuti **tren perubahan data sepanjang waktu**.
+
+Secara sederhana:
+
+**Nilai sebelum → NaN → Nilai sesudah**
+
+akan menghasilkan:
+
+**Nilai sebelum → Nilai hasil interpolasi → Nilai sesudah**
+
+Pendekatan ini lebih sesuai untuk data *time series* karena perubahan nilai tidak dianggap berdiri sendiri, tetapi berkaitan dengan waktu pengamatan.
+
+#### Contoh kode: Time interpolation
+
+```python
+# Menjadikan date sebagai index
+df_clean = df.set_index('date')
+
+# Melakukan interpolasi berdasarkan waktu
+df_clean['CO'] = df_clean['CO'].interpolate(method='time')
+
+# Mengisi NaN yang masih tersisa di awal/akhir data
+df_clean['CO'] = df_clean['CO'].ffill().bfill()
+
+# Mengecek apakah masih ada nilai kosong
+print("Jumlah NaN akhir:", df_clean['CO'].isna().sum())
+```
+
+Penggunaan **`ffill()`** (*forward fill*) dan **`bfill()`** (*backward fill*) dilakukan sebagai langkah tambahan apabila masih terdapat nilai kosong pada bagian awal atau akhir deret waktu yang tidak dapat diinterpolasi dari dua titik waktu.
+
+Dengan demikian, data akhir diharapkan tidak lagi memiliki nilai `-9999`, outlier yang terdeteksi, maupun nilai kosong yang tidak tertangani.
+
+---
+
+### 4. Visualisasi Data
+
+Setelah proses pembersihan selesai, dilakukan visualisasi untuk membandingkan **data mentah** dengan **data bersih**.
+
+Visualisasi tersebut bertujuan untuk memperlihatkan secara langsung perbedaan kondisi data sebelum dan sesudah proses pembersihan, terutama pengaruh nilai `-9999`, outlier, serta hasil interpolasi terhadap pola *time series*.
+
+#### Contoh kode: Menyimpan data mentah dan membuat data bersih
+
+```python
+def clean_polutan(file_name, target_pollutant):
+
+    # Membaca data
+    df = pd.read_csv(file_name)
+
+    # Menyesuaikan nama kolom tanggal
+    df = df.rename(columns={'Tanggal': 'date', 'time': 'date'})
+
+    # Mengubah date menjadi datetime
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Mengurutkan data berdasarkan waktu
+    df = df.sort_values('date').reset_index(drop=True)
+
+    # Mengubah kolom polutan menjadi numerik
+    df[target_pollutant] = pd.to_numeric(
+        df[target_pollutant],
+        errors='coerce'
+    )
+
+    # Menyimpan data mentah
+    raw_data = df[target_pollutant].copy()
+
+    # Mengubah -9999 menjadi NaN
+    df[target_pollutant] = df[target_pollutant].replace(
+        [-9999, -9999.0],
+        np.nan
+    )
+
+    # Menghitung IQR
+    Q1 = df[target_pollutant].quantile(0.25)
+    Q3 = df[target_pollutant].quantile(0.75)
+    IQR = Q3 - Q1
+
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    # Mengubah outlier menjadi NaN
+    df.loc[
+        (df[target_pollutant] < lower_bound) |
+        (df[target_pollutant] > upper_bound),
+        target_pollutant
+    ] = np.nan
+
+    # Time interpolation
+    df_clean = (
+        df.set_index('date')
+        .interpolate(method='time')
+        .ffill()
+        .bfill()
+    )
+
+    return df, df_clean, raw_data
+```
+
+Kemudian data dapat divisualisasikan sebagai berikut:
+
+```python
+def plot_eda_polutan(file_name, target_pollutant):
+
+    # Memanggil proses cleaning
+    df, df_clean, raw_data = clean_polutan(
+        file_name,
+        target_pollutant
+    )
+
+    # Membuat dua grafik
+    fig, axes = plt.subplots(
+        2, 1,
+        figsize=(14, 8),
+        sharex=True
+    )
+
+    # Grafik data mentah
+    axes[0].plot(
+        df['date'],
+        raw_data,
+        color='red',
+        alpha=0.7
+    )
+
+    axes[0].set_title(
+        f'Data Mentah {target_pollutant} '
+        f'(Perhatikan anomali sensor di angka -9999)',
+        fontsize=14,
+        fontweight='bold'
+    )
+
+    axes[0].set_ylabel(
+        'Konsentrasi',
+        fontsize=12
+    )
+
+    # Grafik data bersih
+    axes[1].plot(
+        df_clean.index,
+        df_clean[target_pollutant],
+        color='green',
+        alpha=0.9
+    )
+
+    axes[1].set_title(
+        f'Data Bersih {target_pollutant} '
+        f'(Setelah Pembersihan & Interpolasi Waktu)',
+        fontsize=14,
+        fontweight='bold'
+    )
+
+    axes[1].set_ylabel(
+        'Konsentrasi',
+        fontsize=12
+    )
+
+    axes[1].set_xlabel(
+        'Tanggal',
+        fontsize=12
+    )
+
+    plt.tight_layout()
+    plt.show()
+```
+
+---
+
+### 5. Visualisasi EDA untuk Setiap Polutan
+
+Setelah fungsi pembersihan dan visualisasi dibuat, proses dapat diterapkan pada masing-masing polutan.
+
+#### **Karbon Monoksida (CO)**
+
+```python
+print("Menampilkan EDA untuk Karbon Monoksida (CO)...")
+
+plot_eda_polutan(
+    'data_co_kamal_fix2.csv',
+    'CO'
+)
+```
+
+#### **Sulfur Dioksida (SO₂)**
+
+```python
+print("Menampilkan EDA untuk Sulfur Dioksida (SO2)...")
+
+plot_eda_polutan(
+    'data_so2_kamal_fix2.csv',
+    'SO2'
+)
+```
+
+#### **Nitrogen Dioksida (NO₂)**
+
+Apabila file data NO₂ tersedia, analisis dapat dilakukan dengan cara yang sama:
+
+```python
+print("Menampilkan EDA untuk Nitrogen Dioksida (NO2)...")
+
+plot_eda_polutan(
+    'data_no2_kamal_fix2.csv',
+    'NO2'
+)
+```
+
+---
+
+### 6. Interpretasi Visualisasi
+
+Grafik hasil EDA digunakan untuk memperlihatkan perubahan pola data sebelum dan sesudah proses *data cleaning*.
+
+Pada **grafik data mentah**, nilai error sensor `-9999` dapat terlihat sebagai penurunan ekstrem yang tidak sesuai dengan pola konsentrasi polutan pada waktu tersebut. Nilai tersebut menunjukkan bahwa sensor gagal memberikan pembacaan yang valid.
+
+Setelah dilakukan proses **penggantian `-9999` menjadi `NaN`, deteksi outlier menggunakan IQR, serta interpolasi berbasis waktu**, grafik data bersih diharapkan menunjukkan pola yang lebih kontinu.
+
+Hasil visualisasi tersebut memberikan gambaran bahwa:
+
+* **Anomali sensor tidak lagi diperlakukan sebagai nilai konsentrasi aktual.**
+* **Nilai ekstrem yang terdeteksi sebagai outlier telah ditangani.**
+* **Nilai yang hilang diisi berdasarkan hubungan temporal antarobservasi.**
+* **Pola perubahan konsentrasi polutan dari waktu ke waktu tetap dipertahankan.**
+
+Dengan demikian, data yang telah melalui proses pembersihan menjadi lebih sesuai untuk digunakan pada **tahap ekstraksi fitur, analisis lebih lanjut, dan pemodelan Machine Learning**.
+
+---
 ### Kesimpulan
 
 Berdasarkan analisis yang telah dilakukan, fitur **`median_diff`** digunakan untuk mengukur perubahan tengah dari nilai sinyal antar titik waktu yang berurutan. Pada data CO, fitur ini menghasilkan nilai **0.003**, yang menunjukkan bahwa perubahan tengah konsentrasi CO antar pengamatan adalah sebesar 0.003 satuan.
