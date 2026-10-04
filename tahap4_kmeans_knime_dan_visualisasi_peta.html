@@ -1,0 +1,879 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pemodelan K-Means &amp; Visualisasi Peta Segmentasi &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tahap4_kmeans_knime_dan_visualisasi_peta';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette" href="tahap3_eksperimen_clustering.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap1_pengambilan_data_eda.html">Tahap 1 - Pengambilan Data &amp; Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap2_reduksi_dimensi.html">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap3_eksperimen_clustering.html">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Pemodelan K-Means &amp; Visualisasi Peta Segmentasi</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Ftahap4_kmeans_knime_dan_visualisasi_peta.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/tahap4_kmeans_knime_dan_visualisasi_peta.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Pemodelan K-Means & Visualisasi Peta Segmentasi</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-1-k-means-clustering-polynomial">Bagian 1: K-Means Clustering (Polynomial)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-workflow-knime">Dokumentasi Workflow (KNIME)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-per-skenario">Hasil Evaluasi per Skenario</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tanpa-reduksi-dimensi-pca">1. Tanpa Reduksi Dimensi (PCA)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-203-fitur">2. Reduksi Dimensi dengan PCA (203 Fitur)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-74-fitur">3. Reduksi Dimensi dengan PCA (74 Fitur)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-37-fitur">4. Reduksi Dimensi dengan PCA (37 Fitur)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-tahap-4-visualisasi-peta-segmentasi-wilayah">Bagian 2: Tahap 4 - Visualisasi Peta Segmentasi Wilayah</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-peta">Mengapa Peta?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strategi-geocoding">Strategi Geocoding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-untuk-setiap-dimensi">Peta untuk Setiap Dimensi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-interaktif-folium-satu-layer-per-dimensi">4.4 Peta Interaktif Folium — Satu Layer per Dimensi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-statis-matplotlib-untuk-laporan">4.5 Peta Statis (Matplotlib) — untuk Laporan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-lengkap-analisis">4.6 Ringkasan Lengkap Analisis</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pemodelan-k-means-visualisasi-peta-segmentasi">
+<h1>Pemodelan K-Means &amp; Visualisasi Peta Segmentasi<a class="headerlink" href="#pemodelan-k-means-visualisasi-peta-segmentasi" title="Link to this heading">#</a></h1>
+<section id="bagian-1-k-means-clustering-polynomial">
+<h2>Bagian 1: K-Means Clustering (Polynomial)<a class="headerlink" href="#bagian-1-k-means-clustering-polynomial" title="Link to this heading">#</a></h2>
+<section id="dokumentasi-workflow-knime">
+<h3>Dokumentasi Workflow (KNIME)<a class="headerlink" href="#dokumentasi-workflow-knime" title="Link to this heading">#</a></h3>
+<p>Workflow di atas merupakan rancangan proses klasterisasi menggunakan algoritma K-Means yang membandingkan empat skenario utama berdasarkan pengolahan data <strong>polynomial</strong>: <strong>tanpa reduksi dimensi</strong>, dan <strong>dengan reduksi dimensi (PCA)</strong> menjadi 203 fitur, 74 fitur, dan 37 fitur. Masing-masing skenario diuji dengan jumlah klaster (k) sebanyak 3, 5, dan 7.</p>
+<p><img alt="Workflow KNIME" src="path_gambar_workflow_knime" /></p>
+<p>Berikut adalah penjelasan fungsi untuk setiap node yang digunakan:</p>
+<ol class="arabic">
+<li><p><strong>MySQL Connector</strong> Berfungsi untuk membangun koneksi dari KNIME ke server database MySQL menggunakan kredensial (host, port, database, username, password) yang sesuai.</p></li>
+<li><p><strong>DB Table Selector</strong> Menyeleksi atau memilih tabel spesifik di dalam database MySQL yang berisi data mentah polinomial.</p></li>
+<li><p><strong>DB Reader</strong> Mengeksekusi query dari DB Table Selector dan menarik (import) data mentah tersebut dari database ke dalam memori/environment KNIME agar dapat diproses pada node-node selanjutnya.</p></li>
+<li><p><strong>Column Filter</strong> Menyeleksi fitur-fitur yang akan digunakan dalam pemodelan. Pada workflow ini, digunakan secara spesifik untuk <strong>menghilangkan kolom ID</strong> karena tidak memiliki nilai analitik untuk proses klasterisasi.</p></li>
+<li><p><strong>PCA (Principal Component Analysis)</strong> Teknik reduksi dimensi yang digunakan untuk menyederhanakan kompleksitas data berdimensi tinggi. Karena penggunaan fitur polynomial akan melipatgandakan jumlah kolom, PCA sangat krusial untuk mengatasi <em>curse of dimensionality</em>. Pada workflow ini, PCA dijalankan dalam tiga skenario reduksi:</p>
+<ul class="simple">
+<li><p>Reduksi ke <strong>203 Fitur</strong></p></li>
+<li><p>Reduksi ke <strong>74 Fitur</strong></p></li>
+<li><p>Reduksi ke <strong>37 Fitur</strong></p></li>
+</ul>
+<p>Tujuannya adalah mencari keseimbangan antara efisiensi komputasi dan retensi informasi (variansi) dari data asli.</p>
+</li>
+<li><p><strong>k-Means</strong> Algoritma inti yang bertugas mengelompokkan data. Pada workflow ini, K-Means dijalankan untuk keempat variasi input data (tanpa PCA, PCA 203, PCA 74, PCA 37) dan masing-masing diuji pembentukan <strong>k = 3, 5, dan 7 klaster</strong>.</p></li>
+<li><p><strong>Silhouette Coefficient</strong> Metrik evaluasi yang digunakan untuk mengukur seberapa baik setiap titik data dikelompokkan ke dalam klasternya sendiri dibandingkan dengan klaster lain.</p></li>
+<li><p><strong>Table View</strong> Node visualisasi yang menampilkan nilai Silhouette Coefficient dalam format tabel interaktif. Berdasarkan gambar, rata-rata <em>Silhouette Coefficient</em> dicatatkan secara langsung di atas node Table View untuk memudahkan observasi.</p></li>
+</ol>
+</section>
+<section id="hasil-evaluasi-per-skenario">
+<h3>Hasil Evaluasi per Skenario<a class="headerlink" href="#hasil-evaluasi-per-skenario" title="Link to this heading">#</a></h3>
+<p>Pada bagian ini, evaluasi pembentukan klaster diukur menggunakan rata-rata <em>Silhouette Coefficient</em> pada masing-masing bereksperimen. Menariknya, hasil yang diperoleh sangat konsisten di setiap variasi PCA maupun tanpa PCA:</p>
+<section id="tanpa-reduksi-dimensi-pca">
+<h4>1. Tanpa Reduksi Dimensi (PCA)<a class="headerlink" href="#tanpa-reduksi-dimensi-pca" title="Link to this heading">#</a></h4>
+<p><strong>A. Klastering 3 Kelas (k = 3)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.471</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View Tanpa PCA k=3" src="path_gambar_table_tanpa_pca_k3" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot Tanpa PCA k=3" src="path_gambar_scatter_tanpa_pca_k3" /></p>
+<p><strong>B. Klastering 5 Kelas (k = 5)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.486</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View Tanpa PCA k=5" src="path_gambar_table_tanpa_pca_k5" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot Tanpa PCA k=5" src="path_gambar_scatter_tanpa_pca_k5" /></p>
+<p><strong>C. Klastering 7 Kelas (k = 7)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.537</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View Tanpa PCA k=7" src="path_gambar_table_tanpa_pca_k7" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot Tanpa PCA k=7" src="path_gambar_scatter_tanpa_pca_k7" /></p>
+</section>
+<section id="reduksi-dimensi-dengan-pca-203-fitur">
+<h4>2. Reduksi Dimensi dengan PCA (203 Fitur)<a class="headerlink" href="#reduksi-dimensi-dengan-pca-203-fitur" title="Link to this heading">#</a></h4>
+<p><strong>A. Klastering 3 Kelas (k = 3)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.471</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 203 k=3" src="path_gambar_table_pca203_k3" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 203 k=3" src="path_gambar_scatter_pca203_k3" /></p>
+<p><strong>B. Klastering 5 Kelas (k = 5)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.486</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 203 k=5" src="path_gambar_table_pca203_k5" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 203 k=5" src="path_gambar_scatter_pca203_k5" /></p>
+<p><strong>C. Klastering 7 Kelas (k = 7)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.537</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 203 k=7" src="path_gambar_table_pca203_k7" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 203 k=7" src="path_gambar_scatter_pca203_k7" /></p>
+</section>
+<section id="reduksi-dimensi-dengan-pca-74-fitur">
+<h4>3. Reduksi Dimensi dengan PCA (74 Fitur)<a class="headerlink" href="#reduksi-dimensi-dengan-pca-74-fitur" title="Link to this heading">#</a></h4>
+<p><strong>A. Klastering 3 Kelas (k = 3)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.471</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 74 k=3" src="path_gambar_table_pca74_k3" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 74 k=3" src="path_gambar_scatter_pca74_k3" /></p>
+<p><strong>B. Klastering 5 Kelas (k = 5)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.486</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 74 k=5" src="path_gambar_table_pca74_k5" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 74 k=5" src="path_gambar_scatter_pca74_k5" /></p>
+<p><strong>C. Klastering 7 Kelas (k = 7)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.537</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 74 k=7" src="path_gambar_table_pca74_k7" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 74 k=7" src="path_gambar_scatter_pca74_k7" /></p>
+</section>
+<section id="reduksi-dimensi-dengan-pca-37-fitur">
+<h4>4. Reduksi Dimensi dengan PCA (37 Fitur)<a class="headerlink" href="#reduksi-dimensi-dengan-pca-37-fitur" title="Link to this heading">#</a></h4>
+<p><strong>A. Klastering 3 Kelas (k = 3)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.471</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 37 k=3" src="path_gambar_table_pca37_k3" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 37 k=3" src="path_gambar_scatter_pca37_k3" /></p>
+<p><strong>B. Klastering 5 Kelas (k = 5)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.486</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 37 k=5" src="path_gambar_table_pca37_k5" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 37 k=5" src="path_gambar_scatter_pca37_k5" /></p>
+<p><strong>C. Klastering 7 Kelas (k = 7)</strong></p>
+<ul class="simple">
+<li><p><strong>Silhouette Coefficient</strong>: 0.537</p></li>
+</ul>
+<p><em>Tabel Silhouette Coefficient:</em>
+<img alt="Table View PCA 37 k=7" src="path_gambar_table_pca37_k7" /></p>
+<p><em>Visualisasi Scatter Plot:</em>
+<img alt="Scatter Plot PCA 37 k=7" src="path_gambar_scatter_pca37_k7" /></p>
+</section>
+</section>
+<section id="kesimpulan">
+<h3>Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h3>
+<p>Berdasarkan rancangan eksperimen klasterisasi K-Means dengan data polynomial di atas, dapat ditarik beberapa kesimpulan utama:</p>
+<ol class="arabic simple">
+<li><p><strong>Jumlah Klaster Optimal (k=7):</strong> Pembagian data menjadi 7 klaster secara konsisten memberikan nilai rata-rata <em>Silhouette Coefficient</em> tertinggi yaitu <strong>0.537</strong>, mengungguli pembagian 3 klaster (0.471) dan 5 klaster (0.486). Hal ini menandakan bahwa data memiliki struktur natural yang lebih cocok dipartisi menjadi 7 kelompok.</p></li>
+<li><p><strong>Efektivitas PCA yang Ekstrem:</strong> Penggunaan PCA untuk mereduksi dimensi hingga ke 37 fitur (dari total fitur polynomial awal) <strong>sama sekali tidak mengubah nilai Silhouette Coefficient</strong>. Nilai yang didapat identik dengan penggunaan data asli (tanpa PCA). Ini membuktikan bahwa 37 komponen utama sudah sangat cukup merepresentasikan variansi penting pada data, sehingga kita bisa menghemat resource komputasi secara signifikan tanpa mengorbankan kualitas klasterisasi.</p></li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="bagian-2-tahap-4-visualisasi-peta-segmentasi-wilayah">
+<h2>Bagian 2: Tahap 4 - Visualisasi Peta Segmentasi Wilayah<a class="headerlink" href="#bagian-2-tahap-4-visualisasi-peta-segmentasi-wilayah" title="Link to this heading">#</a></h2>
+<p>Tahap terakhir ini menampilkan hasil clustering di atas <strong>peta interaktif</strong> Indonesia menggunakan library <strong>Folium</strong> (berbasis Leaflet.js). Setiap wilayah divisualisasikan dengan warna berbeda sesuai clusternya.</p>
+<section id="mengapa-peta">
+<h3>Mengapa Peta?<a class="headerlink" href="#mengapa-peta" title="Link to this heading">#</a></h3>
+<p>Peta adalah cara paling intuitif untuk memahami <strong>pola spasial</strong> clustering:</p>
+<ul class="simple">
+<li><p>Apakah wilayah yang berdekatan cenderung masuk ke cluster yang sama?</p></li>
+<li><p>Apakah ada pola regional (Jawa, Kalimantan, dll.)?</p></li>
+<li><p>Wilayah mana yang memiliki karakteristik polutan paling unik (outlier)?</p></li>
+</ul>
+</section>
+<section id="strategi-geocoding">
+<h3>Strategi Geocoding<a class="headerlink" href="#strategi-geocoding" title="Link to this heading">#</a></h3>
+<p>Data tidak memiliki kolom koordinat, sehingga kita perlu <strong>geocoding</strong> — mengubah nama daerah menjadi koordinat (latitude, longitude).</p>
+<p>Strategi yang digunakan (prioritas berurutan):</p>
+<ol class="arabic simple">
+<li><p><strong>Lookup hardcoded</strong> — koordinat yang sudah diverifikasi manual</p></li>
+<li><p><strong>Nominatim (OpenStreetMap)</strong> — geocoding otomatis via geopy</p></li>
+<li><p><strong>Fallback</strong> — koordinat pusat Jawa Timur + jitter acak (jika gagal)</p></li>
+</ol>
+<blockquote>
+<div><p><strong>⚠️ Warning</strong>
+Hasil geocoding otomatis bisa tidak akurat untuk nama daerah yang ambigu. Verifikasi koordinat dengan membuka peta interaktif yang dihasilkan.</p>
+</div></blockquote>
+</section>
+<section id="peta-untuk-setiap-dimensi">
+<h3>Peta untuk Setiap Dimensi<a class="headerlink" href="#peta-untuk-setiap-dimensi" title="Link to this heading">#</a></h3>
+<p>Notebook ini memetakan hasil clustering terbaik di <strong>setiap dimensi</strong> (204 → 203 → 74 → 37) untuk interpolasi Linear dan Polynomial, bukan hanya satu konfigurasi terbaik global. Peta interaktif memiliki satu layer per dimensi, dan peta statis menampilkan semuanya berdampingan.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python Map dimasukkan di sini</span>
+</pre></div>
+</div>
+</section>
+<section id="peta-interaktif-folium-satu-layer-per-dimensi">
+<h3>4.4 Peta Interaktif Folium — Satu Layer per Dimensi<a class="headerlink" href="#peta-interaktif-folium-satu-layer-per-dimensi" title="Link to this heading">#</a></h3>
+<p>Peta interaktif ini menggunakan <strong>Leaflet.js</strong> via Folium, dengan fitur:</p>
+<ul class="simple">
+<li><p><strong>Satu layer untuk setiap dimensi</strong> (Linear dan Poly × 204, 203, 74, 37). Pilih layer di kontrol kanan atas (default: konfigurasi terbaik global)</p></li>
+<li><p><strong>Marker berwarna</strong> per cluster (dapat diklik untuk detail)</p></li>
+<li><p><strong>Pilihan basemap</strong> (OpenStreetMap, Esri Street, Citra Satelit)</p></li>
+<li><p><strong>Ringkasan hasil</strong> semua dimensi di pojok kiri bawah</p></li>
+<li><p><strong>Tooltip</strong> saat hover</p></li>
+</ul>
+<p>Aktifkan <strong>satu layer pada satu waktu</strong> agar marker tidak saling menumpuk.</p>
+<p><a class="reference internal" href="#output/peta_clustering_interaktif.html"><span class="xref myst">Lihat Peta Clustering Interaktif (output/peta_clustering_interaktif.html)</span></a></p>
+</section>
+<section id="peta-statis-matplotlib-untuk-laporan">
+<h3>4.5 Peta Statis (Matplotlib) — untuk Laporan<a class="headerlink" href="#peta-statis-matplotlib-untuk-laporan" title="Link to this heading">#</a></h3>
+<p>Cluster terbaik di setiap dimensi (baris atas Linear, baris bawah Polynomial), semua dengan skala peta yang sama agar mudah dibandingkan.</p>
+<p><img alt="Peta Statis Matplotlib" src="output/12_peta_statis.png" /></p>
+</section>
+<section id="ringkasan-lengkap-analisis">
+<h3>4.6 Ringkasan Lengkap Analisis<a class="headerlink" href="#ringkasan-lengkap-analisis" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=================================================================
+ RINGKASAN LENGKAP ANALISIS CLUSTERING SEGMENTASI POLUTAN
+=================================================================
+
+[TAHAP 1] DATA &amp; EDA
+ Sumber     : MySQL — basisda1_PSD-A-Interpolasi
+ Tabel      : ekstraksi_fitur_linear + ekstraksi_fitur_polynomial
+ Ukuran     : 37 wilayah × 204 fitur (68 per polutan)
+
+[TAHAP 2] REDUKSI DIMENSI
+ Standardisasi : StandardScaler (mean=0, std=1)
+ Urutan        : 204 → 203 → 74 → 37
+ 204 → 203     : seleksi fitur (buang 1 fitur paling redundan)
+ 203 → 74      : seleksi fitur (buang 129 fitur paling redundan)
+ 74 → 37       : PCA (37 komponen)
+
+[TAHAP 3] EKSPERIMEN CLUSTERING
+ Algoritma : K-Means (k-means++, n_init=20)
+ Variasi   : 8 dataset × k=2..10 = 72 eksperimen
+ Evaluasi  : Silhouette Coefficient
+ Terbaik global: Poly-204, k=2, silhouette=0.5375
+
+ Cluster terbaik di setiap dimensi:
+  Linear-204  k=2  sil=0.4909  ukuran: 34 / 3
+  Linear-203  k=2  sil=0.4909  ukuran: 34 / 3
+  Linear-74   k=2  sil=0.4021  ukuran: 33 / 4
+  Linear-37   k=2  sil=0.4021  ukuran: 33 / 4
+  Poly-204    k=2  sil=0.5375  ukuran: 35 / 2
+  Poly-203    k=2  sil=0.5375  ukuran: 35 / 2
+  Poly-74     k=3  sil=0.4543  ukuran: 35 / 1 / 1
+  Poly-37     k=3  sil=0.4543  ukuran: 35 / 1 / 1
+
+[TAHAP 4] VISUALISASI PETA
+ Geocoding : Nominatim (OpenStreetMap) + hardcoded
+ Peta interaktif : output/peta_clustering_interaktif.html
+ Peta statis     : output/12_peta_statis.png
+ Peta per dimensi: output/13_peta_per_dimensi.png
+
+DISTRIBUSI WILAYAH PER CLUSTER:
+-----------------------------------------------------------------
+
+Cluster 0 (35 wilayah) ─ warna: #E53935
+ • Baron Nganjuk
+ • Nunukan
+ • Sreseh, Sampang
+ • Manyar, Gresik
+ • Kamal, Bangkalan
+ • Kedungpring Lamongan
+ • Gresik Kota, Gresik
+ • Waru, Pamekasan
+ • Paciran, Lamongan
+ • Kertosono, Nganjuk
+ • Menganti, Gresik
+ • Bandung - Jogoroto, Jombang
+ • Banyu Ajuh, Perumnas, Kamal
+ • Widang, Tuban
+ • Kwanyar, Bangkalan
+ • sambeng, lamongan
+ • Kec. Kalianget, Sumenep
+ • Cerme, Gresik
+ • Tikala, Manado
+ • Kerek, Tuban
+ • Kwanyar, Bangkalan
+ • Wonokromo, Surabaya
+ • Asemrowo, Surabaya
+ • Kota Sumenep, Sumenep
+ • Socah, Bangkalan
+ • Pilangkenceng, Madiun
+ • Tanah Merah, Bangkalan
+ • Labang, Bangkalan
+ • Widodaren, Ngawi
+ • Bangkalan, Bangkalan
+ • Warudoyong, Kota Sukabumi
+ • Kamal, Bangkalan
+ • Banyuajuh kamal, Bangkalan
+ • Dukun, Gresik
+ • Kecamatan Bangkalan,Bangkalan
+
+Cluster 1 (2 wilayah) ─ warna: #1E88E5
+ • Jabon, Sidoarjo
+ • Sidoarjo, Wonoayu
+
+=================================================================
+ OUTPUT FILES (folder output/)
+=================================================================
+ 01_distribusi_fitur.png                       76.5 KB
+ 02_heatmap_korelasi.png                      208.8 KB
+ 03_linear_vs_poly.png                        156.2 KB
+ 04_standardisasi.png                          92.7 KB
+ 04a_batas_pca.png                             85.7 KB
+ 04c_pipeline_reduksi.png                      38.2 KB
+ 05_seleksi_fitur.png                          53.5 KB
+ 06_pca_tahap3.png                            113.2 KB
+ 07_silhouette_semua.png                      275.3 KB
+ 07b_heatmap_silhouette.png                   171.0 KB
+ 07c_silhouette_per_dimensi.png                81.5 KB
+ 08_silhouette_plot.png                        50.2 KB
+ 08b_silhouette_plot_per_dimensi.png          129.0 KB
+ 09_elbow_silhouette.png                      100.0 KB
+ 10_scatter_cluster.png                       138.6 KB
+ 11_profil_cluster.png                        119.7 KB
+ 12_peta_statis.png                           122.5 KB
+ 13_peta_per_dimensi.png                      194.3 KB
+ koordinat_cache.json                           2.2 KB
+ peta_clustering_interaktif.html             1072.6 KB
+ ringkasan_eksperimen.csv                       0.3 KB
+ ringkasan_per_dimensi.csv                      0.5 KB
+ tahap1_data.pkl                              131.1 KB
+ tahap2_pca.pkl                               434.3 KB
+ tahap3_clustering.pkl                        138.4 KB
+
+[SELESAI]
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="tahap3_eksperimen_clustering.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-1-k-means-clustering-polynomial">Bagian 1: K-Means Clustering (Polynomial)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dokumentasi-workflow-knime">Dokumentasi Workflow (KNIME)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-per-skenario">Hasil Evaluasi per Skenario</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tanpa-reduksi-dimensi-pca">1. Tanpa Reduksi Dimensi (PCA)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-203-fitur">2. Reduksi Dimensi dengan PCA (203 Fitur)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-74-fitur">3. Reduksi Dimensi dengan PCA (74 Fitur)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reduksi-dimensi-dengan-pca-37-fitur">4. Reduksi Dimensi dengan PCA (37 Fitur)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">Kesimpulan</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-tahap-4-visualisasi-peta-segmentasi-wilayah">Bagian 2: Tahap 4 - Visualisasi Peta Segmentasi Wilayah</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-peta">Mengapa Peta?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strategi-geocoding">Strategi Geocoding</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-untuk-setiap-dimensi">Peta untuk Setiap Dimensi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-interaktif-folium-satu-layer-per-dimensi">4.4 Peta Interaktif Folium — Satu Layer per Dimensi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-statis-matplotlib-untuk-laporan">4.5 Peta Statis (Matplotlib) — untuk Laporan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-lengkap-analisis">4.6 Ringkasan Lengkap Analisis</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
