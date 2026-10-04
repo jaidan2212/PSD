@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Analisis Kualitas Udara (Polutan NO2) Area Suramadu &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+    <title>Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
   
   
   
@@ -59,10 +59,10 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'intro';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'tahap3_eksperimen_clustering';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="1. Business Understanding" href="business_understanding.html" />
+    <link rel="prev" title="Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37" href="tahap2_reduksi_dimensi.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -125,8 +125,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -145,7 +143,7 @@
     
   
 
-<a class="navbar-brand logo" href="#">
+<a class="navbar-brand logo" href="intro.html">
   
   
   
@@ -176,13 +174,13 @@
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     Analisis Kualitas Udara (Polutan NO2) Area Suramadu
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
 <li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
@@ -201,7 +199,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tahap1_pengambilan_data_eda.html">Tahap 1 - Pengambilan Data &amp; Exploratory Data Analysis (EDA)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tahap2_reduksi_dimensi.html">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tahap3_eksperimen_clustering.html">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
 </ul>
 
     </div>
@@ -273,7 +271,7 @@
       
       
       
-      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Fintro.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Ftahap3_eksperimen_clustering.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -303,7 +301,7 @@
       
       
       
-      <li><a href="_sources/intro.md" target="_blank"
+      <li><a href="_sources/tahap3_eksperimen_clustering.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -387,7 +385,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Analisis Kualitas Udara (Polutan NO2) Area Suramadu</h1>
+    <h1>Tahap 3 - Eksperimen Clustering & Analisis Silhouette</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -397,9 +395,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-proyek">Informasi Proyek</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-kawasan-suramadu">Mengapa Kawasan Suramadu?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-laporan">Struktur Laporan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-utama">Konsep Utama</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desain-eksperimen">Desain Eksperimen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-load-data-tahap-2">3.1 Import &amp; Load Data Tahap 2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jalankan-72-eksperimen-clustering">3.2 Jalankan 72 Eksperimen Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-silhouette-score-vs-k-semua-dataset">3.3 Visualisasi Silhouette Score vs k (semua dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-perbandingan-pemilihan-konfigurasi-terbaik">3.4 Tabel Perbandingan &amp; Pemilihan Konfigurasi Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b-cluster-terbaik-untuk-setiap-dimensi-204-203-74-37">3.4b Cluster Terbaik untuk Setiap Dimensi (204 -&gt; 203 -&gt; 74 -&gt; 37)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heatmap-perbandingan-silhouette-semua-dimensi">3.5 Heatmap Perbandingan Silhouette - Semua Dimensi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-plot-konfigurasi-terbaik">3.6 Silhouette Plot - Konfigurasi Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elbow-method-konfirmasi-k-terbaik">3.7 Elbow Method - Konfirmasi k Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-cluster-scatter-pca-2d">3.8 Distribusi Cluster &amp; Scatter PCA 2D</a></li>
 </ul>
             </nav>
         </div>
@@ -411,36 +417,162 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="analisis-kualitas-udara-polutan-no2-area-suramadu">
-<h1>Analisis Kualitas Udara (Polutan NO2) Area Suramadu<a class="headerlink" href="#analisis-kualitas-udara-polutan-no2-area-suramadu" title="Link to this heading">#</a></h1>
-<p>Selamat datang pada laporan <strong>Analisis Data Spasial-Temporal Kualitas Udara</strong> kawasan Jembatan Suramadu. Laporan interaktif ini disusun menggunakan platform Jupyter Book untuk mendokumentasikan secara sistematis proses eksplorasi data, mulai dari pemahaman masalah bisnis (<em>business understanding</em>) hingga pemahaman menyeluruh terhadap karakteristik dataset (<em>data understanding</em>).</p>
-<p>Proyek ini disusun untuk memenuhi tugas mata kuliah <strong>Pengumpulan dan Sains Data (PSD)</strong>. Fokus utama dari repositori ini adalah melakukan proses <em>crawling</em> data dari satelit pengamat bumi <strong>Sentinel-5P</strong> milik <em>European Space Agency</em> (ESA), guna memantau dan menganalisis tingkat polusi udara — khususnya fluktuasi konsentrasi gas <strong>Nitrogen Dioksida (NO2)</strong> — di kawasan <strong>Jembatan Suramadu</strong>, yaitu jalur penghubung utama antara Pulau Jawa (Surabaya) dan Pulau Madura.</p>
-<section id="informasi-proyek">
-<h2>Informasi Proyek<a class="headerlink" href="#informasi-proyek" title="Link to this heading">#</a></h2>
+  <section class="tex2jax_ignore mathjax_ignore" id="tahap-3-eksperimen-clustering-analisis-silhouette">
+<h1>Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette<a class="headerlink" href="#tahap-3-eksperimen-clustering-analisis-silhouette" title="Link to this heading">#</a></h1>
+<p>Pada tahap ini, kita akan melakukan eksperimen clustering secara ekstensif menggunakan algoritma <strong>K-Means</strong>. Tujuan utama dari tahap ini adalah untuk membandingkan performa dari 8 representasi data hasil reduksi dimensi (dari Tahap 2) dan menentukan konfigurasi terbaik berdasarkan metrik evaluasi yang valid.</p>
+<section id="konsep-utama">
+<h2>Konsep Utama<a class="headerlink" href="#konsep-utama" title="Link to this heading">#</a></h2>
+<p>Untuk mengevaluasi kualitas cluster yang terbentuk, kita menggunakan dua konsep dan metrik utama:</p>
+<p><strong>1. K-Means dan Within-Cluster Sum of Squares (WCSS)</strong>
+Algoritma K-Means bertujuan meminimalkan varians di dalam masing-masing cluster. Metrik yang dioptimalkan oleh K-Means disebut sebagai <em>Inertia</em> atau <em>Within-Cluster Sum of Squares (WCSS)</em>, yang dirumuskan sebagai:</p>
+<div class="math notranslate nohighlight">
+\[ WCSS = \sum_{i=1}^{k} \sum_{x \in C_i} ||x - \mu_i||^2 \]</div>
+<p>di mana:</p>
 <ul class="simple">
-<li><p><strong>Mata Kuliah:</strong> Pengumpulan dan Sains Data (PSD)</p></li>
-<li><p><strong>Wilayah Observasi:</strong> Jembatan Suramadu, Jawa Timur (<em>Bounding Box</em>: 112.65, -7.22 s.d. 112.78, -7.14)</p></li>
-<li><p><strong>Periode Data:</strong> 1 September 2025 – 31 Agustus 2026</p></li>
-<li><p><strong>Sumber Data:</strong> Copernicus Data Space Ecosystem (Satelit Sentinel-5P)</p></li>
-<li><p><strong>Parameter Utama:</strong> Konsentrasi troposferik Nitrogen Dioksida (NO2)</p></li>
-<li><p><strong>Metode:</strong> Pengumpulan data satelit (<em>remote sensing</em>), pembersihan data (<em>data cleaning</em>), dan analisis deret waktu (<em>time-series analysis</em>)</p></li>
+<li><p><span class="math notranslate nohighlight">\(k\)</span> adalah jumlah cluster,</p></li>
+<li><p><span class="math notranslate nohighlight">\(C_i\)</span> adalah himpunan titik data dalam cluster ke-<span class="math notranslate nohighlight">\(i\)</span>,</p></li>
+<li><p><span class="math notranslate nohighlight">\(x\)</span> adalah titik data, dan</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mu_i\)</span> adalah centroid dari cluster ke-<span class="math notranslate nohighlight">\(i\)</span>.</p></li>
+</ul>
+<p><strong>2. Silhouette Coefficient</strong>
+Meskipun WCSS berguna (sering digunakan pada <em>Elbow Method</em>), nilai ini akan selalu menurun saat jumlah cluster (<span class="math notranslate nohighlight">\(k\)</span>) bertambah. Oleh karena itu, kita menggunakan <strong>Silhouette Score</strong> sebagai metrik evaluasi utama. Silhouette mengukur seberapa dekat setiap titik dengan cluster-nya sendiri dibandingkan dengan cluster tetangga terdekat. Rumusnya adalah:</p>
+<div class="math notranslate nohighlight">
+\[ s(i) = \frac{b(i) - a(i)}{\max(a(i), b(i))} \]</div>
+<p>di mana:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(a(i)\)</span> adalah rata-rata jarak antara titik <span class="math notranslate nohighlight">\(i\)</span> dengan semua titik lain dalam cluster yang sama (kepadatan/kohesi),</p></li>
+<li><p><span class="math notranslate nohighlight">\(b(i)\)</span> adalah rata-rata jarak minimum antara titik <span class="math notranslate nohighlight">\(i\)</span> dengan semua titik pada cluster terdekat (separasi),</p></li>
+<li><p>Nilai <span class="math notranslate nohighlight">\(s(i)\)</span> berkisar dari -1 hingga 1. Nilai mendekati 1 menunjukkan clustering yang sangat baik.</p></li>
 </ul>
 </section>
-<section id="mengapa-kawasan-suramadu">
-<h2>Mengapa Kawasan Suramadu?<a class="headerlink" href="#mengapa-kawasan-suramadu" title="Link to this heading">#</a></h2>
-<p>Jembatan Suramadu bukan sekadar penghubung transportasi, melainkan juga urat nadi logistik dengan volume kendaraan bermotor yang tinggi setiap harinya. Tingginya mobilitas ini berpotensi menjadikan kawasan tersebut sebagai titik akumulasi polutan udara, sehingga penting untuk dipantau secara berkelanjutan menggunakan pendekatan yang efisien dan hemat biaya seperti teknologi penginderaan jauh (<em>remote sensing</em>).</p>
-</section>
-<section id="struktur-laporan">
-<h2>Struktur Laporan<a class="headerlink" href="#struktur-laporan" title="Link to this heading">#</a></h2>
-<p>Laporan ini terbagi ke dalam beberapa bagian utama yang dapat diakses melalui menu navigasi di sebelah kiri:</p>
-<ol class="arabic simple">
-<li><p><strong>Business Understanding</strong> — memuat latar belakang, tujuan, manfaat, serta batasan masalah dari proyek ini.</p></li>
-<li><p><strong>Data Understanding</strong> — memuat deskripsi dataset, penjelasan mendalam mengenai polutan CO dan NO2, identifikasi anomali data, serta visualisasi tren akhir.</p></li>
-</ol>
-<p>Selamat membaca, dan silakan mulai eksplorasi melalui tautan <strong>“Next”</strong> di bagian bawah halaman ini.</p>
-</section>
-<div class="toctree-wrapper compound">
+<section id="desain-eksperimen">
+<h2>Desain Eksperimen<a class="headerlink" href="#desain-eksperimen" title="Link to this heading">#</a></h2>
+<p>Eksperimen dirancang agar komprehensif dengan membandingkan seluruh dataset dan jumlah cluster.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Parameter</p></th>
+<th class="head text-left"><p>Deskripsi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Dataset</strong></p></td>
+<td class="text-left"><p>8 representasi (Linear/Poly pada dimensi 204, 203, 74, 37)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Jumlah Cluster (<span class="math notranslate nohighlight">\(k\)</span>)</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(k = 2, 3, \dots, 10\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Algoritma</strong></p></td>
+<td class="text-left"><p>K-Means</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Parameter K-Means</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">n_init=20</span></code>, <code class="docutils literal notranslate"><span class="pre">random_state=42</span></code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total Skenario (Run)</strong></p></td>
+<td class="text-left"><p>8 dataset <span class="math notranslate nohighlight">\(\times\)</span> 9 nilai <span class="math notranslate nohighlight">\(k\)</span> = 72 run eksperimen</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Metrik Utama</strong></p></td>
+<td class="text-left"><p>Silhouette Score</p></td>
+</tr>
+</tbody>
+</table>
 </div>
+</section>
+<hr class="docutils" />
+<section id="import-load-data-tahap-2">
+<h2>3.1 Import &amp; Load Data Tahap 2<a class="headerlink" href="#import-load-data-tahap-2" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="jalankan-72-eksperimen-clustering">
+<h2>3.2 Jalankan 72 Eksperimen Clustering<a class="headerlink" href="#jalankan-72-eksperimen-clustering" title="Link to this heading">#</a></h2>
+<p>Pada tahap ini, model K-Means dilatih sebanyak 72 kali untuk mengevaluasi seluruh skenario yang telah dirancang.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=== 3.2 Menjalankan Eksperimen Clustering ===
+ Linear-204      k_terbaik = 2 silhouette = 0.4909
+ Linear-203      k_terbaik = 2 silhouette = 0.4909
+ Linear-74       k_terbaik = 2 silhouette = 0.4021
+ Linear-37       k_terbaik = 2 silhouette = 0.4021
+ Poly-204        k_terbaik = 2 silhouette = 0.5375
+ Poly-203        k_terbaik = 2 silhouette = 0.5375
+ Poly-74         k_terbaik = 3 silhouette = 0.4543
+ Poly-37         k_terbaik = 3 silhouette = 0.4543
+
+&gt;&gt; TERBAIK GLOBAL: Poly-204 | k=2 | Sil=0.5375
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="visualisasi-silhouette-score-vs-k-semua-dataset">
+<h2>3.3 Visualisasi Silhouette Score vs k (semua dataset)<a class="headerlink" href="#visualisasi-silhouette-score-vs-k-semua-dataset" title="Link to this heading">#</a></h2>
+<p>Grafik garis (line chart) ini memvisualisasikan bagaimana skor Silhouette berubah seiring dengan bertambahnya jumlah cluster (<span class="math notranslate nohighlight">\(k\)</span>) pada masing-masing dari 8 dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Silhouette Score vs k" src="output/07_silhouette_semua.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="tabel-perbandingan-pemilihan-konfigurasi-terbaik">
+<h2>3.4 Tabel Perbandingan &amp; Pemilihan Konfigurasi Terbaik<a class="headerlink" href="#tabel-perbandingan-pemilihan-konfigurasi-terbaik" title="Link to this heading">#</a></h2>
+<p>Berdasarkan seluruh hasil eksperimen, data diekstraksi ke dalam bentuk tabel untuk memudahkan perbandingan antar konfigurasi.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="b-cluster-terbaik-untuk-setiap-dimensi-204-203-74-37">
+<h2>3.4b Cluster Terbaik untuk Setiap Dimensi (204 -&gt; 203 -&gt; 74 -&gt; 37)<a class="headerlink" href="#b-cluster-terbaik-untuk-setiap-dimensi-204-203-74-37" title="Link to this heading">#</a></h2>
+<p>Visualisasi ini menunjukkan perbandingan skor Silhouette terbaik pada masing-masing tingkatan reduksi dimensi.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Cluster Terbaik per Dimensi" src="output/07c_silhouette_per_dimensi.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="heatmap-perbandingan-silhouette-semua-dimensi">
+<h2>3.5 Heatmap Perbandingan Silhouette - Semua Dimensi<a class="headerlink" href="#heatmap-perbandingan-silhouette-semua-dimensi" title="Link to this heading">#</a></h2>
+<p>Heatmap menyajikan pandangan yang lebih terpusat dan mempermudah kita melihat performa setiap kombinasi dataset dan jumlah cluster melalui intensitas warna.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Heatmap Perbandingan Silhouette" src="output/07b_heatmap_silhouette.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="silhouette-plot-konfigurasi-terbaik">
+<h2>3.6 Silhouette Plot - Konfigurasi Terbaik<a class="headerlink" href="#silhouette-plot-konfigurasi-terbaik" title="Link to this heading">#</a></h2>
+<p>Untuk konfigurasi terbaik (Poly-204, <span class="math notranslate nohighlight">\(k=2\)</span>), kita menggambar plot profil Silhouette secara detail untuk memvalidasi kepadatan dan pemisahan per cluster.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Silhouette Plot" src="output/08_silhouette_plot.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="elbow-method-konfirmasi-k-terbaik">
+<h2>3.7 Elbow Method - Konfirmasi k Terbaik<a class="headerlink" href="#elbow-method-konfirmasi-k-terbaik" title="Link to this heading">#</a></h2>
+<p>Metode Elbow (berdasarkan perhitungan nilai <em>Inertia</em>/WCSS) di-plot untuk mengonfirmasi pilihan <span class="math notranslate nohighlight">\(k=2\)</span> sebagai titik siku-siku dari model K-Means.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Elbow Method" src="output/09_elbow_silhouette.png" /></p>
+</section>
+<hr class="docutils" />
+<section id="distribusi-cluster-scatter-pca-2d">
+<h2>3.8 Distribusi Cluster &amp; Scatter PCA 2D<a class="headerlink" href="#distribusi-cluster-scatter-pca-2d" title="Link to this heading">#</a></h2>
+<p>Langkah terakhir adalah memproyeksikan hasil clustering terbaik ke dalam 2 dimensi (menggunakan PCA dari representasi terbaik) agar sebaran titik-titik antar cluster dapat dilihat secara spasial.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Distribusi Cluster &amp; Scatter PCA 2D" src="output/10_scatter_cluster.png" /></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Membuat 8 visualisasi grafik...
+Semua grafik tersimpan di folder &#39;output&#39;!
+Hasil Tahap 3 disimpan di: output/tahap3_clustering.pkl
+-&gt; Lanjut ke Tahap 4: Visualisasi Peta Segmentasi
+</pre></div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -473,14 +605,14 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
-    <a class="right-next"
-       href="business_understanding.html"
-       title="next page">
+    <a class="left-prev"
+       href="tahap2_reduksi_dimensi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">1. Business Understanding</p>
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</p>
       </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -498,9 +630,17 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#informasi-proyek">Informasi Proyek</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-kawasan-suramadu">Mengapa Kawasan Suramadu?</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#struktur-laporan">Struktur Laporan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#konsep-utama">Konsep Utama</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#desain-eksperimen">Desain Eksperimen</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-load-data-tahap-2">3.1 Import &amp; Load Data Tahap 2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jalankan-72-eksperimen-clustering">3.2 Jalankan 72 Eksperimen Clustering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-silhouette-score-vs-k-semua-dataset">3.3 Visualisasi Silhouette Score vs k (semua dataset)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-perbandingan-pemilihan-konfigurasi-terbaik">3.4 Tabel Perbandingan &amp; Pemilihan Konfigurasi Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#b-cluster-terbaik-untuk-setiap-dimensi-204-203-74-37">3.4b Cluster Terbaik untuk Setiap Dimensi (204 -&gt; 203 -&gt; 74 -&gt; 37)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#heatmap-perbandingan-silhouette-semua-dimensi">3.5 Heatmap Perbandingan Silhouette - Semua Dimensi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#silhouette-plot-konfigurasi-terbaik">3.6 Silhouette Plot - Konfigurasi Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#elbow-method-konfirmasi-k-terbaik">3.7 Elbow Method - Konfirmasi k Terbaik</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-cluster-scatter-pca-2d">3.8 Distribusi Cluster &amp; Scatter PCA 2D</a></li>
 </ul>
   </nav></div>
 
