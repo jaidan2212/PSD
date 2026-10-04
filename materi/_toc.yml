@@ -15,3 +15,4 @@ chapters:
   - file: tahap1_pengambilan_data_eda
   - file: tahap2_reduksi_dimensi
   - file: tahap3_eksperimen_clustering
+  - file: tahap4_kmeans_knime_dan_visualisasi_peta
