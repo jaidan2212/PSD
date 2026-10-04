@@ -14,4 +14,4 @@ chapters:
   - file: Bagian 3 Pemodelan Machine Learning & Evaluasi K-Means
   - file: tahap1_pengambilan_data_eda
   - file: tahap2_reduksi_dimensi
-  
+  - file: tahap3_eksperimen_clustering
