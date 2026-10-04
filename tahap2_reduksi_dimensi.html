@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Kode Python dimasukkan di sini &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+    <title>Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37 &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
   
   
   
@@ -196,14 +196,7 @@
 
 <li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tahap1_pengambilan_data_eda.html">Tahap 1 - Pengambilan Data &amp; Exploratory Data Analysis (EDA)</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Kode Python dimasukkan di sini</a></li>
-
-
-
-
-
-
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
 </ul>
 
     </div>
@@ -389,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Kode Python dimasukkan di sini</h1>
+    <h1>Tahap 2 - Reduksi Dimensi: 204 -> 203 -> 74 -> 37</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -399,16 +392,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Kode Python dimasukkan di sini</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-tidak-pca-di-setiap-tahap">Mengapa tidak PCA di setiap tahap?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library-load-data-tahap-1">2.1 Import Library &amp; Load Data Tahap 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#standardisasi-data-standardscaler">2.2 Standardisasi Data (StandardScaler)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batas-pca-berapa-dimensi-yang-benar-benar-informatif">2.3 Batas PCA: Berapa Dimensi yang Benar-benar Informatif?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fungsi-bantu">2.4 Fungsi Bantu</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-1-204-203-fitur">2.5 Tahap 1: 204 -&gt; 203 Fitur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-203-74-fitur">2.6 Tahap 2: 203 -&gt; 74 Fitur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-74-37-komponen-pca">2.7 Tahap 3: 74 -&gt; 37 Komponen (PCA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-semua-representasi-data">2.8 Ringkasan Semua Representasi Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpan-hasil-untuk-tahap-3">2.9 Simpan Hasil untuk Tahap 3</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -419,173 +413,277 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</p>
-<p>Pada tahap ini dilakukan reduksi dimensi secara bertahap untuk memperoleh representasi data yang lebih ringkas, informatif, dan siap digunakan pada tahap pemodelan berikutnya.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="tahap-2-reduksi-dimensi-204-203-74-37">
+<h1>Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37<a class="headerlink" href="#tahap-2-reduksi-dimensi-204-203-74-37" title="Link to this heading">#</a></h1>
+<p>Pada tahap ini dilakukan <strong>reduksi dimensi secara bertahap</strong> untuk memperoleh representasi data yang lebih ringkas, informatif, dan siap digunakan pada tahap pemodelan berikutnya.</p>
 <p>Urutan reduksi yang digunakan adalah:</p>
-<p>204 fitur -&gt; 203 fitur -&gt; 74 fitur -&gt; 37 komponen</p>
-<p>Pendekatan ini tidak langsung menggunakan PCA sejak awal. Reduksi awal dilakukan menggunakan seleksi berbasis korelasi untuk mengurangi fitur yang redundan terlebih dahulu. Setelah jumlah fitur menjadi lebih kecil dan sesuai dengan batas data, PCA digunakan pada tahap akhir untuk menghasilkan representasi yang lebih ringkas.</p>
-<p>Mengapa tidak PCA di setiap tahap?</p>
-<p>PCA sangat berguna untuk mereduksi dimensi, tetapi penggunaannya harus memperhatikan ukuran data. Pada dataset ini hanya terdapat 37 sampel/wilayah, sedangkan jumlah fitur awal mencapai 204 fitur.</p>
-<p>⚠️ Warning: PCA tidak dapat digunakan secara langsung untuk menghasilkan lebih banyak komponen daripada batas dimensi yang ditentukan oleh jumlah sampel dan jumlah fitur. Dengan hanya 37 sampel, PCA yang langsung diterapkan pada 204 fitur akan mengalami keterbatasan dimensi dan dapat memunculkan error ketika jumlah komponen yang diminta melebihi batas yang diperbolehkan.</p>
+<blockquote>
+<div><p><strong>204 fitur -&gt; 203 fitur -&gt; 74 fitur -&gt; 37 komponen</strong></p>
+</div></blockquote>
+<p>Pendekatan ini tidak langsung menggunakan PCA sejak awal. Reduksi awal dilakukan menggunakan <strong>seleksi berbasis korelasi</strong> untuk mengurangi fitur yang redundan terlebih dahulu. Setelah jumlah fitur menjadi lebih kecil dan sesuai dengan batas data, PCA digunakan pada tahap akhir untuk menghasilkan representasi yang lebih ringkas.</p>
+<section id="mengapa-tidak-pca-di-setiap-tahap">
+<h2>Mengapa tidak PCA di setiap tahap?<a class="headerlink" href="#mengapa-tidak-pca-di-setiap-tahap" title="Link to this heading">#</a></h2>
+<p>PCA sangat berguna untuk mereduksi dimensi, tetapi penggunaannya harus memperhatikan ukuran data. Pada dataset ini hanya terdapat <strong>37 sampel/wilayah</strong>, sedangkan jumlah fitur awal mencapai <strong>204 fitur</strong>.</p>
+<blockquote>
+<div><p><strong>⚠️ Warning:</strong> PCA tidak dapat digunakan secara langsung untuk menghasilkan lebih banyak komponen daripada batas dimensi yang ditentukan oleh jumlah sampel dan jumlah fitur. Dengan hanya 37 sampel, PCA yang langsung diterapkan pada 204 fitur akan mengalami keterbatasan dimensi dan dapat memunculkan <em>error</em> ketika jumlah komponen yang diminta melebihi batas yang diperbolehkan.</p>
+</div></blockquote>
 <p>Oleh karena itu, reduksi dilakukan secara bertahap:</p>
-<p>204 -&gt; 203 fitur menggunakan seleksi korelasi awal.</p>
-<p>203 -&gt; 74 fitur dengan menghapus fitur yang redundan atau memiliki korelasi sangat tinggi.</p>
-<p>74 -&gt; 37 komponen menggunakan PCA pada tahap akhir.</p>
-<p>📝 Note: Strategi ini dipilih agar proses reduksi tetap valid terhadap jumlah sampel yang tersedia. Seleksi korelasi digunakan terlebih dahulu untuk mengurangi redundansi fitur, kemudian PCA digunakan setelah dimensi data berada pada rentang yang sesuai.</p>
-<p>Dengan pendekatan tersebut, setiap tahap mempunyai fungsi yang jelas: seleksi korelasi mengurangi redundansi fitur, sedangkan PCA melakukan kompresi representasi menjadi komponen yang lebih ringkas.</p>
-<p>2.1 Import Library &amp; Load Data Tahap 1</p>
-<p>Tahap pertama dimulai dengan mengimpor library yang dibutuhkan untuk pengolahan data dan reduksi dimensi. Data yang digunakan merupakan hasil dari Tahap 1, yaitu dua representasi data:</p>
-<p>Linear</p>
-<p>Polynomial (Poly)</p>
-<p>Kedua representasi tersebut masih memiliki bentuk awal 37 sampel dan 204 fitur.</p>
-<section class="tex2jax_ignore mathjax_ignore" id="kode-python-dimasukkan-di-sini">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#kode-python-dimasukkan-di-sini" title="Link to this heading">#</a></h1>
-<p>=== 2.1 Memuat Data Tahap 1 ===
-Linear: (37, 204), Poly: (37, 204)</p>
-<p>Berdasarkan keluaran tersebut, dapat diketahui bahwa kedua representasi memiliki jumlah sampel yang sama, yaitu 37 wilayah, dengan masing-masing memiliki 204 fitur.</p>
-<p>2.2 Standardisasi Data (StandardScaler)</p>
-<p>Sebelum proses seleksi fitur dan PCA dilakukan, data perlu melalui proses standardisasi. Standardisasi bertujuan menyetarakan skala setiap fitur sehingga fitur dengan rentang nilai yang besar tidak mendominasi fitur lainnya.</p>
-<p>Metode yang digunakan adalah StandardScaler, yang mengubah data sehingga setiap fitur memiliki nilai rata-rata mendekati 0 dan standar deviasi mendekati 1.</p>
+<ol class="arabic simple">
+<li><p><strong>204 -&gt; 203 fitur</strong> menggunakan seleksi korelasi awal.</p></li>
+<li><p><strong>203 -&gt; 74 fitur</strong> dengan menghapus fitur yang redundan atau memiliki korelasi sangat tinggi.</p></li>
+<li><p><strong>74 -&gt; 37 komponen</strong> menggunakan PCA pada tahap akhir.</p></li>
+</ol>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Strategi ini dipilih agar proses reduksi tetap valid terhadap jumlah sampel yang tersedia. Seleksi korelasi digunakan terlebih dahulu untuk mengurangi redundansi fitur, kemudian PCA digunakan setelah dimensi data berada pada rentang yang sesuai.</p>
+</div></blockquote>
+<p>Dengan pendekatan tersebut, setiap tahap mempunyai fungsi yang jelas: seleksi korelasi mengurangi <strong>redundansi fitur</strong>, sedangkan PCA melakukan <strong>kompresi representasi</strong> menjadi komponen yang lebih ringkas.</p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id1" title="Link to this heading">#</a></h1>
-<p>📝 Note: Standardisasi sangat penting terutama sebelum PCA karena PCA bekerja berdasarkan varians data. Dengan skala yang telah diseragamkan, kontribusi masing-masing fitur dapat dibandingkan secara lebih adil.</p>
+<section id="import-library-load-data-tahap-1">
+<h2>2.1 Import Library &amp; Load Data Tahap 1<a class="headerlink" href="#import-library-load-data-tahap-1" title="Link to this heading">#</a></h2>
+<p>Tahap pertama dimulai dengan mengimpor library yang dibutuhkan untuk pengolahan data dan reduksi dimensi. Data yang digunakan merupakan hasil dari <strong>Tahap 1</strong>, yaitu dua representasi data:</p>
+<ul class="simple">
+<li><p><strong>Linear</strong></p></li>
+<li><p><strong>Polynomial (Poly)</strong></p></li>
+</ul>
+<p>Kedua representasi tersebut masih memiliki bentuk awal <strong>37 sampel dan 204 fitur</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">===</span> <span class="mf">2.1</span> <span class="n">Memuat</span> <span class="n">Data</span> <span class="n">Tahap</span> <span class="mi">1</span> <span class="o">===</span>
+<span class="n">Linear</span><span class="p">:</span> <span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="mi">204</span><span class="p">),</span> <span class="n">Poly</span><span class="p">:</span> <span class="p">(</span><span class="mi">37</span><span class="p">,</span> <span class="mi">204</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Berdasarkan keluaran tersebut, dapat diketahui bahwa kedua representasi memiliki jumlah sampel yang sama, yaitu <strong>37 wilayah</strong>, dengan masing-masing memiliki <strong>204 fitur</strong>.</p>
+</section>
+<section id="standardisasi-data-standardscaler">
+<h2>2.2 Standardisasi Data (StandardScaler)<a class="headerlink" href="#standardisasi-data-standardscaler" title="Link to this heading">#</a></h2>
+<p>Sebelum proses seleksi fitur dan PCA dilakukan, data perlu melalui proses <strong>standardisasi</strong>. Standardisasi bertujuan menyetarakan skala setiap fitur sehingga fitur dengan rentang nilai yang besar tidak mendominasi fitur lainnya.</p>
+<p>Metode yang digunakan adalah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>, yang mengubah data sehingga setiap fitur memiliki nilai rata-rata mendekati <strong>0</strong> dan standar deviasi mendekati <strong>1</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Efek Standardisasi" src="_images/04_standardisasi.png" /></p>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Standardisasi sangat penting terutama sebelum PCA karena PCA bekerja berdasarkan varians data. Dengan skala yang telah diseragamkan, kontribusi masing-masing fitur dapat dibandingkan secara lebih adil.</p>
+</div></blockquote>
 <p>Setelah standardisasi dilakukan, data siap digunakan untuk menentukan batas dimensi yang dapat diproses oleh PCA.</p>
-<p>2.3 Batas PCA: Berapa Dimensi yang Benar-benar Informatif?</p>
-<p>Pada dataset ini terdapat 37 sampel. Secara umum, jumlah komponen PCA yang dapat dipertahankan dibatasi oleh nilai minimum antara jumlah sampel dan jumlah fitur. Karena jumlah sampel hanya 37, maka jumlah komponen PCA yang dapat diambil tidak boleh melebihi 37 komponen.</p>
+</section>
+<section id="batas-pca-berapa-dimensi-yang-benar-benar-informatif">
+<h2>2.3 Batas PCA: Berapa Dimensi yang Benar-benar Informatif?<a class="headerlink" href="#batas-pca-berapa-dimensi-yang-benar-benar-informatif" title="Link to this heading">#</a></h2>
+<p>Pada dataset ini terdapat <strong>37 sampel</strong>. Secara umum, jumlah komponen PCA yang dapat dipertahankan dibatasi oleh nilai minimum antara jumlah sampel dan jumlah fitur. Karena jumlah sampel hanya 37, maka jumlah komponen PCA yang dapat diambil tidak boleh melebihi <strong>37 komponen</strong>.</p>
 <p>Hal tersebut menjadi alasan utama mengapa PCA tidak digunakan sejak tahap awal ketika data masih memiliki 204 fitur. Sebelum PCA diterapkan, fitur terlebih dahulu diseleksi agar redundansi berkurang dan struktur data menjadi lebih efisien.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Batas PCA" src="_images/04a_batas_pca.png" /></p>
+<blockquote>
+<div><p><strong>⚠️ Warning:</strong> Pada kondisi <strong>37 sampel dan 204 fitur</strong>, meminta PCA menghasilkan komponen yang melebihi batas yang diperbolehkan dapat menyebabkan <em>error</em>. Oleh sebab itu, PCA ditempatkan pada tahap akhir setelah seleksi fitur.</p>
+</div></blockquote>
+<p>Hasil analisis pada bagian ini menunjukkan bahwa <strong>37 komponen</strong> merupakan batas maksimum yang relevan untuk representasi PCA pada dataset ini.</p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="id2">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id2" title="Link to this heading">#</a></h1>
-<p>⚠️ Warning: Pada kondisi 37 sampel dan 204 fitur, meminta PCA menghasilkan komponen yang melebihi batas yang diperbolehkan dapat menyebabkan error. Oleh sebab itu, PCA ditempatkan pada tahap akhir setelah seleksi fitur.</p>
-<p>Hasil analisis pada bagian ini menunjukkan bahwa 37 komponen merupakan batas maksimum yang relevan untuk representasi PCA pada dataset ini.</p>
-<p>2.4 Fungsi Bantu</p>
-<p>Untuk menjaga kode tetap terstruktur dan menghindari pengulangan proses, dibuat beberapa fungsi bantu. Fungsi-fungsi tersebut digunakan untuk menangani proses seperti seleksi fitur berbasis korelasi, pemeriksaan bentuk data, dan proses transformasi pada setiap representasi.</p>
-<p>Dengan pendekatan ini, proses pada data Linear dan Poly dapat dilakukan menggunakan alur yang konsisten.</p>
+<section id="fungsi-bantu">
+<h2>2.4 Fungsi Bantu<a class="headerlink" href="#fungsi-bantu" title="Link to this heading">#</a></h2>
+<p>Untuk menjaga kode tetap terstruktur dan menghindari pengulangan proses, dibuat beberapa <strong>fungsi bantu</strong>. Fungsi-fungsi tersebut digunakan untuk menangani proses seperti seleksi fitur berbasis korelasi, pemeriksaan bentuk data, dan proses transformasi pada setiap representasi.</p>
+<p>Dengan pendekatan ini, proses pada data <strong>Linear</strong> dan <strong>Poly</strong> dapat dilakukan menggunakan alur yang konsisten.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Fungsi bantu dibuat agar setiap tahap reduksi mempunyai prosedur yang sama pada kedua representasi data. Hal ini membantu menjaga konsistensi hasil dan memudahkan proses validasi.</p>
+</div></blockquote>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="id3">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id3" title="Link to this heading">#</a></h1>
-<p>📝 Note: Fungsi bantu dibuat agar setiap tahap reduksi mempunyai prosedur yang sama pada kedua representasi data. Hal ini membantu menjaga konsistensi hasil dan memudahkan proses validasi.</p>
-<p>2.5 Tahap 1: 204 -&gt; 203 Fitur</p>
+<section id="tahap-1-204-203-fitur">
+<h2>2.5 Tahap 1: 204 -&gt; 203 Fitur<a class="headerlink" href="#tahap-1-204-203-fitur" title="Link to this heading">#</a></h2>
 <p>Pada tahap pertama reduksi, dilakukan penghapusan awal terhadap satu fitur yang tidak diperlukan sehingga jumlah fitur berkurang dari:</p>
-<p>204 fitur -&gt; 203 fitur</p>
+<blockquote>
+<div><p><strong>204 fitur -&gt; 203 fitur</strong></p>
+</div></blockquote>
 <p>Reduksi ini merupakan langkah awal sebelum dilakukan seleksi fitur yang lebih ketat pada tahap berikutnya.</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="id4">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id4" title="Link to this heading">#</a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
 <p>Tahap ini menghasilkan dua representasi data dengan struktur:</p>
-<p>Representasi</p>
-<p>Sebelum</p>
-<p>Sesudah</p>
-<p>Linear</p>
-<p>204 fitur</p>
-<p>203 fitur</p>
-<p>Poly</p>
-<p>204 fitur</p>
-<p>203 fitur</p>
-<p>📝 Note: Pengurangan dari 204 menjadi 203 fitur bukanlah tahap PCA. Reduksi dilakukan sebagai bagian dari proses seleksi fitur awal agar struktur data menjadi lebih sederhana sebelum masuk ke seleksi redundansi.</p>
-<p>2.6 Tahap 2: 203 -&gt; 74 Fitur</p>
-<p>Setelah tahap awal, dilakukan seleksi fitur berdasarkan korelasi antarfitur. Tujuannya adalah menghapus fitur-fitur yang memberikan informasi yang sangat mirip atau redundant.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Representasi</p></th>
+<th class="head text-right"><p>Sebelum</p></th>
+<th class="head text-right"><p>Sesudah</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Linear</p></td>
+<td class="text-right"><p>204 fitur</p></td>
+<td class="text-right"><p>203 fitur</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly</p></td>
+<td class="text-right"><p>204 fitur</p></td>
+<td class="text-right"><p>203 fitur</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Pengurangan dari 204 menjadi 203 fitur bukanlah tahap PCA. Reduksi dilakukan sebagai bagian dari proses <strong>seleksi fitur awal</strong> agar struktur data menjadi lebih sederhana sebelum masuk ke seleksi redundansi.</p>
+</div></blockquote>
+</section>
+<section id="tahap-2-203-74-fitur">
+<h2>2.6 Tahap 2: 203 -&gt; 74 Fitur<a class="headerlink" href="#tahap-2-203-74-fitur" title="Link to this heading">#</a></h2>
+<p>Setelah tahap awal, dilakukan seleksi fitur berdasarkan <strong>korelasi antarfitur</strong>. Tujuannya adalah menghapus fitur-fitur yang memberikan informasi yang sangat mirip atau redundant.</p>
 <p>Apabila dua fitur memiliki korelasi yang sangat tinggi, salah satu fitur dapat dipertahankan sementara fitur lainnya dihapus. Dengan demikian, jumlah fitur dapat dikurangi secara signifikan tanpa mempertahankan terlalu banyak informasi yang berulang.</p>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="id5">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id5" title="Link to this heading">#</a></h1>
-<p>Hasil seleksi menunjukkan bahwa kedua representasi data berhasil direduksi menjadi 74 fitur.</p>
-<p>=== 2.5 &amp; 2.6 Seleksi Fitur (204 -&gt; 203 -&gt; 74) ===
-Sisa fitur Linear: 74, Poly: 74</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="Seleksi Fitur Redundansi" src="_images/05_seleksi_fitur.png" /></p>
+<p>Hasil seleksi menunjukkan bahwa kedua representasi data berhasil direduksi menjadi <strong>74 fitur</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">===</span> <span class="mf">2.5</span> <span class="o">&amp;</span> <span class="mf">2.6</span> <span class="n">Seleksi</span> <span class="n">Fitur</span> <span class="p">(</span><span class="mi">204</span> <span class="o">-&gt;</span> <span class="mi">203</span> <span class="o">-&gt;</span> <span class="mi">74</span><span class="p">)</span> <span class="o">===</span>
+<span class="n">Sisa</span> <span class="n">fitur</span> <span class="n">Linear</span><span class="p">:</span> <span class="mi">74</span><span class="p">,</span> <span class="n">Poly</span><span class="p">:</span> <span class="mi">74</span>
+</pre></div>
+</div>
 <p>Ringkasan reduksi fitur dapat dilihat pada tabel berikut:</p>
-<p>Representasi</p>
-<p>Awal</p>
-<p>Setelah Seleksi Awal</p>
-<p>Hasil Seleksi Korelasi</p>
-<p>Linear</p>
-<p>204</p>
-<p>203</p>
-<p>74</p>
-<p>Poly</p>
-<p>204</p>
-<p>203</p>
-<p>74</p>
-<p>📝 Note: Seleksi korelasi pada tahap ini berfungsi untuk mengurangi redundansi, bukan untuk membentuk komponen baru. Oleh karena itu, fitur yang tersisa masih merupakan fitur asli dari hasil ekstraksi sebelumnya.</p>
-<p>Setelah jumlah fitur menjadi 74, data sudah berada pada ukuran yang lebih sesuai untuk dilanjutkan ke proses PCA.</p>
-<p>2.7 Tahap 3: 74 -&gt; 37 Komponen (PCA)</p>
-<p>Tahap terakhir menggunakan Principal Component Analysis (PCA) untuk mengubah 74 fitur menjadi 37 komponen utama.</p>
-<p>PCA bekerja dengan mencari kombinasi linear dari fitur-fitur yang mampu mempertahankan variasi data sebanyak mungkin. Hasilnya bukan lagi fitur asli, melainkan komponen baru yang mewakili informasi utama dari seluruh fitur.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Representasi</p></th>
+<th class="head text-right"><p>Awal</p></th>
+<th class="head text-right"><p>Setelah Seleksi Awal</p></th>
+<th class="head text-right"><p>Hasil Seleksi Korelasi</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Linear</p></td>
+<td class="text-right"><p>204</p></td>
+<td class="text-right"><p>203</p></td>
+<td class="text-right"><p>74</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly</p></td>
+<td class="text-right"><p>204</p></td>
+<td class="text-right"><p>203</p></td>
+<td class="text-right"><p>74</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Seleksi korelasi pada tahap ini berfungsi untuk mengurangi <strong>redundansi</strong>, bukan untuk membentuk komponen baru. Oleh karena itu, fitur yang tersisa masih merupakan fitur asli dari hasil ekstraksi sebelumnya.</p>
+</div></blockquote>
+<p>Setelah jumlah fitur menjadi <strong>74</strong>, data sudah berada pada ukuran yang lebih sesuai untuk dilanjutkan ke proses PCA.</p>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="id6">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id6" title="Link to this heading">#</a></h1>
-<p>=== 2.7 PCA (74 -&gt; 37 Komponen) ===
-[Linear] 74 dimensi -&gt; 37 komponen
-[Poly] 74 dimensi -&gt; 37 komponen</p>
+<section id="tahap-3-74-37-komponen-pca">
+<h2>2.7 Tahap 3: 74 -&gt; 37 Komponen (PCA)<a class="headerlink" href="#tahap-3-74-37-komponen-pca" title="Link to this heading">#</a></h2>
+<p>Tahap terakhir menggunakan <strong>Principal Component Analysis (PCA)</strong> untuk mengubah 74 fitur menjadi <strong>37 komponen utama</strong>.</p>
+<p>PCA bekerja dengan mencari kombinasi linear dari fitur-fitur yang mampu mempertahankan variasi data sebanyak mungkin. Hasilnya bukan lagi fitur asli, melainkan <strong>komponen baru</strong> yang mewakili informasi utama dari seluruh fitur.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<p><img alt="PCA Tahap Akhir" src="output/06_pca_tahap3.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">===</span> <span class="mf">2.7</span> <span class="n">PCA</span> <span class="p">(</span><span class="mi">74</span> <span class="o">-&gt;</span> <span class="mi">37</span> <span class="n">Komponen</span><span class="p">)</span> <span class="o">===</span>
+<span class="p">[</span><span class="n">Linear</span><span class="p">]</span> <span class="mi">74</span> <span class="n">dimensi</span> <span class="o">-&gt;</span> <span class="mi">37</span> <span class="n">komponen</span>
+<span class="p">[</span><span class="n">Poly</span><span class="p">]</span> <span class="mi">74</span> <span class="n">dimensi</span> <span class="o">-&gt;</span> <span class="mi">37</span> <span class="n">komponen</span>
+</pre></div>
+</div>
 <p>Hasil tersebut menunjukkan bahwa:</p>
-<p>Representasi Linear berhasil direduksi dari 74 fitur menjadi 37 komponen.</p>
-<p>Representasi Poly berhasil direduksi dari 74 fitur menjadi 37 komponen.</p>
-<p>📝 Note: Berbeda dari seleksi fitur pada tahap sebelumnya, PCA menghasilkan representasi baru berupa komponen utama. Setiap komponen merupakan kombinasi dari fitur-fitur sebelumnya.</p>
+<ul class="simple">
+<li><p>Representasi <strong>Linear</strong> berhasil direduksi dari 74 fitur menjadi 37 komponen.</p></li>
+<li><p>Representasi <strong>Poly</strong> berhasil direduksi dari 74 fitur menjadi 37 komponen.</p></li>
+</ul>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Berbeda dari seleksi fitur pada tahap sebelumnya, PCA menghasilkan <strong>representasi baru</strong> berupa komponen utama. Setiap komponen merupakan kombinasi dari fitur-fitur sebelumnya.</p>
+</div></blockquote>
 <p>Dengan demikian, alur reduksi dimensi telah selesai:</p>
-<p>204 -&gt; 203 -&gt; 74 -&gt; 37</p>
-<p>2.8 Ringkasan Semua Representasi Data</p>
+<blockquote>
+<div><p><strong>204 -&gt; 203 -&gt; 74 -&gt; 37</strong></p>
+</div></blockquote>
+</section>
+<section id="ringkasan-semua-representasi-data">
+<h2>2.8 Ringkasan Semua Representasi Data<a class="headerlink" href="#ringkasan-semua-representasi-data" title="Link to this heading">#</a></h2>
 <p>Setelah seluruh proses reduksi selesai, tersedia beberapa representasi data yang menggambarkan kondisi dataset pada setiap tahap.</p>
-<p>Representasi</p>
-<p>Jumlah Sampel</p>
-<p>Jumlah Fitur/Komponen</p>
-<p>Keterangan</p>
-<p>Linear Tahap 1</p>
-<p>37</p>
-<p>204</p>
-<p>Data awal hasil Tahap 1</p>
-<p>Poly Tahap 1</p>
-<p>37</p>
-<p>204</p>
-<p>Data awal hasil Tahap 1</p>
-<p>Linear Setelah Reduksi Awal</p>
-<p>37</p>
-<p>203</p>
-<p>Hasil seleksi awal</p>
-<p>Poly Setelah Reduksi Awal</p>
-<p>37</p>
-<p>203</p>
-<p>Hasil seleksi awal</p>
-<p>Linear Setelah Seleksi Korelasi</p>
-<p>37</p>
-<p>74</p>
-<p>Fitur redundan telah dikurangi</p>
-<p>Poly Setelah Seleksi Korelasi</p>
-<p>37</p>
-<p>74</p>
-<p>Fitur redundan telah dikurangi</p>
-<p>Linear PCA</p>
-<p>37</p>
-<p>37</p>
-<p>Hasil PCA tahap akhir</p>
-<p>Poly PCA</p>
-<p>37</p>
-<p>37</p>
-<p>Hasil PCA tahap akhir</p>
-<p>Secara keseluruhan terdapat 8 representasi data yang dapat digunakan untuk analisis pada tahap berikutnya.</p>
-<p>📝 Note: Penyimpanan beberapa representasi sekaligus memungkinkan proses eksperimen pada Tahap 3 dilakukan secara lebih fleksibel. Setiap representasi dapat dibandingkan untuk melihat pengaruh reduksi dimensi terhadap performa clustering.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Representasi</p></th>
+<th class="head text-right"><p>Jumlah Sampel</p></th>
+<th class="head text-right"><p>Jumlah Fitur/Komponen</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Linear Tahap 1</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>204</p></td>
+<td><p>Data awal hasil Tahap 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly Tahap 1</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>204</p></td>
+<td><p>Data awal hasil Tahap 1</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear Setelah Reduksi Awal</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>203</p></td>
+<td><p>Hasil seleksi awal</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly Setelah Reduksi Awal</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>203</p></td>
+<td><p>Hasil seleksi awal</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear Setelah Seleksi Korelasi</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>74</p></td>
+<td><p>Fitur redundan telah dikurangi</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly Setelah Seleksi Korelasi</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>74</p></td>
+<td><p>Fitur redundan telah dikurangi</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear PCA</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>37</p></td>
+<td><p>Hasil PCA tahap akhir</p></td>
+</tr>
+<tr class="row-odd"><td><p>Poly PCA</p></td>
+<td class="text-right"><p>37</p></td>
+<td class="text-right"><p>37</p></td>
+<td><p>Hasil PCA tahap akhir</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Secara keseluruhan terdapat <strong>8 representasi data</strong> yang dapat digunakan untuk analisis pada tahap berikutnya.</p>
+<blockquote>
+<div><p><strong>📝 Note:</strong> Penyimpanan beberapa representasi sekaligus memungkinkan proses eksperimen pada Tahap 3 dilakukan secara lebih fleksibel. Setiap representasi dapat dibandingkan untuk melihat pengaruh reduksi dimensi terhadap performa clustering.</p>
+</div></blockquote>
 <p>Alur lengkap reduksi dapat diringkas sebagai berikut:</p>
-<p>Tahap 1
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Tahap 1
 204 fitur
-↓
+   ↓
 Seleksi awal
 203 fitur
-↓
+   ↓
 Seleksi korelasi
 74 fitur
-↓
+   ↓
 PCA
 37 komponen
-↓
+   ↓
 Tahap 3
-Eksperimen Clustering &amp; Silhouette Analysis</p>
-<p>2.9 Simpan Hasil untuk Tahap 3</p>
-<p>Seluruh representasi data hasil reduksi kemudian disimpan agar dapat digunakan kembali pada Tahap 3, tanpa perlu mengulang proses preprocessing dan reduksi dimensi.</p>
+Eksperimen Clustering &amp; Silhouette Analysis
+</pre></div>
+</div>
 </section>
-<section class="tex2jax_ignore mathjax_ignore" id="id7">
-<h1>Kode Python dimasukkan di sini<a class="headerlink" href="#id7" title="Link to this heading">#</a></h1>
-<p>Data (8 representasi) berhasil disimpan di: /content/output/tahap2_pca.pkl
--&gt; Lanjut ke Tahap 3: Eksperimen Clustering &amp; Silhouette Analysis</p>
-<p>📝 Note: File hasil pada tahap ini menjadi input utama untuk eksperimen clustering pada Tahap 3. Dengan menyimpan seluruh representasi, setiap skenario clustering dapat dijalankan secara konsisten menggunakan data yang sama.</p>
+<section id="simpan-hasil-untuk-tahap-3">
+<h2>2.9 Simpan Hasil untuk Tahap 3<a class="headerlink" href="#simpan-hasil-untuk-tahap-3" title="Link to this heading">#</a></h2>
+<p>Seluruh representasi data hasil reduksi kemudian disimpan agar dapat digunakan kembali pada <strong>Tahap 3</strong>, tanpa perlu mengulang proses preprocessing dan reduksi dimensi.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python dimasukkan di sini</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Data</span> <span class="p">(</span><span class="mi">8</span> <span class="n">representasi</span><span class="p">)</span> <span class="n">berhasil</span> <span class="n">disimpan</span> <span class="n">di</span><span class="p">:</span> <span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">tahap2_pca</span><span class="o">.</span><span class="n">pkl</span>
+<span class="o">-&gt;</span> <span class="n">Lanjut</span> <span class="n">ke</span> <span class="n">Tahap</span> <span class="mi">3</span><span class="p">:</span> <span class="n">Eksperimen</span> <span class="n">Clustering</span> <span class="o">&amp;</span> <span class="n">Silhouette</span> <span class="n">Analysis</span>
+</pre></div>
+</div>
+<blockquote>
+<div><p><strong>📝 Note:</strong> File hasil pada tahap ini menjadi input utama untuk eksperimen clustering pada Tahap 3. Dengan menyimpan seluruh representasi, setiap skenario clustering dapat dijalankan secara konsisten menggunakan data yang sama.</p>
+</div></blockquote>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -643,16 +741,17 @@ Eksperimen Clustering &amp; Silhouette Analysis</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Kode Python dimasukkan di sini</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Kode Python dimasukkan di sini</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-tidak-pca-di-setiap-tahap">Mengapa tidak PCA di setiap tahap?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-library-load-data-tahap-1">2.1 Import Library &amp; Load Data Tahap 1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#standardisasi-data-standardscaler">2.2 Standardisasi Data (StandardScaler)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#batas-pca-berapa-dimensi-yang-benar-benar-informatif">2.3 Batas PCA: Berapa Dimensi yang Benar-benar Informatif?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fungsi-bantu">2.4 Fungsi Bantu</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-1-204-203-fitur">2.5 Tahap 1: 204 -&gt; 203 Fitur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-2-203-74-fitur">2.6 Tahap 2: 203 -&gt; 74 Fitur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-3-74-37-komponen-pca">2.7 Tahap 3: 74 -&gt; 37 Komponen (PCA)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-semua-representasi-data">2.8 Ringkasan Semua Representasi Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simpan-hasil-untuk-tahap-3">2.9 Simpan Hasil untuk Tahap 3</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>
