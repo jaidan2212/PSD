@@ -62,28 +62,28 @@ Pada bagian ini, evaluasi pembentukan klaster diukur menggunakan rata-rata *Silh
 - **Silhouette Coefficient**: 0.471
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 203 k=3](output/path_gambar_table_pca_203_k3.png)
+![Table View PCA 203 k=3](output/path_gambar_table_pca203_k3.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 203 k=3](output/path_gambar_scatter_pca_203_k3.png)
+![Scatter Plot PCA 203 k=3](output/path_gambar_scatter_pca203_k3.png)
 
 **B. Klastering 5 Kelas (k = 5)**
 - **Silhouette Coefficient**: 0.486
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 203 k=5](output/path_gambar_table_pca_203_k5.png)
+![Table View PCA 203 k=5](output/path_gambar_table_pca203_k5.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 203 k=5](output/path_gambar_scatter_pca_203_k5.png)
+![Scatter Plot PCA 203 k=5](output/path_gambar_scatter_pca203_k5.png)
 
 **C. Klastering 7 Kelas (k = 7)**
 - **Silhouette Coefficient**: 0.537
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 203 k=7](output/path_gambar_table_pca_203_k7.png)
+![Table View PCA 203 k=7](output/path_gambar_table_pca203_k7.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 203 k=7](output/path_gambar_scatter_pca_203_k7.png)
+![Scatter Plot PCA 203 k=7](output/path_gambar_scatter_pca203_k7.png)
 
 #### 3. Reduksi Dimensi dengan PCA (74 Fitur)
 
@@ -91,28 +91,28 @@ Pada bagian ini, evaluasi pembentukan klaster diukur menggunakan rata-rata *Silh
 - **Silhouette Coefficient**: 0.471
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 74 k=3](output/path_gambar_table_pca_74_k3.png)
+![Table View PCA 74 k=3](output/path_gambar_table_pca74_k3.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 74 k=3](output/path_gambar_scatter_pca_74_k3.png)
+![Scatter Plot PCA 74 k=3](output/path_gambar_scatter_pca74_k3.png)
 
 **B. Klastering 5 Kelas (k = 5)**
 - **Silhouette Coefficient**: 0.486
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 74 k=5](output/path_gambar_table_pca_74_k5.png)
+![Table View PCA 74 k=5](output/path_gambar_table_pca74_k5.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 74 k=5](output/path_gambar_scatter_pca_74_k5.png)
+![Scatter Plot PCA 74 k=5](output/path_gambar_scatter_pca74_k5.png)
 
 **C. Klastering 7 Kelas (k = 7)**
 - **Silhouette Coefficient**: 0.537
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 74 k=7](output/path_gambar_table_pca_74_k7.png)
+![Table View PCA 74 k=7](output/path_gambar_table_pca74_k7.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 74 k=7](output/path_gambar_scatter_pca_74_k7.png)
+![Scatter Plot PCA 74 k=7](output/path_gambar_scatter_pca74_k7.png)
 
 #### 4. Reduksi Dimensi dengan PCA (37 Fitur)
 
@@ -120,28 +120,28 @@ Pada bagian ini, evaluasi pembentukan klaster diukur menggunakan rata-rata *Silh
 - **Silhouette Coefficient**: 0.471
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 37 k=3](output/path_gambar_table_pca_37_k3.png)
+![Table View PCA 37 k=3](output/path_gambar_table_pca37_k3.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 37 k=3](output/path_gambar_scatter_pca_37_k3.png)
+![Scatter Plot PCA 37 k=3](output/path_gambar_scatter_pca37_k3.png)
 
 **B. Klastering 5 Kelas (k = 5)**
 - **Silhouette Coefficient**: 0.486
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 37 k=5](output/path_gambar_table_pca_37_k5.png)
+![Table View PCA 37 k=5](output/path_gambar_table_pca37_k5.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 37 k=5](output/path_gambar_scatter_pca_37_k5.png)
+![Scatter Plot PCA 37 k=5](output/path_gambar_scatter_pca37_k5.png)
 
 **C. Klastering 7 Kelas (k = 7)**
 - **Silhouette Coefficient**: 0.537
 
 *Tabel Silhouette Coefficient:*
-![Table View PCA 37 k=7](output/path_gambar_table_pca_37_k7.png)
+![Table View PCA 37 k=7](output/path_gambar_table_pca37_k7.png)
 
 *Visualisasi Scatter Plot:*
-![Scatter Plot PCA 37 k=7](output/path_gambar_scatter_pca_37_k7.png)
+![Scatter Plot PCA 37 k=7](output/path_gambar_scatter_pca37_k7.png)
 
 ### Kesimpulan
 
