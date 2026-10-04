@@ -34,7 +34,32 @@ Tahap pertama dimulai dengan mengimpor library yang dibutuhkan untuk pengolahan 
 Kedua representasi tersebut masih memiliki bentuk awal **37 sampel dan 204 fitur**.
 
 ```python
-# Kode Python dimasukkan di sini
+import warnings
+warnings.filterwarnings('ignore')
+import os
+import pickle
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+OUTPUT_DIR = 'output'
+plt.rcParams['figure.figsize'] = (13, 5)
+sns.set_theme(style='whitegrid', font_scale=1.05)
+
+# ==========================================
+# 2.1 LOAD DATA TAHAP 1
+# ==========================================
+print("=== 2.1 Memuat Data Tahap 1 ===")
+with open(os.path.join(OUTPUT_DIR, 'tahap1_data.pkl'), 'rb') as f:
+    d = pickle.load(f)
+
+X_linear, X_poly = d['X_linear'], d['X_poly']
+meta_linear, meta_poly = d['meta_linear'], d['meta_poly']
+N_SAMPEL = X_poly.shape[0]
+print(f'Linear: {X_linear.shape}, Poly: {X_poly.shape}')
 ```
 
 ```
@@ -51,7 +76,29 @@ Sebelum proses seleksi fitur dan PCA dilakukan, data perlu melalui proses **stan
 Metode yang digunakan adalah `StandardScaler`, yang mengubah data sehingga setiap fitur memiliki nilai rata-rata mendekati **0** dan standar deviasi mendekati **1**.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.2 STANDARDISASI
+# ==========================================
+print("\n=== 2.2 Standardisasi Data ===")
+scaler_lin, scaler_poly = StandardScaler(), StandardScaler()
+Xs_linear = scaler_lin.fit_transform(X_linear)
+Xs_poly = scaler_poly.fit_transform(X_poly)
+
+# (Grafik 1: Standardisasi)
+n_viz = min(8, X_poly.shape[1])
+cols_viz = list(X_poly.columns[:n_viz])
+lbl = [c[:12] for c in cols_viz]
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+axes[0].boxplot([X_poly[c].values for c in cols_viz])
+axes[0].set_xticklabels(lbl, rotation=45, ha='right')
+axes[0].set_title(f'Sebelum Standardisasi ({n_viz} fitur pertama)', fontweight='bold')
+axes[1].boxplot([Xs_poly[:, i] for i in range(n_viz)])
+axes[1].set_xticklabels(lbl, rotation=45, ha='right')
+axes[1].set_title(f'Sesudah StandardScaler ({n_viz} fitur pertama)', fontweight='bold')
+plt.suptitle('Efek Standardisasi terhadap Distribusi Fitur', fontsize=13, fontweight='bold')
+plt.tight_layout()
+plt.savefig(f'{OUTPUT_DIR}/04_standardisasi.png', dpi=150, bbox_inches='tight')
+plt.close()
 ```
 
 ![Efek Standardisasi](output/04_standardisasi.png)
@@ -67,7 +114,26 @@ Pada dataset ini terdapat **37 sampel**. Secara umum, jumlah komponen PCA yang d
 Hal tersebut menjadi alasan utama mengapa PCA tidak digunakan sejak tahap awal ketika data masih memiliki 204 fitur. Sebelum PCA diterapkan, fitur terlebih dahulu diseleksi agar redundansi berkurang dan struktur data menjadi lebih efisien.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.3 BATAS PCA (Visualisasi 204 fitur)
+# ==========================================
+fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+for ax, Xs, nama, color in [(axes[0], Xs_linear, 'Linear', '#1565C0'), (axes[1], Xs_poly, 'Polynomial', '#B71C1C')]:
+    p_full = PCA(random_state=42).fit(Xs)
+    cum = np.cumsum(p_full.explained_variance_ratio_)
+    k = np.arange(1, len(cum) + 1)
+    n_99 = int(np.argmax(cum >= 0.99) + 1)
+    ax.bar(k, p_full.explained_variance_ratio_, color=color, alpha=0.3)
+    ax.plot(k, cum, 'o-', color=color, markersize=3)
+    ax.axhline(0.99, color='gray', linestyle='--', label=f'99% tercapai di PC-{n_99}')
+    ax.set_title(f'{nama}: komponen maksimum = {p_full.n_components_}', fontweight='bold')
+    ax.set_xlabel('Jumlah Komponen'); ax.set_ylabel('Variansi Kumulatif')
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y:.0%}'))
+    ax.legend(); ax.spines[['top', 'right']].set_visible(False)
+plt.suptitle('PCA pada 204 fitur: jumlah komponen dibatasi oleh jumlah sampel', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.savefig(f'{OUTPUT_DIR}/04a_batas_pca.png', dpi=150, bbox_inches='tight')
+plt.close()
 ```
 
 ![Batas PCA](output/04a_batas_pca.png)
@@ -83,7 +149,37 @@ Untuk menjaga kode tetap terstruktur dan menghindari pengulangan proses, dibuat 
 Dengan pendekatan ini, proses pada data **Linear** dan **Poly** dapat dilakukan menggunakan alur yang konsisten.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.4 FUNGSI BANTU SELEKSI FITUR
+# ==========================================
+def kurangi_fitur(X_df, target):
+    kolom = list(X_df.columns)
+    dibuang = []
+    konstan = [c for c in kolom if X_df[c].std() == 0 or np.isnan(X_df[c].std())]
+    for c in konstan[:max(0, len(kolom) - target)]: dibuang.append(c)
+    sisa = [c for c in kolom if c not in dibuang]
+    
+    C = np.array(X_df[sisa].corr().abs().fillna(0), dtype=float)
+    np.fill_diagonal(C, 0.0)
+    aktif = np.ones(len(sisa), dtype=bool)
+    
+    while aktif.sum() > target:
+        idx = np.where(aktif)[0]
+        sub = C[np.ix_(idx, idx)]
+        i, j = np.unravel_index(np.argmax(sub), sub.shape)
+        gi, gj = idx[i], idx[j]
+        hapus = gi if C[gi, idx].mean() >= C[gj, idx].mean() else gj
+        aktif[hapus] = False
+        dibuang.append(sisa[hapus])
+        
+    return [c for c, a in zip(sisa, aktif) if a], dibuang
+
+def jalankan_pca(X_scaled, n_comp, nama):
+    pca = PCA(n_components=n_comp, random_state=42)
+    X_pca = pca.fit_transform(X_scaled)
+    cumvar = np.cumsum(pca.explained_variance_ratio_)
+    print(f'[{nama}] {X_scaled.shape[1]} dimensi -> {n_comp} komponen')
+    return pca, X_pca, cumvar
 ```
 
 > **📝 Note:** Fungsi bantu dibuat agar setiap tahap reduksi mempunyai prosedur yang sama pada kedua representasi data. Hal ini membantu menjaga konsistensi hasil dan memudahkan proses validasi.
@@ -97,7 +193,13 @@ Pada tahap pertama reduksi, dilakukan penghapusan awal terhadap satu fitur yang 
 Reduksi ini merupakan langkah awal sebelum dilakukan seleksi fitur yang lebih ketat pada tahap berikutnya.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.5 TAHAP 1 (204 -> 203 Fitur)
+# ==========================================
+print("\n=== 2.5 & 2.6 Seleksi Fitur (204 -> 203 -> 74) ===")
+feat203_lin, _ = kurangi_fitur(X_linear, 203)
+feat203_poly, _ = kurangi_fitur(X_poly, 203)
+X_lin203_df, X_poly203_df = X_linear[feat203_lin], X_poly[feat203_poly]
 ```
 
 Tahap ini menghasilkan dua representasi data dengan struktur:
@@ -116,7 +218,29 @@ Setelah tahap awal, dilakukan seleksi fitur berdasarkan **korelasi antarfitur**.
 Apabila dua fitur memiliki korelasi yang sangat tinggi, salah satu fitur dapat dipertahankan sementara fitur lainnya dihapus. Dengan demikian, jumlah fitur dapat dikurangi secara signifikan tanpa mempertahankan terlalu banyak informasi yang berulang.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.6 TAHAP 2 (203 -> 74 Fitur)
+# ==========================================
+feat74_lin, drop2_lin = kurangi_fitur(X_lin203_df, 74)
+feat74_poly, drop2_poly = kurangi_fitur(X_poly203_df, 74)
+X_lin74_df, X_poly74_df = X_linear[feat74_lin], X_poly[feat74_poly]
+print(f'Sisa fitur Linear: {len(feat74_lin)}, Poly: {len(feat74_poly)}')
+
+# (Grafik 3: Histogram Redundansi)
+def max_corr(df):
+    C = np.array(df.corr().abs().fillna(0), dtype=float); np.fill_diagonal(C, 0)
+    return C.max(axis=1)
+
+fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+for ax, a, b, nama, color in [(axes[0], X_lin203_df, X_lin74_df, 'Linear', '#1565C0'), (axes[1], X_poly203_df, X_poly74_df, 'Polynomial', '#B71C1C')]:
+    ax.hist(max_corr(a), bins=20, alpha=0.5, color='gray', label='203 fitur')
+    ax.hist(max_corr(b), bins=20, alpha=0.7, color=color, label='74 fitur')
+    ax.set_xlabel('Korelasi maksimum tiap fitur'); ax.set_ylabel('Jumlah fitur')
+    ax.set_title(f'{nama}: redundansi sebelum vs sesudah seleksi', fontweight='bold')
+    ax.legend(); ax.spines[['top', 'right']].set_visible(False)
+plt.tight_layout()
+plt.savefig(f'{OUTPUT_DIR}/05_seleksi_fitur.png', dpi=150, bbox_inches='tight')
+plt.close()
 ```
 
 ![Seleksi Fitur Redundansi](output/05_seleksi_fitur.png)
@@ -146,7 +270,34 @@ Tahap terakhir menggunakan **Principal Component Analysis (PCA)** untuk mengubah
 PCA bekerja dengan mencari kombinasi linear dari fitur-fitur yang mampu mempertahankan variasi data sebanyak mungkin. Hasilnya bukan lagi fitur asli, melainkan **komponen baru** yang mewakili informasi utama dari seluruh fitur.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.7 TAHAP 3 (PCA 74 -> 37)
+# ==========================================
+print("\n=== 2.7 PCA (74 -> 37 Komponen) ===")
+Xs_lin74 = StandardScaler().fit_transform(X_lin74_df)
+Xs_poly74 = StandardScaler().fit_transform(X_poly74_df)
+pca_lin, X_lin37, cv_lin = jalankan_pca(Xs_lin74, 37, 'Linear')
+pca_poly, X_poly37, cv_poly = jalankan_pca(Xs_poly74, 37, 'Poly')
+
+# (Grafik 4: PCA Tahap Akhir)
+fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+pcs = np.arange(1, 38)
+for ax, cumvar, pca_obj, nama, color in [(axes[0], cv_lin, pca_lin, 'Linear', '#1565C0'), (axes[1], cv_poly, pca_poly, 'Polynomial', '#B71C1C')]:
+    ax.fill_between(pcs, cumvar, alpha=0.15, color=color)
+    ax.plot(pcs, cumvar, 'o-', color=color, markersize=4)
+    ax.bar(pcs, pca_obj.explained_variance_ratio_, alpha=0.25, color=color, width=0.8)
+    for thresh, ls in [(0.90, '--'), (0.95, ':')]:
+        n_t = int(np.argmax(cumvar >= thresh) + 1)
+        ax.axhline(thresh, color='gray', linestyle=ls, linewidth=1.5, label=f'{thresh:.0%} variansi (PC-{n_t})')
+    ax.set_xlim(0, 38); ax.set_ylim(0, 1.05)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda y, _: f'{y:.0%}'))
+    ax.set_xlabel('Jumlah Komponen PCA'); ax.set_ylabel('Variansi Kumulatif')
+    ax.set_title(f'Explained Variance — {nama}\n(74 -> 37 komponen)', fontweight='bold')
+    ax.legend(fontsize=9); ax.spines[['top', 'right']].set_visible(False); ax.grid(True)
+plt.suptitle('PCA Tahap 3: Reduksi 74 -> 37 Komponen', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.savefig(f'{OUTPUT_DIR}/06_pca_tahap3.png', dpi=150, bbox_inches='tight')
+plt.close()
 ```
 
 ![PCA Tahap Akhir](output/06_pca_tahap3.png)
@@ -211,7 +362,30 @@ Eksperimen Clustering & Silhouette Analysis
 Seluruh representasi data hasil reduksi kemudian disimpan agar dapat digunakan kembali pada **Tahap 3**, tanpa perlu mengulang proses preprocessing dan reduksi dimensi.
 
 ```python
-# Kode Python dimasukkan di sini
+# ==========================================
+# 2.8 & 2.9 SIMPAN DATA UNTUK TAHAP 3
+# ==========================================
+representasi = {
+    'Linear-204': Xs_linear, 'Linear-203': StandardScaler().fit_transform(X_lin203_df),
+    'Linear-74' : Xs_lin74,  'Linear-37' : X_lin37,
+    'Poly-204'  : Xs_poly,   'Poly-203'  : StandardScaler().fit_transform(X_poly203_df),
+    'Poly-74'   : Xs_poly74, 'Poly-37'   : X_poly37,
+}
+
+save_data = {
+    'representasi': representasi, 'meta_linear': meta_linear, 'meta_poly': meta_poly,
+    'X_linear': X_linear, 'X_poly': X_poly,
+    'feat203_lin': feat203_lin, 'feat203_poly': feat203_poly,
+    'feat74_lin': feat74_lin, 'feat74_poly': feat74_poly,
+    'cv_lin': cv_lin, 'cv_poly': cv_poly,
+}
+
+save_path = os.path.join(OUTPUT_DIR, 'tahap2_pca.pkl')
+with open(save_path, 'wb') as f:
+    pickle.dump(save_data, f)
+
+print(f'\nData (8 representasi) berhasil disimpan di: {os.path.abspath(save_path)}')
+print('-> Lanjut ke Tahap 3: Eksperimen Clustering & Silhouette Analysis')
 ```
 
 ```
