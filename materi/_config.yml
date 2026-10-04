@@ -1,9 +1,10 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: My sample book
-author: The Jupyter Book Community
-logo: logo.png
+title: Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+author: Muhammad Zaidan Nabil Rafi (240411100068)
+copyright: "2026"
+logo: foto.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -21,9 +22,9 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/executablebooks/jupyter-book  # Online location of your book
-  path_to_book: docs  # Optional path to your book, relative to the repository root
-  branch: master  # Which branch of the repository should be used when creating links (optional)
+  url: https://github.com/jaidan2212/PSD
+  path_to_book: materi
+  branch: main
 
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository

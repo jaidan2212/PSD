@@ -1,5 +1,15 @@
 format: jb-book
 root: intro
+
 chapters:
-- file: business_understanding
-- file: data_understanding
+  - file: business_understanding
+  - file: data_understanding
+  - file: 1_pengumpulan_data
+  - file: 2_database_dan_analisis
+  - file: eda
+  - file: time_series
+  - file: conclusion
+  - file: eda_polutan
+  - file: Bagian 2 Analisis dan Perhitungan Manual Fitur TSFEL
+  - file: Bagian 3 Pemodelan Machine Learning & Evaluasi K-Means
+  - file: tahap1_pengambilan_data_eda

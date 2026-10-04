@@ -1,0 +1,1394 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'eda_polutan';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html" />
+    <link rel="prev" title="4. Kesimpulan dan Rekomendasi" href="conclusion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Feda_polutan.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/eda_polutan.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data-melalui-google-earth-engine-gee">1.1 Pengumpulan Data melalui Google Earth Engine (GEE)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-dan-cakupan-data">Sumber dan Cakupan Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-piksel-kosong-akibat-tutupan-awan">Tantangan: Piksel Kosong akibat Tutupan Awan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-teknik-dictionary-combine-dengan-nilai-default">Solusi: Teknik <em>Dictionary Combine</em> dengan Nilai Default</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-pembersihan-data-mentah">1.2 Data Preprocessing (Pembersihan Data Mentah)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-penggabungan-dataset">a. Penggabungan Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-konversi-sentinel-value-menjadi-missing-value">b. Konversi <em>Sentinel Value</em> menjadi <em>Missing Value</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-penanganan-data-hilang-time-interpolation">c. Penanganan Data Hilang: <em>Time Interpolation</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-time-series">1.3 Visualisasi Time Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rancangan-visualisasi">Rancangan Visualisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan-awal-dari-eksplorasi-visual">1.4 Temuan Awal dari Eksplorasi Visual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-dan-keterbatasan">1.5 Catatan dan Keterbatasan</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ekstraksi-fitur-diperlukan">2.1 Mengapa Ekstraksi Fitur Diperlukan?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notasi-yang-digunakan">2.2 Notasi yang Digunakan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empat-fitur-domain-statistik">2.3 Empat Fitur Domain Statistik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-mean-rata-rata">a. Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-median-nilai-tengah">b. Median (Nilai Tengah)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-maximum-nilai-tertinggi">c. Maximum (Nilai Tertinggi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-standard-deviation-standar-deviasi">d. Standard Deviation (Standar Deviasi)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual">2.4 Simulasi Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-perhitungan-mean">Langkah 1 — Perhitungan Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-perhitungan-median">Langkah 2 — Perhitungan Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-perhitungan-maximum">Langkah 3 — Perhitungan Maximum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-perhitungan-standar-deviasi">Langkah 4 — Perhitungan Standar Deviasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-perhitungan-manual">Ringkasan Hasil Perhitungan Manual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing">3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-standardisasi-bersifat-wajib">3.2 Mengapa Standardisasi Bersifat Wajib?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permasalahan-heterogenitas-skala-antar-fitur">Permasalahan: Heterogenitas Skala Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-k-means">Dampak pada K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-pca">Dampak pada PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-transformasi-z-score">Solusi: Transformasi <em>Z-score</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-reduksi-dimensi-diperlukan">3.3 Mengapa Reduksi Dimensi Diperlukan?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-kutukan-dimensionalitas-curse-of-dimensionality">a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-multikolinearitas-antar-fitur-tsfel">b. Multikolinearitas Antar Fitur TSFEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-makna-principal-component">3.4 Memahami Makna <em>Principal Component</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-sumbu-baru-ditentukan">Bagaimana Sumbu Baru Ditentukan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proporsi-varians-yang-dipertahankan">Proporsi Varians yang Dipertahankan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-arah-tanda-komponen-bersifat-arbitrer">Catatan: Arah Tanda Komponen Bersifat Arbitrer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-struktur-klaster">3.5 Interpretasi Struktur Klaster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-0-biru-rezim-emisi-dasar">Klaster 0 (Biru) — Rezim Emisi Dasar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-2-hijau-kelompok-anomali">Klaster 2 (Hijau) — Kelompok Anomali</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-metodologis-dan-keterbatasan">3.6 Catatan Metodologis dan Keterbatasan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">3.7 Kesimpulan</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan">
+<h1>Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan<a class="headerlink" href="#bagian-1-eksplorasi-data-eda-time-series-pada-setiap-polutan" title="Link to this heading">#</a></h1>
+<p>Bagian ini menguraikan proses pengumpulan, pembersihan, dan visualisasi data konsentrasi polutan udara di wilayah studi. Tujuan utamanya adalah memperoleh tiga deret waktu (<em>time series</em>) yang bersih, kontinu, dan siap dianalisis lebih lanjut, serta memahami karakteristik awal masing-masing polutan sebelum masuk ke tahap pemodelan.</p>
+<hr class="docutils" />
+<section id="pengumpulan-data-melalui-google-earth-engine-gee">
+<h2>1.1 Pengumpulan Data melalui Google Earth Engine (GEE)<a class="headerlink" href="#pengumpulan-data-melalui-google-earth-engine-gee" title="Link to this heading">#</a></h2>
+<section id="sumber-dan-cakupan-data">
+<h3>Sumber dan Cakupan Data<a class="headerlink" href="#sumber-dan-cakupan-data" title="Link to this heading">#</a></h3>
+<p>Data konsentrasi polutan diperoleh dari citra satelit <strong>Sentinel-5P (TROPOMI)</strong> yang diakses melalui platform <strong>Google Earth Engine (GEE)</strong>. Sentinel-5P dipilih karena satelit ini secara khusus dirancang untuk pemantauan komposisi atmosfer harian dengan resolusi spasial yang memadai untuk analisis tingkat kecamatan.</p>
+<p>Terdapat tiga parameter polutan yang diekstraksi:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Polutan</p></th>
+<th class="head"><p>Nama Lengkap</p></th>
+<th class="head"><p>Satuan Pengukuran</p></th>
+<th class="head"><p>Karakteristik Utama</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>NO₂</strong></p></td>
+<td><p>Nitrogen Dioksida</p></td>
+<td><p>mol/m²</p></td>
+<td><p>Indikator emisi kendaraan bermotor dan pembakaran bahan bakar fosil</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>CO</strong></p></td>
+<td><p>Karbon Monoksida</p></td>
+<td><p>mol/m²</p></td>
+<td><p>Indikator pembakaran tidak sempurna (kendaraan, pembakaran biomassa)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>SO₂</strong></p></td>
+<td><p>Sulfur Dioksida</p></td>
+<td><p>mol/m²</p></td>
+<td><p>Indikator emisi industri dan bahan bakar berkandungan sulfur tinggi</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Wilayah studi (<em>Area of Interest</em> / AOI)</strong> yang digunakan adalah <strong>Kecamatan Kamal, Kabupaten Bangkalan, Madura</strong>. Wilayah ini dipilih karena posisinya sebagai gerbang masuk Pulau Madura melalui Jembatan Suramadu dan Pelabuhan Kamal, sehingga memiliki karakteristik lalu lintas dan aktivitas transportasi yang relevan untuk kajian kualitas udara.</p>
+<p>Proses ekstraksi dilakukan dengan mereduksi nilai piksel dalam batas AOI menjadi satu nilai representatif per hari (agregasi spasial), kemudian mengekspor hasilnya ke dalam format <strong>CSV</strong> untuk diolah lebih lanjut di Python.</p>
+</section>
+<section id="tantangan-piksel-kosong-akibat-tutupan-awan">
+<h3>Tantangan: Piksel Kosong akibat Tutupan Awan<a class="headerlink" href="#tantangan-piksel-kosong-akibat-tutupan-awan" title="Link to this heading">#</a></h3>
+<p>Kendala teknis utama muncul pada tahap ekspor data. Sensor TROPOMI bekerja pada spektrum optik, sehingga <strong>tutupan awan</strong> akan menghalangi pengamatan permukaan dan menghasilkan piksel tanpa nilai (<em>null</em>). Permasalahan ini paling sering terjadi pada parameter <strong>CO</strong> dan <strong>SO₂</strong>.</p>
+<p>Konsekuensinya bersifat struktural, bukan sekadar kosongnya satu baris data:</p>
+<ul class="simple">
+<li><p>Ketika seluruh piksel dalam AOI bernilai <em>null</em> pada tanggal tertentu, fungsi reduksi di GEE mengembalikan objek kosong.</p></li>
+<li><p>GEE menyusun <em>header</em> kolom CSV berdasarkan properti yang tersedia pada <em>feature</em> pertama. Bila properti tersebut tidak ada, <strong>kolom polutan tidak ikut terekspor sama sekali</strong>.</p></li>
+<li><p>Akibatnya, file CSV yang dihasilkan menjadi tidak konsisten — jumlah dan nama kolomnya dapat berbeda antar periode ekspor, sehingga tidak dapat langsung digabungkan.</p></li>
+</ul>
+</section>
+<section id="solusi-teknik-dictionary-combine-dengan-nilai-default">
+<h3>Solusi: Teknik <em>Dictionary Combine</em> dengan Nilai Default<a class="headerlink" href="#solusi-teknik-dictionary-combine-dengan-nilai-default" title="Link to this heading">#</a></h3>
+<p>Untuk mengatasi hal tersebut, script JavaScript di GEE dimodifikasi menggunakan pendekatan <strong>“Dictionary Combine”</strong>. Prinsip kerjanya adalah menjamin bahwa setiap <em>feature</em> harian selalu memiliki properti polutan, terlepas dari ada tidaknya hasil pengukuran satelit:</p>
+<ol class="arabic simple">
+<li><p>Hasil reduksi spasial harian dikonversi menjadi sebuah <em>dictionary</em>.</p></li>
+<li><p>Dibuat <em>dictionary</em> cadangan (<em>fallback</em>) yang berisi nama band polutan dengan nilai default <strong><code class="docutils literal notranslate"><span class="pre">-9999</span></code></strong>.</p></li>
+<li><p>Kedua <em>dictionary</em> digabungkan dengan aturan: <strong>nilai asli diprioritaskan</strong>, dan nilai default hanya dipakai bila kunci tersebut tidak ditemukan.</p></li>
+</ol>
+<p>Dengan cara ini, struktur kolom CSV menjadi <strong>konsisten dan terjamin</strong> di sepanjang periode pengamatan. Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> berfungsi sebagai <em>sentinel value</em> — penanda eksplisit bahwa “pengamatan pada tanggal ini tidak tersedia”, bukan sebagai nilai konsentrasi yang sebenarnya. Penanda inilah yang kemudian ditangani pada tahap <em>preprocessing</em>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="data-preprocessing-pembersihan-data-mentah">
+<h2>1.2 Data Preprocessing (Pembersihan Data Mentah)<a class="headerlink" href="#data-preprocessing-pembersihan-data-mentah" title="Link to this heading">#</a></h2>
+<p>Tahap ini dikerjakan di Python menggunakan pustaka <strong>Pandas</strong>, dengan tiga langkah utama sebagai berikut.</p>
+<section id="a-penggabungan-dataset">
+<h3>a. Penggabungan Dataset<a class="headerlink" href="#a-penggabungan-dataset" title="Link to this heading">#</a></h3>
+<p>Ketiga file CSV (NO₂, CO, dan SO₂) dimuat dan disatukan ke dalam satu alur pemrosesan. Kolom tanggal dikonversi ke tipe data <code class="docutils literal notranslate"><span class="pre">datetime</span></code> dan ditetapkan sebagai indeks <em>DataFrame</em>. Langkah ini penting karena indeks bertipe waktu merupakan prasyarat bagi operasi <em>time series</em> pada tahap berikutnya, khususnya interpolasi berbasis waktu.</p>
+</section>
+<section id="b-konversi-sentinel-value-menjadi-missing-value">
+<h3>b. Konversi <em>Sentinel Value</em> menjadi <em>Missing Value</em><a class="headerlink" href="#b-konversi-sentinel-value-menjadi-missing-value" title="Link to this heading">#</a></h3>
+<p>Nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code> yang sebelumnya disisipkan di GEE diubah menjadi <strong><code class="docutils literal notranslate"><span class="pre">NaN</span></code></strong> (<em>Not a Number</em>). Langkah ini krusial karena:</p>
+<ul class="simple">
+<li><p>Secara statistik, <code class="docutils literal notranslate"><span class="pre">-9999</span></code> adalah <em>outlier</em> ekstrem yang akan merusak perhitungan rata-rata, simpangan baku, dan skala visualisasi.</p></li>
+<li><p>Dengan mengubahnya menjadi <code class="docutils literal notranslate"><span class="pre">NaN</span></code>, Pandas dapat mengenali data tersebut sebagai <strong>data hilang yang sah</strong> dan memperlakukannya secara tepat pada operasi agregasi maupun interpolasi.</p></li>
+</ul>
+<p>Singkatnya, <code class="docutils literal notranslate"><span class="pre">-9999</span></code> adalah solusi untuk masalah <em>ekspor</em>, sedangkan <code class="docutils literal notranslate"><span class="pre">NaN</span></code> adalah representasi yang benar untuk masalah <em>analisis</em>.</p>
+</section>
+<section id="c-penanganan-data-hilang-time-interpolation">
+<h3>c. Penanganan Data Hilang: <em>Time Interpolation</em><a class="headerlink" href="#c-penanganan-data-hilang-time-interpolation" title="Link to this heading">#</a></h3>
+<p>Karena data yang hilang muncul secara tersebar dan tidak beraturan (bergantung pada kondisi cuaca harian), teknik pengisian yang digunakan adalah <strong>interpolasi berbasis waktu</strong> (<code class="docutils literal notranslate"><span class="pre">method='time'</span></code>).</p>
+<p>Metode ini dipilih dengan pertimbangan berikut:</p>
+<ul class="simple">
+<li><p><strong>Mempertimbangkan jarak temporal.</strong> Berbeda dengan interpolasi linear biasa yang hanya melihat urutan baris, interpolasi berbasis waktu memperhitungkan selisih hari antar observasi. Celah kosong selama 1 hari dan 10 hari karenanya diperlakukan berbeda secara proporsional.</p></li>
+<li><p><strong>Mempertahankan kontinuitas deret.</strong> Konsentrasi polutan udara merupakan besaran yang berubah secara gradual, sehingga asumsi transisi halus antar titik pengamatan dapat dipertanggungjawabkan secara fisis.</p></li>
+</ul>
+<p>Interpolasi kemudian dilengkapi dengan <strong><code class="docutils literal notranslate"><span class="pre">ffill</span></code> (<em>forward fill</em>)</strong> dan <strong><code class="docutils literal notranslate"><span class="pre">bfill</span></code> (<em>backward fill</em>)</strong> untuk menangani nilai kosong yang berada di <strong>ujung awal dan ujung akhir</strong> deret. Hal ini diperlukan karena interpolasi hanya dapat bekerja di antara dua titik data yang valid, sehingga data hilang di batas periode tidak akan tertangani tanpa langkah tambahan ini.</p>
+<p>Hasil akhir tahap <em>preprocessing</em> adalah tiga deret waktu harian yang <strong>lengkap, kontinu, dan bebas dari nilai anomali</strong> <code class="docutils literal notranslate"><span class="pre">-9999</span></code>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="visualisasi-time-series">
+<h2>1.3 Visualisasi Time Series<a class="headerlink" href="#visualisasi-time-series" title="Link to this heading">#</a></h2>
+<section id="rancangan-visualisasi">
+<h3>Rancangan Visualisasi<a class="headerlink" href="#rancangan-visualisasi" title="Link to this heading">#</a></h3>
+<p>Visualisasi dibangun menggunakan <strong>Matplotlib</strong> dengan konfigurasi <strong>tiga subplot yang ditumpuk secara vertikal</strong> dan <strong>berbagi satu sumbu X</strong> (<code class="docutils literal notranslate"><span class="pre">sharex=True</span></code>).</p>
+<p>Pemilihan format ini didasarkan pada dua alasan:</p>
+<ul class="simple">
+<li><p><strong>Perbedaan skala antar polutan.</strong> Konsentrasi CO berada pada orde 10⁻² mol/m², sementara NO₂ dan SO₂ berada pada orde 10⁻⁴ mol/m². Jika ketiganya diplot pada satu sumbu Y yang sama, fluktuasi NO₂ dan SO₂ akan tampak sebagai garis datar dan kehilangan informasi.</p></li>
+<li><p><strong>Kemudahan perbandingan temporal.</strong> Dengan sumbu X yang seragam, posisi vertikal setiap titik waktu tetap sejajar antar panel, sehingga lonjakan yang terjadi bersamaan pada polutan berbeda dapat dikenali secara visual.</p></li>
+</ul>
+<p>Setiap panel diberi warna berbeda (<em>teal</em> untuk NO₂, oranye untuk CO, ungu untuk SO₂), judul spesifik, serta <em>grid</em> bergaris putus-putus untuk memudahkan pembacaan nilai.</p>
+</section>
+<section id="hasil-visualisasi">
+<h3>Hasil Visualisasi<a class="headerlink" href="#hasil-visualisasi" title="Link to this heading">#</a></h3>
+<p>Grafik yang dihasilkan menunjukkan <strong>deret waktu yang tersambung mulus tanpa garis terputus maupun penurunan ekstrem</strong> ke nilai <code class="docutils literal notranslate"><span class="pre">-9999</span></code>. Hal ini mengonfirmasi bahwa strategi penanganan data hilang — mulai dari penyisipan <em>sentinel value</em> di GEE hingga interpolasi di Pandas — telah berjalan sebagaimana dirancang.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="temuan-awal-dari-eksplorasi-visual">
+<h2>1.4 Temuan Awal dari Eksplorasi Visual<a class="headerlink" href="#temuan-awal-dari-eksplorasi-visual" title="Link to this heading">#</a></h2>
+<p>Beberapa pola dapat diamati dari hasil visualisasi:</p>
+<ul class="simple">
+<li><p><strong>NO₂</strong> menunjukkan variabilitas harian yang paling tinggi di antara ketiga polutan, dengan nilai dasar berkisar pada 0,00005–0,00010 mol/m² dan lonjakan sesekali yang mencapai lebih dari tiga kali nilai dasar. Pola berduri (<em>spiky</em>) semacam ini konsisten dengan karakteristik NO₂ yang memiliki umur atmosferik pendek dan sangat responsif terhadap sumber emisi lokal seperti lalu lintas kendaraan.</p></li>
+<li><p><strong>CO</strong> bergerak dalam rentang yang jauh lebih sempit secara relatif (sekitar 0,020–0,045 mol/m²) dan tampak lebih stabil. Hal ini sejalan dengan sifat CO yang memiliki umur atmosferik lebih panjang, sehingga konsentrasinya lebih mencerminkan kondisi latar regional dibandingkan emisi sesaat.</p></li>
+<li><p><strong>SO₂</strong> memperlihatkan fluktuasi di sekitar nilai nol, termasuk sejumlah <strong>nilai negatif</strong>. Nilai negatif ini bukan kesalahan pengolahan data, melainkan karakteristik retrieval Sentinel-5P: ketika konsentrasi SO₂ sangat rendah dan mendekati batas deteksi sensor, derau pengukuran dapat menghasilkan estimasi kolom yang bernilai negatif. Temuan ini mengindikasikan bahwa aktivitas industri penghasil SO₂ di sekitar wilayah studi relatif rendah.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="catatan-dan-keterbatasan">
+<h2>1.5 Catatan dan Keterbatasan<a class="headerlink" href="#catatan-dan-keterbatasan" title="Link to this heading">#</a></h2>
+<p>Beberapa hal perlu dicatat sebagai batasan yang memengaruhi interpretasi dan tahap analisis selanjutnya:</p>
+<ol class="arabic simple">
+<li><p><strong>Perbedaan cakupan periode antar polutan.</strong> Berdasarkan grafik, deret NO₂ tersedia untuk periode awal rentang pengamatan, sementara CO dan SO₂ tersedia untuk periode setelahnya, dengan irisan waktu yang terbatas. Konsekuensinya, <strong>analisis korelasi atau perbandingan langsung antar polutan hanya valid pada periode yang beririsan</strong>. Penyelarasan rentang tanggal pada saat ekstraksi di GEE disarankan apabila analisis multivariat menjadi bagian dari tahap berikutnya.</p></li>
+<li><p><strong>Ruas garis lurus sebagai jejak interpolasi.</strong> Segmen grafik yang tampak sangat halus dan menyerupai garis lurus panjang menandakan periode dengan tutupan awan berkepanjangan, di mana nilai sepenuhnya merupakan hasil estimasi. Ruas semacam ini tidak boleh diperlakukan sebagai hasil observasi aktual dan sebaiknya tidak dijadikan dasar penarikan kesimpulan.</p></li>
+<li><p><strong>Interpolasi meredam variabilitas.</strong> Data hasil interpolasi secara inheren memiliki simpangan baku yang lebih rendah dibandingkan data observasi murni. Nilai statistik deskriptif yang dihitung dari deret ini karenanya cenderung <em>underestimate</em> terhadap variabilitas yang sebenarnya.</p></li>
+<li><p><strong>Agregasi spasial.</strong> Satu nilai harian merepresentasikan rata-rata seluruh wilayah kecamatan, sehingga variasi konsentrasi antar lokasi di dalam Kecamatan Kamal tidak tertangkap dalam analisis ini.</p></li>
+</ol>
+<p>Dengan catatan tersebut, dataset hasil tahap ini dinilai telah memenuhi syarat untuk dilanjutkan ke tahap analisis berikutnya.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">
+<h1>Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL<a class="headerlink" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel" title="Link to this heading">#</a></h1>
+<p>Pada bagian sebelumnya, deret waktu harian ketiga polutan telah dibersihkan dan divisualisasikan. Langkah berikutnya adalah mengubah deret waktu tersebut menjadi representasi numerik yang dapat dipelajari oleh algoritma <em>machine learning</em>, melalui proses <strong>ekstraksi fitur</strong> menggunakan pustaka <strong>TSFEL (Time Series Feature Extraction Library)</strong>.</p>
+<p>Sebelum menjalankan proses ekstraksi 68 fitur secara otomatis, bagian ini terlebih dahulu membedah <strong>landasan matematis</strong> di balik fitur-fitur tersebut. Tujuannya adalah memastikan bahwa pustaka yang digunakan tidak diperlakukan sebagai <em>black box</em>, melainkan sebagai alat yang perilakunya dipahami dan dapat diverifikasi secara mandiri.</p>
+<hr class="docutils" />
+<section id="mengapa-ekstraksi-fitur-diperlukan">
+<h2>2.1 Mengapa Ekstraksi Fitur Diperlukan?<a class="headerlink" href="#mengapa-ekstraksi-fitur-diperlukan" title="Link to this heading">#</a></h2>
+<p>Data deret waktu memiliki karakteristik yang berbeda dari data tabular konvensional. Pada data tabular, satu baris merepresentasikan satu entitas dengan sejumlah atribut tetap. Pada deret waktu, satu entitas justru direpresentasikan oleh <strong>ratusan hingga ribuan titik observasi berurutan</strong> yang saling bergantung secara temporal.</p>
+<p>Hal ini menimbulkan beberapa persoalan mendasar:</p>
+<ul class="simple">
+<li><p><strong>Ketidaksesuaian format.</strong> Sebagian besar algoritma <em>machine learning</em> klasik (SVM, Random Forest, KNN, Regresi Logistik) mensyaratkan input berupa vektor fitur berdimensi tetap. Deret waktu mentah dengan panjang yang bervariasi tidak dapat langsung dimasukkan ke dalam model tersebut.</p></li>
+<li><p><strong>Dimensionalitas tinggi dan redundansi.</strong> Memperlakukan setiap hari sebagai satu kolom fitur akan menghasilkan ruang fitur berdimensi sangat tinggi, sementara nilai antar hari yang berdekatan cenderung sangat berkorelasi sehingga informasinya tumpang tindih.</p></li>
+<li><p><strong>Informasi pola yang tersembunyi.</strong> Nilai konsentrasi pada satu hari tertentu kurang bermakna bila dilihat sendirian. Yang lebih informatif justru <strong>perilaku agregat</strong> dari sekelompok hari: seberapa tinggi rata-ratanya, seberapa besar gejolaknya, dan berapa puncak tertingginya.</p></li>
+</ul>
+<p>Ekstraksi fitur menjawab persoalan tersebut dengan cara <strong>meringkas sebuah segmen deret waktu (<em>window</em>) menjadi sekumpulan nilai skalar</strong> yang merangkum karakteristiknya. Secara formal, proses ini adalah pemetaan:</p>
+<div class="math notranslate nohighlight">
+\[
+f : \mathbb{R}^{N} \longrightarrow \mathbb{R}
+\]</div>
+<p>yaitu sebuah fungsi yang menerima segmen deret waktu sepanjang <span class="math notranslate nohighlight">\(N\)</span> titik observasi dan mengembalikan satu nilai skalar tunggal. Dengan menerapkan sejumlah fungsi <span class="math notranslate nohighlight">\(f_1, f_2, \dots, f_k\)</span> yang berbeda pada segmen yang sama, diperoleh vektor fitur:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{v} = \left[ f_1(X),\; f_2(X),\; \dots,\; f_k(X) \right]
+\]</div>
+<p>Vektor inilah yang menjadi satu baris pada dataset tabular final, siap digunakan sebagai input model.</p>
+<p>TSFEL mengelompokkan fitur-fiturnya ke dalam tiga domain utama: <strong>statistik</strong> (distribusi nilai), <strong>temporal</strong> (perilaku terhadap waktu), dan <strong>spektral</strong> (kandungan frekuensi). Pembahasan pada bagian ini difokuskan pada <strong>empat fitur dari domain statistik</strong> yang paling fundamental dan paling mudah diverifikasi secara manual.</p>
+</section>
+<hr class="docutils" />
+<section id="notasi-yang-digunakan">
+<h2>2.2 Notasi yang Digunakan<a class="headerlink" href="#notasi-yang-digunakan" title="Link to this heading">#</a></h2>
+<p>Agar pembahasan konsisten, berikut notasi yang dipakai di seluruh bagian ini:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(X = \{x_1, x_2, x_3, \dots, x_N\}\)</span> — segmen deret waktu konsentrasi polutan</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_i\)</span> — nilai konsentrasi pada observasi ke-<span class="math notranslate nohighlight">\(i\)</span></p></li>
+<li><p><span class="math notranslate nohighlight">\(N\)</span> — jumlah observasi dalam segmen</p></li>
+<li><p><span class="math notranslate nohighlight">\(x_{(i)}\)</span> — nilai ke-<span class="math notranslate nohighlight">\(i\)</span> setelah data <strong>diurutkan</strong> dari terkecil ke terbesar (<em>order statistic</em>)</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="empat-fitur-domain-statistik">
+<h2>2.3 Empat Fitur Domain Statistik<a class="headerlink" href="#empat-fitur-domain-statistik" title="Link to this heading">#</a></h2>
+<section id="a-mean-rata-rata">
+<h3>a. Mean (Rata-rata)<a class="headerlink" href="#a-mean-rata-rata" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Mean adalah pusat massa dari sebaran data, diperoleh dengan menjumlahkan seluruh nilai lalu membaginya dengan banyaknya observasi. Mean merupakan ukuran pemusatan (<em>measure of central tendency</em>) yang paling umum digunakan.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\bar{x} = \frac{1}{N} \sum_{i=1}^{N} x_i
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Mean merepresentasikan <strong>tingkat paparan rata-rata</strong> (<em>baseline exposure</em>) selama periode pengamatan. Dalam kajian kualitas udara, nilai ini penting karena sebagian besar baku mutu lingkungan justru dinyatakan dalam bentuk rata-rata pada rentang waktu tertentu, misalnya rata-rata 24 jam atau rata-rata tahunan. Mean NO₂ yang tinggi pada suatu periode mengindikasikan beban emisi yang persisten, bukan sekadar kejadian sesaat.</p>
+<p><strong>Keterbatasan.</strong> Mean sangat sensitif terhadap nilai ekstrem. Satu hari dengan lonjakan konsentrasi yang sangat tinggi dapat menarik nilai mean ke atas, sehingga memberi kesan paparan yang lebih merata daripada kenyataannya.</p>
+</section>
+<hr class="docutils" />
+<section id="b-median-nilai-tengah">
+<h3>b. Median (Nilai Tengah)<a class="headerlink" href="#b-median-nilai-tengah" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Median adalah nilai yang berada tepat di tengah data setelah seluruh observasi diurutkan. Median membagi sebaran menjadi dua bagian sama besar: 50% data berada di bawahnya dan 50% di atasnya.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\tilde{x} =
+\begin{cases}
+x_{\left(\frac{N+1}{2}\right)}, &amp; \text{jika } N \text{ ganjil} \\[8pt]
+\dfrac{1}{2}\left( x_{\left(\frac{N}{2}\right)} + x_{\left(\frac{N}{2}+1\right)} \right), &amp; \text{jika } N \text{ genap}
+\end{cases}
+\end{split}\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Median menggambarkan <strong>kondisi udara pada hari yang tipikal</strong>, tanpa terdistorsi oleh kejadian luar biasa. Karena bersifat <em>robust</em> terhadap <em>outlier</em>, median menjadi pelengkap penting bagi mean.</p>
+<p>Perbandingan antara keduanya bahkan bersifat diagnostik terhadap bentuk distribusi:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\bar{x} \approx \tilde{x}\)</span> → sebaran relatif simetris; fluktuasi harian berlangsung wajar.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\bar{x} &gt; \tilde{x}\)</span> → sebaran <strong>menceng ke kanan</strong> (<em>right-skewed</em>); mayoritas hari berkondisi baik, namun terdapat beberapa hari dengan lonjakan tajam. Pola ini justru khas pada data NO₂ yang dipengaruhi emisi sesaat dari lalu lintas.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="c-maximum-nilai-tertinggi">
+<h3>c. Maximum (Nilai Tertinggi)<a class="headerlink" href="#c-maximum-nilai-tertinggi" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Maximum adalah nilai terbesar yang tercatat dalam segmen. Berbeda dengan mean dan median yang bersifat agregat, fitur ini merekam satu peristiwa tunggal, yaitu titik puncak dari deret.</p>
+<p><strong>Rumus matematis:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+x_{\max} = \max_{1 \le i \le N} \; x_i
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Maximum merepresentasikan <strong>skenario paparan terburuk</strong> (<em>worst-case exposure</em>) pada periode tersebut. Fitur ini memiliki relevansi kesehatan yang berbeda dari mean: paparan akut jangka pendek pada konsentrasi tinggi dapat memicu gangguan pernapasan meskipun rata-rata periodenya masih tergolong aman. Dalam analisis, nilai maximum berguna untuk mendeteksi <strong>episode pencemaran</strong> (<em>pollution episode</em>) yang berpotensi terkait dengan kejadian spesifik seperti kemacetan luar biasa, pembakaran terbuka, atau kondisi meteorologi yang menghambat dispersi polutan.</p>
+</section>
+<hr class="docutils" />
+<section id="d-standard-deviation-standar-deviasi">
+<h3>d. Standard Deviation (Standar Deviasi)<a class="headerlink" href="#d-standard-deviation-standar-deviasi" title="Link to this heading">#</a></h3>
+<p><strong>Konsep dasar.</strong> Standar deviasi mengukur seberapa jauh nilai-nilai dalam data tersebar di sekitar mean-nya. Nilainya diperoleh dengan menghitung rata-rata kuadrat simpangan terhadap mean (varians), kemudian menarik akarnya agar satuannya kembali sama dengan satuan data asli.</p>
+<p><strong>Rumus matematis (populasi):</strong></p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = \sqrt{\frac{1}{N} \sum_{i=1}^{N} \left( x_i - \bar{x} \right)^{2}}
+\]</div>
+<p><strong>Kegunaan dalam konteks polusi udara.</strong> Standar deviasi mengukur <strong>stabilitas atau volatilitas kualitas udara</strong>. Interpretasinya:</p>
+<ul class="simple">
+<li><p><strong>Nilai kecil</strong> → konsentrasi relatif konstan dari hari ke hari, mengindikasikan sumber emisi yang stabil dan kondisi dispersi atmosfer yang seragam.</p></li>
+<li><p><strong>Nilai besar</strong> → konsentrasi berfluktuasi tajam, mengindikasikan adanya sumber emisi intermiten atau pengaruh faktor meteorologi yang berubah-ubah seperti arah angin dan curah hujan.</p></li>
+</ul>
+<p>Fitur ini sangat diskriminatif karena dua periode dapat memiliki mean yang nyaris identik namun karakter yang sama sekali berbeda: satu periode tenang dan stabil, satu lagi penuh lonjakan yang saling meniadakan ketika dirata-ratakan. Perbedaan tersebut hanya tertangkap oleh ukuran penyebaran.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="simulasi-perhitungan-manual">
+<h2>2.4 Simulasi Perhitungan Manual<a class="headerlink" href="#simulasi-perhitungan-manual" title="Link to this heading">#</a></h2>
+<p>Untuk membuktikan pemahaman atas rumus di atas, berikut simulasi perhitungan menggunakan data sampel fiktif berupa konsentrasi polutan selama 5 hari:</p>
+<div class="math notranslate nohighlight">
+\[
+X = [\,1,\; 3,\; 5,\; 7,\; 9\,], \qquad N = 5
+\]</div>
+<section id="langkah-1-perhitungan-mean">
+<h3>Langkah 1 — Perhitungan Mean<a class="headerlink" href="#langkah-1-perhitungan-mean" title="Link to this heading">#</a></h3>
+<p>Jumlahkan seluruh nilai, lalu bagi dengan jumlah observasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\sum_{i=1}^{5} x_i = 1 + 3 + 5 + 7 + 9 = 25
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\bar{x} = \frac{25}{5} = \mathbf{5{,}0}
+\]</div>
+</section>
+<section id="langkah-2-perhitungan-median">
+<h3>Langkah 2 — Perhitungan Median<a class="headerlink" href="#langkah-2-perhitungan-median" title="Link to this heading">#</a></h3>
+<p>Data telah terurut menaik: <span class="math notranslate nohighlight">\([1, 3, 5, 7, 9]\)</span>. Karena <span class="math notranslate nohighlight">\(N = 5\)</span> bernilai <strong>ganjil</strong>, median adalah nilai pada posisi:</p>
+<div class="math notranslate nohighlight">
+\[
+\frac{N+1}{2} = \frac{5+1}{2} = 3
+\]</div>
+<p>Nilai pada posisi ke-3 adalah:</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{x} = x_{(3)} = \mathbf{5{,}0}
+\]</div>
+<blockquote>
+<div><p><strong>Catatan interpretatif:</strong> pada sampel ini <span class="math notranslate nohighlight">\(\bar{x} = \tilde{x} = 5{,}0\)</span>, yang menandakan distribusi data sempurna simetris. Kondisi ideal semacam ini jarang ditemui pada data polutan riil.</p>
+</div></blockquote>
+</section>
+<section id="langkah-3-perhitungan-maximum">
+<h3>Langkah 3 — Perhitungan Maximum<a class="headerlink" href="#langkah-3-perhitungan-maximum" title="Link to this heading">#</a></h3>
+<p>Telusuri seluruh nilai dan pilih yang terbesar:</p>
+<div class="math notranslate nohighlight">
+\[
+x_{\max} = \max(1, 3, 5, 7, 9) = \mathbf{9{,}0}
+\]</div>
+</section>
+<section id="langkah-4-perhitungan-standar-deviasi">
+<h3>Langkah 4 — Perhitungan Standar Deviasi<a class="headerlink" href="#langkah-4-perhitungan-standar-deviasi" title="Link to this heading">#</a></h3>
+<p><strong>(a) Hitung simpangan setiap nilai terhadap mean <span class="math notranslate nohighlight">\((x_i - \bar{x})\)</span> dan kuadratkan:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p><span class="math notranslate nohighlight">\(i\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(x_i\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\(x_i - \bar{x}\)</span></p></th>
+<th class="head text-center"><p><span class="math notranslate nohighlight">\((x_i - \bar{x})^2\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>1</p></td>
+<td class="text-center"><p>1</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1 - 5 = -4\)</span></p></td>
+<td class="text-center"><p>16</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>2</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(3 - 5 = -2\)</span></p></td>
+<td class="text-center"><p>4</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>3</p></td>
+<td class="text-center"><p>5</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(5 - 5 = 0\)</span></p></td>
+<td class="text-center"><p>0</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>4</p></td>
+<td class="text-center"><p>7</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(7 - 5 = 2\)</span></p></td>
+<td class="text-center"><p>4</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>5</p></td>
+<td class="text-center"><p>9</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(9 - 5 = 4\)</span></p></td>
+<td class="text-center"><p>16</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p></p></td>
+<td class="text-center"><p></p></td>
+<td class="text-center"><p><strong>Total</strong></p></td>
+<td class="text-center"><p><strong>40</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>(b) Hitung varians</strong> dengan membagi total kuadrat simpangan dengan <span class="math notranslate nohighlight">\(N\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma^{2} = \frac{40}{5} = 8{,}0
+\]</div>
+<p><strong>(c) Tarik akar kuadrat</strong> untuk memperoleh standar deviasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma = \sqrt{8} \approx \mathbf{2{,}8284271247}
+\]</div>
+</section>
+<section id="ringkasan-hasil-perhitungan-manual">
+<h3>Ringkasan Hasil Perhitungan Manual<a class="headerlink" href="#ringkasan-hasil-perhitungan-manual" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Fitur</p></th>
+<th class="head text-center"><p>Notasi</p></th>
+<th class="head text-right"><p>Hasil Manual</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\bar{x}\)</span></p></td>
+<td class="text-right"><p>5,0000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Median</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\tilde{x}\)</span></p></td>
+<td class="text-right"><p>5,0000000000</p></td>
+</tr>
+<tr class="row-even"><td><p>Maximum</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(x_{\max}\)</span></p></td>
+<td class="text-right"><p>9,0000000000</p></td>
+</tr>
+<tr class="row-odd"><td><p>Standard Deviation</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\sigma\)</span></p></td>
+<td class="text-right"><p>2,8284271247</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="catatan-penting-pembagi-n-atau-n-1">
+<h2>2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?<a class="headerlink" href="#catatan-penting-pembagi-n-atau-n-1" title="Link to this heading">#</a></h2>
+<p>Terdapat satu detail teknis yang kerap menjadi sumber perbedaan hasil dan perlu ditegaskan sebelum pembuktian dilakukan. Standar deviasi memiliki dua varian rumus yang berbeda pada penyebutnya:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Varian</p></th>
+<th class="head"><p>Rumus</p></th>
+<th class="head text-center"><p>Pembagi</p></th>
+<th class="head text-right"><p>Hasil pada sampel <span class="math notranslate nohighlight">\(X\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Populasi</strong> (<span class="math notranslate nohighlight">\(ddof = 0\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sigma = \sqrt{\dfrac{1}{N}\sum (x_i - \bar{x})^2}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(N = 5\)</span></p></td>
+<td class="text-right"><p><span class="math notranslate nohighlight">\(\sqrt{8} \approx 2{,}8284\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sampel</strong> (<span class="math notranslate nohighlight">\(ddof = 1\)</span>)</p></td>
+<td><p><span class="math notranslate nohighlight">\(s = \sqrt{\dfrac{1}{N-1}\sum (x_i - \bar{x})^2}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(N - 1 = 4\)</span></p></td>
+<td class="text-right"><p><span class="math notranslate nohighlight">\(\sqrt{10} \approx 3{,}1623\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Varian sampel menggunakan pembagi <span class="math notranslate nohighlight">\(N-1\)</span> (<strong>koreksi Bessel</strong>) untuk menghasilkan estimasi varians populasi yang tidak bias ketika data yang dimiliki hanya berupa sampel dari populasi yang lebih besar.</p>
+<p>Hal ini relevan karena <strong>TSFEL mengimplementasikan fitur standar deviasi dengan memanggil fungsi <code class="docutils literal notranslate"><span class="pre">numpy.std()</span></code> tanpa mengubah parameter bawaannya</strong>, sedangkan nilai default <code class="docutils literal notranslate"><span class="pre">ddof</span></code> pada NumPy adalah <span class="math notranslate nohighlight">\(0\)</span>. Dengan demikian, TSFEL menghitung <strong>standar deviasi populasi</strong>. Sebagai perbandingan, metode <code class="docutils literal notranslate"><span class="pre">.std()</span></code> pada Pandas justru menggunakan default <span class="math notranslate nohighlight">\(ddof = 1\)</span> sehingga akan menghasilkan angka yang berbeda untuk data yang sama persis.</p>
+<p>Oleh karena itu, perhitungan manual pada Langkah 4 sengaja menggunakan pembagi <span class="math notranslate nohighlight">\(N = 5\)</span> agar setara dengan konvensi yang dipakai TSFEL. Kesadaran atas detail semacam inilah yang membedakan penggunaan pustaka secara sadar dari penggunaan secara <em>black box</em>.</p>
+</section>
+<hr class="docutils" />
+<section id="menuju-pembuktian-komputasional">
+<h2>2.6 Menuju Pembuktian Komputasional<a class="headerlink" href="#menuju-pembuktian-komputasional" title="Link to this heading">#</a></h2>
+<p>Keempat nilai pada tabel ringkasan di atas diperoleh sepenuhnya melalui penurunan rumus secara manual, tanpa bantuan pustaka apa pun. Nilai-nilai tersebut kini berfungsi sebagai <strong>kebenaran acuan</strong> (<em>ground truth</em>) untuk tahap verifikasi.</p>
+<p>Pada blok kode berikut, array sampel yang sama, <span class="math notranslate nohighlight">\(X = [1, 3, 5, 7, 9]\)</span>, akan diproses menggunakan algoritma ekstraksi fitur TSFEL. Hasil keluaran pustaka kemudian dibandingkan secara langsung dengan hasil perhitungan manual. Apabila keduanya menghasilkan <strong>nilai yang identik hingga tingkat presisi desimal</strong>, maka terbukti bahwa:</p>
+<ol class="arabic simple">
+<li><p>Pemahaman terhadap formulasi matematis setiap fitur sudah tepat.</p></li>
+<li><p>TSFEL mengimplementasikan definisi statistik baku, bukan varian rumus yang tersembunyi.</p></li>
+<li><p>Ekstraksi 68 fitur pada data polutan riil di bagian selanjutnya dapat dijalankan dengan keyakinan penuh terhadap makna setiap kolom yang dihasilkan.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tsfel</span>
+
+<span class="c1"># 1. Menyiapkan data sampel yang sama persis dengan perhitungan manual</span>
+<span class="c1"># X = [1, 3, 5, 7, 9]</span>
+<span class="n">data_contoh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+
+<span class="c1"># 2. Mendefinisikan konfigurasi TSFEL (hanya 4 fitur statistik ini yang diekstrak)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;statistical&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;Mean&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Median&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Max&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;Standard deviation&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;use&#39;</span><span class="p">:</span> <span class="s1">&#39;yes&#39;</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># 3. Melakukan Ekstraksi menggunakan TSFEL</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mengekstrak fitur menggunakan TSFEL...&quot;</span><span class="p">)</span>
+<span class="n">hasil_tsfel</span> <span class="o">=</span> <span class="n">tsfel</span><span class="o">.</span><span class="n">time_series_features_extractor</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">data_contoh</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># 4. Menampilkan Perbandingan Output Manual vs Algoritma</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">=== PEMBUKTIAN MANUAL VS TSFEL ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rata-rata (Mean)    | Manual: 5.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Mean&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Median              | Manual: 5.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Median&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nilai Max           | Manual: 9.0    | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Max&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Standar Deviasi     | Manual: 2.828  | TSFEL: </span><span class="si">{</span><span class="n">hasil_tsfel</span><span class="p">[</span><span class="s1">&#39;0_Standard deviation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Output:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Mengekstrak fitur menggunakan TSFEL...
+
+=== PEMBUKTIAN MANUAL VS TSFEL ===
+Rata-rata (Mean)    | Manual: 5.0    | TSFEL: 5.0
+Median              | Manual: 5.0    | TSFEL: 5.0
+Nilai Max           | Manual: 9.0    | TSFEL: 9.0
+Standar Deviasi     | Manual: 2.828  | TSFEL: 2.828
+</pre></div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">
+<h1>Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering<a class="headerlink" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering" title="Link to this heading">#</a></h1>
+<p>Setelah landasan matematis ekstraksi fitur diverifikasi pada bagian sebelumnya, tahap ini menerapkan TSFEL pada data polutan riil dan melanjutkannya ke analisis <em>unsupervised learning</em>. Tujuan akhirnya adalah mengidentifikasi <strong>pola-pola rezim emisi</strong> yang secara alami terbentuk dalam data, tanpa menggunakan label yang ditentukan sebelumnya.</p>
+<p>Alur pemrosesan pada bagian ini terdiri atas empat tahap berurutan: <em>windowing</em> → standardisasi → reduksi dimensi → pengelompokan.</p>
+<hr class="docutils" />
+<section id="dari-deret-waktu-ke-matriks-fitur-strategi-windowing">
+<h2>3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em><a class="headerlink" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing" title="Link to this heading">#</a></h2>
+<p>Ekstraksi fitur tidak diterapkan pada keseluruhan deret waktu sekaligus, karena hal itu hanya akan menghasilkan <strong>satu baris sampel</strong> dan tidak memungkinkan analisis pengelompokan. Sebagai gantinya, deret waktu dipotong menjadi segmen-segmen berurutan menggunakan teknik <em><strong>windowing</strong></em> dengan <code class="docutils literal notranslate"><span class="pre">window_size</span> <span class="pre">=</span> <span class="pre">14</span></code>.</p>
+<p><strong>Rasionalisasi pemilihan jendela 14 hari:</strong></p>
+<ul class="simple">
+<li><p><strong>Kecukupan statistik.</strong> Setiap jendela harus memuat titik observasi yang memadai agar fitur statistik seperti standar deviasi, kurtosis, dan <em>skewness</em> dapat dihitung secara stabil. Jendela yang terlalu pendek menghasilkan estimasi yang bergejolak dan tidak dapat diandalkan.</p></li>
+<li><p><strong>Relevansi periodik.</strong> Rentang 14 hari setara dengan dua siklus mingguan penuh, sehingga mampu menangkap kontras antara hari kerja dan akhir pekan — pola yang sangat relevan pada polutan berbasis transportasi seperti NO₂.</p></li>
+<li><p><strong>Resolusi temporal yang memadai.</strong> Jendela yang terlalu panjang akan meratakan (<em>smoothing out</em>) episode pencemaran jangka pendek dan mengurangi jumlah sampel secara drastis.</p></li>
+</ul>
+<p>Karena parameter <code class="docutils literal notranslate"><span class="pre">overlap</span></code> dibiarkan pada nilai bawaan (nol), setiap jendela bersifat <strong>saling lepas</strong> (<em>non-overlapping</em>). Pilihan ini penting secara metodologis: jendela yang bertumpang tindih akan berbagi observasi yang sama sehingga menciptakan ketergantungan artifisial antar sampel, yang pada gilirannya membuat klaster tampak lebih kohesif daripada kenyataannya.</p>
+<p>Hasil transformasi ini adalah <strong>matriks fitur</strong> berbentuk:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{X} \in \mathbb{R}^{n \times p}, \qquad p = 68
+\]</div>
+<p>dengan <span class="math notranslate nohighlight">\(n\)</span> adalah jumlah jendela yang terbentuk dan <span class="math notranslate nohighlight">\(p = 68\)</span> adalah jumlah fitur per jendela. Deret waktu yang semula bersifat sekuensial kini telah berubah menjadi <strong>data tabular konvensional</strong>, di mana setiap baris merepresentasikan “karakter dua mingguan” dari kualitas udara.</p>
+</section>
+<hr class="docutils" />
+<section id="mengapa-standardisasi-bersifat-wajib">
+<h2>3.2 Mengapa Standardisasi Bersifat Wajib?<a class="headerlink" href="#mengapa-standardisasi-bersifat-wajib" title="Link to this heading">#</a></h2>
+<section id="permasalahan-heterogenitas-skala-antar-fitur">
+<h3>Permasalahan: Heterogenitas Skala Antar Fitur<a class="headerlink" href="#permasalahan-heterogenitas-skala-antar-fitur" title="Link to this heading">#</a></h3>
+<p>Ke-68 fitur yang dihasilkan TSFEL berasal dari tiga domain berbeda dan memiliki <strong>satuan serta rentang nilai yang sangat tidak seragam</strong>. Sebagai ilustrasi pada data NO₂:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Jenis Fitur</p></th>
+<th class="head"><p>Orde Nilai Tipikal</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Mean, Median, Max (mol/m²)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{-4}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Variance (mol²/m⁴)</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{-9}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Entropy, Autocorrelation</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{0}\)</span> (rentang 0–1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Zero Crossing Rate, jumlah puncak</p></td>
+<td><p><span class="math notranslate nohighlight">\(\sim 10^{0}\)</span> hingga <span class="math notranslate nohighlight">\(10^{1}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Spectral energy / FFT magnitude</p></td>
+<td><p>dapat mencapai <span class="math notranslate nohighlight">\(\sim 10^{2}\)</span> ke atas</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Rentang perbedaan yang mencapai <strong>lebih dari sepuluh orde magnitudo</strong> ini menimbulkan konsekuensi serius bagi kedua algoritma yang digunakan.</p>
+</section>
+<section id="dampak-pada-k-means">
+<h3>Dampak pada K-Means<a class="headerlink" href="#dampak-pada-k-means" title="Link to this heading">#</a></h3>
+<p>K-Means bekerja dengan meminimalkan jumlah kuadrat jarak Euklides antara setiap titik dan pusat klasternya:</p>
+<div class="math notranslate nohighlight">
+\[
+J = \sum_{k=1}^{K} \sum_{\mathbf{x}_i \in C_k} \left\lVert \mathbf{x}_i - \boldsymbol{\mu}_k \right\rVert^{2}
+\]</div>
+<p>Dalam perhitungan jarak Euklides, kontribusi setiap fitur bersifat <strong>aditif dan proporsional terhadap besaran nilainya</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+d(\mathbf{a}, \mathbf{b}) = \sqrt{\sum_{j=1}^{p} (a_j - b_j)^2}
+\]</div>
+<p>Tanpa standardisasi, selisih pada fitur berorde <span class="math notranslate nohighlight">\(10^{2}\)</span> akan menghasilkan kontribusi kuadrat yang jauh lebih besar dibandingkan selisih pada fitur berorde <span class="math notranslate nohighlight">\(10^{-4}\)</span>. Akibatnya, <strong>struktur klaster praktis ditentukan oleh satu atau dua fitur berskala besar saja</strong>, sementara informasi dari puluhan fitur lain menjadi tidak berpengaruh sama sekali. Ini bukan sekadar bias, melainkan kegagalan metodologis: algoritma seolah-olah memproses 68 fitur, padahal secara efektif hanya membaca segelintir di antaranya.</p>
+</section>
+<section id="dampak-pada-pca">
+<h3>Dampak pada PCA<a class="headerlink" href="#dampak-pada-pca" title="Link to this heading">#</a></h3>
+<p>Persoalan pada PCA bersifat lebih fundamental. PCA mencari arah dalam ruang fitur yang <strong>memaksimalkan varians</strong>. Namun varians adalah besaran yang <strong>bergantung pada satuan pengukuran</strong> — mengubah satuan dari mol/m² menjadi µmol/m² akan melipatgandakan variansnya secara kuadratik tanpa mengubah informasi apa pun yang terkandung di dalamnya.</p>
+<p>Konsekuensinya, PCA pada data tanpa standardisasi akan menempatkan komponen utama pertamanya searah dengan fitur yang <strong>kebetulan</strong> memiliki satuan terbesar, bukan fitur yang paling informatif. Komponen yang dihasilkan menjadi artefak dari pilihan satuan, bukan cerminan struktur data.</p>
+</section>
+<section id="solusi-transformasi-z-score">
+<h3>Solusi: Transformasi <em>Z-score</em><a class="headerlink" href="#solusi-transformasi-z-score" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> menerapkan transformasi berikut pada setiap kolom fitur <span class="math notranslate nohighlight">\(j\)</span> secara independen:</p>
+<div class="math notranslate nohighlight">
+\[
+z_{ij} = \frac{x_{ij} - \mu_j}{\sigma_j}
+\]</div>
+<p>dengan <span class="math notranslate nohighlight">\(\mu_j\)</span> dan <span class="math notranslate nohighlight">\(\sigma_j\)</span> masing-masing adalah rata-rata dan standar deviasi kolom tersebut. Setelah transformasi, <strong>seluruh fitur memiliki rata-rata nol dan standar deviasi satu</strong>, sehingga menjadi tidak berdimensi (<em>dimensionless</em>) dan berkontribusi secara setara terhadap perhitungan jarak maupun varians. Dengan demikian, yang dibandingkan antar jendela bukan lagi besaran absolut, melainkan <strong>posisi relatif setiap jendela terhadap keseluruhan dataset</strong>.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="mengapa-reduksi-dimensi-diperlukan">
+<h2>3.3 Mengapa Reduksi Dimensi Diperlukan?<a class="headerlink" href="#mengapa-reduksi-dimensi-diperlukan" title="Link to this heading">#</a></h2>
+<p>Standardisasi menyelesaikan masalah skala, tetapi tidak menyelesaikan masalah <strong>dimensionalitas</strong>. Terdapat tiga alasan teknis mengapa PCA diterapkan sebelum pengelompokan.</p>
+<section id="a-kutukan-dimensionalitas-curse-of-dimensionality">
+<h3>a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)<a class="headerlink" href="#a-kutukan-dimensionalitas-curse-of-dimensionality" title="Link to this heading">#</a></h3>
+<p>Fenomena yang paling merugikan K-Means pada ruang berdimensi tinggi adalah <strong>konsentrasi jarak</strong> (<em>distance concentration</em>). Seiring bertambahnya dimensi <span class="math notranslate nohighlight">\(p\)</span>, jarak Euklides antara titik terdekat dan titik terjauh dari suatu titik acuan cenderung menjadi semakin seragam:</p>
+<div class="math notranslate nohighlight">
+\[
+\lim_{p \to \infty} \frac{d_{\max} - d_{\min}}{d_{\min}} \longrightarrow 0
+\]</div>
+<p>Ketika semua titik berjarak “hampir sama” satu sama lain, konsep kemiripan kehilangan daya bedanya. K-Means yang sepenuhnya bergantung pada jarak Euklides akan menghasilkan partisi yang nyaris arbitrer. Dengan <span class="math notranslate nohighlight">\(p = 68\)</span>, risiko ini sudah sangat nyata.</p>
+</section>
+<section id="b-multikolinearitas-antar-fitur-tsfel">
+<h3>b. Multikolinearitas Antar Fitur TSFEL<a class="headerlink" href="#b-multikolinearitas-antar-fitur-tsfel" title="Link to this heading">#</a></h3>
+<p>Ke-68 fitur TSFEL <strong>tidak saling bebas</strong>. Banyak di antaranya mengukur aspek yang secara matematis berkaitan erat, misalnya:</p>
+<ul class="simple">
+<li><p><em>Mean</em> dan <em>Median</em> (keduanya ukuran pemusatan)</p></li>
+<li><p><em>Standard Deviation</em>, <em>Variance</em>, dan <em>Root Mean Square</em> (secara aljabar saling terkait langsung)</p></li>
+<li><p><em>Max</em>, <em>Min</em>, dan <em>Peak-to-peak distance</em></p></li>
+<li><p>Berbagai statistik spektral yang diturunkan dari transformasi Fourier yang sama</p></li>
+</ul>
+<p>Pada ruang fitur asli, redundansi ini menyebabkan <strong>satu konsep tunggal dihitung berkali-kali</strong>, sehingga bobotnya menjadi berlebihan dalam perhitungan jarak. PCA mengatasi hal ini secara elegan: karena komponen utama disusun saling <strong>ortogonal</strong>, fitur-fitur yang berkorelasi tinggi otomatis terlipat menjadi satu arah komponen yang sama.</p>
+</section>
+<section id="c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">
+<h3>c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi<a class="headerlink" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi" title="Link to this heading">#</a></h3>
+<p>Komponen-komponen awal menangkap variasi struktural yang dominan, sementara komponen-komponen akhir umumnya memuat derau pengukuran. Membuang komponen minor karenanya berfungsi sebagai <strong>penapis derau</strong>. Selain itu, reduksi menjadi dua dimensi adalah satu-satunya cara agar struktur data dapat diperiksa secara visual pada bidang datar — sesuatu yang mustahil dilakukan pada ruang berdimensi 68.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="memahami-makna-principal-component">
+<h2>3.4 Memahami Makna <em>Principal Component</em><a class="headerlink" href="#memahami-makna-principal-component" title="Link to this heading">#</a></h2>
+<section id="pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">
+<h3>PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear<a class="headerlink" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear" title="Link to this heading">#</a></h3>
+<p>Kesalahpahaman yang paling umum adalah menganggap PC1 sebagai “fitur terpenting yang terpilih”. Anggapan tersebut keliru. <strong>PCA tidak melakukan seleksi fitur, melainkan konstruksi sumbu baru.</strong></p>
+<p>Setiap komponen utama merupakan <strong>kombinasi linear berbobot dari seluruh 68 fitur yang telah distandardisasi</strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{PC}_k = w_{k1} z_1 + w_{k2} z_2 + w_{k3} z_3 + \dots + w_{k,68} z_{68} = \sum_{j=1}^{68} w_{kj} \, z_j
+\]</div>
+<p>Koefisien <span class="math notranslate nohighlight">\(w_{kj}\)</span> disebut <em><strong>loading</strong></em>, yaitu besar kontribusi fitur ke-<span class="math notranslate nohighlight">\(j\)</span> terhadap komponen ke-<span class="math notranslate nohighlight">\(k\)</span>. Dengan demikian, setiap titik pada scatter plot tetap membawa jejak dari seluruh 68 fitur, hanya saja informasinya telah dipadatkan ke dalam dua koordinat.</p>
+</section>
+<section id="bagaimana-sumbu-baru-ditentukan">
+<h3>Bagaimana Sumbu Baru Ditentukan<a class="headerlink" href="#bagaimana-sumbu-baru-ditentukan" title="Link to this heading">#</a></h3>
+<p>Secara formal, PCA melakukan <strong>dekomposisi eigen</strong> terhadap matriks kovarians dari data terstandardisasi:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{C} = \frac{1}{n-1} \mathbf{Z}^{\top} \mathbf{Z}, \qquad \mathbf{C}\mathbf{v}_k = \lambda_k \mathbf{v}_k
+\]</div>
+<ul class="simple">
+<li><p><strong>Vektor eigen</strong> <span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> menentukan <strong>arah</strong> komponen utama ke-<span class="math notranslate nohighlight">\(k\)</span> (yaitu himpunan <em>loading</em>-nya).</p></li>
+<li><p><strong>Nilai eigen</strong> <span class="math notranslate nohighlight">\(\lambda_k\)</span> menyatakan <strong>besar varians</strong> yang dijelaskan oleh arah tersebut.</p></li>
+</ul>
+<p>Komponen diurutkan secara menurun berdasarkan nilai eigennya, sehingga berlaku dua sifat penting:</p>
+<ol class="arabic simple">
+<li><p><strong>PC1 adalah arah dengan varians terbesar</strong> dalam data, yakni sumbu di mana sampel-sampel paling terbentang dan paling mudah dibedakan satu sama lain.</p></li>
+<li><p><strong>PC2 ortogonal terhadap PC1</strong> (<span class="math notranslate nohighlight">\(\mathbf{v}_1 \perp \mathbf{v}_2\)</span>) dan menangkap varians terbesar berikutnya dari sisa informasi yang belum terjelaskan. Karena ortogonal, PC2 memuat informasi yang <strong>sepenuhnya tidak tumpang tindih</strong> dengan PC1.</p></li>
+</ol>
+</section>
+<section id="proporsi-varians-yang-dipertahankan">
+<h3>Proporsi Varians yang Dipertahankan<a class="headerlink" href="#proporsi-varians-yang-dipertahankan" title="Link to this heading">#</a></h3>
+<p>Ukuran seberapa banyak informasi yang berhasil dipertahankan dinyatakan oleh:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Explained Variance Ratio} = \frac{\lambda_1 + \lambda_2}{\sum_{k=1}^{p} \lambda_k}
+\]</div>
+<blockquote>
+<div><p><strong>Nilai pada analisis ini:</strong> <em>[isi dengan keluaran variabel <code class="docutils literal notranslate"><span class="pre">varians</span></code> dari sel kode]</em> %</p>
+</div></blockquote>
+<p>Angka ini merupakan <strong>syarat validitas utama</strong> bagi seluruh interpretasi visual yang dilakukan setelahnya, dengan pedoman umum sebagai berikut:</p>
+<ul class="simple">
+<li><p><strong>&gt; 70%</strong> — proyeksi dua dimensi merepresentasikan struktur data dengan baik; interpretasi visual dapat dipercaya.</p></li>
+<li><p><strong>50–70%</strong> — representasi cukup memadai, namun sebagian struktur tidak tergambarkan pada bidang ini.</p></li>
+<li><p><strong>&lt; 50%</strong> — lebih dari separuh informasi hilang. Jarak visual antar titik berpotensi menyesatkan, dan kesimpulan harus disampaikan dengan kehati-hatian tinggi.</p></li>
+</ul>
+</section>
+<section id="catatan-arah-tanda-komponen-bersifat-arbitrer">
+<h3>Catatan: Arah Tanda Komponen Bersifat Arbitrer<a class="headerlink" href="#catatan-arah-tanda-komponen-bersifat-arbitrer" title="Link to this heading">#</a></h3>
+<p>Satu sifat PCA yang wajib diperhatikan saat menafsirkan grafik: <strong>tanda dari vektor eigen tidak unik</strong>. Jika <span class="math notranslate nohighlight">\(\mathbf{v}_k\)</span> adalah solusi valid, maka <span class="math notranslate nohighlight">\(-\mathbf{v}_k\)</span> juga solusi valid dengan nilai eigen yang identik. Implikasinya, <strong>PC1 bernilai positif tidak secara otomatis berarti “polusi tinggi”</strong>. Arah interpretasi hanya dapat ditetapkan dengan memeriksa <em>loading</em> (<code class="docutils literal notranslate"><span class="pre">pca.components_</span></code>) atau dengan menelusuri kembali nilai asli dari jendela-jendela yang berada di ujung sumbu.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interpretasi-struktur-klaster">
+<h2>3.5 Interpretasi Struktur Klaster<a class="headerlink" href="#interpretasi-struktur-klaster" title="Link to this heading">#</a></h2>
+<p>K-Means dijalankan dengan <span class="math notranslate nohighlight">\(K = 3\)</span> pada koordinat hasil PCA. Berikut karakterisasi ketiga kelompok berdasarkan posisinya pada grafik.</p>
+<section id="klaster-0-biru-rezim-emisi-dasar">
+<h3>Klaster 0 (Biru) — Rezim Emisi Dasar<a class="headerlink" href="#klaster-0-biru-rezim-emisi-dasar" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (−3,5 ; −1,0)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sebaran PC1</p></td>
+<td><p>−9,6 hingga +2,1</p></td>
+</tr>
+<tr class="row-even"><td><p>Proporsi sampel</p></td>
+<td><p>Mayoritas dataset</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Klaster ini menempati seluruh wilayah PC1 negatif dan merupakan kelompok dengan anggota terbanyak. Dominasi jumlah anggotanya menunjukkan bahwa kelompok ini merepresentasikan <strong>kondisi kualitas udara yang paling sering terjadi</strong> — rezim latar (<em>baseline regime</em>) di Kecamatan Kamal.</p>
+<p>Yang perlu dicatat, klaster ini <strong>tidak padat</strong>: anggotanya tersebar cukup luas pada kedua sumbu. Hal ini mengindikasikan bahwa kondisi “normal” bukanlah satu keadaan tunggal yang seragam, melainkan spektrum variasi rutin yang masih berada dalam rentang wajar. Secara lingkungan, jendela-jendela dalam kelompok ini kemungkinan besar mencerminkan periode dua mingguan dengan aktivitas transportasi reguler dan kondisi dispersi atmosfer yang normal.</p>
+</section>
+<section id="klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">
+<h3>Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2<a class="headerlink" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (2,6 ; 4,3)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sebaran PC1</p></td>
+<td><p>−0,8 hingga +6,7 (lebar)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sebaran PC2</p></td>
+<td><p>4,0 hingga 4,6 (<strong>sangat sempit</strong>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Klaster ini memiliki karakteristik geometris yang paling menarik untuk dianalisis. Anggotanya <strong>terbentang luas pada sumbu PC1 namun terkonsentrasi sangat rapat pada sumbu PC2</strong> dengan rentang kurang dari satu satuan.</p>
+<p>Pola horizontal semacam ini memiliki makna analitis yang spesifik: <strong>faktor pembeda utama kelompok ini bukanlah PC1, melainkan PC2</strong>. Kelima jendela ini boleh jadi berbeda satu sama lain dalam hal intensitas emisi (yang diwakili PC1), tetapi mereka berbagi satu karakteristik bersama yang kuat pada dimensi kedua.</p>
+<p>Mengingat PC2 ortogonal terhadap PC1, karakteristik bersama tersebut merupakan dimensi yang <strong>independen dari intensitas</strong>. Dalam konteks polusi udara, dimensi semacam ini biasanya berkaitan dengan <strong>bentuk dan dinamika deret</strong>, bukan besarannya — misalnya tingkat volatilitas, keberadaan lonjakan tajam yang berulang, atau perubahan pola periodisitas. Kelompok ini karenanya lebih tepat dibaca sebagai <strong>rezim dengan pola temporal yang khas</strong> daripada sekadar “tingkat polusi menengah”.</p>
+<blockquote>
+<div><p><strong>Langkah verifikasi yang disarankan:</strong> periksa fitur dengan <em>loading</em> absolut terbesar pada PC2. Bila didominasi fitur penyebaran (standar deviasi, varians) atau fitur spektral, maka klaster ini dapat ditafsirkan sebagai periode dengan <strong>fluktuasi emisi yang tidak stabil</strong> — misalnya periode dengan perubahan cuaca yang sering atau aktivitas transportasi yang tidak merata.</p>
+</div></blockquote>
+</section>
+<section id="klaster-2-hijau-kelompok-anomali">
+<h3>Klaster 2 (Hijau) — Kelompok Anomali<a class="headerlink" href="#klaster-2-hijau-kelompok-anomali" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspek</p></th>
+<th class="head"><p>Keterangan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Posisi centroid</p></td>
+<td><p>≈ (14,8 ; −1,85)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Anggota</p></td>
+<td><p>3 titik: ≈ (8,8 ; −6,3), (17,9 ; +7,4), (17,9 ; −6,5)</p></td>
+</tr>
+<tr class="row-even"><td><p>Proporsi sampel</p></td>
+<td><p>Terkecil</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Ketiga anggota kelompok ini terletak sangat jauh dari pusat sebaran utama, dengan nilai PC1 yang mencapai lebih dari tiga kali lipat titik terjauh pada Klaster 0. Jarak sebesar ini pada sumbu varians terbesar merupakan indikator kuat adanya <strong>periode dengan karakteristik yang menyimpang secara ekstrem</strong> dari kondisi rutin.</p>
+<p>Namun demikian, terdapat satu aspek penting yang harus dinyatakan secara jujur dalam analisis ini: <strong>ketiga titik tersebut tidak membentuk kelompok yang kohesif</strong>. Rentang PC2 mereka membentang dari −6,5 hingga +7,4, dan posisi centroid di (14,8 ; −1,85) sebenarnya <strong>tidak berdekatan dengan satu pun anggotanya</strong>. Salah satu anggota bahkan terpisah hampir 14 satuan dari anggota lainnya pada sumbu vertikal — jarak yang lebih besar daripada keseluruhan rentang Klaster 0.</p>
+<p>Temuan ini mengarah pada kesimpulan yang lebih berhati-hati: Klaster 2 <strong>bukanlah satu jenis anomali yang berulang tiga kali, melainkan kumpulan tiga anomali yang masing-masing berbeda karakternya</strong>. Ketiganya dikelompokkan bersama bukan karena saling menyerupai, tetapi karena sama-sama berada jauh dari pusat sebaran. Perilaku semacam ini merupakan konsekuensi wajar dari K-Means, yang karena mewajibkan setiap titik memperoleh keanggotaan (<em>hard assignment</em>), cenderung memperlakukan klaster terkecil sebagai <strong>wadah penampung bagi seluruh pencilan</strong>.</p>
+<p>Secara lingkungan, ketiga jendela ini menandai periode dua mingguan yang layak diselidiki secara individual — bukan sebagai satu fenomena kolektif. Kemungkinan penyebabnya mencakup episode pencemaran akut, kondisi meteorologi ekstrem yang menghambat dispersi, aktivitas pembakaran terbuka musiman, atau — yang juga harus dipertimbangkan — <strong>artefak pengolahan data</strong> berupa jendela yang sebagian besar isinya merupakan hasil interpolasi dari Bagian 1.</p>
+<blockquote>
+<div><p><strong>Langkah verifikasi yang disarankan:</strong> identifikasi indeks ketiga jendela ini, telusuri kembali rentang tanggal aktualnya, lalu periksa (a) nilai konsentrasi mentahnya pada grafik Bagian 1 dan (b) berapa banyak observasi dalam jendela tersebut yang berasal dari interpolasi. Langkah ini akan memastikan apakah anomali bersifat fenomenologis atau metodologis.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="catatan-metodologis-dan-keterbatasan">
+<h2>3.6 Catatan Metodologis dan Keterbatasan<a class="headerlink" href="#catatan-metodologis-dan-keterbatasan" title="Link to this heading">#</a></h2>
+<p>Sebagai bagian dari pelaporan yang bertanggung jawab, berikut beberapa batasan yang memengaruhi kekuatan kesimpulan di atas.</p>
+<ol class="arabic simple">
+<li><p><strong>Pengelompokan dilakukan pada ruang tereduksi, bukan ruang fitur penuh.</strong> K-Means dijalankan terhadap koordinat hasil PCA, bukan terhadap 68 fitur terstandardisasi. Pendekatan ini sah dan lazim digunakan karena mengurangi derau serta menghindari konsentrasi jarak, namun memiliki dua implikasi: (a) informasi pembeda yang mungkin tersimpan pada komponen ke-3 dan seterusnya tidak ikut memengaruhi penentuan klaster; dan (b) pemisahan visual yang tampak rapi pada grafik sebagian bersifat <strong>konsekuensi logis dari desain</strong>, karena pengelompokan dan visualisasi terjadi pada ruang yang sama persis. Grafik ini karenanya tidak dapat diperlakukan sebagai validasi independen atas hasil pengelompokan.</p></li>
+<li><p><strong>Rasio jumlah sampel terhadap jumlah fitur sangat rendah.</strong> Dengan sekitar dua puluhan jendela berbanding 68 fitur, dataset ini berada pada kondisi <span class="math notranslate nohighlight">\(n &lt; p\)</span>. Pada kondisi demikian, matriks kovarians bersifat singular dan jumlah komponen utama yang bermakna terbatas maksimal pada <span class="math notranslate nohighlight">\(n - 1\)</span>. Estimasi struktur klaster pada rasio serendah ini rentan terhadap ketidakstabilan — penambahan atau penghapusan beberapa sampel saja berpotensi mengubah hasil.</p></li>
+<li><p><strong>Nilai <span class="math notranslate nohighlight">\(K = 3\)</span> belum divalidasi secara kuantitatif.</strong> Jumlah klaster ditetapkan di awal tanpa pengujian formal. Untuk memperkuat justifikasi, disarankan melengkapi analisis dengan <strong>metode Elbow</strong> (kurva inersia) dan <strong>Silhouette Score</strong>. Nilai <em>silhouette</em> juga akan memberikan bukti kuantitatif atas pengamatan pada Klaster 2 — apabila skornya rendah atau negatif, dugaan bahwa kelompok tersebut merupakan wadah pencilan menjadi terkonfirmasi secara numerik.</p></li>
+<li><p><strong>Asumsi geometris K-Means.</strong> K-Means mengasumsikan klaster berbentuk bulat (<em>isotropic</em>) dan berukuran relatif seimbang. Sebaran Klaster 0 yang memanjang serta ukuran Klaster 2 yang sangat kecil menunjukkan bahwa asumsi tersebut tidak sepenuhnya terpenuhi. Algoritma berbasis kerapatan seperti <strong>DBSCAN</strong> dapat menjadi pembanding yang berguna, karena mampu menandai pencilan sebagai <em>noise</em> alih-alih memaksanya masuk ke dalam suatu klaster.</p></li>
+<li><p><strong>Pewarisan ketidakpastian dari tahap interpolasi.</strong> Jendela yang sebagian besar nilainya berasal dari interpolasi akan memiliki varians yang tertekan secara artifisial. Fitur-fitur penyebaran pada jendela tersebut mencerminkan proses pengisian data, bukan kondisi atmosfer yang sebenarnya.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>3.7 Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Rangkaian analisis pada bagian ini berhasil mentransformasikan deret waktu konsentrasi polutan harian menjadi representasi terstruktur yang dapat dianalisis secara kuantitatif. Melalui <em>windowing</em> 14 harian, ekstraksi 68 fitur TSFEL, standardisasi, dan proyeksi PCA, data berhasil diringkas ke dalam dua dimensi tanpa kehilangan struktur utamanya.</p>
+<p>Hasil pengelompokan mengungkap adanya <strong>stratifikasi rezim kualitas udara</strong> di Kecamatan Kamal: satu rezim dasar yang mendominasi sebagian besar periode pengamatan, satu rezim dengan karakteristik temporal khas yang dibedakan pada dimensi kedua, serta sejumlah kecil periode anomali yang menyimpang secara ekstrem dan layak ditelaah lebih lanjut secara individual.</p>
+<p>Temuan ini menegaskan bahwa kualitas udara di wilayah studi <strong>tidak bersifat homogen sepanjang tahun</strong>, melainkan terdiri atas beberapa mode perilaku yang berbeda — sebuah wawasan yang tidak dapat diperoleh hanya dengan mengamati grafik deret waktu mentah pada Bagian 1.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="conclusion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">4. Kesimpulan dan Rekomendasi</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pengumpulan-data-melalui-google-earth-engine-gee">1.1 Pengumpulan Data melalui Google Earth Engine (GEE)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sumber-dan-cakupan-data">Sumber dan Cakupan Data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tantangan-piksel-kosong-akibat-tutupan-awan">Tantangan: Piksel Kosong akibat Tutupan Awan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-teknik-dictionary-combine-dengan-nilai-default">Solusi: Teknik <em>Dictionary Combine</em> dengan Nilai Default</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-preprocessing-pembersihan-data-mentah">1.2 Data Preprocessing (Pembersihan Data Mentah)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-penggabungan-dataset">a. Penggabungan Dataset</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-konversi-sentinel-value-menjadi-missing-value">b. Konversi <em>Sentinel Value</em> menjadi <em>Missing Value</em></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-penanganan-data-hilang-time-interpolation">c. Penanganan Data Hilang: <em>Time Interpolation</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-time-series">1.3 Visualisasi Time Series</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rancangan-visualisasi">Rancangan Visualisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-visualisasi">Hasil Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#temuan-awal-dari-eksplorasi-visual">1.4 Temuan Awal dari Eksplorasi Visual</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-dan-keterbatasan">1.5 Catatan dan Keterbatasan</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-2-konsep-dasar-dan-pembuktian-ekstraksi-fitur-tsfel">Bagian 2: Konsep Dasar dan Pembuktian Ekstraksi Fitur TSFEL</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-ekstraksi-fitur-diperlukan">2.1 Mengapa Ekstraksi Fitur Diperlukan?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notasi-yang-digunakan">2.2 Notasi yang Digunakan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#empat-fitur-domain-statistik">2.3 Empat Fitur Domain Statistik</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-mean-rata-rata">a. Mean (Rata-rata)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-median-nilai-tengah">b. Median (Nilai Tengah)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-maximum-nilai-tertinggi">c. Maximum (Nilai Tertinggi)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-standard-deviation-standar-deviasi">d. Standard Deviation (Standar Deviasi)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual">2.4 Simulasi Perhitungan Manual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-perhitungan-mean">Langkah 1 — Perhitungan Mean</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-perhitungan-median">Langkah 2 — Perhitungan Median</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-perhitungan-maximum">Langkah 3 — Perhitungan Maximum</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-perhitungan-standar-deviasi">Langkah 4 — Perhitungan Standar Deviasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-hasil-perhitungan-manual">Ringkasan Hasil Perhitungan Manual</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-penting-pembagi-n-atau-n-1">2.5 Catatan Penting: Pembagi <span class="math notranslate nohighlight">\(N\)</span> atau <span class="math notranslate nohighlight">\(N-1\)</span>?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#menuju-pembuktian-komputasional">2.6 Menuju Pembuktian Komputasional</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-machine-learning-reduksi-dimensi-dan-k-means-clustering">Bagian 3: Machine Learning — Reduksi Dimensi dan K-Means Clustering</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dari-deret-waktu-ke-matriks-fitur-strategi-windowing">3.1 Dari Deret Waktu ke Matriks Fitur: Strategi <em>Windowing</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-standardisasi-bersifat-wajib">3.2 Mengapa Standardisasi Bersifat Wajib?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#permasalahan-heterogenitas-skala-antar-fitur">Permasalahan: Heterogenitas Skala Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-k-means">Dampak pada K-Means</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dampak-pada-pca">Dampak pada PCA</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#solusi-transformasi-z-score">Solusi: Transformasi <em>Z-score</em></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-reduksi-dimensi-diperlukan">3.3 Mengapa Reduksi Dimensi Diperlukan?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-kutukan-dimensionalitas-curse-of-dimensionality">a. Kutukan Dimensionalitas (<em>Curse of Dimensionality</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-multikolinearitas-antar-fitur-tsfel">b. Multikolinearitas Antar Fitur TSFEL</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-pemisahan-sinyal-dari-derau-serta-kebutuhan-visualisasi">c. Pemisahan Sinyal dari Derau serta Kebutuhan Visualisasi</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memahami-makna-principal-component">3.4 Memahami Makna <em>Principal Component</em></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pc-bukan-fitur-tunggal-melainkan-kombinasi-linear">PC Bukan Fitur Tunggal, Melainkan Kombinasi Linear</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-sumbu-baru-ditentukan">Bagaimana Sumbu Baru Ditentukan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proporsi-varians-yang-dipertahankan">Proporsi Varians yang Dipertahankan</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-arah-tanda-komponen-bersifat-arbitrer">Catatan: Arah Tanda Komponen Bersifat Arbitrer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-struktur-klaster">3.5 Interpretasi Struktur Klaster</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-0-biru-rezim-emisi-dasar">Klaster 0 (Biru) — Rezim Emisi Dasar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-1-merah-rezim-transisi-yang-dibedakan-oleh-pc2">Klaster 1 (Merah) — Rezim Transisi yang Dibedakan oleh PC2</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#klaster-2-hijau-kelompok-anomali">Klaster 2 (Hijau) — Kelompok Anomali</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catatan-metodologis-dan-keterbatasan">3.6 Catatan Metodologis dan Keterbatasan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">3.7 Kesimpulan</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Muhammad Zaidan Nabil Rafi (240411100068)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
