@@ -251,7 +251,9 @@ Peta interaktif ini menggunakan **Leaflet.js** via Folium, dengan fitur:
 
 Aktifkan **satu layer pada satu waktu** agar marker tidak saling menumpuk.
 
-[Lihat Peta Clustering Interaktif (output/peta_clustering_interaktif.html)](output/peta_clustering_interaktif.html)
+<iframe src="output/peta_clustering_interaktif.html" width="100%" height="600px" style="border:none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></iframe>
+
+[Buka Peta di Tab Baru (Layar Penuh)](output/peta_clustering_interaktif.html)
 
 ### 4.5 Peta Statis (Matplotlib) — untuk Laporan
 
