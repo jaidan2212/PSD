@@ -180,7 +180,64 @@ Strategi yang digunakan (prioritas berurutan):
 Notebook ini memetakan hasil clustering terbaik di **setiap dimensi** (204 → 203 → 74 → 37) untuk interpolasi Linear dan Polynomial, bukan hanya satu konfigurasi terbaik global. Peta interaktif memiliki satu layer per dimensi, dan peta statis menampilkan semuanya berdampingan.
 
 ```python
-# Kode Python Map dimasukkan di sini
+import folium
+import pandas as pd
+import requests
+
+# 1. Siapkan data wilayah dan hasil clustering (berdasarkan evaluasi K-Means terbaik)
+# Data disederhanakan untuk contoh (Cluster 0: Mayoritas, Cluster 1: Sidoarjo)
+data_cluster = {
+    'Gresik': 0, 'Bangkalan': 0, 'Lamongan': 0, 'Pamekasan': 0,
+    'Tuban': 0, 'Sumenep': 0, 'Surabaya': 0, 'Sidoarjo': 1,
+    'Nganjuk': 0, 'Nunukan': 0, 'Sampang': 0, 'Jombang': 0,
+    'Manado': 0, 'Madiun': 0, 'Ngawi': 0, 'Sukabumi': 0
+}
+
+# 2. Load GeoJSON wilayah (Gunakan public repo atau file lokal .geojson)
+geojson_url = "https://raw.githubusercontent.com/superpikar/indonesia-geojson/master/indonesia-edit.geojson"
+indonesia_geojson = requests.get(geojson_url).json()
+
+# 3. Inisialisasi peta di koordinat pusat Jawa Timur
+m = folium.Map(location=[-7.5360639, 112.2384017], zoom_start=7, tiles='OpenStreetMap')
+
+# 4. Fungsi pewarnaan poligon (Choropleth) berdasarkan cluster
+def get_color(feature):
+    # Sesuaikan 'name' dengan key/atribut nama daerah pada file GeoJSON Anda
+    nama_wilayah = feature['properties'].get('name', '')
+    
+    # Mencocokkan nama wilayah di GeoJSON dengan data cluster
+    for wilayah, cluster in data_cluster.items():
+        if wilayah.lower() in str(nama_wilayah).lower():
+            if cluster == 0:
+                return '#E53935' # Merah untuk Cluster 0
+            elif cluster == 1:
+                return '#1E88E5' # Biru untuk Cluster 1
+    
+    # Wilayah tanpa data / di luar jangkauan (Abu-abu)
+    return '#cccccc' 
+
+# 5. Tambahkan layer GeoJSON ke peta
+folium.GeoJson(
+    indonesia_geojson,
+    name="Peta Segmentasi Polutan",
+    style_function=lambda feature: {
+        'fillColor': get_color(feature),
+        'color': 'black',
+        'weight': 1,
+        'fillOpacity': 0.7 if get_color(feature) != '#cccccc' else 0.1
+    },
+    tooltip=folium.GeoJsonTooltip(
+        fields=['name'], 
+        aliases=['Wilayah:'], 
+        localize=True
+    )
+).add_to(m)
+
+# Tambahkan kontrol layer
+folium.LayerControl().add_to(m)
+
+# 6. Simpan peta ke bentuk HTML interaktif
+m.save('output/peta_clustering_interaktif.html')
 ```
 
 ### 4.4 Peta Interaktif Folium — Satu Layer per Dimensi
