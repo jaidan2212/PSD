@@ -242,6 +242,10 @@ Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari t
 | Danau | 80 | 64 | 16 |
 | **Total** | **520** | **416** | **104** |
 
+**Unduh Dataset (*Data Training* & *Data Testing*):**
+- {download}`Download Data Training (80%) <data_training.csv>`
+- {download}`Download Data Testing (20%) <data_testing.csv>`
+
 ```python
 X = df[FITUR]
 y = df['kelas_id']
