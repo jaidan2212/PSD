@@ -410,8 +410,11 @@ for idx, row in df_laut.iterrows():
     ).add_to(m_laut)
 
 folium.LayerControl().add_to(m_laut)
+m_laut.save("output/peta_khusus_laut.html")
 m_laut
 ```
+
+<iframe src="output/peta_khusus_laut.html" width="100%" height="500px"></iframe>
 
 ### 7.3 Prediksi Piksel pada Area Studi dan Perhitungan Luas Area
 Untuk menerapkan model pada skala penuh (*spatially-continuous*), area studi (AOI) dibagi menjadi kumpulan *grid/ubin*, nilai spektral tiap piksel diekstrak, dan model diaplikasikan langsung pada piksel tersebut. Hasilnya ditimpa sebagai `ImageOverlay` semi-transparan di atas peta *Folium*.
@@ -530,10 +533,12 @@ peta.get_root().html.add_child(folium.Element(legenda))
 folium.LayerControl(collapsed=False).add_to(peta)
 peta.fit_bounds([[AOI[1], AOI[0]], [AOI[3], AOI[2]]])
 
-peta.save("hasil_klasifikasi_random_forest.html")
-print("Peta disimpan: hasil_klasifikasi_random_forest.html (dapat ditanam di web statis lewat <iframe>)")
+peta.save("output/peta_hasil_rf.html")
+print("Peta disimpan: output/peta_hasil_rf.html (dapat ditanam di web statis lewat <iframe>)")
 peta
 ```
+
+<iframe src="output/peta_hasil_rf.html" width="100%" height="600px"></iframe>
 
 ---
 
