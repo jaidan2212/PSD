@@ -180,64 +180,7 @@ Strategi yang digunakan (prioritas berurutan):
 Notebook ini memetakan hasil clustering terbaik di **setiap dimensi** (204 → 203 → 74 → 37) untuk interpolasi Linear dan Polynomial, bukan hanya satu konfigurasi terbaik global. Peta interaktif memiliki satu layer per dimensi, dan peta statis menampilkan semuanya berdampingan.
 
 ```python
-import folium
-import pandas as pd
-import requests
-
-# 1. Siapkan data wilayah dan hasil clustering (berdasarkan evaluasi K-Means terbaik)
-# Data disederhanakan untuk contoh (Cluster 0: Mayoritas, Cluster 1: Sidoarjo)
-data_cluster = {
-    'Gresik': 0, 'Bangkalan': 0, 'Lamongan': 0, 'Pamekasan': 0,
-    'Tuban': 0, 'Sumenep': 0, 'Surabaya': 0, 'Sidoarjo': 1,
-    'Nganjuk': 0, 'Nunukan': 0, 'Sampang': 0, 'Jombang': 0,
-    'Manado': 0, 'Madiun': 0, 'Ngawi': 0, 'Sukabumi': 0
-}
-
-# 2. Load GeoJSON wilayah (Gunakan public repo atau file lokal .geojson)
-geojson_url = "https://raw.githubusercontent.com/superpikar/indonesia-geojson/master/indonesia-edit.geojson"
-indonesia_geojson = requests.get(geojson_url).json()
-
-# 3. Inisialisasi peta di koordinat pusat Jawa Timur
-m = folium.Map(location=[-7.5360639, 112.2384017], zoom_start=7, tiles='OpenStreetMap')
-
-# 4. Fungsi pewarnaan poligon (Choropleth) berdasarkan cluster
-def get_color(feature):
-    # Sesuaikan 'name' dengan key/atribut nama daerah pada file GeoJSON Anda
-    nama_wilayah = feature['properties'].get('name', '')
-    
-    # Mencocokkan nama wilayah di GeoJSON dengan data cluster
-    for wilayah, cluster in data_cluster.items():
-        if wilayah.lower() in str(nama_wilayah).lower():
-            if cluster == 0:
-                return '#E53935' # Merah untuk Cluster 0
-            elif cluster == 1:
-                return '#1E88E5' # Biru untuk Cluster 1
-    
-    # Wilayah tanpa data / di luar jangkauan (Abu-abu)
-    return '#cccccc' 
-
-# 5. Tambahkan layer GeoJSON ke peta
-folium.GeoJson(
-    indonesia_geojson,
-    name="Peta Segmentasi Polutan",
-    style_function=lambda feature: {
-        'fillColor': get_color(feature),
-        'color': 'black',
-        'weight': 1,
-        'fillOpacity': 0.7 if get_color(feature) != '#cccccc' else 0.1
-    },
-    tooltip=folium.GeoJsonTooltip(
-        fields=['name'], 
-        aliases=['Wilayah:'], 
-        localize=True
-    )
-).add_to(m)
-
-# Tambahkan kontrol layer
-folium.LayerControl().add_to(m)
-
-# 6. Simpan peta ke bentuk HTML interaktif
-m.save('output/peta_clustering_interaktif.html')
+# Kode Python Map dimasukkan di sini
 ```
 
 ### 4.4 Peta Interaktif Folium — Satu Layer per Dimensi
@@ -251,9 +194,7 @@ Peta interaktif ini menggunakan **Leaflet.js** via Folium, dengan fitur:
 
 Aktifkan **satu layer pada satu waktu** agar marker tidak saling menumpuk.
 
-<iframe src="_static/peta_clustering_interaktif.html" width="100%" height="600px" style="border:none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></iframe>
-
-[Buka Peta di Tab Baru (Layar Penuh)](_static/peta_clustering_interaktif.html)
+[Lihat Peta Clustering Interaktif (output/peta_clustering_interaktif.html)](output/peta_clustering_interaktif.html)
 
 ### 4.5 Peta Statis (Matplotlib) — untuk Laporan
 
@@ -377,3 +318,38 @@ Cluster 1 (2 wilayah) ─ warna: #1E88E5
 
 [SELESAI]
 ```
+
+---
+
+## Bagian 3: Frequently Asked Questions (FAQ) Dosen / Penguji
+
+Jika terdapat pertanyaan terkait karakteristik dan batasan pengolahan data untuk pemodelan K-Means ini, berikut adalah rincian referensi yang dapat digunakan:
+
+### 1. Data Apa yang Dimasukkan ke Model? (Pixel atau Polygon?)
+Meskipun data asli Sentinel-5P berbentuk _pixel_ / grid raster, data yang digunakan sebagai input *Training* K-Means adalah data berbasis **Polygon**. Pada tahap ekstraksi data (openEO API), telah dilakukan **Spatial Aggregation** (`reducer="mean"`) di mana seluruh piksel yang jatuh pada poligon _Bounding Box_ suatu daerah dirata-rata nilainya menjadi satu representasi untuk wilayah tersebut.
+
+### 2. Berapa Jumlah Observasi Data (X-Train) dan Persentasenya?
+Data pelatihan (X-Train) berjumlah **37 data observasi**. Ke-37 data ini adalah hasil agregasi 37 wilayah unik dari data deret waktu harian selama setahun penuh. Karena K-Means adalah algoritma _Unsupervised Learning_ (tanpa label/target prediksi), maka **100% data (seluruh 37 observasi)** digunakan sepenuhnya sebagai data pelatihan (*training*). Tidak ada pembagian proporsi (seperti 80% *train* : 20% *test*) yang umumnya dilakukan pada algoritma klasifikasi/regresi.
+
+### 3. Berapa Jumlah Fitur / Variabelnya?
+- **Fitur Dasar**: Ekstraksi statistik *time-series* awal menghasilkan **68 fitur**.
+- **Ekspansi Fitur**: Diperluas menjadi **204 fitur** menggunakan _Polynomial Features_.
+- **Reduksi Fitur**: Melalui PCA, jumlah kolom diciutkan menjadi **203**, **74**, hingga **37 fitur utama (Principal Components)** untuk menghindari permasalahan *curse of dimensionality*.
+
+### 4. Berapa Extent (Cakupan) Datanya?
+- **Spatial Extent**: Koordinat _Bounding Box_ sekitar wilayah Suramadu dan Selat Madura (Longitude: `112.65` s.d. `112.78` | Latitude: `-7.22` s.d. `-7.14`).
+- **Temporal Extent**: Rentang waktu selama 1 tahun, mulai `01 Januari 2025` hingga `31 Desember 2025`.
+
+### 5. Kenapa Kolom ID, Nama, dan Daerah Dikeluarkan (Drop)?
+Terdapat 3 kolom string/kategorikal pada dataset mentah awal, yaitu `id`, `nama`, dan `daerah`. **Ketiga kolom identitas tersebut secara eksplisit di-drop / dikeluarkan (menggunakan fitur Column Filter pada KNIME)** sebelum data diumpankan ke algoritma K-Means. Hal ini wajib dilakukan karena algoritma K-Means murni menggunakan penghitungan metrik jarak matematika (seperti *Euclidean Distance*), sehingga penyertaan label atau nomor ID akan mengacaukan pemisahan letak klaster.
+
+### 6. Bagaimana Klasifikasi Data Sawah dan Non-Sawah (QGIS)?
+Selain pemetaan kualitas udara, proyek ini juga menyertakan klasifikasi penggunaan lahan yang terdiri dari **50 titik/area Sawah** dan **50 titik/area Non-Sawah**. 
+Data klasifikasi wilayah ini tidak disatukan dalam bentuk CSV, melainkan disimpan sebagai vektor spasial murni berformat **Shapefile (.shp)**. Untuk keperluan visualisasi dan _overlay_ peta klasifikasinya, *Shapefile* tersebut diolah langsung menggunakan *software* Sistem Informasi Geografis yaitu **QGIS** (tersimpan dalam file *project* `.qgz`). Data ini berguna sebagai acuan tambahan untuk melihat karakteristik area pertanian (sawah) dibandingkan area lainnya.
+
+Berikut adalah pratinjau visualisasi sebaran **50 Sawah** (Hijau) dan **50 Non-Sawah** (Merah) yang telah diekstrak langsung dari _Shapefile_-mu:
+
+![Sebaran 50 Sawah dan Non-Sawah](output/peta_sawah_nonsawah.png)
+
+Selain gambar statis di atas, aku juga sudah membuatkan peta interaktif (menggunakan library Folium) yang bisa kamu klik dan _zoom_ langsung layaknya di QGIS:
+[🌍 Buka Peta Interaktif Sawah & Non-Sawah (Folium)](output/peta_sawah_nonsawah_interaktif.html)

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Pemodelan K-Means &amp; Visualisasi Peta Segmentasi &#8212; Analisis Kualitas Udara (Polutan NO2) Area Suramadu</title>
+    <title>Pemodelan K-Means &amp; Visualisasi Peta Segmentasi &#8212; Tugas PSD</title>
   
   
   
@@ -60,6 +60,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'tahap4_kmeans_knime_dan_visualisasi_peta';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur" href="Tugas_PSD_LULC_Final.html" />
     <link rel="prev" title="Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette" href="tahap3_eksperimen_clustering.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -152,8 +153,8 @@
       
     
     
-    <img src="_static/foto.png" class="logo__image only-light" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>
-    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Analisis Kualitas Udara (Polutan NO2) Area Suramadu - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="Tugas PSD - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Tugas PSD - Home"/>`);</script>
   
   
 </a></div>
@@ -199,6 +200,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tahap2_reduksi_dimensi.html">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tahap3_eksperimen_clustering.html">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Pemodelan K-Means &amp; Visualisasi Peta Segmentasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas_PSD_LULC_Final.html">Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur</a></li>
 </ul>
 
     </div>
@@ -240,53 +242,6 @@
         <div class="header-article-item">
 
 <div class="article-header-buttons">
-
-
-
-
-
-<div class="dropdown dropdown-source-buttons">
-  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
-    <i class="fab fa-github"></i>
-  </button>
-  <ul class="dropdown-menu">
-      
-      
-      
-      <li><a href="https://github.com/jaidan2212/PSD" target="_blank"
-   class="btn btn-sm btn-source-repository-button dropdown-item"
-   title="Source repository"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="btn__text-container">Repository</span>
-</a>
-</li>
-      
-      
-      
-      
-      <li><a href="https://github.com/jaidan2212/PSD/issues/new?title=Issue%20on%20page%20%2Ftahap4_kmeans_knime_dan_visualisasi_peta.html&body=Your%20issue%20content%20here." target="_blank"
-   class="btn btn-sm btn-source-issues-button dropdown-item"
-   title="Open an issue"
-   data-bs-placement="left" data-bs-toggle="tooltip"
->
-  
-
-<span class="btn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="btn__text-container">Open issue</span>
-</a>
-</li>
-      
-  </ul>
-</div>
-
 
 
 
@@ -413,6 +368,15 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-interaktif-folium-satu-layer-per-dimensi">4.4 Peta Interaktif Folium — Satu Layer per Dimensi</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-statis-matplotlib-untuk-laporan">4.5 Peta Statis (Matplotlib) — untuk Laporan</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-lengkap-analisis">4.6 Ringkasan Lengkap Analisis</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-frequently-asked-questions-faq-dosen-penguji">Bagian 3: Frequently Asked Questions (FAQ) Dosen / Penguji</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-apa-yang-dimasukkan-ke-model-pixel-atau-polygon">1. Data Apa yang Dimasukkan ke Model? (Pixel atau Polygon?)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-jumlah-observasi-data-x-train-dan-persentasenya">2. Berapa Jumlah Observasi Data (X-Train) dan Persentasenya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-jumlah-fitur-variabelnya">3. Berapa Jumlah Fitur / Variabelnya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-extent-cakupan-datanya">4. Berapa Extent (Cakupan) Datanya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kenapa-kolom-id-nama-dan-daerah-dikeluarkan-drop">5. Kenapa Kolom ID, Nama, dan Daerah Dikeluarkan (Drop)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-klasifikasi-data-sawah-dan-non-sawah-qgis">6. Bagaimana Klasifikasi Data Sawah dan Non-Sawah (QGIS)?</a></li>
 </ul>
 </li>
 </ul>
@@ -604,64 +568,7 @@ Hasil geocoding otomatis bisa tidak akurat untuk nama daerah yang ambigu. Verifi
 <section id="peta-untuk-setiap-dimensi">
 <h3>Peta untuk Setiap Dimensi<a class="headerlink" href="#peta-untuk-setiap-dimensi" title="Link to this heading">#</a></h3>
 <p>Notebook ini memetakan hasil clustering terbaik di <strong>setiap dimensi</strong> (204 → 203 → 74 → 37) untuk interpolasi Linear dan Polynomial, bukan hanya satu konfigurasi terbaik global. Peta interaktif memiliki satu layer per dimensi, dan peta statis menampilkan semuanya berdampingan.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">folium</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-
-<span class="c1"># 1. Siapkan data wilayah dan hasil clustering (berdasarkan evaluasi K-Means terbaik)</span>
-<span class="c1"># Data disederhanakan untuk contoh (Cluster 0: Mayoritas, Cluster 1: Sidoarjo)</span>
-<span class="n">data_cluster</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;Gresik&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Bangkalan&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Lamongan&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Pamekasan&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s1">&#39;Tuban&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Sumenep&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Surabaya&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Sidoarjo&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s1">&#39;Nganjuk&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Nunukan&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Sampang&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Jombang&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="s1">&#39;Manado&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Madiun&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Ngawi&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Sukabumi&#39;</span><span class="p">:</span> <span class="mi">0</span>
-<span class="p">}</span>
-
-<span class="c1"># 2. Load GeoJSON wilayah (Gunakan public repo atau file lokal .geojson)</span>
-<span class="n">geojson_url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/superpikar/indonesia-geojson/master/indonesia-edit.geojson&quot;</span>
-<span class="n">indonesia_geojson</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">geojson_url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-
-<span class="c1"># 3. Inisialisasi peta di koordinat pusat Jawa Timur</span>
-<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">7.5360639</span><span class="p">,</span> <span class="mf">112.2384017</span><span class="p">],</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;OpenStreetMap&#39;</span><span class="p">)</span>
-
-<span class="c1"># 4. Fungsi pewarnaan poligon (Choropleth) berdasarkan cluster</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_color</span><span class="p">(</span><span class="n">feature</span><span class="p">):</span>
-    <span class="c1"># Sesuaikan &#39;name&#39; dengan key/atribut nama daerah pada file GeoJSON Anda</span>
-    <span class="n">nama_wilayah</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    
-    <span class="c1"># Mencocokkan nama wilayah di GeoJSON dengan data cluster</span>
-    <span class="k">for</span> <span class="n">wilayah</span><span class="p">,</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">data_cluster</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">wilayah</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">nama_wilayah</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">cluster</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;#E53935&#39;</span> <span class="c1"># Merah untuk Cluster 0</span>
-            <span class="k">elif</span> <span class="n">cluster</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">return</span> <span class="s1">&#39;#1E88E5&#39;</span> <span class="c1"># Biru untuk Cluster 1</span>
-    
-    <span class="c1"># Wilayah tanpa data / di luar jangkauan (Abu-abu)</span>
-    <span class="k">return</span> <span class="s1">&#39;#cccccc&#39;</span> 
-
-<span class="c1"># 5. Tambahkan layer GeoJSON ke peta</span>
-<span class="n">folium</span><span class="o">.</span><span class="n">GeoJson</span><span class="p">(</span>
-    <span class="n">indonesia_geojson</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Peta Segmentasi Polutan&quot;</span><span class="p">,</span>
-    <span class="n">style_function</span><span class="o">=</span><span class="k">lambda</span> <span class="n">feature</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;fillColor&#39;</span><span class="p">:</span> <span class="n">get_color</span><span class="p">(</span><span class="n">feature</span><span class="p">),</span>
-        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s1">&#39;fillOpacity&#39;</span><span class="p">:</span> <span class="mf">0.7</span> <span class="k">if</span> <span class="n">get_color</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;#cccccc&#39;</span> <span class="k">else</span> <span class="mf">0.1</span>
-    <span class="p">},</span>
-    <span class="n">tooltip</span><span class="o">=</span><span class="n">folium</span><span class="o">.</span><span class="n">GeoJsonTooltip</span><span class="p">(</span>
-        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> 
-        <span class="n">aliases</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wilayah:&#39;</span><span class="p">],</span> 
-        <span class="n">localize</span><span class="o">=</span><span class="kc">True</span>
-    <span class="p">)</span>
-<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-
-<span class="c1"># Tambahkan kontrol layer</span>
-<span class="n">folium</span><span class="o">.</span><span class="n">LayerControl</span><span class="p">()</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-
-<span class="c1"># 6. Simpan peta ke bentuk HTML interaktif</span>
-<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;output/peta_clustering_interaktif.html&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kode Python Map dimasukkan di sini</span>
 </pre></div>
 </div>
 </section>
@@ -676,8 +583,7 @@ Hasil geocoding otomatis bisa tidak akurat untuk nama daerah yang ambigu. Verifi
 <li><p><strong>Tooltip</strong> saat hover</p></li>
 </ul>
 <p>Aktifkan <strong>satu layer pada satu waktu</strong> agar marker tidak saling menumpuk.</p>
-<iframe src="_static/peta_clustering_interaktif.html" width="100%" height="600px" style="border:none; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></iframe>
-<p><a class="reference download internal" download="" href="_downloads/45515fd631ad9f97b32981347bfb392d/peta_clustering_interaktif.html"><span class="xref download myst">Buka Peta di Tab Baru (Layar Penuh)</span></a></p>
+<p><a class="reference download internal" download="" href="_downloads/20147bc458e84c5d44b317d2ad203355/peta_clustering_interaktif.html"><span class="xref download myst">Lihat Peta Clustering Interaktif (output/peta_clustering_interaktif.html)</span></a></p>
 </section>
 <section id="peta-statis-matplotlib-untuk-laporan">
 <h3>4.5 Peta Statis (Matplotlib) — untuk Laporan<a class="headerlink" href="#peta-statis-matplotlib-untuk-laporan" title="Link to this heading">#</a></h3>
@@ -802,6 +708,47 @@ Cluster 1 (2 wilayah) ─ warna: #1E88E5
 </div>
 </section>
 </section>
+<hr class="docutils" />
+<section id="bagian-3-frequently-asked-questions-faq-dosen-penguji">
+<h2>Bagian 3: Frequently Asked Questions (FAQ) Dosen / Penguji<a class="headerlink" href="#bagian-3-frequently-asked-questions-faq-dosen-penguji" title="Link to this heading">#</a></h2>
+<p>Jika terdapat pertanyaan terkait karakteristik dan batasan pengolahan data untuk pemodelan K-Means ini, berikut adalah rincian referensi yang dapat digunakan:</p>
+<section id="data-apa-yang-dimasukkan-ke-model-pixel-atau-polygon">
+<h3>1. Data Apa yang Dimasukkan ke Model? (Pixel atau Polygon?)<a class="headerlink" href="#data-apa-yang-dimasukkan-ke-model-pixel-atau-polygon" title="Link to this heading">#</a></h3>
+<p>Meskipun data asli Sentinel-5P berbentuk <em>pixel</em> / grid raster, data yang digunakan sebagai input <em>Training</em> K-Means adalah data berbasis <strong>Polygon</strong>. Pada tahap ekstraksi data (openEO API), telah dilakukan <strong>Spatial Aggregation</strong> (<code class="docutils literal notranslate"><span class="pre">reducer=&quot;mean&quot;</span></code>) di mana seluruh piksel yang jatuh pada poligon <em>Bounding Box</em> suatu daerah dirata-rata nilainya menjadi satu representasi untuk wilayah tersebut.</p>
+</section>
+<section id="berapa-jumlah-observasi-data-x-train-dan-persentasenya">
+<h3>2. Berapa Jumlah Observasi Data (X-Train) dan Persentasenya?<a class="headerlink" href="#berapa-jumlah-observasi-data-x-train-dan-persentasenya" title="Link to this heading">#</a></h3>
+<p>Data pelatihan (X-Train) berjumlah <strong>37 data observasi</strong>. Ke-37 data ini adalah hasil agregasi 37 wilayah unik dari data deret waktu harian selama setahun penuh. Karena K-Means adalah algoritma <em>Unsupervised Learning</em> (tanpa label/target prediksi), maka <strong>100% data (seluruh 37 observasi)</strong> digunakan sepenuhnya sebagai data pelatihan (<em>training</em>). Tidak ada pembagian proporsi (seperti 80% <em>train</em> : 20% <em>test</em>) yang umumnya dilakukan pada algoritma klasifikasi/regresi.</p>
+</section>
+<section id="berapa-jumlah-fitur-variabelnya">
+<h3>3. Berapa Jumlah Fitur / Variabelnya?<a class="headerlink" href="#berapa-jumlah-fitur-variabelnya" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Fitur Dasar</strong>: Ekstraksi statistik <em>time-series</em> awal menghasilkan <strong>68 fitur</strong>.</p></li>
+<li><p><strong>Ekspansi Fitur</strong>: Diperluas menjadi <strong>204 fitur</strong> menggunakan <em>Polynomial Features</em>.</p></li>
+<li><p><strong>Reduksi Fitur</strong>: Melalui PCA, jumlah kolom diciutkan menjadi <strong>203</strong>, <strong>74</strong>, hingga <strong>37 fitur utama (Principal Components)</strong> untuk menghindari permasalahan <em>curse of dimensionality</em>.</p></li>
+</ul>
+</section>
+<section id="berapa-extent-cakupan-datanya">
+<h3>4. Berapa Extent (Cakupan) Datanya?<a class="headerlink" href="#berapa-extent-cakupan-datanya" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Spatial Extent</strong>: Koordinat <em>Bounding Box</em> sekitar wilayah Suramadu dan Selat Madura (Longitude: <code class="docutils literal notranslate"><span class="pre">112.65</span></code> s.d. <code class="docutils literal notranslate"><span class="pre">112.78</span></code> | Latitude: <code class="docutils literal notranslate"><span class="pre">-7.22</span></code> s.d. <code class="docutils literal notranslate"><span class="pre">-7.14</span></code>).</p></li>
+<li><p><strong>Temporal Extent</strong>: Rentang waktu selama 1 tahun, mulai <code class="docutils literal notranslate"><span class="pre">01</span> <span class="pre">Januari</span> <span class="pre">2025</span></code> hingga <code class="docutils literal notranslate"><span class="pre">31</span> <span class="pre">Desember</span> <span class="pre">2025</span></code>.</p></li>
+</ul>
+</section>
+<section id="kenapa-kolom-id-nama-dan-daerah-dikeluarkan-drop">
+<h3>5. Kenapa Kolom ID, Nama, dan Daerah Dikeluarkan (Drop)?<a class="headerlink" href="#kenapa-kolom-id-nama-dan-daerah-dikeluarkan-drop" title="Link to this heading">#</a></h3>
+<p>Terdapat 3 kolom string/kategorikal pada dataset mentah awal, yaitu <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">nama</span></code>, dan <code class="docutils literal notranslate"><span class="pre">daerah</span></code>. <strong>Ketiga kolom identitas tersebut secara eksplisit di-drop / dikeluarkan (menggunakan fitur Column Filter pada KNIME)</strong> sebelum data diumpankan ke algoritma K-Means. Hal ini wajib dilakukan karena algoritma K-Means murni menggunakan penghitungan metrik jarak matematika (seperti <em>Euclidean Distance</em>), sehingga penyertaan label atau nomor ID akan mengacaukan pemisahan letak klaster.</p>
+</section>
+<section id="bagaimana-klasifikasi-data-sawah-dan-non-sawah-qgis">
+<h3>6. Bagaimana Klasifikasi Data Sawah dan Non-Sawah (QGIS)?<a class="headerlink" href="#bagaimana-klasifikasi-data-sawah-dan-non-sawah-qgis" title="Link to this heading">#</a></h3>
+<p>Selain pemetaan kualitas udara, proyek ini juga menyertakan klasifikasi penggunaan lahan yang terdiri dari <strong>50 titik/area Sawah</strong> dan <strong>50 titik/area Non-Sawah</strong>.
+Data klasifikasi wilayah ini tidak disatukan dalam bentuk CSV, melainkan disimpan sebagai vektor spasial murni berformat <strong>Shapefile (.shp)</strong>. Untuk keperluan visualisasi dan <em>overlay</em> peta klasifikasinya, <em>Shapefile</em> tersebut diolah langsung menggunakan <em>software</em> Sistem Informasi Geografis yaitu <strong>QGIS</strong> (tersimpan dalam file <em>project</em> <code class="docutils literal notranslate"><span class="pre">.qgz</span></code>). Data ini berguna sebagai acuan tambahan untuk melihat karakteristik area pertanian (sawah) dibandingkan area lainnya.</p>
+<p>Berikut adalah pratinjau visualisasi sebaran <strong>50 Sawah</strong> (Hijau) dan <strong>50 Non-Sawah</strong> (Merah) yang telah diekstrak langsung dari <em>Shapefile</em>-mu:</p>
+<p><img alt="Sebaran 50 Sawah dan Non-Sawah" src="_images/peta_sawah_nonsawah.png" /></p>
+<p>Selain gambar statis di atas, aku juga sudah membuatkan peta interaktif (menggunakan library Folium) yang bisa kamu klik dan <em>zoom</em> langsung layaknya di QGIS:
+<a class="reference download internal" download="" href="_downloads/e455ee08c835bf20dd2ec9f3a9ae4e3e/peta_sawah_nonsawah_interaktif.html"><span class="xref download myst">🌍 Buka Peta Interaktif Sawah &amp; Non-Sawah (Folium)</span></a></p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -843,6 +790,15 @@ Cluster 1 (2 wilayah) ─ warna: #1E88E5
         <p class="prev-next-title">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</p>
       </div>
     </a>
+    <a class="right-next"
+       href="Tugas_PSD_LULC_Final.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -880,6 +836,15 @@ Cluster 1 (2 wilayah) ─ warna: #1E88E5
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-lengkap-analisis">4.6 Ringkasan Lengkap Analisis</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bagian-3-frequently-asked-questions-faq-dosen-penguji">Bagian 3: Frequently Asked Questions (FAQ) Dosen / Penguji</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-apa-yang-dimasukkan-ke-model-pixel-atau-polygon">1. Data Apa yang Dimasukkan ke Model? (Pixel atau Polygon?)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-jumlah-observasi-data-x-train-dan-persentasenya">2. Berapa Jumlah Observasi Data (X-Train) dan Persentasenya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-jumlah-fitur-variabelnya">3. Berapa Jumlah Fitur / Variabelnya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#berapa-extent-cakupan-datanya">4. Berapa Extent (Cakupan) Datanya?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kenapa-kolom-id-nama-dan-daerah-dikeluarkan-drop">5. Kenapa Kolom ID, Nama, dan Daerah Dikeluarkan (Drop)?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bagaimana-klasifikasi-data-sawah-dan-non-sawah-qgis">6. Bagaimana Klasifikasi Data Sawah dan Non-Sawah (QGIS)?</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -894,7 +859,7 @@ Cluster 1 (2 wilayah) ─ warna: #1E88E5
   <div class="footer-item">
     
 <p class="component-author">
-By Muhammad Zaidan Nabil Rafi (240411100068)
+By Zaidan
 </p>
 
   </div>
@@ -904,7 +869,7 @@ By Muhammad Zaidan Nabil Rafi (240411100068)
 
   <p class="copyright">
     
-      © Copyright 2026.
+      © Copyright 2023.
       <br/>
     
   </p>
