@@ -87,13 +87,13 @@ Data poligon area tiap kelas diperoleh dari file kompresi dan shapefile QGIS (*Q
 
 | ID | Kelas | Berkas shapefile | Target jumlah sampel |
 |---|---|---|---|
-| 1 | Sawah | `sawah.shp` | 50 |
-| 2 | Bangunan | `bangunan.shp` | 50 |
-| 3 | Mangrove | `mangrove.shp` | 20 |
-| 4 | Lahan Hijau | `lahan_hijau.shp` | 20 |
-| 5 | Perairan Terbuka (Laut) | `lautan.shp` | 15 |
-| 6 | Danau | `danau.shp` | 20 |
-| | **Total** | | **175 sampel, 6 kelas** |
+| 1 | Sawah | `50 Sawah gqis.qgz` / `sawah.shp` | 100 |
+| 2 | Bangunan | `50 Non Sawah gqis.qgz` / `bangunan.shp` | 100 |
+| 3 | Mangrove | `Mangrove Zaidan.zip` / `mangrove.shp` | 80 |
+| 4 | Lahan Hijau | `Lahan hijau.zip` / `lahan_hijau.shp` | 80 |
+| 5 | Perairan Terbuka (Laut) | `laut.zip` / `lautan.shp` | 80 |
+| 6 | Danau | `Danau.zip` / `danau.shp` | 80 |
+| | **Total** | | **520 sampel, 6 kelas** |
 
 *Catatan: File asli bersumber dari kompresi seperti `50 Sawah gqis.qgz`, `Lahan hijau.zip`, `laut.zip`, `Danau.zip`, dan `Mangrove Zaidan.zip` yang diekstrak menjadi file `.shp`.*
 
@@ -230,17 +230,17 @@ plt.show()
 
 Algoritma **Random Forest** digunakan karena akurasinya secara umum lebih unggul dan kokoh (*robust*) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar **80% *training* (data latih) dan 20% *testing* (data uji)**.
 
-Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari total 175 sampel:
+Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari total 520 sampel (80% / 20%):
 
 | Kelas | Total Sampel | Data Training (80%) | Data Testing (20%) |
 |---|---|---|---|
-| Sawah | 50 | 40 | 10 |
-| Bangunan | 50 | 40 | 10 |
-| Mangrove | 20 | 16 | 4 |
-| Lahan Hijau | 20 | 16 | 4 |
-| Perairan Terbuka (Laut) | 15 | 12 | 3 |
-| Danau | 20 | 16 | 4 |
-| **Total** | **175** | **140** | **35** |
+| Sawah | 100 | 80 | 20 |
+| Bangunan | 100 | 80 | 20 |
+| Mangrove | 80 | 64 | 16 |
+| Lahan Hijau | 80 | 64 | 16 |
+| Perairan Terbuka (Laut) | 80 | 64 | 16 |
+| Danau | 80 | 64 | 16 |
+| **Total** | **520** | **416** | **104** |
 
 ```python
 X = df[FITUR]

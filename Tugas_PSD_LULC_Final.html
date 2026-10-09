@@ -556,38 +556,38 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <tbody>
 <tr class="row-even"><td><p>1</p></td>
 <td><p>Sawah</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">sawah.shp</span></code></p></td>
-<td><p>50</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">50</span> <span class="pre">Sawah</span> <span class="pre">gqis.qgz</span></code> / <code class="docutils literal notranslate"><span class="pre">sawah.shp</span></code></p></td>
+<td><p>100</p></td>
 </tr>
 <tr class="row-odd"><td><p>2</p></td>
 <td><p>Bangunan</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">bangunan.shp</span></code></p></td>
-<td><p>50</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">50</span> <span class="pre">Non</span> <span class="pre">Sawah</span> <span class="pre">gqis.qgz</span></code> / <code class="docutils literal notranslate"><span class="pre">bangunan.shp</span></code></p></td>
+<td><p>100</p></td>
 </tr>
 <tr class="row-even"><td><p>3</p></td>
 <td><p>Mangrove</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">mangrove.shp</span></code></p></td>
-<td><p>20</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Mangrove</span> <span class="pre">Zaidan.zip</span></code> / <code class="docutils literal notranslate"><span class="pre">mangrove.shp</span></code></p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-odd"><td><p>4</p></td>
 <td><p>Lahan Hijau</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">lahan_hijau.shp</span></code></p></td>
-<td><p>20</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Lahan</span> <span class="pre">hijau.zip</span></code> / <code class="docutils literal notranslate"><span class="pre">lahan_hijau.shp</span></code></p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-even"><td><p>5</p></td>
 <td><p>Perairan Terbuka (Laut)</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">lautan.shp</span></code></p></td>
-<td><p>15</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">laut.zip</span></code> / <code class="docutils literal notranslate"><span class="pre">lautan.shp</span></code></p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-odd"><td><p>6</p></td>
 <td><p>Danau</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">danau.shp</span></code></p></td>
-<td><p>20</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Danau.zip</span></code> / <code class="docutils literal notranslate"><span class="pre">danau.shp</span></code></p></td>
+<td><p>80</p></td>
 </tr>
 <tr class="row-even"><td><p></p></td>
 <td><p><strong>Total</strong></p></td>
 <td><p></p></td>
-<td><p><strong>175 sampel, 6 kelas</strong></p></td>
+<td><p><strong>520 sampel, 6 kelas</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -730,7 +730,7 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <section id="pemodelan-random-forest-dan-evaluasi">
 <h2>5. Pemodelan (Random Forest) dan Evaluasi<a class="headerlink" href="#pemodelan-random-forest-dan-evaluasi" title="Link to this heading">#</a></h2>
 <p>Algoritma <strong>Random Forest</strong> digunakan karena akurasinya secara umum lebih unggul dan kokoh (<em>robust</em>) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar <strong>80% <em>training</em> (data latih) dan 20% <em>testing</em> (data uji)</strong>.</p>
-<p>Berikut adalah rincian hasil pembagian data (<em>split</em>) secara proporsional dari total 175 sampel:</p>
+<p>Berikut adalah rincian hasil pembagian data (<em>split</em>) secara proporsional dari total 520 sampel (80% / 20%):</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Kelas</p></th>
@@ -741,39 +741,39 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Sawah</p></td>
-<td><p>50</p></td>
-<td><p>40</p></td>
-<td><p>10</p></td>
+<td><p>100</p></td>
+<td><p>80</p></td>
+<td><p>20</p></td>
 </tr>
 <tr class="row-odd"><td><p>Bangunan</p></td>
-<td><p>50</p></td>
-<td><p>40</p></td>
-<td><p>10</p></td>
+<td><p>100</p></td>
+<td><p>80</p></td>
+<td><p>20</p></td>
 </tr>
 <tr class="row-even"><td><p>Mangrove</p></td>
-<td><p>20</p></td>
+<td><p>80</p></td>
+<td><p>64</p></td>
 <td><p>16</p></td>
-<td><p>4</p></td>
 </tr>
 <tr class="row-odd"><td><p>Lahan Hijau</p></td>
-<td><p>20</p></td>
+<td><p>80</p></td>
+<td><p>64</p></td>
 <td><p>16</p></td>
-<td><p>4</p></td>
 </tr>
 <tr class="row-even"><td><p>Perairan Terbuka (Laut)</p></td>
-<td><p>15</p></td>
-<td><p>12</p></td>
-<td><p>3</p></td>
+<td><p>80</p></td>
+<td><p>64</p></td>
+<td><p>16</p></td>
 </tr>
 <tr class="row-odd"><td><p>Danau</p></td>
-<td><p>20</p></td>
+<td><p>80</p></td>
+<td><p>64</p></td>
 <td><p>16</p></td>
-<td><p>4</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>Total</strong></p></td>
-<td><p><strong>175</strong></p></td>
-<td><p><strong>140</strong></p></td>
-<td><p><strong>35</strong></p></td>
+<td><p><strong>520</strong></p></td>
+<td><p><strong>416</strong></p></td>
+<td><p><strong>104</strong></p></td>
 </tr>
 </tbody>
 </table>
