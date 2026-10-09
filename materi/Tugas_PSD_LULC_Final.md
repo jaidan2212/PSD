@@ -414,7 +414,7 @@ m_laut.save("output/peta_khusus_laut.html")
 m_laut
 ```
 
-<iframe src="output/peta_khusus_laut.html" width="100%" height="500px"></iframe>
+<iframe src="_static/peta_khusus_laut.html" width="100%" height="500px"></iframe>
 
 ### 7.3 Prediksi Piksel pada Area Studi dan Perhitungan Luas Area
 Untuk menerapkan model pada skala penuh (*spatially-continuous*), area studi (AOI) dibagi menjadi kumpulan *grid/ubin*, nilai spektral tiap piksel diekstrak, dan model diaplikasikan langsung pada piksel tersebut. Hasilnya ditimpa sebagai `ImageOverlay` semi-transparan di atas peta *Folium*.
@@ -538,7 +538,7 @@ print("Peta disimpan: output/peta_hasil_rf.html (dapat ditanam di web statis lew
 peta
 ```
 
-<iframe src="output/peta_hasil_rf.html" width="100%" height="600px"></iframe>
+<iframe src="_static/peta_hasil_rf.html" width="100%" height="600px"></iframe>
 
 ---
 
