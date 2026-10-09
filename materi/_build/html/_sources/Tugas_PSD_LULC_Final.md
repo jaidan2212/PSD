@@ -83,16 +83,19 @@ from IPython.display import display, Markdown
 ```
 
 ### 2.2 Membaca Shapefile (QGIS/ZIP) dan Penentuan Titik Sampel
-Data poligon *training area* tiap kelas diperoleh dari file kompresi dan QGIS (*QGZ*) berikut yang telah dibuat sebelumnya:
-- **`50 Sawah gqis.qgz`** (Area Sawah)
-- **`50 Non Sawah gqis.qgz`** (Area Bangunan / Lahan Terbangun)
-- **`Lahan hijau.zip`** (Area Hutan / Vegetasi)
-- **`laut.zip`** (Perairan Terbuka / Laut)
-- **`Danau.zip`** (Area Danau / Waduk)
-- **`Mangrove Zaidan.zip`** (Area Mangrove)
+Data poligon area tiap kelas diperoleh dari file kompresi dan shapefile QGIS (*QGZ*) berikut. Seluruh poligon diekstraksi dan dikonversi ke sistem koordinat **WGS84 geografis (EPSG:4326)**. Dari poligon tersebut, dilakukan pengambilan sampel titik secara acak (*random sampling*) menggunakan pustaka `geopandas` sesuai target jumlah berikut:
 
-Seluruh poligon area tersebut diekstraksi dan dikonversi ke sistem koordinat **WGS84 geografis (EPSG:4326)**.
-Dari setiap kelas diambil titik sampel secara acak namun representatif di dalam poligon menggunakan pustaka `geopandas` dan iterasi `shapely.geometry.Point`.
+| ID | Kelas | Berkas shapefile | Target jumlah sampel |
+|---|---|---|---|
+| 1 | Sawah | `50 Sawah gqis.qgz` / `sawah.shp` | 100 |
+| 2 | Bangunan | `50 Non Sawah gqis.qgz` / `bangunan.shp` | 100 |
+| 3 | Mangrove | `Mangrove Zaidan.zip` / `mangrove.shp` | 80 |
+| 4 | Lahan Hijau | `Lahan hijau.zip` / `lahan_hijau.shp` | 80 |
+| 5 | Perairan Terbuka (Laut) | `laut.zip` / `lautan.shp` | 80 |
+| 6 | Danau | `Danau.zip` / `danau.shp` | 80 |
+| | **Total** | | **520 sampel, 6 kelas** |
+
+*Catatan: File asli bersumber dari kompresi seperti `50 Sawah gqis.qgz`, `Lahan hijau.zip`, `laut.zip`, `Danau.zip`, dan `Mangrove Zaidan.zip` yang diekstrak menjadi file `.shp`.*
 
 ### 2.3 Pengambilan Citra Sentinel-2A
 Pengambilan dilakukan melalui sebuah *evalscript* (skrip JavaScript kecil) yang dijalankan di server Copernicus dengan langkah:
@@ -225,7 +228,23 @@ plt.show()
 
 ## 5. Pemodelan (Random Forest) dan Evaluasi
 
-Algoritma **Random Forest** digunakan karena akurasinya secara umum lebih unggul dan kokoh (*robust*) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar 80% *training* dan 20% *testing*.
+Algoritma **Random Forest** digunakan karena akurasinya secara umum lebih unggul dan kokoh (*robust*) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar **80% *training* (data latih) dan 20% *testing* (data uji)**.
+
+Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari total 520 sampel (80% / 20%):
+
+| Kelas | Total Sampel | Data Training (80%) | Data Testing (20%) |
+|---|---|---|---|
+| Sawah | 100 | 80 | 20 |
+| Bangunan | 100 | 80 | 20 |
+| Mangrove | 80 | 64 | 16 |
+| Lahan Hijau | 80 | 64 | 16 |
+| Perairan Terbuka (Laut) | 80 | 64 | 16 |
+| Danau | 80 | 64 | 16 |
+| **Total** | **520** | **416** | **104** |
+
+**Unduh Dataset (*Data Training* & *Data Testing*):**
+- {download}`Download Data Training (80%) <data_training.csv>`
+- {download}`Download Data Testing (20%) <data_testing.csv>`
 
 ```python
 X = df[FITUR]
