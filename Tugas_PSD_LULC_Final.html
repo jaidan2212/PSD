@@ -370,7 +370,8 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jumlah-data-per-kelas">4.1 Jumlah Data per Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-deskriptif-fitur">4.2 Statistik Deskriptif Fitur</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tanda-tangan-spektral-spectral-signature">4.3 Tanda Tangan Spektral (Spectral Signature)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-antar-fitur">4.4 Korelasi Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sebaran-indeks-spektral-per-kelas">4.4 Sebaran Indeks Spektral per Kelas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-antar-fitur">4.5 Korelasi Antar Fitur</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-random-forest-dan-evaluasi">5. Pemodelan (Random Forest) dan Evaluasi</a><ul class="nav section-nav flex-column">
@@ -622,6 +623,157 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>kelas_id</p></th>
+<th class="head text-left"><p>kelas</p></th>
+<th class="head text-right"><p>poligon_id</p></th>
+<th class="head text-right"><p>lon</p></th>
+<th class="head text-right"><p>lat</p></th>
+<th class="head text-right"><p>B2</p></th>
+<th class="head text-right"><p>B3</p></th>
+<th class="head text-right"><p>B4</p></th>
+<th class="head text-right"><p>B5</p></th>
+<th class="head text-right"><p>B6</p></th>
+<th class="head text-right"><p>B7</p></th>
+<th class="head text-right"><p>B8</p></th>
+<th class="head text-right"><p>B8A</p></th>
+<th class="head text-right"><p>B11</p></th>
+<th class="head text-right"><p>B12</p></th>
+<th class="head text-right"><p>NDVI</p></th>
+<th class="head text-right"><p>NDWI</p></th>
+<th class="head text-right"><p>MNDWI</p></th>
+<th class="head text-right"><p>NDBI</p></th>
+<th class="head text-right"><p>NDRE</p></th>
+<th class="head text-right"><p>EVI</p></th>
+<th class="head text-right"><p>SAVI</p></th>
+<th class="head text-right"><p>BSI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>112.481</p></td>
+<td class="text-right"><p>-6.9327</p></td>
+<td class="text-right"><p>0.0373284</p></td>
+<td class="text-right"><p>0.0387974</p></td>
+<td class="text-right"><p>0.054836</p></td>
+<td class="text-right"><p>0.0589178</p></td>
+<td class="text-right"><p>0.273305</p></td>
+<td class="text-right"><p>0.340697</p></td>
+<td class="text-right"><p>0.342223</p></td>
+<td class="text-right"><p>0.388425</p></td>
+<td class="text-right"><p>0.196901</p></td>
+<td class="text-right"><p>0.0793139</p></td>
+<td class="text-right"><p>0.723789</p></td>
+<td class="text-right"><p>-0.79635</p></td>
+<td class="text-right"><p>-0.670789</p></td>
+<td class="text-right"><p>-0.269551</p></td>
+<td class="text-right"><p>0.706248</p></td>
+<td class="text-right"><p>0.516409</p></td>
+<td class="text-right"><p>0.480548</p></td>
+<td class="text-right"><p>-0.202465</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>112.826</p></td>
+<td class="text-right"><p>-7.34553</p></td>
+<td class="text-right"><p>0.0340131</p></td>
+<td class="text-right"><p>0.055427</p></td>
+<td class="text-right"><p>0.0220972</p></td>
+<td class="text-right"><p>0.0963175</p></td>
+<td class="text-right"><p>0.277231</p></td>
+<td class="text-right"><p>0.28902</p></td>
+<td class="text-right"><p>0.299058</p></td>
+<td class="text-right"><p>0.33275</p></td>
+<td class="text-right"><p>0.133405</p></td>
+<td class="text-right"><p>0.0454954</p></td>
+<td class="text-right"><p>0.862389</p></td>
+<td class="text-right"><p>-0.687282</p></td>
+<td class="text-right"><p>-0.41295</p></td>
+<td class="text-right"><p>-0.383044</p></td>
+<td class="text-right"><p>0.51278</p></td>
+<td class="text-right"><p>0.588505</p></td>
+<td class="text-right"><p>0.505923</p></td>
+<td class="text-right"><p>-0.363443</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>112.301</p></td>
+<td class="text-right"><p>-6.94279</p></td>
+<td class="text-right"><p>0.0403789</p></td>
+<td class="text-right"><p>0.0681401</p></td>
+<td class="text-right"><p>0.039785</p></td>
+<td class="text-right"><p>0.11461</p></td>
+<td class="text-right"><p>0.273071</p></td>
+<td class="text-right"><p>0.330074</p></td>
+<td class="text-right"><p>0.369655</p></td>
+<td class="text-right"><p>0.37093</p></td>
+<td class="text-right"><p>0.171473</p></td>
+<td class="text-right"><p>0.089013</p></td>
+<td class="text-right"><p>0.805661</p></td>
+<td class="text-right"><p>-0.688712</p></td>
+<td class="text-right"><p>-0.43125</p></td>
+<td class="text-right"><p>-0.366237</p></td>
+<td class="text-right"><p>0.526664</p></td>
+<td class="text-right"><p>0.631681</p></td>
+<td class="text-right"><p>0.544076</p></td>
+<td class="text-right"><p>-0.319939</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>112.68</p></td>
+<td class="text-right"><p>-7.03791</p></td>
+<td class="text-right"><p>0.0373183</p></td>
+<td class="text-right"><p>0.0679005</p></td>
+<td class="text-right"><p>0.0385076</p></td>
+<td class="text-right"><p>0.0710112</p></td>
+<td class="text-right"><p>0.239585</p></td>
+<td class="text-right"><p>0.329603</p></td>
+<td class="text-right"><p>0.284292</p></td>
+<td class="text-right"><p>0.339163</p></td>
+<td class="text-right"><p>0.0996959</p></td>
+<td class="text-right"><p>0.0511951</p></td>
+<td class="text-right"><p>0.761415</p></td>
+<td class="text-right"><p>-0.614413</p></td>
+<td class="text-right"><p>-0.189714</p></td>
+<td class="text-right"><p>-0.480734</p></td>
+<td class="text-right"><p>0.600278</p></td>
+<td class="text-right"><p>0.497358</p></td>
+<td class="text-right"><p>0.448076</p></td>
+<td class="text-right"><p>-0.398872</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>5</p></td>
+<td class="text-left"><p>Perairan Terbuka (Laut)</p></td>
+<td class="text-right"><p>17</p></td>
+<td class="text-right"><p>114.574</p></td>
+<td class="text-right"><p>-7.07992</p></td>
+<td class="text-right"><p>0.0412647</p></td>
+<td class="text-right"><p>0.0458061</p></td>
+<td class="text-right"><p>0.0298306</p></td>
+<td class="text-right"><p>0.037196</p></td>
+<td class="text-right"><p>0.0415861</p></td>
+<td class="text-right"><p>0.0309907</p></td>
+<td class="text-right"><p>0.0344325</p></td>
+<td class="text-right"><p>0.0416916</p></td>
+<td class="text-right"><p>0.0185456</p></td>
+<td class="text-right"><p>0.00944939</p></td>
+<td class="text-right"><p>0.0716092</p></td>
+<td class="text-right"><p>0.141748</p></td>
+<td class="text-right"><p>0.423617</p></td>
+<td class="text-right"><p>-0.299876</p></td>
+<td class="text-right"><p>-0.0385813</p></td>
+<td class="text-right"><p>0.0127273</p></td>
+<td class="text-right"><p>0.0122332</p></td>
+<td class="text-right"><p>-0.2202</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -675,6 +827,7 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<p><img alt="Jumlah Data per Kelas Lahan" src="_images/jumlah_data_per_kelas.png" /></p>
 </section>
 <section id="statistik-deskriptif-fitur">
 <h3>4.2 Statistik Deskriptif Fitur<a class="headerlink" href="#statistik-deskriptif-fitur" title="Link to this heading">#</a></h3>
@@ -686,6 +839,351 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Rata-rata fitur per kelas:&quot;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;kelas&quot;</span><span class="p">)[</span><span class="n">FITUR</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
 </pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p></p></th>
+<th class="head text-right"><p>count</p></th>
+<th class="head text-right"><p>mean</p></th>
+<th class="head text-right"><p>std</p></th>
+<th class="head text-right"><p>min</p></th>
+<th class="head text-right"><p>25%</p></th>
+<th class="head text-right"><p>50%</p></th>
+<th class="head text-right"><p>75%</p></th>
+<th class="head text-right"><p>max</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>B2</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0523</p></td>
+<td class="text-right"><p>0.0282</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.033</p></td>
+<td class="text-right"><p>0.0462</p></td>
+<td class="text-right"><p>0.0642</p></td>
+<td class="text-right"><p>0.1354</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B3</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0726</p></td>
+<td class="text-right"><p>0.0305</p></td>
+<td class="text-right"><p>0.003</p></td>
+<td class="text-right"><p>0.0515</p></td>
+<td class="text-right"><p>0.0668</p></td>
+<td class="text-right"><p>0.0895</p></td>
+<td class="text-right"><p>0.1655</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B4</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0604</p></td>
+<td class="text-right"><p>0.0444</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.029</p></td>
+<td class="text-right"><p>0.0432</p></td>
+<td class="text-right"><p>0.0777</p></td>
+<td class="text-right"><p>0.1771</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B5</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.097</p></td>
+<td class="text-right"><p>0.0479</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0492</p></td>
+<td class="text-right"><p>0.1006</p></td>
+<td class="text-right"><p>0.1339</p></td>
+<td class="text-right"><p>0.2059</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B6</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1681</p></td>
+<td class="text-right"><p>0.1022</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0394</p></td>
+<td class="text-right"><p>0.201</p></td>
+<td class="text-right"><p>0.2559</p></td>
+<td class="text-right"><p>0.3178</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B7</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1933</p></td>
+<td class="text-right"><p>0.1252</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0385</p></td>
+<td class="text-right"><p>0.2218</p></td>
+<td class="text-right"><p>0.2941</p></td>
+<td class="text-right"><p>0.387</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B8</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1911</p></td>
+<td class="text-right"><p>0.1244</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0327</p></td>
+<td class="text-right"><p>0.2275</p></td>
+<td class="text-right"><p>0.2969</p></td>
+<td class="text-right"><p>0.3697</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B8A</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2115</p></td>
+<td class="text-right"><p>0.137</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0383</p></td>
+<td class="text-right"><p>0.243</p></td>
+<td class="text-right"><p>0.3282</p></td>
+<td class="text-right"><p>0.4147</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B11</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1406</p></td>
+<td class="text-right"><p>0.0947</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.1695</p></td>
+<td class="text-right"><p>0.2192</p></td>
+<td class="text-right"><p>0.2969</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B12</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0947</p></td>
+<td class="text-right"><p>0.0829</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.024</p></td>
+<td class="text-right"><p>0.078</p></td>
+<td class="text-right"><p>0.1282</p></td>
+<td class="text-right"><p>0.2774</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>NDVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.3218</p></td>
+<td class="text-right"><p>0.4991</p></td>
+<td class="text-right"><p>-0.9651</p></td>
+<td class="text-right"><p>0.0325</p></td>
+<td class="text-right"><p>0.5115</p></td>
+<td class="text-right"><p>0.7609</p></td>
+<td class="text-right"><p>0.9931</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>NDWI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.2214</p></td>
+<td class="text-right"><p>0.5058</p></td>
+<td class="text-right"><p>-0.9256</p></td>
+<td class="text-right"><p>-0.6318</p></td>
+<td class="text-right"><p>-0.4195</p></td>
+<td class="text-right"><p>0.1226</p></td>
+<td class="text-right"><p>0.9758</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>MNDWI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1254</p></td>
+<td class="text-right"><p>0.4741</p></td>
+<td class="text-right"><p>-0.857</p></td>
+<td class="text-right"><p>-0.4514</p></td>
+<td class="text-right"><p>-0.3418</p></td>
+<td class="text-right"><p>0.1598</p></td>
+<td class="text-right"><p>0.9724</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>NDBI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1354</p></td>
+<td class="text-right"><p>0.3602</p></td>
+<td class="text-right"><p>-0.9637</p></td>
+<td class="text-right"><p>-0.3699</p></td>
+<td class="text-right"><p>-0.1441</p></td>
+<td class="text-right"><p>0.1377</p></td>
+<td class="text-right"><p>0.95</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>NDRE</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1521</p></td>
+<td class="text-right"><p>0.4112</p></td>
+<td class="text-right"><p>-0.9746</p></td>
+<td class="text-right"><p>-0.0104</p></td>
+<td class="text-right"><p>0.2867</p></td>
+<td class="text-right"><p>0.489</p></td>
+<td class="text-right"><p>0.9406</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>EVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2575</p></td>
+<td class="text-right"><p>0.263</p></td>
+<td class="text-right"><p>-0.1403</p></td>
+<td class="text-right"><p>0.0086</p></td>
+<td class="text-right"><p>0.2035</p></td>
+<td class="text-right"><p>0.5042</p></td>
+<td class="text-right"><p>0.8064</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>SAVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2286</p></td>
+<td class="text-right"><p>0.2302</p></td>
+<td class="text-right"><p>-0.1552</p></td>
+<td class="text-right"><p>0.0089</p></td>
+<td class="text-right"><p>0.199</p></td>
+<td class="text-right"><p>0.4705</p></td>
+<td class="text-right"><p>0.5823</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>BSI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1226</p></td>
+<td class="text-right"><p>0.2445</p></td>
+<td class="text-right"><p>-0.8749</p></td>
+<td class="text-right"><p>-0.3083</p></td>
+<td class="text-right"><p>-0.1202</p></td>
+<td class="text-right"><p>0.0972</p></td>
+<td class="text-right"><p>0.4942</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Rata-rata fitur per kelas:</strong></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>kelas</p></th>
+<th class="head text-right"><p>B2</p></th>
+<th class="head text-right"><p>B3</p></th>
+<th class="head text-right"><p>B4</p></th>
+<th class="head text-right"><p>B5</p></th>
+<th class="head text-right"><p>B6</p></th>
+<th class="head text-right"><p>B7</p></th>
+<th class="head text-right"><p>B8</p></th>
+<th class="head text-right"><p>B8A</p></th>
+<th class="head text-right"><p>B11</p></th>
+<th class="head text-right"><p>B12</p></th>
+<th class="head text-right"><p>NDVI</p></th>
+<th class="head text-right"><p>NDWI</p></th>
+<th class="head text-right"><p>MNDWI</p></th>
+<th class="head text-right"><p>NDBI</p></th>
+<th class="head text-right"><p>NDRE</p></th>
+<th class="head text-right"><p>EVI</p></th>
+<th class="head text-right"><p>SAVI</p></th>
+<th class="head text-right"><p>BSI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Bangunan</p></td>
+<td class="text-right"><p>0.099</p></td>
+<td class="text-right"><p>0.122</p></td>
+<td class="text-right"><p>0.141</p></td>
+<td class="text-right"><p>0.159</p></td>
+<td class="text-right"><p>0.17</p></td>
+<td class="text-right"><p>0.179</p></td>
+<td class="text-right"><p>0.181</p></td>
+<td class="text-right"><p>0.201</p></td>
+<td class="text-right"><p>0.261</p></td>
+<td class="text-right"><p>0.242</p></td>
+<td class="text-right"><p>0.122</p></td>
+<td class="text-right"><p>-0.195</p></td>
+<td class="text-right"><p>-0.363</p></td>
+<td class="text-right"><p>0.182</p></td>
+<td class="text-right"><p>0.064</p></td>
+<td class="text-right"><p>0.079</p></td>
+<td class="text-right"><p>0.071</p></td>
+<td class="text-right"><p>0.18</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Danau</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.05</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.039</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.029</p></td>
+<td class="text-right"><p>0.022</p></td>
+<td class="text-right"><p>0.027</p></td>
+<td class="text-right"><p>0.023</p></td>
+<td class="text-right"><p>0.013</p></td>
+<td class="text-right"><p>-0.173</p></td>
+<td class="text-right"><p>0.41</p></td>
+<td class="text-right"><p>0.407</p></td>
+<td class="text-right"><p>-0.013</p></td>
+<td class="text-right"><p>-0.308</p></td>
+<td class="text-right"><p>-0.02</p></td>
+<td class="text-right"><p>-0.024</p></td>
+<td class="text-right"><p>-0.004</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>0.038</p></td>
+<td class="text-right"><p>0.058</p></td>
+<td class="text-right"><p>0.04</p></td>
+<td class="text-right"><p>0.096</p></td>
+<td class="text-right"><p>0.282</p></td>
+<td class="text-right"><p>0.352</p></td>
+<td class="text-right"><p>0.338</p></td>
+<td class="text-right"><p>0.378</p></td>
+<td class="text-right"><p>0.18</p></td>
+<td class="text-right"><p>0.089</p></td>
+<td class="text-right"><p>0.789</p></td>
+<td class="text-right"><p>-0.708</p></td>
+<td class="text-right"><p>-0.516</p></td>
+<td class="text-right"><p>-0.305</p></td>
+<td class="text-right"><p>0.558</p></td>
+<td class="text-right"><p>0.584</p></td>
+<td class="text-right"><p>0.508</p></td>
+<td class="text-right"><p>-0.262</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.063</p></td>
+<td class="text-right"><p>0.028</p></td>
+<td class="text-right"><p>0.101</p></td>
+<td class="text-right"><p>0.26</p></td>
+<td class="text-right"><p>0.298</p></td>
+<td class="text-right"><p>0.299</p></td>
+<td class="text-right"><p>0.333</p></td>
+<td class="text-right"><p>0.11</p></td>
+<td class="text-right"><p>0.048</p></td>
+<td class="text-right"><p>0.833</p></td>
+<td class="text-right"><p>-0.653</p></td>
+<td class="text-right"><p>-0.275</p></td>
+<td class="text-right"><p>-0.462</p></td>
+<td class="text-right"><p>0.496</p></td>
+<td class="text-right"><p>0.559</p></td>
+<td class="text-right"><p>0.492</p></td>
+<td class="text-right"><p>-0.412</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Perairan Terbuka (Laut)</p></td>
+<td class="text-right"><p>0.054</p></td>
+<td class="text-right"><p>0.049</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.034</p></td>
+<td class="text-right"><p>0.021</p></td>
+<td class="text-right"><p>0.021</p></td>
+<td class="text-right"><p>0.02</p></td>
+<td class="text-right"><p>0.022</p></td>
+<td class="text-right"><p>0.012</p></td>
+<td class="text-right"><p>0.014</p></td>
+<td class="text-right"><p>-0.258</p></td>
+<td class="text-right"><p>0.442</p></td>
+<td class="text-right"><p>0.595</p></td>
+<td class="text-right"><p>-0.171</p></td>
+<td class="text-right"><p>-0.28</p></td>
+<td class="text-right"><p>-0.031</p></td>
+<td class="text-right"><p>-0.031</p></td>
+<td class="text-right"><p>-0.262</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Sawah</p></td>
+<td class="text-right"><p>0.048</p></td>
+<td class="text-right"><p>0.079</p></td>
+<td class="text-right"><p>0.068</p></td>
+<td class="text-right"><p>0.129</p></td>
+<td class="text-right"><p>0.229</p></td>
+<td class="text-right"><p>0.267</p></td>
+<td class="text-right"><p>0.27</p></td>
+<td class="text-right"><p>0.29</p></td>
+<td class="text-right"><p>0.21</p></td>
+<td class="text-right"><p>0.12</p></td>
+<td class="text-right"><p>0.599</p></td>
+<td class="text-right"><p>-0.55</p></td>
+<td class="text-right"><p>-0.457</p></td>
+<td class="text-right"><p>-0.124</p></td>
+<td class="text-right"><p>0.355</p></td>
+<td class="text-right"><p>0.388</p></td>
+<td class="text-right"><p>0.361</p></td>
+<td class="text-right"><p>-0.065</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="tanda-tangan-spektral-spectral-signature">
@@ -712,9 +1210,29 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<p><img alt="Tanda tangan spektral rata-rata per kelas" src="_images/spectral_signature.png" /></p>
+</section>
+<section id="sebaran-indeks-spektral-per-kelas">
+<h3>4.4 Sebaran Indeks Spektral per Kelas<a class="headerlink" href="#sebaran-indeks-spektral-per-kelas" title="Link to this heading">#</a></h3>
+<p><em>Boxplot</em> menunjukkan seberapa baik sebuah indeks memisahkan kelas. Indeks yang kotaknya tidak saling tumpang tindih antar kelas adalah pembeda yang baik.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">INDEKS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NDVI&#39;</span><span class="p">,</span> <span class="s1">&#39;NDWI&#39;</span><span class="p">,</span> <span class="s1">&#39;MNDWI&#39;</span><span class="p">,</span> <span class="s1">&#39;NDBI&#39;</span><span class="p">,</span> <span class="s1">&#39;NDRE&#39;</span><span class="p">,</span> <span class="s1">&#39;EVI&#39;</span><span class="p">,</span> <span class="s1">&#39;SAVI&#39;</span><span class="p">,</span> <span class="s1">&#39;BSI&#39;</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">INDEKS</span><span class="p">):</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;kelas&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="Sebaran Indeks Spektral per Kelas" src="_images/sebaran_indeks.png" /></p>
 </section>
 <section id="korelasi-antar-fitur">
-<h3>4.4 Korelasi Antar Fitur<a class="headerlink" href="#korelasi-antar-fitur" title="Link to this heading">#</a></h3>
+<h3>4.5 Korelasi Antar Fitur<a class="headerlink" href="#korelasi-antar-fitur" title="Link to this heading">#</a></h3>
 <p>Melihat hubungan (<em>redundansi</em>) antar fitur yang berdekatan.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">FITUR</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;coolwarm&quot;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.1f&quot;</span><span class="p">,</span>
@@ -724,6 +1242,7 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<p><img alt="Matriks korelasi antar fitur" src="_images/korelasi_fitur.png" /></p>
 </section>
 </section>
 <hr class="docutils" />
@@ -803,6 +1322,21 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Laporan Klasifikasi:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="n">NAMA_KELAS</span><span class="p">))</span>
 </pre></div>
 </div>
+<p><strong>Laporan Klasifikasi:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                         precision    recall  f1-score   support
+
+                  Sawah       1.00      1.00      1.00        20
+               Bangunan       1.00      1.00      1.00        20
+               Mangrove       1.00      1.00      1.00        16
+            Lahan Hijau       1.00      1.00      1.00        16
+Perairan Terbuka (Laut)       0.82      0.88      0.85        16
+                  Danau       0.87      0.81      0.84        16
+
+               accuracy                           0.95       104
+              macro avg       0.95      0.95      0.95       104
+           weighted avg       0.95      0.95      0.95       104
+</pre></div>
+</div>
 <section id="confusion-matrix">
 <h3>5.1 Confusion Matrix<a class="headerlink" href="#confusion-matrix" title="Link to this heading">#</a></h3>
 <p><em>Confusion matrix</em> memperlihatkan dengan jelas kelas mana yang berhasil diprediksi dengan sempurna dan mana yang masih saling tertukar (misalnya antara Sawah dan Lahan Hijau karena sama-sama berupa tutupan vegetasi).</p>
@@ -816,6 +1350,7 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+<p><img alt="Confusion Matrix - Random Forest" src="_images/confusion_matrix.png" /></p>
 </section>
 </section>
 <hr class="docutils" />
@@ -839,6 +1374,33 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hasil_rasio</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 </pre></div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Rasio train:test</p></th>
+<th class="head text-right"><p>Akurasi rata-rata</p></th>
+<th class="head text-right"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>90:10</p></td>
+<td class="text-right"><p>0.9519</p></td>
+<td class="text-right"><p>0.0232</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>80:20</p></td>
+<td class="text-right"><p>0.9442</p></td>
+<td class="text-right"><p>0.0148</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>70:30</p></td>
+<td class="text-right"><p>0.9468</p></td>
+<td class="text-right"><p>0.0058</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>60:40</p></td>
+<td class="text-right"><p>0.9495</p></td>
+<td class="text-right"><p>0.0084</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="eksperimen-kombinasi-fitur">
 <h3>6.2 Eksperimen Kombinasi Fitur<a class="headerlink" href="#eksperimen-kombinasi-fitur" title="Link to this heading">#</a></h3>
@@ -861,6 +1423,38 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">hasil_fitur</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;Akurasi CV&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 </pre></div>
 </div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Skenario</p></th>
+<th class="head text-right"><p>Jumlah fitur</p></th>
+<th class="head text-right"><p>Akurasi CV</p></th>
+<th class="head text-right"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>B. 10 band Sentinel-2A</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9538</p></td>
+<td class="text-right"><p>0.0133</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>D. Band + indeks (18 fitur)</p></td>
+<td class="text-right"><p>18</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>C. 8 indeks spektral</p></td>
+<td class="text-right"><p>8</p></td>
+<td class="text-right"><p>0.9069</p></td>
+<td class="text-right"><p>0.0282</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>A. 4 band 10 m (B2,B3,B4,B8)</p></td>
+<td class="text-right"><p>4</p></td>
+<td class="text-right"><p>0.8635</p></td>
+<td class="text-right"><p>0.0309</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="eksperimen-parameter-grid-search">
 <h3>6.3 Eksperimen Parameter (Grid Search)<a class="headerlink" href="#eksperimen-parameter-grid-search" title="Link to this heading">#</a></h3>
@@ -872,6 +1466,78 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter terbaik: </span><span class="si">{</span><span class="n">grid</span><span class="o">.</span><span class="n">best_params_</span><span class="si">}</span><span class="s2"> | Akurasi CV: </span><span class="si">{</span><span class="n">grid</span><span class="o">.</span><span class="n">best_score_</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>param_n_estimators</p></th>
+<th class="head text-right"><p>param_max_depth</p></th>
+<th class="head text-right"><p>mean_test_score</p></th>
+<th class="head text-right"><p>std_test_score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9462</p></td>
+<td class="text-right"><p>0.0136</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0124</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9412</p></td>
+<td class="text-right"><p>0.0152</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9446</p></td>
+<td class="text-right"><p>0.0137</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9473</p></td>
+<td class="text-right"><p>0.0139</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9458</p></td>
+<td class="text-right"><p>0.0138</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9473</p></td>
+<td class="text-right"><p>0.0154</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9496</p></td>
+<td class="text-right"><p>0.0119</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9462</p></td>
+<td class="text-right"><p>0.0136</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0124</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </section>
 <section id="model-final">
@@ -1178,7 +1844,8 @@ Berikut adalah kode untuk memuat latar belakang satelit (<em>basemap</em>) resol
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#jumlah-data-per-kelas">4.1 Jumlah Data per Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik-deskriptif-fitur">4.2 Statistik Deskriptif Fitur</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tanda-tangan-spektral-spectral-signature">4.3 Tanda Tangan Spektral (Spectral Signature)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-antar-fitur">4.4 Korelasi Antar Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sebaran-indeks-spektral-per-kelas">4.4 Sebaran Indeks Spektral per Kelas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#korelasi-antar-fitur">4.5 Korelasi Antar Fitur</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-random-forest-dan-evaluasi">5. Pemodelan (Random Forest) dan Evaluasi</a><ul class="nav section-nav flex-column">
