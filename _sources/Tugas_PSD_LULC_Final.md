@@ -6,7 +6,7 @@
 Materi ini berisi alur lengkap: **pemahaman data → pengumpulan data → deskripsi fitur → eksplorasi data → pemodelan Random Forest → eksperimen → peta hasil klasifikasi**. Setiap tahap disertai penjelasan agar mudah diikuti.
 
 **Daftar isi**
-1. Data Understanding (tujuan analisis, acuan klasifikasi, wilayah, kelas, band Sentinel-2A)
+1. Data Understanding (tujuan analisis, acuan klasifikasi, wilayah, kelas, band Sentinel-2A, pendekatan Pixel-based vs Poligon)
 2. Data Collection (persiapan lingkungan, pembacaan shapefile, penentuan sampel, ekstraksi citra)
 3. Deskripsi Fitur dan Rumusnya
 4. Eksplorasi Data (EDA)
@@ -54,12 +54,32 @@ Sentinel-2A membawa sensor MSI (MultiSpectral Instrument) dengan 13 band. Band y
 | B11 | SWIR 1 | 20 m | Kelembapan vegetasi/tanah, area terbangun |
 | B12 | SWIR 2 | 20 m | Tanah terbuka, area terbangun |
 
+### 1.5 Pendekatan Metodologi: Pixel-Based Classification vs Polygon (ROI)
+Dalam penginderaan jauh (*remote sensing*) dan klasifikasi tutupan lahan (LULC), terdapat dua paradigma utama: **Pixel-Based** (berbasis piksel) dan **Object-Based / OBIA** (berbasis segmen objek/poligon). Proyek ini menggunakan **pendekatan klasifikasi berbasis piksel (*Pixel-based Classification*)**, dengan memanfaatkan **poligon shapefile sebagai area referensi (*Region of Interest / ROI*)**.
+
+Perbedaan peran poligon dan piksel pada proyek ini diuraikan sebagai berikut:
+
+| Aspek | Peran Poligon (*Polygon ROI*) | Peran Piksel (*Pixel Unit*) |
+|---|---|---|
+| **Tahap Penggunaan** | Tahap Pengumpulan Sampel (*Data Collection & Ground Truth*) | Tahap Ekstraksi Fitur, Pelatihan Model (*Training*), dan Inferensi Peta (*Inference*) |
+| **Fungsi Utama** | Sebagai batas delimitasi area referensi kebenaran lapangan (*ground truth*) di QGIS agar sampel tidak keliru kelas. | Sebagai unit observasi terkecil yang diekstrak nilai pantulannya (10 band + 8 indeks) untuk diinput ke model Machine Learning. |
+| **Unit Analisis** | Area poligon vektor (`.shp` / `.qgz`). | Grid raster resolusi spasial 10 m $\times$ 10 m. |
+| **Representasi Data** | Kumpulan koordinat batas poligon. | Satu baris data pada dataset CSV dengan 18 fitur spektral per piksel. |
+| **Output Akhir** | Bukan unit prediksi model. | Prediksi label tutupan lahan dilakukan **piksel demi piksel** pada seluruh grid area studi. |
+
+```{admonition} Mengapa Memilih Pixel-Based dengan Sampling Poligon?
+:class: tip
+1. **Efisiensi Komputasi:** Klasifikasi piksel dapat dieksekusi secara cepat oleh algoritma Random Forest tabular tanpa memerlukan tahapan segmentasi citra multiresolusi yang kompleks dan berat.
+2. **Kesesuaian Resolusi Sentinel-2A:** Resolusi spasial 10 meter Sentinel-2A sangat ideal untuk menangkap variasi spektral piksel individual pada bentang alam homogen maupun heterogen.
+3. **Akurasi Ground Truth:** Menggambar poligon ROI di QGIS memastikan bahwa titik-titik sampel piksel yang diekstraksi benar-benar murni (*pure pixels*) mewakili kelas lahan target.
+```
+
 ---
 
 ## 2. Data Collection
 
 Bagian ini menjelaskan bagaimana data citra satelit mentah dapat diekstrak menjadi tabel dataset. Alur utamanya:
-`Shapefile (6 kelas) -> titik sampel -> ekstraksi nilai band Sentinel-2A (Copernicus) -> hitung indeks spektral -> dataset fitur (CSV)`
+`Poligon ROI (Shapefile 6 kelas) -> Titik Sampel Representatif -> Ekstraksi Nilai Spektral Piksel Sentinel-2A (Copernicus) -> Hitung Indeks Spektral -> Dataset Fitur Piksel (CSV)`
 
 ### 2.1 Persiapan Lingkungan dan Konfigurasi
 Citra diambil dari **Copernicus Data Space Ecosystem (CDSE)** melalui layanan **Sentinel Hub Process API** (gratis dengan kuota bulanan). Layanan ini mengolah citra di server Copernicus (masking awan dan komposit median), sehingga kita hanya perlu mengunduh nilai piksel yang dibutuhkan dan tidak perlu mengunduh file citra mentah berukuran ratusan MB.
@@ -681,3 +701,4 @@ Melalui eksperimen dengan model **Random Forest** dan klasifikasi berdasar 6 kel
 1. **Jumlah sampel:** Penambahan sampel, terutama untuk kelas minoritas laut dan mangrove akan memperkuat kemampuan prediksi.
 2. **Kemiripan spektral:** Pasangan kelas "Sawah vs Lahan Hijau" (sama-sama vegetasi) adalah yang paling berpotensi tertukar. Hal ini terkonfirmasi dari *Confusion Matrix*.
 3. **Model Terpilih:** Random Forest berhasil mempelajari interaksi antar band (seperti B8A) dan indeks spektral (NDVI, EVI) lebih tangguh untuk klasifikasi tutupan lahan kompleks.
+4. **Pendekatan Metodologi:** Klasifikasi berbasis piksel (*pixel-based*) yang dipadukan dengan area referensi poligon (*polygon ground-truth ROI*) terbukti sangat efisien dan akurat untuk memetakan mosaik bentang alam Jawa Timur pada resolusi 10 m tanpa memerlukan beban komputasi segmentasi citra yang berat (*OBIA*).
