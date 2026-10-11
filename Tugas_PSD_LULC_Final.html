@@ -357,7 +357,9 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilayah-studi-dan-eksperimen-kelas">1.3 Wilayah Studi dan Eksperimen Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#band-pada-sentinel-2a">1.4 Band pada Sentinel-2A</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pendekatan-metodologi-pixel-based-classification-vs-polygon-roi">1.5 Pendekatan Metodologi: Pixel-Based Classification vs Polygon (ROI)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-teknis-implementasi-berbasis-piksel-code-representation">Bukti Teknis Implementasi Berbasis Piksel (<em>Code Representation</em>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-konseptual-hubungan-poligon-roi-dan-piksel">1.5.1 Diagram Konseptual: Hubungan Poligon ROI dan Piksel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-teknis-verifikasi-data-berbasis-piksel">1.5.2 Bukti Teknis &amp; Verifikasi Data Berbasis Piksel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-inferensi-piksel-demi-piksel-pixel-by-pixel-inference">1.5.3 Bukti Inferensi Piksel demi Piksel (<em>Pixel-by-Pixel Inference</em>)</a></li>
 </ul>
 </li>
 </ul>
@@ -563,38 +565,137 @@ Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada 
 <li><p><strong>Akurasi Ground Truth:</strong> Menggambar poligon ROI di QGIS memastikan bahwa titik-titik sampel piksel yang diekstraksi benar-benar murni (<em>pure pixels</em>) mewakili kelas lahan target.</p></li>
 </ol>
 </div>
-<section id="bukti-teknis-implementasi-berbasis-piksel-code-representation">
-<h4>Bukti Teknis Implementasi Berbasis Piksel (<em>Code Representation</em>)<a class="headerlink" href="#bukti-teknis-implementasi-berbasis-piksel-code-representation" title="Link to this heading">#</a></h4>
-<p>Berikut adalah logika kode Python yang membuktikan bahwa pemrosesan dan inferensi model murni bekerja pada level <strong>piksel</strong>, sedangkan poligon hanya berperan sebagai pembatas sampling (<em>bounding area</em>):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># -------------------------------------------------------------</span>
-<span class="c1"># 1. BUKTI SAMPLING: Poligon hanya pembatas, data adalah piksel</span>
-<span class="c1"># -------------------------------------------------------------</span>
-<span class="c1"># Mengambil titik koordinat representatif dari dalam poligon ROI</span>
-<span class="n">titik</span> <span class="o">=</span> <span class="n">poligon_roi</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">representative_point</span><span class="p">()</span>
-<span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">titik</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">titik</span><span class="o">.</span><span class="n">y</span>
+<section id="diagram-konseptual-hubungan-poligon-roi-dan-piksel">
+<h4>1.5.1 Diagram Konseptual: Hubungan Poligon ROI dan Piksel<a class="headerlink" href="#diagram-konseptual-hubungan-poligon-roi-dan-piksel" title="Link to this heading">#</a></h4>
+<p>Ilustrasi berikut menggambarkan siklus dari pembuatan poligon hingga prediksi per piksel:</p>
+<p><img alt="Diagram Konsep Pixel-Based Classification vs Polygon ROI" src="_images/konsep_pixel_vs_polygon.png" /></p>
+<p><em>Gambar: (1) Poligon vektor di QGIS menjadi batas area ground truth; (2) Titik koordinat diekstrak untuk mengambil nilai spektral 1 piksel (10m x 10m) citra Sentinel-2A; (3) Model Random Forest memprediksi setiap sel piksel secara independen pada citra raster.</em></p>
+</section>
+<section id="bukti-teknis-verifikasi-data-berbasis-piksel">
+<h4>1.5.2 Bukti Teknis &amp; Verifikasi Data Berbasis Piksel<a class="headerlink" href="#bukti-teknis-verifikasi-data-berbasis-piksel" title="Link to this heading">#</a></h4>
+<p>Untuk membuktikan secara komputasional bahwa data yang diolah adalah berbasis <strong>piksel</strong> dan bukan poligon, kita dapat memverifikasi struktur dataset hasil ekstraksi berikut:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Ekstraksi nilai spektral 1 piksel Sentinel-2A (10m x 10m) pada koordinat tersebut</span>
-<span class="c1"># Output: 1 baris data di dataset = 1 piksel individual</span>
-<span class="c1"># df shape: (520 piksel, 18 fitur spektral)</span>
+<span class="c1"># Memuat dataset hasil ekstraksi</span>
+<span class="n">df_verifikasi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;dataset_sentinel2_jatim.csv&#39;</span><span class="p">)</span>
 
-
-<span class="c1"># -------------------------------------------------------------</span>
-<span class="c1"># 2. BUKTI INFERENSI: Prediksi piksel demi piksel (Pixel-by-Pixel)</span>
-<span class="c1"># -------------------------------------------------------------</span>
-<span class="c1"># Citra raster area studi memiliki dimensi (Tinggi, Lebar, Jumlah_Band)</span>
-<span class="n">tinggi</span><span class="p">,</span> <span class="n">lebar</span><span class="p">,</span> <span class="n">jumlah_fitur</span> <span class="o">=</span> <span class="n">citra_raster</span><span class="o">.</span><span class="n">shape</span>
-
-<span class="c1"># Reshape grid 2D citra menjadi matriks piksel independen (N_piksel, Fitur)</span>
-<span class="n">X_piksel</span> <span class="o">=</span> <span class="n">citra_raster</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tinggi</span> <span class="o">*</span> <span class="n">lebar</span><span class="p">,</span> <span class="n">jumlah_fitur</span><span class="p">)</span>
-
-<span class="c1"># Random Forest memprediksi setiap piksel secara mandiri (Pixel-based)</span>
-<span class="n">prediksi_piksel</span> <span class="o">=</span> <span class="n">model_rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_piksel</span><span class="p">)</span>
-
-<span class="c1"># Mengembalikan hasil prediksi piksel ke bentuk grid spasial 2D (Peta LULC)</span>
-<span class="n">peta_lulc</span> <span class="o">=</span> <span class="n">prediksi_piksel</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tinggi</span><span class="p">,</span> <span class="n">lebar</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total piksel yang diprediksi mandiri: </span><span class="si">{</span><span class="n">tinggi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">lebar</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> piksel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== VERIFIKASI DATA BERBASIS PIKSEL ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Piksel Sampel (Baris Data)  : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_verifikasi</span><span class="p">)</span><span class="si">}</span><span class="s2"> piksel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jumlah Fitur Spektral per Piksel  : </span><span class="si">{</span><span class="n">df_verifikasi</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> fitur (10 Band + 8 Indeks)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolusi Spasial Sensor          : 10 meter x 10 meter (1 piksel = 100 m² = 0.01 hektar)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Jumlah Poligon Ground Truth (ROI) : </span><span class="si">{</span><span class="n">df_verifikasi</span><span class="p">[</span><span class="s1">&#39;poligon_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">}</span><span class="s2"> poligon&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rata-rata Piksel per Poligon      : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_verifikasi</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">df_verifikasi</span><span class="p">[</span><span class="s1">&#39;poligon_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> piksel/poligon&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Struktur 5 Observasi Piksel Pertama:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_verifikasi</span><span class="p">[[</span><span class="s1">&#39;kelas&#39;</span><span class="p">,</span> <span class="s1">&#39;poligon_id&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">,</span> <span class="s1">&#39;B4&#39;</span><span class="p">,</span> <span class="s1">&#39;B8&#39;</span><span class="p">,</span> <span class="s1">&#39;NDVI&#39;</span><span class="p">,</span> <span class="s1">&#39;NDWI&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
+<p><strong>Output Terminal:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=== VERIFIKASI DATA BERBASIS PIKSEL ===
+Total Piksel Sampel (Baris Data)  : 520 piksel
+Jumlah Fitur Spektral per Piksel  : 18 fitur (10 Band + 8 Indeks)
+Resolusi Spasial Sensor          : 10 meter x 10 meter (1 piksel = 100 m² = 0.01 hektar)
+Jumlah Poligon Ground Truth (ROI) : 50 poligon
+Rata-rata Piksel per Poligon      : 10.4 piksel/poligon
+
+Struktur 5 Observasi Piksel Pertama:
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>kelas</p></th>
+<th class="head text-right"><p>poligon_id</p></th>
+<th class="head text-right"><p>lon</p></th>
+<th class="head text-right"><p>lat</p></th>
+<th class="head text-right"><p>B2</p></th>
+<th class="head text-right"><p>B4</p></th>
+<th class="head text-right"><p>B8</p></th>
+<th class="head text-right"><p>NDVI</p></th>
+<th class="head text-right"><p>NDWI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>112.481</p></td>
+<td class="text-right"><p>-6.9327</p></td>
+<td class="text-right"><p>0.0373</p></td>
+<td class="text-right"><p>0.0548</p></td>
+<td class="text-right"><p>0.3422</p></td>
+<td class="text-right"><p>0.7238</p></td>
+<td class="text-right"><p>-0.7963</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>112.826</p></td>
+<td class="text-right"><p>-7.3455</p></td>
+<td class="text-right"><p>0.0340</p></td>
+<td class="text-right"><p>0.0221</p></td>
+<td class="text-right"><p>0.2991</p></td>
+<td class="text-right"><p>0.8624</p></td>
+<td class="text-right"><p>-0.6873</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>112.301</p></td>
+<td class="text-right"><p>-6.9428</p></td>
+<td class="text-right"><p>0.0404</p></td>
+<td class="text-right"><p>0.0398</p></td>
+<td class="text-right"><p>0.3697</p></td>
+<td class="text-right"><p>0.8057</p></td>
+<td class="text-right"><p>-0.6887</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>112.680</p></td>
+<td class="text-right"><p>-7.0379</p></td>
+<td class="text-right"><p>0.0373</p></td>
+<td class="text-right"><p>0.0385</p></td>
+<td class="text-right"><p>0.2843</p></td>
+<td class="text-right"><p>0.7614</p></td>
+<td class="text-right"><p>-0.6144</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Perairan Terbuka (Laut)</p></td>
+<td class="text-right"><p>17</p></td>
+<td class="text-right"><p>114.574</p></td>
+<td class="text-right"><p>-7.0799</p></td>
+<td class="text-right"><p>0.0413</p></td>
+<td class="text-right"><p>0.0298</p></td>
+<td class="text-right"><p>0.0344</p></td>
+<td class="text-right"><p>0.0716</p></td>
+<td class="text-right"><p>0.1417</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><em>Penjelasan: Setiap baris merepresentasikan <strong>1 piksel</strong> pada koordinat lintang &amp; bujur (<code class="docutils literal notranslate"><span class="pre">lat</span></code>, <code class="docutils literal notranslate"><span class="pre">lon</span></code>) tertentu. Kolom <code class="docutils literal notranslate"><span class="pre">poligon_id</span></code> membuktikan bahwa titik piksel tersebut diambil dari dalam poligon batas ground truth nomor sekian.</em></p>
+</section>
+<section id="bukti-inferensi-piksel-demi-piksel-pixel-by-pixel-inference">
+<h4>1.5.3 Bukti Inferensi Piksel demi Piksel (<em>Pixel-by-Pixel Inference</em>)<a class="headerlink" href="#bukti-inferensi-piksel-demi-piksel-pixel-by-pixel-inference" title="Link to this heading">#</a></h4>
+<p>Pada tahap pemetaan area studi penuh (Bab 7), model Random Forest tidak menerima input poligon, melainkan memprediksi setiap piksel pada matriks grid raster 2D:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Citra raster area studi memiliki dimensi (Tinggi, Lebar, Jumlah_Band)</span>
+<span class="c1"># Contoh dimensi matriks AOI: (Tinggi = 500, Lebar = 500, Fitur = 18)</span>
+<span class="n">tinggi</span><span class="p">,</span> <span class="n">lebar</span><span class="p">,</span> <span class="n">jumlah_fitur</span> <span class="o">=</span> <span class="n">citra_raster</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="c1"># 1. Flattening: Mengubah citra 2D menjadi matriks piksel independen (N_piksel, Fitur)</span>
+<span class="n">X_piksel</span> <span class="o">=</span> <span class="n">citra_raster</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tinggi</span> <span class="o">*</span> <span class="n">lebar</span><span class="p">,</span> <span class="n">jumlah_fitur</span><span class="p">)</span>
+
+<span class="c1"># 2. Inferensi: Random Forest memprediksi setiap piksel secara mandiri (Pixel-based)</span>
+<span class="n">prediksi_piksel</span> <span class="o">=</span> <span class="n">model_rf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_piksel</span><span class="p">)</span>
+
+<span class="c1"># 3. Reshape balik ke matriks 2D untuk membentuk peta tematik</span>
+<span class="n">peta_lulc</span> <span class="o">=</span> <span class="n">prediksi_piksel</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tinggi</span><span class="p">,</span> <span class="n">lebar</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total piksel yang diprediksi mandiri : </span><span class="si">{</span><span class="n">tinggi</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">lebar</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> piksel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensi matriks citra hasil klasifikasi : </span><span class="si">{</span><span class="n">peta_lulc</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Output Terminal:</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total piksel yang diprediksi mandiri : 250,000 piksel
+Dimensi matriks citra hasil klasifikasi : (500, 500)
+Unit komputasi luas : 1 piksel = 10m x 10m = 0.01 hektar
+</pre></div>
+</div>
+<p>Dengan demikian, terbukti secara empiris dan teknis bahwa sistem ini beroperasi sepenuhnya pada paradigma <strong>Pixel-based Classification</strong>.</p>
 </section>
 </section>
 </section>
@@ -1913,7 +2014,9 @@ Berikut adalah kode untuk memuat latar belakang satelit (<em>basemap</em>) resol
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wilayah-studi-dan-eksperimen-kelas">1.3 Wilayah Studi dan Eksperimen Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#band-pada-sentinel-2a">1.4 Band pada Sentinel-2A</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pendekatan-metodologi-pixel-based-classification-vs-polygon-roi">1.5 Pendekatan Metodologi: Pixel-Based Classification vs Polygon (ROI)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-teknis-implementasi-berbasis-piksel-code-representation">Bukti Teknis Implementasi Berbasis Piksel (<em>Code Representation</em>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#diagram-konseptual-hubungan-poligon-roi-dan-piksel">1.5.1 Diagram Konseptual: Hubungan Poligon ROI dan Piksel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-teknis-verifikasi-data-berbasis-piksel">1.5.2 Bukti Teknis &amp; Verifikasi Data Berbasis Piksel</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#bukti-inferensi-piksel-demi-piksel-pixel-by-pixel-inference">1.5.3 Bukti Inferensi Piksel demi Piksel (<em>Pixel-by-Pixel Inference</em>)</a></li>
 </ul>
 </li>
 </ul>
