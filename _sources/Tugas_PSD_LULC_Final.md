@@ -74,6 +74,40 @@ Perbedaan peran poligon dan piksel pada proyek ini diuraikan sebagai berikut:
 3. **Akurasi Ground Truth:** Menggambar poligon ROI di QGIS memastikan bahwa titik-titik sampel piksel yang diekstraksi benar-benar murni (*pure pixels*) mewakili kelas lahan target.
 ```
 
+#### Bukti Teknis Implementasi Berbasis Piksel (*Code Representation*)
+
+Berikut adalah logika kode Python yang membuktikan bahwa pemrosesan dan inferensi model murni bekerja pada level **piksel**, sedangkan poligon hanya berperan sebagai pembatas sampling (*bounding area*):
+
+```python
+# -------------------------------------------------------------
+# 1. BUKTI SAMPLING: Poligon hanya pembatas, data adalah piksel
+# -------------------------------------------------------------
+# Mengambil titik koordinat representatif dari dalam poligon ROI
+titik = poligon_roi.geometry.representative_point()
+lon, lat = titik.x, titik.y
+
+# Ekstraksi nilai spektral 1 piksel Sentinel-2A (10m x 10m) pada koordinat tersebut
+# Output: 1 baris data di dataset = 1 piksel individual
+# df shape: (520 piksel, 18 fitur spektral)
+
+
+# -------------------------------------------------------------
+# 2. BUKTI INFERENSI: Prediksi piksel demi piksel (Pixel-by-Pixel)
+# -------------------------------------------------------------
+# Citra raster area studi memiliki dimensi (Tinggi, Lebar, Jumlah_Band)
+tinggi, lebar, jumlah_fitur = citra_raster.shape
+
+# Reshape grid 2D citra menjadi matriks piksel independen (N_piksel, Fitur)
+X_piksel = citra_raster.reshape(tinggi * lebar, jumlah_fitur)
+
+# Random Forest memprediksi setiap piksel secara mandiri (Pixel-based)
+prediksi_piksel = model_rf.predict(X_piksel)
+
+# Mengembalikan hasil prediksi piksel ke bentuk grid spasial 2D (Peta LULC)
+peta_lulc = prediksi_piksel.reshape(tinggi, lebar)
+print(f"Total piksel yang diprediksi mandiri: {tinggi * lebar:,} piksel")
+```
+
 ---
 
 ## 2. Data Collection
