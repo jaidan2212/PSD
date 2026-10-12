@@ -183,7 +183,7 @@ folium.TileLayer(
     control=True
 ).add_to(m_laut)
 
-df_laut = df[y_pred == 5]
+df_laut = df.loc[X_test.index[y_pred == 5]]
 for idx, row in df_laut.iterrows():
     folium.CircleMarker(
         location=[row['lat'], row['lon']],
