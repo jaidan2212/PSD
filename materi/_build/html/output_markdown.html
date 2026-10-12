@@ -1,0 +1,1138 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2.4 Head &#8212; Tugas PSD</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'output_markdown';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Tugas PSD - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Tugas PSD - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap1_pengambilan_data_eda.html">Tahap 1 - Pengambilan Data &amp; Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap2_reduksi_dimensi.html">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap3_eksperimen_clustering.html">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap4_kmeans_knime_dan_visualisasi_peta.html">Pemodelan K-Means &amp; Visualisasi Peta Segmentasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas_PSD_LULC_Final.html">Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/output_markdown.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>2.4 Head</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2.4 Head</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik">4.2 Statistik</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report">5. Classification Report</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rasio">6.1 Rasio</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kombinasi-fitur">6.2 Kombinasi Fitur</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search">6.3 Grid Search</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="head">
+<h1>2.4 Head<a class="headerlink" href="#head" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>kelas_id</p></th>
+<th class="head text-left"><p>kelas</p></th>
+<th class="head text-right"><p>poligon_id</p></th>
+<th class="head text-right"><p>lon</p></th>
+<th class="head text-right"><p>lat</p></th>
+<th class="head text-right"><p>B2</p></th>
+<th class="head text-right"><p>B3</p></th>
+<th class="head text-right"><p>B4</p></th>
+<th class="head text-right"><p>B5</p></th>
+<th class="head text-right"><p>B6</p></th>
+<th class="head text-right"><p>B7</p></th>
+<th class="head text-right"><p>B8</p></th>
+<th class="head text-right"><p>B8A</p></th>
+<th class="head text-right"><p>B11</p></th>
+<th class="head text-right"><p>B12</p></th>
+<th class="head text-right"><p>NDVI</p></th>
+<th class="head text-right"><p>NDWI</p></th>
+<th class="head text-right"><p>MNDWI</p></th>
+<th class="head text-right"><p>NDBI</p></th>
+<th class="head text-right"><p>NDRE</p></th>
+<th class="head text-right"><p>EVI</p></th>
+<th class="head text-right"><p>SAVI</p></th>
+<th class="head text-right"><p>BSI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>112.481</p></td>
+<td class="text-right"><p>-6.9327</p></td>
+<td class="text-right"><p>0.0373284</p></td>
+<td class="text-right"><p>0.0387974</p></td>
+<td class="text-right"><p>0.054836</p></td>
+<td class="text-right"><p>0.0589178</p></td>
+<td class="text-right"><p>0.273305</p></td>
+<td class="text-right"><p>0.340697</p></td>
+<td class="text-right"><p>0.342223</p></td>
+<td class="text-right"><p>0.388425</p></td>
+<td class="text-right"><p>0.196901</p></td>
+<td class="text-right"><p>0.0793139</p></td>
+<td class="text-right"><p>0.723789</p></td>
+<td class="text-right"><p>-0.79635</p></td>
+<td class="text-right"><p>-0.670789</p></td>
+<td class="text-right"><p>-0.269551</p></td>
+<td class="text-right"><p>0.706248</p></td>
+<td class="text-right"><p>0.516409</p></td>
+<td class="text-right"><p>0.480548</p></td>
+<td class="text-right"><p>-0.202465</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>112.826</p></td>
+<td class="text-right"><p>-7.34553</p></td>
+<td class="text-right"><p>0.0340131</p></td>
+<td class="text-right"><p>0.055427</p></td>
+<td class="text-right"><p>0.0220972</p></td>
+<td class="text-right"><p>0.0963175</p></td>
+<td class="text-right"><p>0.277231</p></td>
+<td class="text-right"><p>0.28902</p></td>
+<td class="text-right"><p>0.299058</p></td>
+<td class="text-right"><p>0.33275</p></td>
+<td class="text-right"><p>0.133405</p></td>
+<td class="text-right"><p>0.0454954</p></td>
+<td class="text-right"><p>0.862389</p></td>
+<td class="text-right"><p>-0.687282</p></td>
+<td class="text-right"><p>-0.41295</p></td>
+<td class="text-right"><p>-0.383044</p></td>
+<td class="text-right"><p>0.51278</p></td>
+<td class="text-right"><p>0.588505</p></td>
+<td class="text-right"><p>0.505923</p></td>
+<td class="text-right"><p>-0.363443</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>4</p></td>
+<td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>112.301</p></td>
+<td class="text-right"><p>-6.94279</p></td>
+<td class="text-right"><p>0.0403789</p></td>
+<td class="text-right"><p>0.0681401</p></td>
+<td class="text-right"><p>0.039785</p></td>
+<td class="text-right"><p>0.11461</p></td>
+<td class="text-right"><p>0.273071</p></td>
+<td class="text-right"><p>0.330074</p></td>
+<td class="text-right"><p>0.369655</p></td>
+<td class="text-right"><p>0.37093</p></td>
+<td class="text-right"><p>0.171473</p></td>
+<td class="text-right"><p>0.089013</p></td>
+<td class="text-right"><p>0.805661</p></td>
+<td class="text-right"><p>-0.688712</p></td>
+<td class="text-right"><p>-0.43125</p></td>
+<td class="text-right"><p>-0.366237</p></td>
+<td class="text-right"><p>0.526664</p></td>
+<td class="text-right"><p>0.631681</p></td>
+<td class="text-right"><p>0.544076</p></td>
+<td class="text-right"><p>-0.319939</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>3</p></td>
+<td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>112.68</p></td>
+<td class="text-right"><p>-7.03791</p></td>
+<td class="text-right"><p>0.0373183</p></td>
+<td class="text-right"><p>0.0679005</p></td>
+<td class="text-right"><p>0.0385076</p></td>
+<td class="text-right"><p>0.0710112</p></td>
+<td class="text-right"><p>0.239585</p></td>
+<td class="text-right"><p>0.329603</p></td>
+<td class="text-right"><p>0.284292</p></td>
+<td class="text-right"><p>0.339163</p></td>
+<td class="text-right"><p>0.0996959</p></td>
+<td class="text-right"><p>0.0511951</p></td>
+<td class="text-right"><p>0.761415</p></td>
+<td class="text-right"><p>-0.614413</p></td>
+<td class="text-right"><p>-0.189714</p></td>
+<td class="text-right"><p>-0.480734</p></td>
+<td class="text-right"><p>0.600278</p></td>
+<td class="text-right"><p>0.497358</p></td>
+<td class="text-right"><p>0.448076</p></td>
+<td class="text-right"><p>-0.398872</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>5</p></td>
+<td class="text-left"><p>Perairan Terbuka (Laut)</p></td>
+<td class="text-right"><p>17</p></td>
+<td class="text-right"><p>114.574</p></td>
+<td class="text-right"><p>-7.07992</p></td>
+<td class="text-right"><p>0.0412647</p></td>
+<td class="text-right"><p>0.0458061</p></td>
+<td class="text-right"><p>0.0298306</p></td>
+<td class="text-right"><p>0.037196</p></td>
+<td class="text-right"><p>0.0415861</p></td>
+<td class="text-right"><p>0.0309907</p></td>
+<td class="text-right"><p>0.0344325</p></td>
+<td class="text-right"><p>0.0416916</p></td>
+<td class="text-right"><p>0.0185456</p></td>
+<td class="text-right"><p>0.00944939</p></td>
+<td class="text-right"><p>0.0716092</p></td>
+<td class="text-right"><p>0.141748</p></td>
+<td class="text-right"><p>0.423617</p></td>
+<td class="text-right"><p>-0.299876</p></td>
+<td class="text-right"><p>-0.0385813</p></td>
+<td class="text-right"><p>0.0127273</p></td>
+<td class="text-right"><p>0.0122332</p></td>
+<td class="text-right"><p>-0.2202</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="statistik">
+<h1>4.2 Statistik<a class="headerlink" href="#statistik" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p></p></th>
+<th class="head text-right"><p>count</p></th>
+<th class="head text-right"><p>mean</p></th>
+<th class="head text-right"><p>std</p></th>
+<th class="head text-right"><p>min</p></th>
+<th class="head text-right"><p>25%</p></th>
+<th class="head text-right"><p>50%</p></th>
+<th class="head text-right"><p>75%</p></th>
+<th class="head text-right"><p>max</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>B2</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0523</p></td>
+<td class="text-right"><p>0.0282</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.033</p></td>
+<td class="text-right"><p>0.0462</p></td>
+<td class="text-right"><p>0.0642</p></td>
+<td class="text-right"><p>0.1354</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B3</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0726</p></td>
+<td class="text-right"><p>0.0305</p></td>
+<td class="text-right"><p>0.003</p></td>
+<td class="text-right"><p>0.0515</p></td>
+<td class="text-right"><p>0.0668</p></td>
+<td class="text-right"><p>0.0895</p></td>
+<td class="text-right"><p>0.1655</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B4</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0604</p></td>
+<td class="text-right"><p>0.0444</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.029</p></td>
+<td class="text-right"><p>0.0432</p></td>
+<td class="text-right"><p>0.0777</p></td>
+<td class="text-right"><p>0.1771</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B5</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.097</p></td>
+<td class="text-right"><p>0.0479</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0492</p></td>
+<td class="text-right"><p>0.1006</p></td>
+<td class="text-right"><p>0.1339</p></td>
+<td class="text-right"><p>0.2059</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B6</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1681</p></td>
+<td class="text-right"><p>0.1022</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0394</p></td>
+<td class="text-right"><p>0.201</p></td>
+<td class="text-right"><p>0.2559</p></td>
+<td class="text-right"><p>0.3178</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B7</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1933</p></td>
+<td class="text-right"><p>0.1252</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0385</p></td>
+<td class="text-right"><p>0.2218</p></td>
+<td class="text-right"><p>0.2941</p></td>
+<td class="text-right"><p>0.387</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B8</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1911</p></td>
+<td class="text-right"><p>0.1244</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0327</p></td>
+<td class="text-right"><p>0.2275</p></td>
+<td class="text-right"><p>0.2969</p></td>
+<td class="text-right"><p>0.3697</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B8A</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2115</p></td>
+<td class="text-right"><p>0.137</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.0383</p></td>
+<td class="text-right"><p>0.243</p></td>
+<td class="text-right"><p>0.3282</p></td>
+<td class="text-right"><p>0.4147</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>B11</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1406</p></td>
+<td class="text-right"><p>0.0947</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.1695</p></td>
+<td class="text-right"><p>0.2192</p></td>
+<td class="text-right"><p>0.2969</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>B12</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.0947</p></td>
+<td class="text-right"><p>0.0829</p></td>
+<td class="text-right"><p>0.001</p></td>
+<td class="text-right"><p>0.024</p></td>
+<td class="text-right"><p>0.078</p></td>
+<td class="text-right"><p>0.1282</p></td>
+<td class="text-right"><p>0.2774</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>NDVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.3218</p></td>
+<td class="text-right"><p>0.4991</p></td>
+<td class="text-right"><p>-0.9651</p></td>
+<td class="text-right"><p>0.0325</p></td>
+<td class="text-right"><p>0.5115</p></td>
+<td class="text-right"><p>0.7609</p></td>
+<td class="text-right"><p>0.9931</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>NDWI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.2214</p></td>
+<td class="text-right"><p>0.5058</p></td>
+<td class="text-right"><p>-0.9256</p></td>
+<td class="text-right"><p>-0.6318</p></td>
+<td class="text-right"><p>-0.4195</p></td>
+<td class="text-right"><p>0.1226</p></td>
+<td class="text-right"><p>0.9758</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>MNDWI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1254</p></td>
+<td class="text-right"><p>0.4741</p></td>
+<td class="text-right"><p>-0.857</p></td>
+<td class="text-right"><p>-0.4514</p></td>
+<td class="text-right"><p>-0.3418</p></td>
+<td class="text-right"><p>0.1598</p></td>
+<td class="text-right"><p>0.9724</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>NDBI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1354</p></td>
+<td class="text-right"><p>0.3602</p></td>
+<td class="text-right"><p>-0.9637</p></td>
+<td class="text-right"><p>-0.3699</p></td>
+<td class="text-right"><p>-0.1441</p></td>
+<td class="text-right"><p>0.1377</p></td>
+<td class="text-right"><p>0.95</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>NDRE</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.1521</p></td>
+<td class="text-right"><p>0.4112</p></td>
+<td class="text-right"><p>-0.9746</p></td>
+<td class="text-right"><p>-0.0104</p></td>
+<td class="text-right"><p>0.2867</p></td>
+<td class="text-right"><p>0.489</p></td>
+<td class="text-right"><p>0.9406</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>EVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2575</p></td>
+<td class="text-right"><p>0.263</p></td>
+<td class="text-right"><p>-0.1403</p></td>
+<td class="text-right"><p>0.0086</p></td>
+<td class="text-right"><p>0.2035</p></td>
+<td class="text-right"><p>0.5042</p></td>
+<td class="text-right"><p>0.8064</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>SAVI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>0.2286</p></td>
+<td class="text-right"><p>0.2302</p></td>
+<td class="text-right"><p>-0.1552</p></td>
+<td class="text-right"><p>0.0089</p></td>
+<td class="text-right"><p>0.199</p></td>
+<td class="text-right"><p>0.4705</p></td>
+<td class="text-right"><p>0.5823</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>BSI</p></td>
+<td class="text-right"><p>520</p></td>
+<td class="text-right"><p>-0.1226</p></td>
+<td class="text-right"><p>0.2445</p></td>
+<td class="text-right"><p>-0.8749</p></td>
+<td class="text-right"><p>-0.3083</p></td>
+<td class="text-right"><p>-0.1202</p></td>
+<td class="text-right"><p>0.0972</p></td>
+<td class="text-right"><p>0.4942</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Rata-rata fitur per kelas:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>kelas</p></th>
+<th class="head text-right"><p>B2</p></th>
+<th class="head text-right"><p>B3</p></th>
+<th class="head text-right"><p>B4</p></th>
+<th class="head text-right"><p>B5</p></th>
+<th class="head text-right"><p>B6</p></th>
+<th class="head text-right"><p>B7</p></th>
+<th class="head text-right"><p>B8</p></th>
+<th class="head text-right"><p>B8A</p></th>
+<th class="head text-right"><p>B11</p></th>
+<th class="head text-right"><p>B12</p></th>
+<th class="head text-right"><p>NDVI</p></th>
+<th class="head text-right"><p>NDWI</p></th>
+<th class="head text-right"><p>MNDWI</p></th>
+<th class="head text-right"><p>NDBI</p></th>
+<th class="head text-right"><p>NDRE</p></th>
+<th class="head text-right"><p>EVI</p></th>
+<th class="head text-right"><p>SAVI</p></th>
+<th class="head text-right"><p>BSI</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>Bangunan</p></td>
+<td class="text-right"><p>0.099</p></td>
+<td class="text-right"><p>0.122</p></td>
+<td class="text-right"><p>0.141</p></td>
+<td class="text-right"><p>0.159</p></td>
+<td class="text-right"><p>0.17</p></td>
+<td class="text-right"><p>0.179</p></td>
+<td class="text-right"><p>0.181</p></td>
+<td class="text-right"><p>0.201</p></td>
+<td class="text-right"><p>0.261</p></td>
+<td class="text-right"><p>0.242</p></td>
+<td class="text-right"><p>0.122</p></td>
+<td class="text-right"><p>-0.195</p></td>
+<td class="text-right"><p>-0.363</p></td>
+<td class="text-right"><p>0.182</p></td>
+<td class="text-right"><p>0.064</p></td>
+<td class="text-right"><p>0.079</p></td>
+<td class="text-right"><p>0.071</p></td>
+<td class="text-right"><p>0.18</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Danau</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.05</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.039</p></td>
+<td class="text-right"><p>0.031</p></td>
+<td class="text-right"><p>0.029</p></td>
+<td class="text-right"><p>0.022</p></td>
+<td class="text-right"><p>0.027</p></td>
+<td class="text-right"><p>0.023</p></td>
+<td class="text-right"><p>0.013</p></td>
+<td class="text-right"><p>-0.173</p></td>
+<td class="text-right"><p>0.41</p></td>
+<td class="text-right"><p>0.407</p></td>
+<td class="text-right"><p>-0.013</p></td>
+<td class="text-right"><p>-0.308</p></td>
+<td class="text-right"><p>-0.02</p></td>
+<td class="text-right"><p>-0.024</p></td>
+<td class="text-right"><p>-0.004</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Lahan Hijau</p></td>
+<td class="text-right"><p>0.038</p></td>
+<td class="text-right"><p>0.058</p></td>
+<td class="text-right"><p>0.04</p></td>
+<td class="text-right"><p>0.096</p></td>
+<td class="text-right"><p>0.282</p></td>
+<td class="text-right"><p>0.352</p></td>
+<td class="text-right"><p>0.338</p></td>
+<td class="text-right"><p>0.378</p></td>
+<td class="text-right"><p>0.18</p></td>
+<td class="text-right"><p>0.089</p></td>
+<td class="text-right"><p>0.789</p></td>
+<td class="text-right"><p>-0.708</p></td>
+<td class="text-right"><p>-0.516</p></td>
+<td class="text-right"><p>-0.305</p></td>
+<td class="text-right"><p>0.558</p></td>
+<td class="text-right"><p>0.584</p></td>
+<td class="text-right"><p>0.508</p></td>
+<td class="text-right"><p>-0.262</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Mangrove</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.063</p></td>
+<td class="text-right"><p>0.028</p></td>
+<td class="text-right"><p>0.101</p></td>
+<td class="text-right"><p>0.26</p></td>
+<td class="text-right"><p>0.298</p></td>
+<td class="text-right"><p>0.299</p></td>
+<td class="text-right"><p>0.333</p></td>
+<td class="text-right"><p>0.11</p></td>
+<td class="text-right"><p>0.048</p></td>
+<td class="text-right"><p>0.833</p></td>
+<td class="text-right"><p>-0.653</p></td>
+<td class="text-right"><p>-0.275</p></td>
+<td class="text-right"><p>-0.462</p></td>
+<td class="text-right"><p>0.496</p></td>
+<td class="text-right"><p>0.559</p></td>
+<td class="text-right"><p>0.492</p></td>
+<td class="text-right"><p>-0.412</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>Perairan Terbuka (Laut)</p></td>
+<td class="text-right"><p>0.054</p></td>
+<td class="text-right"><p>0.049</p></td>
+<td class="text-right"><p>0.032</p></td>
+<td class="text-right"><p>0.034</p></td>
+<td class="text-right"><p>0.021</p></td>
+<td class="text-right"><p>0.021</p></td>
+<td class="text-right"><p>0.02</p></td>
+<td class="text-right"><p>0.022</p></td>
+<td class="text-right"><p>0.012</p></td>
+<td class="text-right"><p>0.014</p></td>
+<td class="text-right"><p>-0.258</p></td>
+<td class="text-right"><p>0.442</p></td>
+<td class="text-right"><p>0.595</p></td>
+<td class="text-right"><p>-0.171</p></td>
+<td class="text-right"><p>-0.28</p></td>
+<td class="text-right"><p>-0.031</p></td>
+<td class="text-right"><p>-0.031</p></td>
+<td class="text-right"><p>-0.262</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>Sawah</p></td>
+<td class="text-right"><p>0.048</p></td>
+<td class="text-right"><p>0.079</p></td>
+<td class="text-right"><p>0.068</p></td>
+<td class="text-right"><p>0.129</p></td>
+<td class="text-right"><p>0.229</p></td>
+<td class="text-right"><p>0.267</p></td>
+<td class="text-right"><p>0.27</p></td>
+<td class="text-right"><p>0.29</p></td>
+<td class="text-right"><p>0.21</p></td>
+<td class="text-right"><p>0.12</p></td>
+<td class="text-right"><p>0.599</p></td>
+<td class="text-right"><p>-0.55</p></td>
+<td class="text-right"><p>-0.457</p></td>
+<td class="text-right"><p>-0.124</p></td>
+<td class="text-right"><p>0.355</p></td>
+<td class="text-right"><p>0.388</p></td>
+<td class="text-right"><p>0.361</p></td>
+<td class="text-right"><p>-0.065</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="classification-report">
+<h1>5. Classification Report<a class="headerlink" href="#classification-report" title="Link to this heading">#</a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                         <span class="n">precision</span>    <span class="n">recall</span>  <span class="n">f1</span><span class="o">-</span><span class="n">score</span>   <span class="n">support</span>
+
+                  <span class="n">Sawah</span>       <span class="mf">1.00</span>      <span class="mf">1.00</span>      <span class="mf">1.00</span>        <span class="mi">20</span>
+               <span class="n">Bangunan</span>       <span class="mf">1.00</span>      <span class="mf">1.00</span>      <span class="mf">1.00</span>        <span class="mi">20</span>
+               <span class="n">Mangrove</span>       <span class="mf">1.00</span>      <span class="mf">1.00</span>      <span class="mf">1.00</span>        <span class="mi">16</span>
+            <span class="n">Lahan</span> <span class="n">Hijau</span>       <span class="mf">1.00</span>      <span class="mf">1.00</span>      <span class="mf">1.00</span>        <span class="mi">16</span>
+<span class="n">Perairan</span> <span class="n">Terbuka</span> <span class="p">(</span><span class="n">Laut</span><span class="p">)</span>       <span class="mf">0.82</span>      <span class="mf">0.88</span>      <span class="mf">0.85</span>        <span class="mi">16</span>
+                  <span class="n">Danau</span>       <span class="mf">0.87</span>      <span class="mf">0.81</span>      <span class="mf">0.84</span>        <span class="mi">16</span>
+
+               <span class="n">accuracy</span>                           <span class="mf">0.95</span>       <span class="mi">104</span>
+              <span class="n">macro</span> <span class="n">avg</span>       <span class="mf">0.95</span>      <span class="mf">0.95</span>      <span class="mf">0.95</span>       <span class="mi">104</span>
+           <span class="n">weighted</span> <span class="n">avg</span>       <span class="mf">0.95</span>      <span class="mf">0.95</span>      <span class="mf">0.95</span>       <span class="mi">104</span>
+
+</pre></div>
+</div>
+</section>
+<section id="rasio">
+<h1>6.1 Rasio<a class="headerlink" href="#rasio" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Rasio train:test</p></th>
+<th class="head text-right"><p>Akurasi rata-rata</p></th>
+<th class="head text-right"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>90:10</p></td>
+<td class="text-right"><p>0.9519</p></td>
+<td class="text-right"><p>0.0232</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>80:20</p></td>
+<td class="text-right"><p>0.9442</p></td>
+<td class="text-right"><p>0.0148</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>70:30</p></td>
+<td class="text-right"><p>0.9468</p></td>
+<td class="text-right"><p>0.0058</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>60:40</p></td>
+<td class="text-right"><p>0.9495</p></td>
+<td class="text-right"><p>0.0084</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="kombinasi-fitur">
+<h1>6.2 Kombinasi Fitur<a class="headerlink" href="#kombinasi-fitur" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Skenario</p></th>
+<th class="head text-right"><p>Jumlah fitur</p></th>
+<th class="head text-right"><p>Akurasi CV</p></th>
+<th class="head text-right"><p>Std</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p>B. 10 band Sentinel-2A</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9538</p></td>
+<td class="text-right"><p>0.0133</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>D. Band + indeks (18 fitur)</p></td>
+<td class="text-right"><p>18</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p>C. 8 indeks spektral</p></td>
+<td class="text-right"><p>8</p></td>
+<td class="text-right"><p>0.9069</p></td>
+<td class="text-right"><p>0.0282</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p>A. 4 band 10 m (B2,B3,B4,B8)</p></td>
+<td class="text-right"><p>4</p></td>
+<td class="text-right"><p>0.8635</p></td>
+<td class="text-right"><p>0.0309</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="grid-search">
+<h1>6.3 Grid Search<a class="headerlink" href="#grid-search" title="Link to this heading">#</a></h1>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>param_n_estimators</p></th>
+<th class="head text-right"><p>param_max_depth</p></th>
+<th class="head text-right"><p>mean_test_score</p></th>
+<th class="head text-right"><p>std_test_score</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9462</p></td>
+<td class="text-right"><p>0.0136</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p></p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0124</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9412</p></td>
+<td class="text-right"><p>0.0152</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9446</p></td>
+<td class="text-right"><p>0.0137</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>5</p></td>
+<td class="text-right"><p>0.9473</p></td>
+<td class="text-right"><p>0.0139</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9458</p></td>
+<td class="text-right"><p>0.0138</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9473</p></td>
+<td class="text-right"><p>0.0154</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>10</p></td>
+<td class="text-right"><p>0.9496</p></td>
+<td class="text-right"><p>0.0119</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>50</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9462</p></td>
+<td class="text-right"><p>0.0136</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>100</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0156</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>200</p></td>
+<td class="text-right"><p>20</p></td>
+<td class="text-right"><p>0.9488</p></td>
+<td class="text-right"><p>0.0124</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">2.4 Head</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#statistik">4.2 Statistik</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#classification-report">5. Classification Report</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#rasio">6.1 Rasio</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#kombinasi-fitur">6.2 Kombinasi Fitur</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#grid-search">6.3 Grid Search</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Zaidan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

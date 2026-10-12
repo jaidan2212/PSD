@@ -3,11 +3,14 @@ import pandas as pd
 import numpy as np
 import folium
 from streamlit_folium import folium_static
+from folium.raster_layers import ImageOverlay
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
+import base64
+import os
 
 st.set_page_config(page_title="Klasifikasi LULC Jawa Timur", layout="wide")
 
@@ -141,88 +144,147 @@ st.pyplot(fig2)
 
 st.header("4. Visualisasi Hasil Klasifikasi")
 st.markdown("""
-Peta interaktif menggunakan WMS Google Maps Satellite. Seluruh titik sampel (**520 piksel**) diprediksi menggunakan model Random Forest yang telah dilatih.
-Gunakan filter di bawah untuk memilih kelas tutupan lahan yang ingin ditampilkan.
+Visualisasi hasil prediksi model **Random Forest** mencakup klasifikasi piksel penuh (*spatially-continuous raster grid*) di seluruh wilayah Jawa Timur serta penanda titik sampel ground truth.
 """)
 
-colors = {
-    1: "#FFA500",  # Sawah - Orange/Gold
-    2: "#E63946",  # Bangunan - Merah
-    3: "#9D4EDD",  # Mangrove - Ungu
-    4: "#2A9D8F",  # Lahan Hijau - Hijau
-    5: "#1D3557",  # Lautan - Biru Tua
-    6: "#4EA8DE",  # Danau - Biru Muda
-}
+tab_raster, tab_points = st.tabs([
+    "🗺️ Peta Klasifikasi Raster Se-Jawa Timur (160.000 Piksel)", 
+    "📍 Peta Titik Sampel Prediksi & Filter Kelas"
+])
 
-# Filter interaktif kelas di Streamlit
-opsi_kelas = list(kelas_map.values())
-kelas_terpilih = st.multiselect(
-    "Filter Kelas yang Ditampilkan di Peta:",
-    options=opsi_kelas,
-    default=opsi_kelas
-)
+# Bounding box Jawa Timur
+bounds_jatim = [[-8.8, 111.0], [-6.6, 114.5]]
 
-df_filtered = df[df['kelas_prediksi'].isin(kelas_terpilih)]
-st.caption(f"Menampilkan **{len(df_filtered)}** titik sampel terprediksi dari total {len(df)} titik.")
-
-m = folium.Map(location=[-7.7, 112.5], zoom_start=8)
-
-# Google Satellite WMS
-folium.TileLayer(
-    tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
-    attr='Google',
-    name='Google Satellite',
-    overlay=False,
-    control=True
-).add_to(m)
-
-# OpenStreetMap
-folium.TileLayer(
-    tiles='OpenStreetMap',
-    name='OpenStreetMap',
-    overlay=False,
-    control=True
-).add_to(m)
-
-# Kelompokkan marker berdasarkan kelas
-for nama_k in kelas_terpilih:
-    df_sub = df_filtered[df_filtered['kelas_prediksi'] == nama_k]
-    k_id = [k for k, v in kelas_map.items() if v == nama_k][0]
-    fg = folium.FeatureGroup(name=f"Prediksi: {nama_k} ({len(df_sub)} titik)")
+# TAB 1: PETA RASTER LULC SE-JAWA TIMUR (SEPERTI DI FOTO!)
+with tab_raster:
+    st.subheader("Peta Tematik Klasifikasi LULC Skala Penuh (Raster Grid)")
+    st.markdown("""
+    Peta di bawah ini menampilkan hasil inferensi model **Random Forest pada 160.000 piksel** di seluruh daratan dan perairan Jawa Timur.
+    Lapisan raster tematik ditumpuk di atas citra satelit Google Maps (*ImageOverlay*).
+    """)
     
-    for idx, row in df_sub.iterrows():
-        folium.CircleMarker(
-            location=[row['lat'], row['lon']],
-            radius=6,
-            popup=f"<b>Prediksi:</b> {nama_k}<br><b>Aktual:</b> {row['kelas']}<br><b>Koordinat:</b> ({row['lat']:.4f}, {row['lon']:.4f})",
-            color="white",
-            weight=1,
-            fill=True,
-            fill_color=colors.get(k_id, "black"),
-            fill_opacity=0.85
-        ).add_to(fg)
-    fg.add_to(m)
+    col_op1, col_op2 = st.columns([2, 1])
+    with col_op1:
+        opacity = st.slider("Atur Transparansi Lapisan Raster (Opacity):", min_value=0.2, max_value=1.0, value=0.72, step=0.05)
+    with col_op2:
+        st.info("💡 **Legenda:** 🟨 Sawah | 🟥 Bangunan | 🟪 Mangrove | 🟩 Lahan Hijau | 🟦 Laut | 🩵 Danau")
+    
+    m_raster = folium.Map(location=[-7.7, 112.5], zoom_start=8, control_scale=True)
+    
+    # Basemap Google Satellite
+    folium.TileLayer(
+        tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
+        attr='Google',
+        name='Google Satellite',
+        overlay=False,
+        control=True
+    ).add_to(m_raster)
+    
+    # Basemap Esri Satellite
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        attr="Tiles &copy; Esri",
+        name="Esri Satellite",
+        overlay=False,
+        control=True
+    ).add_to(m_raster)
+    
+    # Load PNG raster base64
+    raster_png_path = "materi/_static/peta_lulc_raster.png"
+    if os.path.exists(raster_png_path):
+        with open(raster_png_path, "rb") as f:
+            b64_img = base64.b64encode(f.read()).decode("utf-8")
+        data_uri = f"data:image/png;base64,{b64_img}"
+        
+        ImageOverlay(
+            image=data_uri,
+            bounds=bounds_jatim,
+            opacity=opacity,
+            name="Klasifikasi Raster LULC (160.000 Piksel)",
+            interactive=False,
+            zindex=4
+        ).add_to(m_raster)
+    
+    # Kotak batas AOI
+    folium.Rectangle(bounds_jatim, color="yellow", weight=2.5, fill=False, dash_array="6").add_to(m_raster)
+    
+    # Floating HTML Legend
+    legend_raster_html = '''
+    <div style="position: fixed; 
+         bottom: 30px; left: 30px; width: 210px;
+         background-color: white; z-index:9999; font-size:12px;
+         border:2px solid #bbb; border-radius: 8px; padding: 12px;
+         box-shadow: 2px 2px 6px rgba(0,0,0,0.3);">
+         <b style="font-size:13px;">Klasifikasi LULC Jawa Timur</b><br>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#FFC81E;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>1. Sawah (Pertanian)</div>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#E62D2D;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>2. Bangunan (Permukiman)</div>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#8E44AD;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>3. Mangrove (Pesisir)</div>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#289132;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>4. Lahan Hijau (Hutan)</div>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#194BA0;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>5. Perairan Laut</div>
+         <div style="margin:3px 0"><span style="display:inline-block;width:12px;height:12px;background:#46BEF5;border-radius:2px;margin-right:8px;vertical-align:middle;"></span>6. Danau / Waduk</div>
+    </div>
+    '''
+    m_raster.get_root().html.add_child(folium.Element(legend_raster_html))
+    folium.LayerControl(collapsed=False).add_to(m_raster)
+    m_raster.fit_bounds(bounds_jatim)
+    folium_static(m_raster)
 
-# Tambahkan legenda HTML melayang pada peta
-legend_html = '''
-<div style="position: fixed; 
-     bottom: 30px; left: 30px; width: 190px;
-     background-color: white; z-index:9999; font-size:12px;
-     border:2px solid #bbb; border-radius: 8px; padding: 10px;
-     box-shadow: 2px 2px 6px rgba(0,0,0,0.3);">
-     <b style="font-size:13px;">Legenda Kelas LULC</b><br>
-     <i style="background:#FFA500; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Sawah<br>
-     <i style="background:#E63946; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Bangunan<br>
-     <i style="background:#9D4EDD; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Mangrove<br>
-     <i style="background:#2A9D8F; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Lahan Hijau<br>
-     <i style="background:#1D3557; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Perairan Laut<br>
-     <i style="background:#4EA8DE; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Danau<br>
-</div>
-'''
-m.get_root().html.add_child(folium.Element(legend_html))
-folium.LayerControl(collapsed=False).add_to(m)
-
-folium_static(m)
+# TAB 2: PETA TITIK SAMPEL PREDIKSI
+with tab_points:
+    st.subheader("Peta Penanda Titik Sampel (520 Piksel ROI)")
+    st.markdown("Filter kelas tutupan lahan di bawah untuk melihat titik-titik sampel spesifik.")
+    
+    colors = {
+        1: "#FFA500",  # Sawah - Orange/Gold
+        2: "#E63946",  # Bangunan - Merah
+        3: "#9D4EDD",  # Mangrove - Ungu
+        4: "#2A9D8F",  # Lahan Hijau - Hijau
+        5: "#1D3557",  # Lautan - Biru Tua
+        6: "#4EA8DE",  # Danau - Biru Muda
+    }
+    
+    opsi_kelas = list(kelas_map.values())
+    kelas_terpilih = st.multiselect(
+        "Filter Kelas yang Ditampilkan di Peta:",
+        options=opsi_kelas,
+        default=opsi_kelas,
+        key="filter_titik_kelas"
+    )
+    
+    df_filtered = df[df['kelas_prediksi'].isin(kelas_terpilih)]
+    st.caption(f"Menampilkan **{len(df_filtered)}** titik sampel terprediksi dari total {len(df)} titik.")
+    
+    m_points = folium.Map(location=[-7.7, 112.5], zoom_start=8)
+    
+    folium.TileLayer(
+        tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
+        attr='Google',
+        name='Google Satellite',
+        overlay=False,
+        control=True
+    ).add_to(m_points)
+    
+    for nama_k in kelas_terpilih:
+        df_sub = df_filtered[df_filtered['kelas_prediksi'] == nama_k]
+        k_id = [k for k, v in kelas_map.items() if v == nama_k][0]
+        fg = folium.FeatureGroup(name=f"Prediksi: {nama_k} ({len(df_sub)} titik)")
+        
+        for idx, row in df_sub.iterrows():
+            folium.CircleMarker(
+                location=[row['lat'], row['lon']],
+                radius=6,
+                popup=f"<b>Prediksi:</b> {nama_k}<br><b>Aktual:</b> {row['kelas']}<br><b>Koordinat:</b> ({row['lat']:.4f}, {row['lon']:.4f})",
+                color="white",
+                weight=1,
+                fill=True,
+                fill_color=colors.get(k_id, "black"),
+                fill_opacity=0.85
+            ).add_to(fg)
+        fg.add_to(m_points)
+    
+    m_points.get_root().html.add_child(folium.Element(legend_raster_html))
+    folium.LayerControl(collapsed=False).add_to(m_points)
+    folium_static(m_points)
 
 st.header("5. Peta Khusus Kelas Laut di Jawa Timur")
 st.markdown("Untuk melihat letak spesifik kelas perairan laut yang diklasifikasikan oleh model, peta di bawah ini menampilkan **seluruh titik sampel yang diprediksi sebagai Perairan Terbuka (Laut)**.")
