@@ -112,19 +112,26 @@ kelas_map = dict(zip(df['kelas_id'], df['kelas']))
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-st.write(f"**Jumlah Data Training:** {X_train.shape[0]}")
-st.write(f"**Jumlah Data Testing:** {X_test.shape[0]}")
+col1, col2 = st.columns(2)
+with col1:
+    st.info(f"📊 **Data Training (80%):** {X_train.shape[0]} titik sampel")
+with col2:
+    st.info(f"🧪 **Data Testing (20%):** {X_test.shape[0]} titik sampel")
 
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
 rf.fit(X_train, y_train)
 y_pred = rf.predict(X_test)
 
+# Prediksi untuk seluruh dataset agar peta menampilkan semua titik klasifikasi
+df['prediksi'] = rf.predict(X)
+df['kelas_prediksi'] = df['prediksi'].map(kelas_map)
+
 acc = accuracy_score(y_test, y_pred)
-st.success(f"**Akurasi Model Random Forest:** {acc * 100:.2f}%")
+st.success(f"🎯 **Akurasi Model Random Forest (Data Testing):** {acc * 100:.2f}%")
 
 st.subheader("Confusion Matrix")
 cm = confusion_matrix(y_test, y_pred)
-fig2, ax2 = plt.subplots(figsize=(6,4))
+fig2, ax2 = plt.subplots(figsize=(6, 4))
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
             xticklabels=[kelas_map[i] for i in sorted(kelas_map.keys())],
             yticklabels=[kelas_map[i] for i in sorted(kelas_map.keys())], ax=ax2)
@@ -133,11 +140,34 @@ ax2.set_ylabel('Aktual')
 st.pyplot(fig2)
 
 st.header("4. Visualisasi Hasil Klasifikasi")
-st.markdown("Peta interaktif menggunakan WMS Google Maps Satellite. Penanda pada peta menunjukkan sampel dan hasil prediksinya.")
+st.markdown("""
+Peta interaktif menggunakan WMS Google Maps Satellite. Seluruh titik sampel (**520 piksel**) diprediksi menggunakan model Random Forest yang telah dilatih.
+Gunakan filter di bawah untuk memilih kelas tutupan lahan yang ingin ditampilkan.
+""")
+
+colors = {
+    1: "#FFA500",  # Sawah - Orange/Gold
+    2: "#E63946",  # Bangunan - Merah
+    3: "#9D4EDD",  # Mangrove - Ungu
+    4: "#2A9D8F",  # Lahan Hijau - Hijau
+    5: "#1D3557",  # Lautan - Biru Tua
+    6: "#4EA8DE",  # Danau - Biru Muda
+}
+
+# Filter interaktif kelas di Streamlit
+opsi_kelas = list(kelas_map.values())
+kelas_terpilih = st.multiselect(
+    "Filter Kelas yang Ditampilkan di Peta:",
+    options=opsi_kelas,
+    default=opsi_kelas
+)
+
+df_filtered = df[df['kelas_prediksi'].isin(kelas_terpilih)]
+st.caption(f"Menampilkan **{len(df_filtered)}** titik sampel terprediksi dari total {len(df)} titik.")
 
 m = folium.Map(location=[-7.7, 112.5], zoom_start=8)
 
-# Add Google Maps Satellite WMS
+# Google Satellite WMS
 folium.TileLayer(
     tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
     attr='Google',
@@ -146,33 +176,61 @@ folium.TileLayer(
     control=True
 ).add_to(m)
 
-colors = {
-    1: "orange",    # Sawah
-    2: "red",       # Bangunan
-    3: "purple",    # Mangrove
-    4: "green",     # Lahan Hijau
-    5: "darkblue",  # Lautan
-    6: "lightblue", # Danau
-}
+# OpenStreetMap
+folium.TileLayer(
+    tiles='OpenStreetMap',
+    name='OpenStreetMap',
+    overlay=False,
+    control=True
+).add_to(m)
 
-# Add points to map
-for idx, row in df.iterrows():
-    kelas_id = row['kelas_id']
-    nama_kelas = row['kelas']
-    folium.CircleMarker(
-        location=[row['lat'], row['lon']],
-        radius=5,
-        popup=f"Kelas: {nama_kelas}",
-        color=colors.get(kelas_id, "black"),
-        fill=True,
-        fill_color=colors.get(kelas_id, "black"),
-        fill_opacity=0.7
-    ).add_to(m)
+# Kelompokkan marker berdasarkan kelas
+for nama_k in kelas_terpilih:
+    df_sub = df_filtered[df_filtered['kelas_prediksi'] == nama_k]
+    k_id = [k for k, v in kelas_map.items() if v == nama_k][0]
+    fg = folium.FeatureGroup(name=f"Prediksi: {nama_k} ({len(df_sub)} titik)")
+    
+    for idx, row in df_sub.iterrows():
+        folium.CircleMarker(
+            location=[row['lat'], row['lon']],
+            radius=6,
+            popup=f"<b>Prediksi:</b> {nama_k}<br><b>Aktual:</b> {row['kelas']}<br><b>Koordinat:</b> ({row['lat']:.4f}, {row['lon']:.4f})",
+            color="white",
+            weight=1,
+            fill=True,
+            fill_color=colors.get(k_id, "black"),
+            fill_opacity=0.85
+        ).add_to(fg)
+    fg.add_to(m)
+
+# Tambahkan legenda HTML melayang pada peta
+legend_html = '''
+<div style="position: fixed; 
+     bottom: 30px; left: 30px; width: 190px;
+     background-color: white; z-index:9999; font-size:12px;
+     border:2px solid #bbb; border-radius: 8px; padding: 10px;
+     box-shadow: 2px 2px 6px rgba(0,0,0,0.3);">
+     <b style="font-size:13px;">Legenda Kelas LULC</b><br>
+     <i style="background:#FFA500; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Sawah<br>
+     <i style="background:#E63946; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Bangunan<br>
+     <i style="background:#9D4EDD; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Mangrove<br>
+     <i style="background:#2A9D8F; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Lahan Hijau<br>
+     <i style="background:#1D3557; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Perairan Laut<br>
+     <i style="background:#4EA8DE; width:12px; height:12px; display:inline-block; margin-right:6px; border-radius:50%;"></i> Danau<br>
+</div>
+'''
+m.get_root().html.add_child(folium.Element(legend_html))
+folium.LayerControl(collapsed=False).add_to(m)
 
 folium_static(m)
 
 st.header("5. Peta Khusus Kelas Laut di Jawa Timur")
-st.markdown("Untuk melihat letak spesifik kelas perairan laut yang diklasifikasikan model, peta di bawah ini hanya menampilkan prediksi kelas **Perairan Terbuka (Laut)**.")
+st.markdown("Untuk melihat letak spesifik kelas perairan laut yang diklasifikasikan oleh model, peta di bawah ini menampilkan **seluruh titik sampel yang diprediksi sebagai Perairan Terbuka (Laut)**.")
+
+# Ambil SEMUA titik yang diprediksi sebagai laut (kelas_id = 5) dari seluruh data
+df_laut = df[df['prediksi'] == 5]
+
+st.metric("Total Titik Terprediksi Laut", f"{len(df_laut)} titik sampel")
 
 m_laut = folium.Map(location=[-7.7, 112.5], zoom_start=8)
 folium.TileLayer(
@@ -183,16 +241,16 @@ folium.TileLayer(
     control=True
 ).add_to(m_laut)
 
-df_laut = df.loc[X_test.index[y_pred == 5]]
 for idx, row in df_laut.iterrows():
     folium.CircleMarker(
         location=[row['lat'], row['lon']],
-        radius=6,
+        radius=7,
         popup=f"Titik Laut (lon: {row['lon']:.4f}, lat: {row['lat']:.4f})",
-        color="cyan",
+        color="white",
+        weight=1.5,
         fill=True,
-        fill_color="blue",
-        fill_opacity=0.8
+        fill_color="#0077b6",
+        fill_opacity=0.85
     ).add_to(m_laut)
 
 folium_static(m_laut)
