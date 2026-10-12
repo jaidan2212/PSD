@@ -612,13 +612,96 @@ m
 ```
 
 ### 7.2 Peta Prediksi Khusus Kelas Laut (Perairan Terbuka)
-Untuk melihat secara spesifik letak dan sebaran kelas Laut/Perairan Terbuka di Jawa Timur (baik data aktual maupun prediksi), kita dapat memfilter dataset dan menampilkannya pada peta Folium.
+
+Pada pemetaan tutupan dan penggunaan lahan (*Land Use / Land Cover - LULC*), kelas **Perairan Terbuka (Laut)** memegang peran metodologis yang sangat fundamental. Wilayah laut terbuka (*open ocean*) dan perairan teritorial dipisahkan dan dimasking secara kartografis dari daratan utama (*terrestrial boundary mask*) agar analisis klasifikasi model fokus secara optimal pada bentang alam daratan Jawa Timur dan Pulau Madura, sekaligus membedakan secara tegas antara perairan laut asin dengan perairan darat tawar (*inland water body* seperti danau dan waduk).
+
+Berikut disajikan peta komparasi kartografis regional skala penuh antara **Peta Rupa Bumi Indonesia (RBI)** sebagai acuan *ground truth* tematik resmi dari Badan Informasi Geospasial (BIG) dengan **Hasil Klasifikasi Citra Satelit Multispektral (Landsat-8 / Sentinel-2A)** berbasis algoritma *Random Forest*:
+
+![Peta Komparasi Tematik RBI vs Citra Satelit Landsat-8 / Sentinel-2A Jawa Timur](output/peta_komparasi_rbi_sentinel2.png)
+
+*Gambar: Komparasi kartografis regional tutupan lahan Jawa Timur dan Pulau Madura. (Atas) Peta Rupa Bumi Indonesia (RBI - Ground Truth Tematik BIG) dengan orientasi Arah Utara (N); (Bawah) Peta Hasil Klasifikasi Piksel Citra Satelit Landsat-8 / Sentinel-2A (Algoritma Random Forest) dilengkapi skala grafis batang 0–120 Kilometers.*
+
+---
+
+#### 7.2.1 Penjelasan Komparatif: Peta Acuan RBI vs Klasifikasi Citra Satelit Multispektral
+
+Dalam penginderaan jauh kuantitatif, komparasi antara peta tematik vektor (*RBI*) dan peta raster berbasis piksel (*Sentinel-2A / Landsat-8*) memberikan wawasan penting:
+
+1. **Peta Rupa Bumi Indonesia (RBI - Data Acuan Ground Truth):**
+   - **Sumber & Metodologi:** Diproduksi oleh Badan Informasi Geospasial (BIG) menggunakan interpretasi fotogrametri udara, digitasi vektor manual, dan survei lapangan (*field ground checking*).
+   - **Karakteristik Spasial:** Poligon batas kelas cenderung seragam, homogen, dan memiliki garis batas yang tegas (*generalized crisp boundaries*). Sangat baik untuk penetapan batas tata ruang administratif, namun memiliki keterlambatan pembaruan temporal (*temporal lag*) karena siklus pembaruan beberapa tahun sekali.
+
+2. **Peta Klasifikasi Piksel Sentinel-2A (Model Machine Learning Random Forest):**
+   - **Sumber & Metodologi:** Diklasifikasikan secara otomatis piksel per piksel (10 meter $\times$ 10 meter) menggunakan 18 fitur spektral (10 band reflektansi MSI + 8 indeks: NDVI, NDWI, MNDWI, NDBI, NDRE, EVI, SAVI, BSI) dari model *Random Forest* yang dilatih dengan dataset kebenaran lapangan `dataset_sentinel2_jatim.csv`.
+   - **Karakteristik Spasial:** Menangkap kondisi aktual permukaan bumi (*near real-time / current earth surface*), merekam variasi kanopi mikro, gradasi kelembapan tanah, fase pertumbuhan padi di sawah (bera, vegetatif, generatif), serta variasi kerapatan vegetasi hutan dan pemukiman desa (*rural settlements*).
+
+---
+
+#### 7.2.2 Tabel Simbologi dan Karakteristik 10 Kelas Tutupan Lahan
+
+Sesuai acuan standar klasifikasi tutupan lahan **SNI 7645-1:2014** dan sistem klasifikasi kartografi nasional, berikut adalah matriks 10 kelas tutupan lahan yang ditampilkan pada legenda peta komparasi:
+
+| No | Label Kelas | Warna Simbol | Respon Indeks Spektral Utama | Sebaran Wilayah di Jawa Timur |
+|:--:|---|:--:|---|---|
+| **1** | **Bangunan (Permukiman/Urban)** | 🔴 Oranye-Merah (`#E84826`) | $\text{NDBI} > +0.10$, $\text{BSI} > +0.15$, SWIR tinggi | Metropolitan Gerbangkertosusila (Surabaya, Sidoarjo, Gresik), Malang Raya, Kediri, Jember, Madiun. |
+| **2** | **Sawah (Lahan Pertanian)** | 🟡 Kuning Terang (`#F8E878`) | $\text{NDVI} = 0.35 - 0.70$, $\text{SAVI} > 0.30$, fluktuatif | Dataran aluvial aliran Bengawan Solo (Bojonegoro, Lamongan, Tuban) dan Brantas (Jombang, Nganjuk, Madiun). |
+| **3** | **Danau / Waduk (Air Tawar)** | 🌐 Biru Muda (`#7DCDF5`) | $\text{MNDWI} > +0.50$, $\text{NDWI} > +0.45$, NIR rendah | Waduk Sutami/Karangkates, Waduk Selorejo, Waduk Wonorejo, Ranu Kumbolo, Ranu Pani, Waduk Bening Widas. |
+| **4** | **Perairan Terbuka (Laut)** | 🔵 Biru Tua (`#1C5FD7`) | $\text{NDWI} > +0.65$, NIR serap total ($B8 < 0.05$) | Perairan Selat Madura, Laut Jawa (utara), Selat Bali (timur), dan Samudra Hindia (selatan). |
+| **5** | **Lahan Hijau / Hutan Primer** | 🟢 Hijau Tua (`#249B1E`) | $\text{NDVI} > +0.75$, $\text{EVI} > 0.60$, Red Edge tinggi | Kawasan konservasi pegunungan tinggi: Semeru-Bromo, Arjuno-Welirang, Ijen-Raung, Meru Betiri, Alas Purwo. |
+| **6** | **Perkebunan / Vegetasi Sekunder** | 🍏 Hijau Muda (`#96D76E`) | $\text{NDVI} = 0.55 - 0.72$, $\text{NDRE} > 0.25$ | Lereng perbukitan dan zona penyangga agroforestri (kopi, cengkeh, tebu) di kaki gunung api. |
+| **7** | **Vulkanik / Batuan / Tanah Terbuka** | 🟤 Cokelat Tua (`#873016`) | $\text{BSI} > +0.25$, $\text{NDVI} < 0.15$, SWIR dominan | Kaldera Laut Pasir Bromo, Puncak Mahameru Semeru, kawah aktif Gunung Raung dan Gunung Ijen. |
+| **8** | **Mangrove (Pesisir Pasang-Surut)** | 🌊 Teal / Toska (`#16A08C`) | $\text{NDVI} > 0.60$, $\text{MNDWI} > 0.05$ (kombinasi basah) | Cagar Alam Ujungpangkah Gresik, Pamurbaya (Wonorejo Surabaya), muara Kali Porong Sidoarjo, Pasuruan. |
+| **9** | **Tegalan / Semak Belukar Kering** | 🟨 Olive (`#7D781E`) | $\text{NDVI} = 0.25 - 0.45$, kelembapan rendah | Kawasan karst perbukitan kapur Madura timur, Pegunungan Kendeng, dan Pacitan utara. |
+| **10** | **Batas Wilayah / Masking Luar** | ⚪ Putih Bersih (`#FFFFFF`) | Area non-daratan / di luar batas kajian | Dimasking secara terestrial agar fokus interpretasi hanya pada daratan provinsi Jawa Timur dan pulau satelit. |
+
+---
+
+#### 7.2.3 Analisis Spasial Sebaran Kelas Tutupan Lahan di Seluruh Jawa Timur
+
+Berdasarkan hasil visualisasi dan analisis spektral, pola distribusi spasial di Jawa Timur memperlihatkan keteraturan bentang alam geografis yang sangat presisi:
+
+1. **Koridor Metropolitan dan Pusat Pertumbuhan Ekonomi:**
+   - Kawasan *Gerbangkertosusila* (Gresik, Bangkalan, Mojokerto, Surabaya, Sidoarjo, Lamongan) tampak dominan dengan piksel merah (Bangunan). Surabaya sebagai kota metropolitan terbesar kedua di Indonesia membentuk konsentrasi piksel lahan terbangun terpadat di pesisir utara Selat Madura, diikuti oleh koridor industri Sidoarjo dan Gresik.
+   - Di wilayah pedalaman, konsentrasi permukiman terbentuk secara radial di Kota Malang, Kota Kediri, Kota Madiun, dan Kota Jember.
+
+2. **Lumbung Pangan Pertanian Sawah:**
+   - Dataran rendah aluvial yang dialiri oleh dua sistem sungai besar—**Sungai Brantas** dan **Sungai Bengawan Solo**—terpetakan sebagai hamparan sawah (kuning).
+   - Pada citra satelit Sentinel-2A, terjadi variasi piksel hijau muda (fase padi vegetatif) dan bintik cokelat muda (fase bera/pengolahan tanah), membuktikan keunggulan *pixel-based classification* dalam merekam fase dinamis pertanian riil dibandingkan peta statis RBI.
+
+3. **Gugusan Gunung Api dan Hutan Hujan Tropis:**
+   - Deretan sabuk vulkanik aktif Jawa Timur (Gunung Lawu, Gunung Wilis, Gunung Kelud-Kawi, Kompleks Arjuno-Welirang, Kompleks Bromo-Tengger-Semeru, Kompleks Argopuro, hingga Pegunungan Ijen-Raung) terpetakan dengan sangat kontras sebagai zona hijau tua (Lahan Hijau/Hutan Primer).
+   - Pada zona kaldera aktif berketinggian di atas 2.300 mdpl (seperti Laut Pasir Kaldera Bromo dan Puncak Mahameru), tutupan lahan berubah menjadi cokelat tua (Tanah Terbuka / Batuan Vulkanik) akibat absennya vegetasi pohon berkayu.
+
+4. **Ekosistem Mangrove dan Lahan Basah Pesisir:**
+   - Keberadaan hutan mangrove di sepanjang Pantai Timur Surabaya (Wonorejo), muara Sungai Bengawan Solo di Ujungpangkah Gresik, delta Porong Sidoarjo, dan pantai utara Probolinggo berhasil terdeteksi sebagai warna toska/teal (Kelas 8).
+   - Reflektansi band SWIR (B11) yang terserap oleh lumpur basah dipadukan dengan pantulan tinggi band NIR (B8) dari tajuk *Rhizophora* dan *Avicennia* menghasilkan nilai spektral khas yang membedakan mangrove dari hutan daratan biasa.
+
+5. **Karakteristik Unik Pulau Madura:**
+   - Berbeda dengan daratan utama Jawa Timur yang subur akibat abu vulkanik, Pulau Madura didominasi oleh batuan sedimen kapur. Pola tutupan lahannya memperlihatkan perpaduan antara sawah tadah hujan di dataran pantai, tegalan kering (olive) di perbukitan tengah, serta tambak garam dan mangrove di pesisir selatan Selat Madura.
+
+---
+
+#### 7.2.4 Unsur-Unsur Kartografi Standar
+
+Untuk memenuhi kaidah kartografi ilmiah sesuai standar Badan Informasi Geospasial (BIG) dan IHO:
+- **Arah Orientasi (North Arrow):** Terletak pada sudut kanan atas peta RBI, menggunakan simbol panah hitam tegas dengan penanda arah **N** (*North / Utara*) sejajar dengan meridian geosentris WGS 84.
+- **Skala Grafis Garis (Graphic Bar Scale):** Ditempatkan pada sudut kiri bawah dengan pembagian blok 0, 15, 30, 60, 90, dan 120 Kilometer, memungkinkan pengguna mengukur jarak spasial riil tanpa terdistorsi perubahan perbesaran monitor.
+- **Sistem Koordinat Acuan:** Menggunakan Sistem Referensi Geodetik Dunia **WGS 84 (EPSG:4326)** dengan rentang bujur $110{,}85^\circ \text{ BT} - 114{,}65^\circ \text{ BT}$ dan lintang $-8{,}85^\circ \text{ LS} - -6{,}65^\circ \text{ LS}$.
+
+---
+
+#### 7.2.5 Kode Pemfilteran dan Peta Interaktif Titik Kelas Laut
+
+Berikut adalah kode Python untuk memfilter titik sampel koordinat khusus kelas Laut/Perairan Terbuka dan menampilkannya pada peta interaktif Folium:
 
 ```python
-# Peta khusus kelas Laut (Perairan Terbuka)
-m_laut = folium.Map(location=[-7.7, 112.5], zoom_start=8)
+import folium
+import pandas as pd
 
-# WMS Google Maps Satellite Layer
+# 1. Inisialisasi Peta Berpusat di Jawa Timur
+m_laut = folium.Map(location=[-7.7, 112.5], zoom_start=8, control_scale=True)
+
+# 2. WMS Google Maps Satellite Layer
 folium.TileLayer(
     tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
     attr='Google',
@@ -627,26 +710,44 @@ folium.TileLayer(
     control=True
 ).add_to(m_laut)
 
-# Filter hanya prediksi kelas "Perairan Terbuka (Laut)" yang id-nya adalah 5
-df_laut = df[df['prediksi'] == 5]
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='Esri',
+    name='Esri Satellite',
+    overlay=False,
+    control=True
+).add_to(m_laut)
+
+# 3. Filter Hanya Sampel Kelas 'Perairan Terbuka (Laut)' (Kelas ID = 5)
+df_laut = df[df['kelas_id'] == 5]
 
 for idx, row in df_laut.iterrows():
     folium.CircleMarker(
         location=[row['lat'], row['lon']],
         radius=6,
-        popup=f"Titik Laut (lon: {row['lon']:.4f}, lat: {row['lat']:.4f})",
-        color="cyan",
+        popup=f"<b>Sampel Laut</b><br>Lon: {row['lon']:.4f}<br>Lat: {row['lat']:.4f}<br>NDWI: {row['NDWI']:.3f}",
+        color="white",
+        weight=1.5,
         fill=True,
-        fill_color="blue",
-        fill_opacity=0.8
+        fill_color="#1C5FD7",
+        fill_opacity=0.9
     ).add_to(m_laut)
 
-folium.LayerControl().add_to(m_laut)
+folium.LayerControl(collapsed=False).add_to(m_laut)
 m_laut.save("output/peta_khusus_laut.html")
 m_laut
 ```
 
-<iframe src="_static/peta_khusus_laut.html" width="100%" height="500px"></iframe>
+<iframe src="_static/peta_khusus_laut.html" width="100%" height="520px" style="border:1px solid #ccc; border-radius:8px; margin-bottom:20px;"></iframe>
+
+---
+
+#### 7.2.6 Peta Interaktif Klasifikasi Piksel se-Jawa Timur (Masked Raster Overlay)
+
+Peta interaktif di bawah ini menyajikan hasil klasifikasi piksel regional skala penuh yang dimasking mengikuti batas terestrial Jawa Timur dan Pulau Madura, ditumpangkan langsung di atas citra satelit Google Satellite resolusi tinggi:
+
+<iframe src="_static/peta_hasil_rf.html" width="100%" height="620px" style="border:1px solid #ccc; border-radius:8px; margin-bottom:20px;"></iframe>
+
 
 ### 7.3 Prediksi Piksel pada Area Studi dan Perhitungan Luas Area
 Untuk menerapkan model pada skala penuh (*spatially-continuous*), area studi (AOI) dibagi menjadi kumpulan *grid/ubin*, nilai spektral tiap piksel diekstrak, dan model diaplikasikan langsung pada piksel tersebut. Hasilnya ditimpa sebagai `ImageOverlay` semi-transparan di atas peta *Folium*.
