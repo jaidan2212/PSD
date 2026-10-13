@@ -14,8 +14,8 @@ img.save(buffered, format='PNG')
 img_b64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
 data_uri = f'data:image/png;base64,{img_b64}'
 
-lat_min, lat_max = -8.85, -6.65
-lon_min, lon_max = 110.85, 114.65
+lat_min, lat_max = -8.96, -6.52
+lon_min, lon_max = 110.75, 114.75
 bounds = [[lat_min, lon_min], [lat_max, lon_max]]
 pusat = [-7.75, 112.75]
 
@@ -85,4 +85,5 @@ m.fit_bounds(bounds)
 
 m.save('materi/_static/peta_hasil_rf.html')
 m.save('materi/output/peta_hasil_rf.html')
-print('Successfully saved interactive Folium map to materi/_static and materi/output.')
+m.save('output/peta_hasil_rf.html')
+print('Successfully saved interactive Folium map to materi/_static, materi/output, and output.')

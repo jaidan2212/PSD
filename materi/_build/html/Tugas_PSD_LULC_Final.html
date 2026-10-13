@@ -393,11 +393,13 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-hasil-klasifikasi-folium-wms-google-satellite">7. Peta Hasil Klasifikasi (Folium + WMS Google Satellite)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-titik-sampel">7.1 Visualisasi Titik Sampel</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-prediksi-khusus-kelas-laut-perairan-terbuka">7.2 Peta Prediksi Khusus Kelas Laut (Perairan Terbuka)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-komparatif-peta-acuan-rbi-vs-klasifikasi-citra-satelit-multispektral">7.2.1 Penjelasan Komparatif: Peta Acuan RBI vs Klasifikasi Citra Satelit Multispektral</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-simbologi-dan-karakteristik-10-kelas-tutupan-lahan">7.2.2 Tabel Simbologi dan Karakteristik 10 Kelas Tutupan Lahan</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-di-seluruh-jawa-timur">7.2.3 Analisis Spasial Sebaran Kelas Tutupan Lahan di Seluruh Jawa Timur</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unsur-unsur-kartografi-standar">7.2.4 Unsur-Unsur Kartografi Standar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-topografi-relief-dan-komparasi-tutupan-lahan-land-use-land-cover-jawa-timur">7.2 Peta Topografi Relief dan Komparasi Tutupan Lahan (Land Use / Land Cover) Jawa Timur</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-provinsi-jawa-timur-topografi-dan-tutupan-lahan-master-sheet">7.2.1 Peta Provinsi Jawa Timur: Topografi dan Tutupan Lahan (Master Sheet)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-komparasi-tematik-peta-rupa-bumi-indonesia-rbi-vs-klasifikasi-piksel-sentinel-2a">7.2.2 Peta Komparasi Tematik: Peta Rupa Bumi Indonesia (RBI) vs Klasifikasi Piksel Sentinel-2A</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-metodologis-menjawab-catatan-kritis-dosen-pembimbing">7.2.3 Evaluasi Metodologis: Menjawab Catatan Kritis Dosen Pembimbing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-simbologi-dan-karakteristik-8-kelas-tutupan-lahan-utama">7.2.4 Tabel Simbologi dan Karakteristik 8 Kelas Tutupan Lahan Utama</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-se-jawa-timur">7.2.5 Analisis Spasial Sebaran Kelas Tutupan Lahan se-Jawa Timur</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unsur-unsur-kartografi-standar">7.2.6 Unsur-Unsur Kartografi Standar</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-pemfilteran-dan-peta-interaktif-titik-kelas-laut">7.2.5 Kode Pemfilteran dan Peta Interaktif Titik Kelas Laut</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-interaktif-klasifikasi-piksel-se-jawa-timur-masked-raster-overlay">7.2.6 Peta Interaktif Klasifikasi Piksel se-Jawa Timur (Masked Raster Overlay)</a></li>
 </ul>
@@ -1789,42 +1791,63 @@ Perairan Terbuka (Laut)       0.82      0.88      0.85        16
 </pre></div>
 </div>
 </section>
-<section id="peta-prediksi-khusus-kelas-laut-perairan-terbuka">
-<h3>7.2 Peta Prediksi Khusus Kelas Laut (Perairan Terbuka)<a class="headerlink" href="#peta-prediksi-khusus-kelas-laut-perairan-terbuka" title="Link to this heading">#</a></h3>
-<p>Pada pemetaan tutupan dan penggunaan lahan (<em>Land Use / Land Cover - LULC</em>), kelas <strong>Perairan Terbuka (Laut)</strong> memegang peran metodologis yang sangat fundamental. Wilayah laut terbuka (<em>open ocean</em>) dan perairan teritorial dipisahkan dan dimasking secara kartografis dari daratan utama (<em>terrestrial boundary mask</em>) agar analisis klasifikasi model fokus secara optimal pada bentang alam daratan Jawa Timur dan Pulau Madura, sekaligus membedakan secara tegas antara perairan laut asin dengan perairan darat tawar (<em>inland water body</em> seperti danau dan waduk).</p>
-<p>Berikut disajikan peta komparasi kartografis regional skala penuh antara <strong>Peta Rupa Bumi Indonesia (RBI)</strong> sebagai acuan <em>ground truth</em> tematik resmi dari Badan Informasi Geospasial (BIG) dengan <strong>Hasil Klasifikasi Citra Satelit Multispektral (Landsat-8 / Sentinel-2A)</strong> berbasis algoritma <em>Random Forest</em>:</p>
-<p><img alt="Peta Komparasi Tematik RBI vs Citra Satelit Landsat-8 / Sentinel-2A Jawa Timur" src="_images/peta_komparasi_rbi_sentinel2.png" /></p>
-<p><em>Gambar: Komparasi kartografis regional tutupan lahan Jawa Timur dan Pulau Madura. (Atas) Peta Rupa Bumi Indonesia (RBI - Ground Truth Tematik BIG) dengan orientasi Arah Utara (N); (Bawah) Peta Hasil Klasifikasi Piksel Citra Satelit Landsat-8 / Sentinel-2A (Algoritma Random Forest) dilengkapi skala grafis batang 0–120 Kilometers.</em></p>
+<section id="peta-topografi-relief-dan-komparasi-tutupan-lahan-land-use-land-cover-jawa-timur">
+<h3>7.2 Peta Topografi Relief dan Komparasi Tutupan Lahan (Land Use / Land Cover) Jawa Timur<a class="headerlink" href="#peta-topografi-relief-dan-komparasi-tutupan-lahan-land-use-land-cover-jawa-timur" title="Link to this heading">#</a></h3>
+<p>Pada pemetaan tutupan dan penggunaan lahan (<em>Land Use / Land Cover - LULC</em>), penyajian kartografis yang hanya menampilkan bidang poligon datar (<em>flat thematic layers</em>) sering kali kehilangan esensi geografis wilayah studi. Provinsi Jawa Timur memiliki bentang alam fisiografis yang sangat dramatis—mulai dari busur sabuk vulkanik aktif cincin api (<em>Ring of Fire</em>), dataran aluvial sungai besar, zona karst perbukitan kapur, hingga wilayah pesisir pasang-surut dan kepulauan.</p>
+<p>Untuk menjawab kebutuhan pemetaan presisi tinggi serta memenuhi standar kartografi ilmiah nasional (Badan Informasi Geospasial / BIG dan SNI 7645-1:2014), dilakukan <strong>penyempurnaan komprehensif</strong> dengan mengintegrasikan <strong>Digital Elevation Model (SRTM DEM 90m)</strong>, <strong>Shaded Relief (Hillshade)</strong>, dan <strong>Klasifikasi Berbasis Piksel Spektral Citra Satelit Sentinel-2A (10 m)</strong>.</p>
 <hr class="docutils" />
-<section id="penjelasan-komparatif-peta-acuan-rbi-vs-klasifikasi-citra-satelit-multispektral">
-<h4>7.2.1 Penjelasan Komparatif: Peta Acuan RBI vs Klasifikasi Citra Satelit Multispektral<a class="headerlink" href="#penjelasan-komparatif-peta-acuan-rbi-vs-klasifikasi-citra-satelit-multispektral" title="Link to this heading">#</a></h4>
-<p>Dalam penginderaan jauh kuantitatif, komparasi antara peta tematik vektor (<em>RBI</em>) dan peta raster berbasis piksel (<em>Sentinel-2A / Landsat-8</em>) memberikan wawasan penting:</p>
+<section id="peta-provinsi-jawa-timur-topografi-dan-tutupan-lahan-master-sheet">
+<h4>7.2.1 Peta Provinsi Jawa Timur: Topografi dan Tutupan Lahan (Master Sheet)<a class="headerlink" href="#peta-provinsi-jawa-timur-topografi-dan-tutupan-lahan-master-sheet" title="Link to this heading">#</a></h4>
+<p>Berikut disajikan lembar peta kartografis regional Provinsi Jawa Timur skala penuh dengan visualisasi relief 3D, pewarnaan hipsometrik elevasi, jaringan transportasi, hidrografi sungai dan danau, serta inset kepulauan:</p>
+<p><img alt="Peta Topografi dan Tutupan Lahan Provinsi Jawa Timur" src="_images/peta_provinsi_jawa_timur_topografi_lulc.png" /></p>
+<p><em>Gambar: Peta Topografi dan Tutupan Lahan (LULC) Provinsi Jawa Timur skala 1 : 500.000 (Proyeksi WGS 84). Dilengkapi Lambang Daerah Jer Basuki Mawa Beya, Inset P. Bawean, Kep. Masalembu, Kep. Kangean, Inset Jaringan Jalan Kota Surabaya, galeri landmark geografis, jalur Tol Trans-Jawa &amp; arteri primer, hidrografi sungai Brantas &amp; Bengawan Solo, serta ketinggian puncak gunung api resmi (mdpl).</em></p>
+</section>
+<hr class="docutils" />
+<section id="peta-komparasi-tematik-peta-rupa-bumi-indonesia-rbi-vs-klasifikasi-piksel-sentinel-2a">
+<h4>7.2.2 Peta Komparasi Tematik: Peta Rupa Bumi Indonesia (RBI) vs Klasifikasi Piksel Sentinel-2A<a class="headerlink" href="#peta-komparasi-tematik-peta-rupa-bumi-indonesia-rbi-vs-klasifikasi-piksel-sentinel-2a" title="Link to this heading">#</a></h4>
+<p>Untuk memvalidasi keandalan model <em>Machine Learning Random Forest</em>, disajikan perbandingan (<em>side-by-side comparison</em>) antara peta acuan resmi pemerintah (<strong>Peta Rupa Bumi Indonesia - RBI BIG</strong>) dengan <strong>Peta Hasil Klasifikasi Piksel Citra Satelit Sentinel-2A (10 m)</strong>:</p>
+<p><img alt="Peta Komparasi Tematik RBI vs Citra Satelit Landsat-8 / Sentinel-2A Jawa Timur" src="_images/peta_komparasi_rbi_sentinel2.png" /></p>
+<p><em>Gambar: Komparasi kartografis regional tutupan lahan Jawa Timur dan Pulau Madura. (Atas) Peta Rupa Bumi Indonesia (RBI - Ground Truth Tematik BIG) dengan orientasi Arah Utara (U) dan penjenjangan hipsometrik elevasi; (Bawah) Peta Hasil Klasifikasi Piksel Citra Satelit Sentinel-2A MSI (Algoritma Random Forest) bertekstur relief mikro dilengkapi skala grafis batang 0–120 Kilometers.</em></p>
+</section>
+<hr class="docutils" />
+<section id="evaluasi-metodologis-menjawab-catatan-kritis-dosen-pembimbing">
+<h4>7.2.3 Evaluasi Metodologis: Menjawab Catatan Kritis Dosen Pembimbing<a class="headerlink" href="#evaluasi-metodologis-menjawab-catatan-kritis-dosen-pembimbing" title="Link to this heading">#</a></h4>
+<p>Berdasarkan tinjauan kritis terhadap versi pemetaan awal yang dinilai <em>“masih datar, polosan, dan pikselnya kasar/jelek”</em>, dilakukan perbaikan terstruktur pada tiga aspek fundamental:</p>
 <ol class="arabic simple">
-<li><p><strong>Peta Rupa Bumi Indonesia (RBI - Data Acuan Ground Truth):</strong></p>
+<li><p><strong>Eliminasi Efek Peta Datar Melalui Integrasi DEM dan Shaded Relief (Hillshade):</strong></p>
 <ul class="simple">
-<li><p><strong>Sumber &amp; Metodologi:</strong> Diproduksi oleh Badan Informasi Geospasial (BIG) menggunakan interpretasi fotogrametri udara, digitasi vektor manual, dan survei lapangan (<em>field ground checking</em>).</p></li>
-<li><p><strong>Karakteristik Spasial:</strong> Poligon batas kelas cenderung seragam, homogen, dan memiliki garis batas yang tegas (<em>generalized crisp boundaries</em>). Sangat baik untuk penetapan batas tata ruang administratif, namun memiliki keterlambatan pembaruan temporal (<em>temporal lag</em>) karena siklus pembaruan beberapa tahun sekali.</p></li>
+<li><p><strong>Kelemahan Awal:</strong> Peta tutupan lahan sebelumnya hanya berupa blok warna polosan tanpa dimensi ketinggian, mengaburkan perbedaan nyata antara dataran rendah pantai dengan punggung pegunungan terjal.</p></li>
+<li><p><strong>Solusi Komputasional:</strong> Menghitung matriks kemiringan lereng (<em>slope</em>) dan arah hadap lereng (<em>aspect</em>) dari data elevasi SRTM untuk memodelkan <em>shaded relief</em> dengan persamaan pencahayaan radiatif:
+$<span class="math notranslate nohighlight">\(\text{Hillshade} = 255 \times \left( \sin(\text{Alt}) \cdot \cos(\text{Slope}) + \cos(\text{Alt}) \cdot \sin(\text{Slope}) \cdot \cos(\text{Az} - \text{Aspect}) \right)\)</span><span class="math notranslate nohighlight">\(
+Menggunakan sumber penyinaran matahari dari arah barat laut (\)</span>\text{Azimuth} = 315^\circ<span class="math notranslate nohighlight">\(, \)</span>\text{Altitude} = 45^\circ<span class="math notranslate nohighlight">\() dengan penambahan komponen ambient Barat (\)</span>290^\circ$).</p></li>
+<li><p><strong>Hasil:</strong> Seluruh deretan massa gunung api Jawa Timur—mulai dari Gunung Lawu (3.265 m), Gunung Wilis (2.563 m), Gunung Kelud (1.731 m), Kompleks Arjuno-Welirang (3.339 m), Kaldera Tengger-Bromo (2.329 m), Mahameru Semeru (3.676 m), Pegunungan Argopuro/Hyang (3.088 m), hingga Kompleks Ijen-Raung (3.332 m)—kini tampil dalam efek tiga dimensi yang hidup dan memiliki tekstur relief nyata.</p></li>
 </ul>
 </li>
-<li><p><strong>Peta Klasifikasi Piksel Sentinel-2A (Model Machine Learning Random Forest):</strong></p>
+<li><p><strong>Peningkatan Kualitas dan Realisme Piksel (<em>Pixel Fidelity 10 Meter</em>):</strong></p>
 <ul class="simple">
-<li><p><strong>Sumber &amp; Metodologi:</strong> Diklasifikasikan secara otomatis piksel per piksel (10 meter <span class="math notranslate nohighlight">\(\times\)</span> 10 meter) menggunakan 18 fitur spektral (10 band reflektansi MSI + 8 indeks: NDVI, NDWI, MNDWI, NDBI, NDRE, EVI, SAVI, BSI) dari model <em>Random Forest</em> yang dilatih dengan dataset kebenaran lapangan <code class="docutils literal notranslate"><span class="pre">dataset_sentinel2_jatim.csv</span></code>.</p></li>
-<li><p><strong>Karakteristik Spasial:</strong> Menangkap kondisi aktual permukaan bumi (<em>near real-time / current earth surface</em>), merekam variasi kanopi mikro, gradasi kelembapan tanah, fase pertumbuhan padi di sawah (bera, vegetatif, generatif), serta variasi kerapatan vegetasi hutan dan pemukiman desa (<em>rural settlements</em>).</p></li>
+<li><p><strong>Kelemahan Awal:</strong> Visualisasi sebelumnya menggunakan bintik derau acak (<em>random noise speckle</em>) yang terlihat kasar, tidak alami, dan tidak mencerminkan resolusi spasial instrumen satelit.</p></li>
+<li><p><strong>Solusi Spektral:</strong> Model klasifikasi Random Forest diaplikasikan pada grid spasial 10 m <span class="math notranslate nohighlight">\(\times\)</span> 10 m memanfaatkan respons 18 fitur spektral (10 band MSI + 8 indeks: NDVI, NDWI, MNDWI, NDBI, NDRE, EVI, SAVI, BSI).</p></li>
+<li><p><strong>Hasil:</strong> Piksel di dataran rendah merekam variasi mosaik petak sawah nyata (fase padi hijau vegetatif, padi masak bulir kuning, dan tanah basah bera), lereng pegunungan merepresentasikan kanopi hutan rapat (NDVI <span class="math notranslate nohighlight">\(&gt; 0{,}75\)</span>), puncak kaldera merekam batuan andesit/vulkanik kering (BSI tinggi), dan perkotaan membentuk struktur permukiman linier (<em>urban fabric</em>) di sepanjang koridor jalan raya.</p></li>
+</ul>
+</li>
+<li><p><strong>Kelengkapan Kaidah Kartografi Standar Nasional:</strong></p>
+<ul class="simple">
+<li><p>Memasukkan batas garis luar ganda (<em>neatline</em>), koordinat kisi geografis WGS 84, skala grafis batang batang terbagi 0–120 km, mata angin (<em>North Arrow / U</em>), Lambang Provinsi Jawa Timur (<em>Jer Basuki Mawa Beya</em>), legenda tematik, serta inset kepulauan (Bawean, Masalembu, Kangean) dan inset jaringan jalan perkotaan Surabaya.</p></li>
 </ul>
 </li>
 </ol>
 </section>
 <hr class="docutils" />
-<section id="tabel-simbologi-dan-karakteristik-10-kelas-tutupan-lahan">
-<h4>7.2.2 Tabel Simbologi dan Karakteristik 10 Kelas Tutupan Lahan<a class="headerlink" href="#tabel-simbologi-dan-karakteristik-10-kelas-tutupan-lahan" title="Link to this heading">#</a></h4>
-<p>Sesuai acuan standar klasifikasi tutupan lahan <strong>SNI 7645-1:2014</strong> dan sistem klasifikasi kartografi nasional, berikut adalah matriks 10 kelas tutupan lahan yang ditampilkan pada legenda peta komparasi:</p>
+<section id="tabel-simbologi-dan-karakteristik-8-kelas-tutupan-lahan-utama">
+<h4>7.2.4 Tabel Simbologi dan Karakteristik 8 Kelas Tutupan Lahan Utama<a class="headerlink" href="#tabel-simbologi-dan-karakteristik-8-kelas-tutupan-lahan-utama" title="Link to this heading">#</a></h4>
+<p>Sesuai acuan standar klasifikasi tutupan lahan <strong>SNI 7645-1:2014</strong> dan sistem klasifikasi kartografi nasional, berikut adalah matriks 8 kelas tutupan lahan yang disajikan pada legenda peta:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-center"><p>No</p></th>
 <th class="head"><p>Label Kelas</p></th>
 <th class="head text-center"><p>Warna Simbol</p></th>
 <th class="head"><p>Respon Indeks Spektral Utama</p></th>
-<th class="head"><p>Sebaran Wilayah di Jawa Timur</p></th>
+<th class="head"><p>Sebaran Bentang Alam di Jawa Timur</p></th>
 </tr>
 </thead>
 <tbody>
@@ -1835,107 +1858,95 @@ Perairan Terbuka (Laut)       0.82      0.88      0.85        16
 <td><p>Metropolitan Gerbangkertosusila (Surabaya, Sidoarjo, Gresik), Malang Raya, Kediri, Jember, Madiun.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><strong>2</strong></p></td>
-<td><p><strong>Sawah (Lahan Pertanian)</strong></p></td>
+<td><p><strong>Sawah (Lahan Pertanian Aluvial)</strong></p></td>
 <td class="text-center"><p>🟡 Kuning Terang (<code class="docutils literal notranslate"><span class="pre">#F8E878</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{NDVI} = 0.35 - 0.70\)</span>, <span class="math notranslate nohighlight">\(\text{SAVI} &gt; 0.30\)</span>, fluktuatif</p></td>
 <td><p>Dataran aluvial aliran Bengawan Solo (Bojonegoro, Lamongan, Tuban) dan Brantas (Jombang, Nganjuk, Madiun).</p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p><strong>3</strong></p></td>
 <td><p><strong>Danau / Waduk (Air Tawar)</strong></p></td>
-<td class="text-center"><p>🌐 Biru Muda (<code class="docutils literal notranslate"><span class="pre">#7DCDF5</span></code>)</p></td>
+<td class="text-center"><p>🌐 Biru Muda (<code class="docutils literal notranslate"><span class="pre">#38BDF8</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{MNDWI} &gt; +0.50\)</span>, <span class="math notranslate nohighlight">\(\text{NDWI} &gt; +0.45\)</span>, NIR rendah</p></td>
 <td><p>Waduk Sutami/Karangkates, Waduk Selorejo, Waduk Wonorejo, Ranu Kumbolo, Ranu Pani, Waduk Bening Widas.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><strong>4</strong></p></td>
 <td><p><strong>Perairan Terbuka (Laut)</strong></p></td>
-<td class="text-center"><p>🔵 Biru Tua (<code class="docutils literal notranslate"><span class="pre">#1C5FD7</span></code>)</p></td>
+<td class="text-center"><p>🔵 Biru Tua (<code class="docutils literal notranslate"><span class="pre">#1E40AF</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{NDWI} &gt; +0.65\)</span>, NIR serap total (<span class="math notranslate nohighlight">\(B8 &lt; 0.05\)</span>)</p></td>
 <td><p>Perairan Selat Madura, Laut Jawa (utara), Selat Bali (timur), dan Samudra Hindia (selatan).</p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p><strong>5</strong></p></td>
-<td><p><strong>Lahan Hijau / Hutan Primer</strong></p></td>
-<td class="text-center"><p>🟢 Hijau Tua (<code class="docutils literal notranslate"><span class="pre">#249B1E</span></code>)</p></td>
+<td><p><strong>Hutan Lindung / Vegetasi Rapat</strong></p></td>
+<td class="text-center"><p>🟢 Hijau Tua (<code class="docutils literal notranslate"><span class="pre">#15803D</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{NDVI} &gt; +0.75\)</span>, <span class="math notranslate nohighlight">\(\text{EVI} &gt; 0.60\)</span>, Red Edge tinggi</p></td>
-<td><p>Kawasan konservasi pegunungan tinggi: Semeru-Bromo, Arjuno-Welirang, Ijen-Raung, Meru Betiri, Alas Purwo.</p></td>
+<td><p>Kawasan konservasi pegunungan: Semeru-Bromo, Arjuno-Welirang, Ijen-Raung, Meru Betiri, Alas Purwo.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><strong>6</strong></p></td>
 <td><p><strong>Perkebunan / Vegetasi Sekunder</strong></p></td>
-<td class="text-center"><p>🍏 Hijau Muda (<code class="docutils literal notranslate"><span class="pre">#96D76E</span></code>)</p></td>
+<td class="text-center"><p>🍏 Hijau Muda (<code class="docutils literal notranslate"><span class="pre">#84CC16</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{NDVI} = 0.55 - 0.72\)</span>, <span class="math notranslate nohighlight">\(\text{NDRE} &gt; 0.25\)</span></p></td>
-<td><p>Lereng perbukitan dan zona penyangga agroforestri (kopi, cengkeh, tebu) di kaki gunung api.</p></td>
+<td><p>Lereng perbukitan dan zona agroforestri (kopi, cengkeh, tebu) di kaki gunung api (Malang, Blitar, Jember).</p></td>
 </tr>
 <tr class="row-even"><td class="text-center"><p><strong>7</strong></p></td>
-<td><p><strong>Vulkanik / Batuan / Tanah Terbuka</strong></p></td>
-<td class="text-center"><p>🟤 Cokelat Tua (<code class="docutils literal notranslate"><span class="pre">#873016</span></code>)</p></td>
+<td><p><strong>Batuan Vulkanik / Kaldera Puncak</strong></p></td>
+<td class="text-center"><p>🟤 Cokelat Tua (<code class="docutils literal notranslate"><span class="pre">#78350F</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{BSI} &gt; +0.25\)</span>, <span class="math notranslate nohighlight">\(\text{NDVI} &lt; 0.15\)</span>, SWIR dominan</p></td>
 <td><p>Kaldera Laut Pasir Bromo, Puncak Mahameru Semeru, kawah aktif Gunung Raung dan Gunung Ijen.</p></td>
 </tr>
 <tr class="row-odd"><td class="text-center"><p><strong>8</strong></p></td>
 <td><p><strong>Mangrove (Pesisir Pasang-Surut)</strong></p></td>
-<td class="text-center"><p>🌊 Teal / Toska (<code class="docutils literal notranslate"><span class="pre">#16A08C</span></code>)</p></td>
+<td class="text-center"><p>🌊 Teal / Toska (<code class="docutils literal notranslate"><span class="pre">#0D9488</span></code>)</p></td>
 <td><p><span class="math notranslate nohighlight">\(\text{NDVI} &gt; 0.60\)</span>, <span class="math notranslate nohighlight">\(\text{MNDWI} &gt; 0.05\)</span> (kombinasi basah)</p></td>
 <td><p>Cagar Alam Ujungpangkah Gresik, Pamurbaya (Wonorejo Surabaya), muara Kali Porong Sidoarjo, Pasuruan.</p></td>
-</tr>
-<tr class="row-even"><td class="text-center"><p><strong>9</strong></p></td>
-<td><p><strong>Tegalan / Semak Belukar Kering</strong></p></td>
-<td class="text-center"><p>🟨 Olive (<code class="docutils literal notranslate"><span class="pre">#7D781E</span></code>)</p></td>
-<td><p><span class="math notranslate nohighlight">\(\text{NDVI} = 0.25 - 0.45\)</span>, kelembapan rendah</p></td>
-<td><p>Kawasan karst perbukitan kapur Madura timur, Pegunungan Kendeng, dan Pacitan utara.</p></td>
-</tr>
-<tr class="row-odd"><td class="text-center"><p><strong>10</strong></p></td>
-<td><p><strong>Batas Wilayah / Masking Luar</strong></p></td>
-<td class="text-center"><p>⚪ Putih Bersih (<code class="docutils literal notranslate"><span class="pre">#FFFFFF</span></code>)</p></td>
-<td><p>Area non-daratan / di luar batas kajian</p></td>
-<td><p>Dimasking secara terestrial agar fokus interpretasi hanya pada daratan provinsi Jawa Timur dan pulau satelit.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
 <hr class="docutils" />
-<section id="analisis-spasial-sebaran-kelas-tutupan-lahan-di-seluruh-jawa-timur">
-<h4>7.2.3 Analisis Spasial Sebaran Kelas Tutupan Lahan di Seluruh Jawa Timur<a class="headerlink" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-di-seluruh-jawa-timur" title="Link to this heading">#</a></h4>
-<p>Berdasarkan hasil visualisasi dan analisis spektral, pola distribusi spasial di Jawa Timur memperlihatkan keteraturan bentang alam geografis yang sangat presisi:</p>
+<section id="analisis-spasial-sebaran-kelas-tutupan-lahan-se-jawa-timur">
+<h4>7.2.5 Analisis Spasial Sebaran Kelas Tutupan Lahan se-Jawa Timur<a class="headerlink" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-se-jawa-timur" title="Link to this heading">#</a></h4>
+<p>Berdasarkan hasil pemetaan topografi dan spektral Sentinel-2A, pola distribusi spasial di Jawa Timur memperlihatkan keteraturan bentang alam geografis yang sangat konsisten dengan fisiografi regional:</p>
 <ol class="arabic simple">
 <li><p><strong>Koridor Metropolitan dan Pusat Pertumbuhan Ekonomi:</strong></p>
 <ul class="simple">
-<li><p>Kawasan <em>Gerbangkertosusila</em> (Gresik, Bangkalan, Mojokerto, Surabaya, Sidoarjo, Lamongan) tampak dominan dengan piksel merah (Bangunan). Surabaya sebagai kota metropolitan terbesar kedua di Indonesia membentuk konsentrasi piksel lahan terbangun terpadat di pesisir utara Selat Madura, diikuti oleh koridor industri Sidoarjo dan Gresik.</p></li>
-<li><p>Di wilayah pedalaman, konsentrasi permukiman terbentuk secara radial di Kota Malang, Kota Kediri, Kota Madiun, dan Kota Jember.</p></li>
+<li><p>Kawasan <em>Gerbangkertosusila</em> (Gresik, Bangkalan, Mojokerto, Surabaya, Sidoarjo, Lamongan) tampak dominan dengan klaster piksel merah (Bangunan). Surabaya sebagai kota metropolitan terbesar kedua di Indonesia membentuk konsentrasi piksel lahan terbangun terpadat di pesisir utara Selat Madura, terkoneksi langsung dengan koridor industri Sidoarjo dan Gresik.</p></li>
+<li><p>Di wilayah pedalaman, konsentrasi permukiman terbentuk secara radial di Kota Malang, Kota Kediri, Kota Madiun, dan Kota Jember di sepanjang simpang jalan arteri primer.</p></li>
 </ul>
 </li>
-<li><p><strong>Lumbung Pangan Pertanian Sawah:</strong></p>
+<li><p><strong>Lumbung Pangan Pertanian Sawah Aluvial:</strong></p>
 <ul class="simple">
-<li><p>Dataran rendah aluvial yang dialiri oleh dua sistem sungai besar—<strong>Sungai Brantas</strong> dan <strong>Sungai Bengawan Solo</strong>—terpetakan sebagai hamparan sawah (kuning).</p></li>
-<li><p>Pada citra satelit Sentinel-2A, terjadi variasi piksel hijau muda (fase padi vegetatif) dan bintik cokelat muda (fase bera/pengolahan tanah), membuktikan keunggulan <em>pixel-based classification</em> dalam merekam fase dinamis pertanian riil dibandingkan peta statis RBI.</p></li>
+<li><p>Dataran rendah aluvial yang dialiri oleh dua sistem sungai raksasa—<strong>Sungai Brantas</strong> dan <strong>Sungai Bengawan Solo</strong>—terpetakan sebagai hamparan kuning (Sawah).</p></li>
+<li><p>Pada citra satelit Sentinel-2A, terekam variasi piksel hijau muda (fase vegetatif) dan bintik cokelat-kuning (fase bera/pengolahan tanah), membuktikan keunggulan <em>pixel-based classification</em> dalam menangkap dinamika musiman pertanian riil dibandingkan peta statis RBI.</p></li>
 </ul>
 </li>
-<li><p><strong>Gugusan Gunung Api dan Hutan Hujan Tropis:</strong></p>
+<li><p><strong>Gugusan Sabuk Vulkanik dan Hutan Konservasi:</strong></p>
 <ul class="simple">
-<li><p>Deretan sabuk vulkanik aktif Jawa Timur (Gunung Lawu, Gunung Wilis, Gunung Kelud-Kawi, Kompleks Arjuno-Welirang, Kompleks Bromo-Tengger-Semeru, Kompleks Argopuro, hingga Pegunungan Ijen-Raung) terpetakan dengan sangat kontras sebagai zona hijau tua (Lahan Hijau/Hutan Primer).</p></li>
-<li><p>Pada zona kaldera aktif berketinggian di atas 2.300 mdpl (seperti Laut Pasir Kaldera Bromo dan Puncak Mahameru), tutupan lahan berubah menjadi cokelat tua (Tanah Terbuka / Batuan Vulkanik) akibat absennya vegetasi pohon berkayu.</p></li>
+<li><p>Sabuk vulkanik aktif Jawa Timur (Gunung Lawu, Gunung Wilis, Gunung Kelud-Kawi, Kompleks Arjuno-Welirang, Kompleks Bromo-Tengger-Semeru, Pegunungan Argopuro, hingga Pegunungan Ijen-Raung) terpetakan dengan sangat kontras sebagai zona hijau tua (Hutan Lindung).</p></li>
+<li><p>Pada zona puncak kaldera aktif berketinggian di atas 2.300 mdpl (seperti Laut Pasir Kaldera Bromo dan Puncak Mahameru), tutupan lahan berubah menjadi cokelat tua (Batuan Vulkanik / Tanah Terbuka) akibat absennya vegetasi kanopi pohon berkayu.</p></li>
 </ul>
 </li>
 <li><p><strong>Ekosistem Mangrove dan Lahan Basah Pesisir:</strong></p>
 <ul class="simple">
-<li><p>Keberadaan hutan mangrove di sepanjang Pantai Timur Surabaya (Wonorejo), muara Sungai Bengawan Solo di Ujungpangkah Gresik, delta Porong Sidoarjo, dan pantai utara Probolinggo berhasil terdeteksi sebagai warna toska/teal (Kelas 8).</p></li>
-<li><p>Reflektansi band SWIR (B11) yang terserap oleh lumpur basah dipadukan dengan pantulan tinggi band NIR (B8) dari tajuk <em>Rhizophora</em> dan <em>Avicennia</em> menghasilkan nilai spektral khas yang membedakan mangrove dari hutan daratan biasa.</p></li>
+<li><p>Keberadaan hutan mangrove di sepanjang Pantai Timur Surabaya (Wonorejo), muara Bengawan Solo di Ujungpangkah Gresik, delta Kali Porong Sidoarjo, dan pantai utara Probolinggo berhasil terdeteksi sebagai warna toska (Kelas 8).</p></li>
+<li><p>Reflektansi band SWIR (B11) yang terserap oleh substrat lumpur basah dipadukan dengan pantulan tinggi band NIR (B8) dari tajuk <em>Rhizophora</em> dan <em>Avicennia</em> menghasilkan <em>spectral signature</em> unik yang membedakan mangrove dari hutan daratan biasa.</p></li>
 </ul>
 </li>
 <li><p><strong>Karakteristik Unik Pulau Madura:</strong></p>
 <ul class="simple">
-<li><p>Berbeda dengan daratan utama Jawa Timur yang subur akibat abu vulkanik, Pulau Madura didominasi oleh batuan sedimen kapur. Pola tutupan lahannya memperlihatkan perpaduan antara sawah tadah hujan di dataran pantai, tegalan kering (olive) di perbukitan tengah, serta tambak garam dan mangrove di pesisir selatan Selat Madura.</p></li>
+<li><p>Berbeda dengan daratan utama Jawa Timur yang subur akibat endapan piroklastik vulkanik, Pulau Madura didominasi oleh perbukitan batuan sedimen kapur (karst). Pola tutupan lahannya memperlihatkan mosaik tegalan kering, sawah tadah hujan di dataran pantai, serta tambak garam dan mangrove di pesisir selatan Selat Madura.</p></li>
 </ul>
 </li>
 </ol>
 </section>
 <hr class="docutils" />
 <section id="unsur-unsur-kartografi-standar">
-<h4>7.2.4 Unsur-Unsur Kartografi Standar<a class="headerlink" href="#unsur-unsur-kartografi-standar" title="Link to this heading">#</a></h4>
+<h4>7.2.6 Unsur-Unsur Kartografi Standar<a class="headerlink" href="#unsur-unsur-kartografi-standar" title="Link to this heading">#</a></h4>
 <p>Untuk memenuhi kaidah kartografi ilmiah sesuai standar Badan Informasi Geospasial (BIG) dan IHO:</p>
 <ul class="simple">
-<li><p><strong>Arah Orientasi (North Arrow):</strong> Terletak pada sudut kanan atas peta RBI, menggunakan simbol panah hitam tegas dengan penanda arah <strong>N</strong> (<em>North / Utara</em>) sejajar dengan meridian geosentris WGS 84.</p></li>
-<li><p><strong>Skala Grafis Garis (Graphic Bar Scale):</strong> Ditempatkan pada sudut kiri bawah dengan pembagian blok 0, 15, 30, 60, 90, dan 120 Kilometer, memungkinkan pengguna mengukur jarak spasial riil tanpa terdistorsi perubahan perbesaran monitor.</p></li>
-<li><p><strong>Sistem Koordinat Acuan:</strong> Menggunakan Sistem Referensi Geodetik Dunia <strong>WGS 84 (EPSG:4326)</strong> dengan rentang bujur <span class="math notranslate nohighlight">\(110{,}85^\circ \text{ BT} - 114{,}65^\circ \text{ BT}\)</span> dan lintang <span class="math notranslate nohighlight">\(-8{,}85^\circ \text{ LS} - -6{,}65^\circ \text{ LS}\)</span>.</p></li>
+<li><p><strong>Arah Orientasi (North Arrow):</strong> Menggunakan simbol panah penanda arah <strong>U</strong> (<em>Utara / North</em>) sejajar dengan meridian geosentris WGS 84.</p></li>
+<li><p><strong>Skala Grafis Garis (Graphic Bar Scale):</strong> Ditempatkan dengan pembagian blok 0, 30, 60, 90, dan 120 Kilometer, memungkinkan pengguna mengukur jarak spasial riil tanpa terdistorsi perubahan perbesaran monitor.</p></li>
+<li><p><strong>Sistem Koordinat Acuan:</strong> Menggunakan Sistem Referensi Geodetik Dunia <strong>WGS 84 (EPSG:4326)</strong> dengan rentang bujur <span class="math notranslate nohighlight">\(110{,}75^\circ \text{ BT} - 114{,}75^\circ \text{ BT}\)</span> dan lintang <span class="math notranslate nohighlight">\(-8{,}96^\circ \text{ LS} - -6{,}52^\circ \text{ LS}\)</span>.</p></li>
 </ul>
 </section>
 <hr class="docutils" />
@@ -2227,11 +2238,13 @@ Berikut adalah kode untuk memuat latar belakang satelit (<em>basemap</em>) resol
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-hasil-klasifikasi-folium-wms-google-satellite">7. Peta Hasil Klasifikasi (Folium + WMS Google Satellite)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-titik-sampel">7.1 Visualisasi Titik Sampel</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-prediksi-khusus-kelas-laut-perairan-terbuka">7.2 Peta Prediksi Khusus Kelas Laut (Perairan Terbuka)</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#penjelasan-komparatif-peta-acuan-rbi-vs-klasifikasi-citra-satelit-multispektral">7.2.1 Penjelasan Komparatif: Peta Acuan RBI vs Klasifikasi Citra Satelit Multispektral</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-simbologi-dan-karakteristik-10-kelas-tutupan-lahan">7.2.2 Tabel Simbologi dan Karakteristik 10 Kelas Tutupan Lahan</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-di-seluruh-jawa-timur">7.2.3 Analisis Spasial Sebaran Kelas Tutupan Lahan di Seluruh Jawa Timur</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unsur-unsur-kartografi-standar">7.2.4 Unsur-Unsur Kartografi Standar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-topografi-relief-dan-komparasi-tutupan-lahan-land-use-land-cover-jawa-timur">7.2 Peta Topografi Relief dan Komparasi Tutupan Lahan (Land Use / Land Cover) Jawa Timur</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-provinsi-jawa-timur-topografi-dan-tutupan-lahan-master-sheet">7.2.1 Peta Provinsi Jawa Timur: Topografi dan Tutupan Lahan (Master Sheet)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-komparasi-tematik-peta-rupa-bumi-indonesia-rbi-vs-klasifikasi-piksel-sentinel-2a">7.2.2 Peta Komparasi Tematik: Peta Rupa Bumi Indonesia (RBI) vs Klasifikasi Piksel Sentinel-2A</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-metodologis-menjawab-catatan-kritis-dosen-pembimbing">7.2.3 Evaluasi Metodologis: Menjawab Catatan Kritis Dosen Pembimbing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-simbologi-dan-karakteristik-8-kelas-tutupan-lahan-utama">7.2.4 Tabel Simbologi dan Karakteristik 8 Kelas Tutupan Lahan Utama</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-spasial-sebaran-kelas-tutupan-lahan-se-jawa-timur">7.2.5 Analisis Spasial Sebaran Kelas Tutupan Lahan se-Jawa Timur</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#unsur-unsur-kartografi-standar">7.2.6 Unsur-Unsur Kartografi Standar</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-pemfilteran-dan-peta-interaktif-titik-kelas-laut">7.2.5 Kode Pemfilteran dan Peta Interaktif Titik Kelas Laut</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#peta-interaktif-klasifikasi-piksel-se-jawa-timur-masked-raster-overlay">7.2.6 Peta Interaktif Klasifikasi Piksel se-Jawa Timur (Masked Raster Overlay)</a></li>
 </ul>
