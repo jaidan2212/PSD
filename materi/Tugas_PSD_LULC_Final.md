@@ -10,7 +10,7 @@ Materi ini berisi alur lengkap: **pemahaman data → pengumpulan data → deskri
 2. Data Collection (persiapan lingkungan, pembacaan shapefile, penentuan sampel, ekstraksi citra)
 3. Deskripsi Fitur dan Rumusnya
 4. Eksplorasi Data (EDA)
-5. Pemodelan Random Forest (data training dan testing)
+5. Pemodelan Random Forest dan Evaluasi Akurasi (Overall Accuracy, Kappa, Confusion Matrix, Classification Report)
 6. Eksperimen dan Evaluasi (rasio, fitur, hiperparameter)
 7. Peta Hasil Klasifikasi (Folium + Google Satellite WMS)
 8. Kesimpulan
@@ -392,7 +392,7 @@ plt.show()
 
 ---
 
-## 5. Pemodelan (Random Forest) dan Evaluasi
+## 5. Pemodelan (Random Forest) dan Evaluasi Akurasi
 
 Algoritma **Random Forest** digunakan karena akurasinya secara umum lebih unggul dan kokoh (*robust*) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar **80% *training* (data latih) dan 20% *testing* (data uji)**.
 
@@ -412,7 +412,15 @@ Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari t
 - {download}`Download Data Training (80%) <data_training.csv>`
 - {download}`Download Data Testing (20%) <data_testing.csv>`
 
+### 5.1 Pelatihan Model Random Forest
+
+Model dilatih menggunakan algoritma **Random Forest** dengan 100 *decision trees* (`n_estimators=100`) dan *random state* 42. Seluruh 18 fitur spektral (10 band Sentinel-2A dan 8 indeks spektral) diumpankan ke model:
+
 ```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, confusion_matrix
+
 X = df[FITUR]
 y = df['kelas_id']
 kelas_map = dict(zip(df['kelas_id'], df['kelas']))
@@ -421,36 +429,99 @@ NAMA_KELAS = [kelas_map[i] for i in sorted(kelas_map.keys())]
 # Split Data 80% Training, 20% Testing dengan stratify agar proporsi kelas terjaga
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-print(f"Jumlah Data Training: {len(X_train)}")
-print(f"Jumlah Data Testing: {len(X_test)}")
+print(f"Jumlah Data Training : {len(X_train)} piksel")
+print(f"Jumlah Data Testing  : {len(X_test)} piksel")
 
 # Pelatihan Model
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model.fit(X_train, y_train)
-y_pred = rf_model.predict(X_test)
 
-print("\nAkurasi Model Random Forest:", accuracy_score(y_test, y_pred))
-print("\nLaporan Klasifikasi:\n", classification_report(y_test, y_pred, target_names=NAMA_KELAS))
+# Prediksi pada Data Uji (Testing)
+y_pred = rf_model.predict(X_test)
 ```
 
-**Laporan Klasifikasi:**
+---
+
+### 5.2 Ringkasan Metrik Akurasi Klasifikasi (Overall Accuracy & Cohen's Kappa)
+
+Untuk mengukur performa model secara objektif pada data uji yang belum pernah dilihat sebelumnya (*unseen test data*), dievaluasi dua metrik utama standar internasional penginderaan jauh: **Akurasi Keseluruhan (*Overall Accuracy*)** dan **Koefisien Cohen's Kappa ($\kappa$)**.
+
+```{admonition} Ringkasan Hasil Akurasi Model Random Forest
+:class: tip
+* **Overall Accuracy (OA):** **95.19%** (0.9519) &mdash; Dari total 104 piksel data uji independen, sebanyak **99 piksel berhasil diprediksi dengan tepat**, dan hanya 5 piksel yang mengalami misklasifikasi.
+* **Cohen's Kappa Coefficient ($\kappa$):** **0.9422** &mdash; Nilai $\kappa > 0.81$ mengindikasikan tingkat reliabilitas dan kesepakatan klasifikasi **"Almost Perfect Agreement"** (Kesesuaian Sangat Sempurna) antara prediksi model dengan label referensi kebenaran medan (*ground truth*).
+* **5-Fold Cross-Validation Accuracy:** **95.38% $\pm$ 1.33%** &mdash; Membuktikan stabilitas performa model di seluruh variasi lipatan sampel, menegaskan model terbebas dari *overfitting*.
+* **Macro Average F1-Score:** **94.79%** (0.9479)
+* **Weighted Average F1-Score:** **95.18%** (0.9518)
+```
+
+Berikut adalah kode Python untuk mengekstrak metrik akurasi kuantitatif tersebut:
+
+```python
+# 1. Menghitung Overall Accuracy dan Cohen's Kappa
+akurasi_oa = accuracy_score(y_test, y_pred)
+skor_kappa = cohen_kappa_score(y_test, y_pred)
+
+print(f"Overall Accuracy (Akurasi Keseluruhan) : {akurasi_oa:.4f} ({akurasi_oa*100:.2f}%)")
+print(f"Cohen's Kappa Coefficient             : {skor_kappa:.4f}")
+print("\nLaporan Klasifikasi Lengkap (Precision, Recall, F1-Score):\n")
+print(classification_report(y_test, y_pred, target_names=NAMA_KELAS, digits=4))
+```
+
+**Output Terminal:**
 ```text
+Overall Accuracy (Akurasi Keseluruhan) : 0.9519 (95.19%)
+Cohen's Kappa Coefficient             : 0.9422
+
+Laporan Klasifikasi Lengkap (Precision, Recall, F1-Score):
                          precision    recall  f1-score   support
 
-                  Sawah       1.00      1.00      1.00        20
-               Bangunan       1.00      1.00      1.00        20
-               Mangrove       1.00      1.00      1.00        16
-            Lahan Hijau       1.00      1.00      1.00        16
-Perairan Terbuka (Laut)       0.82      0.88      0.85        16
-                  Danau       0.87      0.81      0.84        16
+                  Sawah     1.0000    1.0000    1.0000        20
+               Bangunan     1.0000    1.0000    1.0000        20
+               Mangrove     1.0000    1.0000    1.0000        16
+            Lahan Hijau     1.0000    1.0000    1.0000        16
+Perairan Terbuka (Laut)     0.8235    0.8750    0.8485        16
+                  Danau     0.8667    0.8125    0.8387        16
 
-               accuracy                           0.95       104
-              macro avg       0.95      0.95      0.95       104
-           weighted avg       0.95      0.95      0.95       104
+               accuracy                         0.9519       104
+              macro avg     0.9484    0.9479    0.9479       104
+           weighted avg     0.9523    0.9519    0.9518       104
 ```
 
-### 5.1 Confusion Matrix
-*Confusion matrix* memperlihatkan dengan jelas kelas mana yang berhasil diprediksi dengan sempurna dan mana yang masih saling tertukar (misalnya antara Sawah dan Lahan Hijau karena sama-sama berupa tutupan vegetasi).
+---
+
+### 5.3 Tabel Metrik Kinerja per Kelas Lahan (Standar Penginderaan Jauh)
+
+Dalam literatur penginderaan jauh (*Remote Sensing*), metrik evaluasi klasifikasi memiliki padanan istilah khusus:
+- **User's Accuracy (Precision):** Peluang bahwa suatu piksel yang diklasifikasikan pada peta benar-benar mewakili kelas tersebut di lapangan ($UA = \frac{TP}{TP + FP}$).
+- **Producer's Accuracy (Recall):** Peluang bahwa suatu area di lapangan berhasil diidentifikasi dengan benar oleh algoritma klasifikasi ($PA = \frac{TP}{TP + FN}$).
+- **F1-Score:** Rata-rata harmonik antara *User's Accuracy* dan *Producer's Accuracy*.
+
+Tabel berikut menyajikan rincian akurasi untuk keenam kelas tutupan lahan:
+
+| Kelas Tutupan Lahan | User's Accuracy (*Precision*) | Producer's Accuracy (*Recall*) | F1-Score | Data Uji (*Support*) | Kategori Akurasi |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **Sawah** | **100.00%** | **100.00%** | **1.0000** | 20 piksel | Sempurna (100%) |
+| **Bangunan** | **100.00%** | **100.00%** | **1.0000** | 20 piksel | Sempurna (100%) |
+| **Mangrove** | **100.00%** | **100.00%** | **1.0000** | 16 piksel | Sempurna (100%) |
+| **Lahan Hijau** | **100.00%** | **100.00%** | **1.0000** | 16 piksel | Sempurna (100%) |
+| **Perairan Terbuka (Laut)** | 82.35% | 87.50% | 0.8485 | 16 piksel | Sangat Tinggi (>80%) |
+| **Danau** | 86.67% | 81.25% | 0.8387 | 16 piksel | Sangat Tinggi (>80%) |
+| **Rata-rata Makro (*Macro Avg*)** | **94.84%** | **94.79%** | **0.9479** | **104 piksel** | **Sangat Baik** |
+| **Rata-rata Tertimbang (*Weighted Avg*)** | **95.23%** | **95.19%** | **0.9518** | **104 piksel** | **Sangat Baik** |
+| **Overall Accuracy (Akurasi Total)** | <td colspan="3">**95.19%** (99 dari 104 piksel terklasifikasi benar)</td> | <td colspan="2">**Kappa ($\kappa$): 0.9422**</td> |
+
+Visualisasi perbandingan metrik akurasi antar kelas ditunjukkan pada grafik batang di bawah ini:
+
+![Evaluasi Metrik Akurasi per Kelas Lahan](output/grafik_akurasi_per_kelas.png)
+
+*Gambar: Perbandingan User's Accuracy (Precision), Producer's Accuracy (Recall), dan F1-Score untuk keenam kelas tutupan lahan dengan garis acuan Akurasi Keseluruhan (Overall Accuracy) 95.19%.*
+
+---
+
+### 5.4 Matriks Kebingungan (*Confusion Matrix*) dan Analisis Kesalahan (*Error Analysis*)
+
+*Confusion matrix* memetakan secara detail jumlah piksel yang berhasil diprediksi secara tepat pada diagonal utama dan piksel yang saling tertukar di luar diagonal:
 
 ```python
 cm = confusion_matrix(y_test, y_pred)
@@ -459,11 +530,37 @@ sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
             xticklabels=NAMA_KELAS, yticklabels=NAMA_KELAS)
 plt.xlabel('Prediksi')
 plt.ylabel('Aktual')
-plt.title('Confusion Matrix - Random Forest')
+plt.title('Confusion Matrix - Random Forest (Akurasi: 95.19%)')
+plt.tight_layout()
 plt.show()
 ```
 
 ![Confusion Matrix - Random Forest](output/confusion_matrix.png)
+
+*Gambar: Matriks Kebingungan (Confusion Matrix) model Random Forest pada data uji (104 sampel).*
+
+#### Rincian Tabel Matriks Kebingungan (*Error Matrix*):
+
+| Kelas Aktual (Ground Truth) | Pred: Sawah | Pred: Bangunan | Pred: Mangrove | Pred: Lahan Hijau | Pred: Laut | Pred: Danau | Total Aktual | Producer's Acc. |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Sawah** | **20** | 0 | 0 | 0 | 0 | 0 | 20 | **100.00%** |
+| **Bangunan** | 0 | **20** | 0 | 0 | 0 | 0 | 20 | **100.00%** |
+| **Mangrove** | 0 | 0 | **16** | 0 | 0 | 0 | 16 | **100.00%** |
+| **Lahan Hijau** | 0 | 0 | 0 | **16** | 0 | 0 | 16 | **100.00%** |
+| **Perairan Terbuka (Laut)** | 0 | 0 | 0 | 0 | **14** | 2 | 16 | **87.50%** |
+| **Danau** | 0 | 0 | 0 | 0 | 3 | **13** | 16 | **81.25%** |
+| **Total Prediksi** | **20** | **20** | **16** | **16** | **17** | **15** | **104** | - |
+| **User's Accuracy** | **100%** | **100%** | **100%** | **100%** | **82.35%** | **86.67%** | - | **OA: 95.19%** |
+
+#### Analisis Ilmiah Kesalahan Klasifikasi:
+1. **Keberhasilan Klasifikasi Sempurna (100%):**
+   - Sebanyak **4 dari 6 kelas** (Sawah, Bangunan, Mangrove, dan Lahan Hijau) berhasil diklasifikasikan dengan akurasi mutlak **100%** tanpa satupun piksel tertukar.
+   - Pembedaan antara vegetasi terestrial (Lahan Hijau dan Sawah) terhadap vegetasi pesisir (Mangrove) terpisahkan secara tegas berkat kontribusi band inframerah dekat *Narrow NIR* (B8A) dan indeks *Red Edge* (NDRE) yang sangat sensitif terhadap struktur biomassa kanopi dan salinitas tanah.
+2. **Karakteristik Kesalahan Minor pada Badan Air (Laut vs Danau):**
+   - Misklasifikasi hanya terjadi secara terisolasi antara dua kelas perairan: **Perairan Terbuka (Laut)** dan **Danau**.
+   - Dari 16 sampel Laut, 14 terprediksi benar dan 2 terprediksi Danau (kesalahan komisi 12.5%).
+   - Dari 16 sampel Danau, 13 terprediksi benar dan 3 terprediksi Laut (kesalahan omisi 18.75%).
+   - **Penyebab Spektral:** Kedua kelas merupakan badan air yang memiliki profil penyerapan gelombang inframerah dekat (NIR/SWIR) yang sangat kuat, sehingga nilai indeks NDWI dan MNDWI keduanya berada pada rentang positif tinggi yang serupa. Variasi pantulan hanya ditentukan oleh tingkat kekeruhan air (*turbidity*), alga renik/klorofil terlarut, dan kedalaman batimetri perairan.
 
 ---
 
@@ -898,10 +995,24 @@ peta
 
 ## 8. Kesimpulan
 
-Melalui eksperimen dengan model **Random Forest** dan klasifikasi berdasar 6 kelas (mengacu pada SNI), didapatkan peningkatan kemampuan deteksi serta pemetaan spasial yang lebih jelas menggunakan WMS satelit Google Maps melalui library *Folium*.
+Melalui eksperimen klasifikasi tutupan dan penggunaan lahan (LULC) Provinsi Jawa Timur menggunakan citra satelit **Sentinel-2A**, 18 fitur spektral, dan algoritma **Random Forest**, diperoleh hasil dan temuan penting sebagai berikut:
 
-**Keterbatasan & Catatan Lanjut:**
-1. **Jumlah sampel:** Penambahan sampel, terutama untuk kelas minoritas laut dan mangrove akan memperkuat kemampuan prediksi.
-2. **Kemiripan spektral:** Pasangan kelas "Sawah vs Lahan Hijau" (sama-sama vegetasi) adalah yang paling berpotensi tertukar. Hal ini terkonfirmasi dari *Confusion Matrix*.
-3. **Model Terpilih:** Random Forest berhasil mempelajari interaksi antar band (seperti B8A) dan indeks spektral (NDVI, EVI) lebih tangguh untuk klasifikasi tutupan lahan kompleks.
-4. **Pendekatan Metodologi:** Klasifikasi berbasis piksel (*pixel-based*) yang dipadukan dengan area referensi poligon (*polygon ground-truth ROI*) terbukti sangat efisien dan akurat untuk memetakan mosaik bentang alam Jawa Timur pada resolusi 10 m tanpa memerlukan beban komputasi segmentasi citra yang berat (*OBIA*).
+1. **Performa Akurasi Model yang Sangat Tinggi:**
+   - Model Random Forest berhasil membukukan **Akurasi Keseluruhan (*Overall Accuracy*) sebesar 95.19%** pada data uji independen (20% data testing, 104 piksel), di mana 99 sampel berhasil diprediksi secara tepat.
+   - Nilai **Koefisien Cohen's Kappa ($\kappa$) mencapai 0.9422**, yang masuk dalam kategori **"Almost Perfect Agreement"** (kesesuaian klasifikasi hampir sempurna menurut standar internasional penginderaan jauh).
+   - Pengujian validasi silang berulang (5-Fold Stratified Cross-Validation) menghasilkan rata-rata **95.38% $\pm$ 1.33%**, membuktikan model sangat kokoh (*robust*), stabil, dan bebas dari gejala *overfitting*.
+
+2. **Daya Pembeda Antar Kelas (Separabilitas Spektral):**
+   - Sebanyak **4 dari 6 kelas** (Sawah, Bangunan, Mangrove, dan Lahan Hijau) berhasil diklasifikasikan dengan **akurasi sempurna 100.00%** (Precision 100%, Recall 100%, F1-Score 1.0000).
+   - Pembedaan tajam antara sawah dan lahan hijau dapat terwujud berkat integrasi band Narrow NIR (B8A) dan indeks vegetasi (NDVI, EVI, SAVI).
+   - Misklasifikasi minor hanya terjadi pada batas spektral antara **Perairan Terbuka (Laut)** dan **Danau** (Precision 82.35% vs 86.67%) akibat kedua badan air sama-sama menyerap radiasi inframerah secara masif, dengan variasi hanya pada tingkat kekeruhan dan kedalaman.
+
+3. **Efisiensi Metodologi Berbasis Piksel (*Pixel-Based*):**
+   - Pendekatan klasifikasi berbasis piksel 10 meter yang dipandu oleh batas delimitasi kebenaran medan (*polygon ground-truth ROI*) terbukti sangat efisien secara komputasi dan mampu memetakan mosaik spasial wilayah Jawa Timur secara detail tanpa memerlukan segmentasi poligon citra (*OBIA*) yang memakan beban memori besar.
+
+4. **Integrasi Kartografis dan Visualisasi Spasial:**
+   - Visualisasi peta interaktif *Folium* dengan integrasi layer Google Satellite WMS serta peta master topografi relief hillshade DEM 90m memberikan pemahaman geospasial yang komprehensif bagi perencana tata ruang dan analis lingkungan.
+
+**Rekomendasi Pengembangan Lanjut:**
+1. **Peningkatan Sampel Spektral Perairan:** Penambahan sampel badan air dengan variasi batimetri dan tingkat sedimentasi musiman (musim kemarau vs hujan) guna semakin memisahkan karakteristik danau air tawar dan laut dangkal.
+2. **Eksplorasi Deret Waktu (*Time-Series Sentinel-2*):** Memanfaatkan komposit citra multitemporal sepanjang siklus tanam padi untuk mendeteksi fase penggenangan, vegetatif, dan panen pada lahan sawah secara dinamis.
