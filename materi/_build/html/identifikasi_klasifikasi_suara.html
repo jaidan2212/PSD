@@ -385,16 +385,46 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perangkat-lunak-dan-library-python">4. Perangkat Lunak dan Library Python</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-dan-karakteristik-sampel-audio">5. Dataset dan Karakteristik Sampel Audio</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-dan-spesifikasi-sampel">5.1 Distribusi dan Spesifikasi Sampel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perangkat-lunak-dan-library-python">4. Perangkat Lunak dan Library Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#arsitektur-modul-klasifikasi-scikit-learn-stack">4.1 Arsitektur Modul Klasifikasi (<code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> Stack)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-pengolahan-audio-sistematis">6. Tahapan Pengolahan Audio Sistematis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-python">7. Implementasi Kode Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-dan-karakteristik-sampel-audio">5. Dataset dan Karakteristik Sampel Audio</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-dan-spesifikasi-sampel">5.1 Distribusi dan Spesifikasi Sampel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skema-partisi-dataset-untuk-pelatihan-dan-pengujian-klasifikasi">5.2 Skema Partisi Dataset untuk Pelatihan dan Pengujian Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-stratified-train-test-split-80-20">A. Stratified Train-Test Split (80:20)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-5-fold-stratified-cross-validation">B. 5-Fold Stratified Cross-Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-signifikansi-keseimbangan-kelas-class-balance">C. Signifikansi Keseimbangan Kelas (<em>Class Balance</em>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-pengolahan-audio-sistematis">6. Tahapan Pengolahan Audio Sistematis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-transisi-sinyal-mentah-ke-vektor-fitur">6.1 Alur Transisi: Sinyal Mentah ke Vektor Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-transisi-vektor-fitur-ke-keputusan-klasifikasi">6.2 Alur Transisi: Vektor Fitur ke Keputusan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-agregasi-statistik-konstruksi-ruang-fitur-mathbb-r-32">Tahap 4: Agregasi Statistik &amp; Konstruksi Ruang Fitur (<span class="math notranslate nohighlight">\(\mathbb{R}^{32}\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-5-normalisasi-z-score-standardscaler-pencegahan-data-leakage">Tahap 5: Normalisasi Z-Score (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>) &amp; Pencegahan Data Leakage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-6-mekanisme-klasifikasi-support-vector-machine-kernel-rbf">Tahap 6: Mekanisme Klasifikasi Support Vector Machine (Kernel RBF)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-7-mekanisme-klasifikasi-random-forest-100-trees">Tahap 7: Mekanisme Klasifikasi Random Forest (100 Trees)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-8-protokol-evaluasi-multi-metrik">Tahap 8: Protokol Evaluasi Multi-Metrik</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-python">7. Implementasi Kode Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-ekstraksi-fitur-audio-data-ingestion-audio-processing">7.1 Kode Ekstraksi Fitur Audio (Data Ingestion &amp; Audio Processing)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-pipeline-klasifikasi-cross-validation-dan-evaluasi-visual">7.2 Kode Pipeline Klasifikasi, Cross-Validation, dan Evaluasi Visual</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual">8. Hasil Ekstraksi Fitur Aktual</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pratinjau-sampel-fitur-nyata">8.1 Pratinjau Sampel Fitur Nyata</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rangkuman-statistik-komparatif-antar-kelas">8.2 Rangkuman Statistik Komparatif Antar-Kelas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler">8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-bahaya-distorsi-geometris-fitur-mentah-scale-disparity-distortion">A. Bahaya Distorsi Geometris Fitur Mentah (<em>Scale Disparity Distortion</em>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-perbandingan-distribusi-nilai-sebelum-vs-sesudah-z-score">B. Perbandingan Distribusi Nilai Sebelum vs Sesudah Z-score</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-daya-pisah-fitur-feature-separability-terhadap-kelas-klasifikasi">8.4 Analisis Daya Pisah Fitur (<em>Feature Separability</em>) terhadap Kelas Klasifikasi</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-dan-analisis-komparatif">9. Visualisasi dan Analisis Komparatif</a><ul class="nav section-nav flex-column">
@@ -478,11 +508,37 @@ document.write(`
 <li><p>3.5 Mel-Frequency Cepstral Coefficients (MFCC)</p></li>
 </ul>
 </li>
-<li><p>Perangkat Lunak dan Library Python</p></li>
-<li><p>Dataset dan Karakteristik Sampel Audio</p></li>
-<li><p>Tahapan Pengolahan Audio Sistematis</p></li>
-<li><p>Implementasi Kode Python</p></li>
-<li><p>Hasil Ekstraksi Fitur Aktual</p></li>
+<li><p>Perangkat Lunak dan Library Python</p>
+<ul class="simple">
+<li><p>4.1 Arsitektur Modul Klasifikasi (scikit-learn Stack)</p></li>
+</ul>
+</li>
+<li><p>Dataset dan Karakteristik Sampel Audio</p>
+<ul class="simple">
+<li><p>5.1 Distribusi dan Spesifikasi Sampel</p></li>
+<li><p>5.2 Skema Partisi Dataset untuk Pelatihan dan Pengujian Klasifikasi</p></li>
+</ul>
+</li>
+<li><p>Tahapan Pengolahan Audio Sistematis</p>
+<ul class="simple">
+<li><p>6.1 Alur Transisi: Sinyal Mentah ke Vektor Fitur</p></li>
+<li><p>6.2 Alur Transisi: Vektor Fitur ke Keputusan Klasifikasi</p></li>
+</ul>
+</li>
+<li><p>Implementasi Kode Python</p>
+<ul class="simple">
+<li><p>7.1 Kode Ekstraksi Fitur Audio (Data Ingestion &amp; Audio Processing)</p></li>
+<li><p>7.2 Kode Pipeline Klasifikasi, Cross-Validation, dan Evaluasi Visual</p></li>
+</ul>
+</li>
+<li><p>Hasil Ekstraksi Fitur Aktual</p>
+<ul class="simple">
+<li><p>8.1 Pratinjau Sampel Fitur Nyata</p></li>
+<li><p>8.2 Rangkuman Statistik Komparatif Antar-Kelas</p></li>
+<li><p>8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah StandardScaler)</p></li>
+<li><p>8.4 Analisis Daya Pisah Fitur (Feature Separability) terhadap Kelas Klasifikasi</p></li>
+</ul>
+</li>
 <li><p>Visualisasi dan Analisis Komparatif</p></li>
 <li><p>Proses Identifikasi dan Pemodelan Klasifikasi</p></li>
 <li><p>Evaluasi Hasil dan Performa Model</p></li>
@@ -644,50 +700,113 @@ $<span class="math notranslate nohighlight">\(c[j] = \sum_{m=1}^{M} S[m] \cos\le
 <hr class="docutils" />
 <section id="perangkat-lunak-dan-library-python">
 <h2>4. Perangkat Lunak dan Library Python<a class="headerlink" href="#perangkat-lunak-dan-library-python" title="Link to this heading">#</a></h2>
-<p>Eksperimen ini dibangun menggunakan ekosistem ilmiah Python dengan dependensi library sebagai berikut:</p>
+<p>Eksperimen pengolahan sinyal dan klasifikasi suara ini dibangun menggunakan ekosistem ilmiah Python dengan dependensi pustaka utama sebagai berikut:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>Perangkat / Library</p></th>
 <th class="head"><p>Versi</p></th>
-<th class="head"><p>Peran dan Fungsi dalam Praktikum</p></th>
+<th class="head"><p>Peran dan Fungsi Spesifik dalam Pipeline</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><strong>Python</strong></p></td>
 <td><p>3.10.x</p></td>
-<td><p>Lingkungan komputasi utama</p></td>
+<td><p>Lingkungan komputasi dan runtime eksekusi utama</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>librosa</strong></p></td>
 <td><p>0.10.x</p></td>
-<td><p>Ekstraksi fitur audio (RMS, Spectral Centroid, ZCR, MFCC) dan dekode sinyal</p></td>
+<td><p>Ekstraksi fitur audio (RMS, Spectral Centroid, ZCR, MFCC), framing STFT, dan konversi sample rate</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>soundfile</strong></p></td>
 <td><p>0.12.x</p></td>
-<td><p>Backend pembaca file audio PCM WAV tanpa kompresi</p></td>
+<td><p>Backend I/O pembaca berkas audio linear PCM WAV berkecepatan tinggi</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>imageio-ffmpeg</strong></p></td>
 <td><p>0.6.0</p></td>
-<td><p>Penyedia pustaka biner FFmpeg portabel untuk mendekode format MP3, AAC, dan M4A</p></td>
+<td><p>Penyedia dependensi biner FFmpeg portabel untuk dekoding format terkompresi (MP3, AAC, M4A)</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>numpy</strong></p></td>
 <td><p>1.23+</p></td>
-<td><p>Operasi matriks, komputasi numerik, dan agregasi statistik (mean, std)</p></td>
+<td><p>Komputasi aljabar linier, manipulasi array multidimensi, dan kalkulasi statistik deskriptif</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>pandas</strong></p></td>
 <td><p>2.0+</p></td>
-<td><p>Manajemen struktur data tabel tabular (DataFrame) dan ekspor hasil ke CSV</p></td>
+<td><p>Struktur data tabular (DataFrame), pengindeksan metadata, dan manajemen dataset fitur CSV</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>scikit-learn</strong></p></td>
 <td><p>1.3+</p></td>
-<td><p>Standardisasi (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>), pemodelan ML (SVM, Random Forest), dan metrik evaluasi</p></td>
+<td><p>Pipeline machine learning: scaling fitur, pemodelan klasifikasi (SVM, Random Forest), dan metrik evaluasi</p></td>
 </tr>
 <tr class="row-odd"><td><p><strong>matplotlib</strong></p></td>
 <td><p>3.7+</p></td>
-<td><p>Visualisasi waveform, spektrogram, diagram kurva temporal, boxplot, dan confusion matrix</p></td>
+<td><p>Pembuatan visualisasi visual: waveform, spektrogram STFT, heatmap MFCC, boxplot, dan confusion matrix</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<section id="arsitektur-modul-klasifikasi-scikit-learn-stack">
+<h3>4.1 Arsitektur Modul Klasifikasi (<code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> Stack)<a class="headerlink" href="#arsitektur-modul-klasifikasi-scikit-learn-stack" title="Link to this heading">#</a></h3>
+<p>Dalam perancangan sistem identifikasi dan klasifikasi audio otomatis, pustaka <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> memegang peranan krusial sebagai mesin pemroses keputusan terawasi (<em>supervised decision engine</em>). Arsitektur modul yang digunakan terbagi ke dalam empat lapisan fungsional:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[ Matriks Fitur X (32 Dimensi) &amp; Target y ]
+                    │
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ 1. Modul Prapemrosesan (sklearn.preprocessing)         │
+│    - LabelEncoder : y_str (&#39;Berisik&#39;, &#39;NonBerisik&#39;) -&gt; │
+│                     y_int (0, 1)                       │
+│    - StandardScaler : z = (x - μ) / σ                 │
+└────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ 2. Modul Partisi Data (sklearn.model_selection)        │
+│    - train_test_split (test_size=0.20, stratify=y)     │
+│    - StratifiedKFold (n_splits=5, shuffle=True)        │
+└────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ 3. Estimator Klasifikasi (Model Machine Learning)      │
+│    - sklearn.svm.SVC : Kernel RBF, C=1.0, γ=&#39;scale&#39;    │
+│    - sklearn.ensemble.RandomForestClassifier :         │
+│      100 Trees, max_depth=8, Criterion=&#39;gini&#39;          │
+└────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+┌────────────────────────────────────────────────────────┐
+│ 4. Modul Evaluasi Performa (sklearn.metrics)           │
+│    - accuracy_score, classification_report             │
+│    - confusion_matrix, ConfusionMatrixDisplay          │
+└────────────────────────────────────────────────────────┘
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Transformasi Ruang Fitur (<code class="docutils literal notranslate"><span class="pre">sklearn.preprocessing</span></code>):</strong></p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>:</strong> Mengimplementasikan standardisasi z-score untuk mentransformasikan setiap fitur secara independen sehingga memiliki nilai rata-rata <span class="math notranslate nohighlight">\(\mu = 0\)</span> dan varians unit <span class="math notranslate nohighlight">\(\sigma^2 = 1\)</span>. Standardisasi ini sangat krusial bagi algoritma berbasis jarak seperti SVM RBF, di mana fitur berorde ribuan (seperti Spectral Centroid) tanpa scaling akan mendominasi perhitungan gradien dan menenggelamkan kontribusi fitur berorde desimal kecil (seperti RMS).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">LabelEncoder</span></code>:</strong> Bertugas mengonversi label kelas berbasis teks (<code class="docutils literal notranslate"><span class="pre">'Berisik'</span></code> dan <code class="docutils literal notranslate"><span class="pre">'NonBerisik'</span></code>) menjadi format numerik biner diskrit <span class="math notranslate nohighlight">\(\{0, 1\}\)</span>. Pada praktikum ini, kelas <code class="docutils literal notranslate"><span class="pre">'Berisik'</span></code> dienkode sebagai <span class="math notranslate nohighlight">\(0\)</span> dan <code class="docutils literal notranslate"><span class="pre">'NonBerisik'</span></code> sebagai <span class="math notranslate nohighlight">\(1\)</span>.</p></li>
+</ul>
+</li>
+<li><p><strong>Partisi Data Bebas Bias (<code class="docutils literal notranslate"><span class="pre">sklearn.model_selection</span></code>):</strong></p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">train_test_split</span></code>:</strong> Membagi dataset secara terstratifikasi (<em>stratified split</em>) menjadi data latih (<span class="math notranslate nohighlight">\(80\%\)</span>) dan data uji (<span class="math notranslate nohighlight">\(20\%\)</span>). Parameter <code class="docutils literal notranslate"><span class="pre">stratify=y</span></code> menjamin proporsi kedua kelas di data uji tepat sama dengan populasi aslinya, mencegah terjadinya pergeseran distribusi (<em>distributional shift</em>).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">cross_val_score</span></code>:</strong> Menyediakan mekanisme validasi silang 5 lipatan (<em>5-Fold Stratified CV</em>) yang secara bergilir menguji ketahanan model pada partisi independen, menghasilkan estimasi performa generalisasi yang jauh lebih objektif dan bebas dari variansi acak partisi tunggal.</p></li>
+</ul>
+</li>
+<li><p><strong>Algoritma Pemodelan Klasifikasi:</strong></p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sklearn.svm.SVC</span></code> (Support Vector Classification):</strong> Membangun bidang pemisah berdimensi 32 dengan margin maksimal (<em>maximum margin hyperplane</em>). Menggunakan fungsi kernel <em>Radial Basis Function</em> (RBF) untuk memetakan hubungan non-linier kompleks antar-fitur audio ke ruang berdimensi tak terhingga.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">sklearn.ensemble.RandomForestClassifier</span></code>:</strong> Mengimplementasikan paradigma <em>ensemble learning</em> berbasis <em>Bootstrap Aggregating (Bagging)</em> dengan 100 pohon keputusan acak. Menggunakan kriteria reduksi ketidakmurnian Gini (<em>Gini Impurity Reduction</em>) untuk menentukan titik cabang optimal dan menyediakan estimasi kepentingan fitur (<em>feature importance</em>).</p></li>
+</ul>
+</li>
+<li><p><strong>Kuantifikasi Kinerja Model (<code class="docutils literal notranslate"><span class="pre">sklearn.metrics</span></code>):</strong></p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">classification_report</span></code>:</strong> Menghitung metrik <em>Precision</em>, <em>Recall</em>, dan <em>F1-Score</em> untuk setiap kelas target secara individual maupun agregat (<em>macro average</em> dan <em>weighted average</em>).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">confusion_matrix</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">ConfusionMatrixDisplay</span></code>:</strong> Menghitung dan memvisualisasikan matriks kontingensi biner <span class="math notranslate nohighlight">\(2 \times 2\)</span> guna memeriksa sebaran kesalahan klasifikasi (<em>Type I Error / False Positive</em> dan <em>Type II Error / False Negative</em>).</p></li>
+</ul>
+</li>
+</ol>
+</section>
 </section>
 <hr class="docutils" />
 <section id="dataset-dan-karakteristik-sampel-audio">
@@ -748,9 +867,67 @@ $<span class="math notranslate nohighlight">\(c[j] = \sum_{m=1}^{M} S[m] \cos\le
     └── NonBerisik/    (113 file .mp3, .wav, .aac, .m4a)
 </pre></div>
 </div>
-<blockquote>
-<div><p><strong>Keseimbangan Kelas (<em>Balanced Dataset</em>):</strong> Rasio perbandingan data Berisik (116) dan NonBerisik (113) berada pada kisaran <span class="math notranslate nohighlight">\(1,02 : 1\)</span>, yang menunjukkan dataset sangat seimbang. Kondisi ini ideal untuk pelatihan machine learning tanpa perlu dilakukan teknik <em>oversampling</em> (SMOTE) maupun <em>undersampling</em>.</p>
-</div></blockquote>
+</section>
+<section id="skema-partisi-dataset-untuk-pelatihan-dan-pengujian-klasifikasi">
+<h3>5.2 Skema Partisi Dataset untuk Pelatihan dan Pengujian Klasifikasi<a class="headerlink" href="#skema-partisi-dataset-untuk-pelatihan-dan-pengujian-klasifikasi" title="Link to this heading">#</a></h3>
+<p>Untuk menjamin pengujian performa machine learning yang tidak bias dan bebas dari <em>overfitting</em>, dataset dibagi ke dalam dua protokol evaluasi standar industri:</p>
+<section id="a-stratified-train-test-split-80-20">
+<h4>A. Stratified Train-Test Split (80:20)<a class="headerlink" href="#a-stratified-train-test-split-80-20" title="Link to this heading">#</a></h4>
+<p>Data dibagi ke dalam set pelatihan (<span class="math notranslate nohighlight">\(80\%\)</span>) dan set pengujian (<span class="math notranslate nohighlight">\(20\%\)</span>) menggunakan pengacakan terkontrol (<code class="docutils literal notranslate"><span class="pre">random_state=42</span></code>) dengan stratifikasi label kelas:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Partisi Dataset</p></th>
+<th class="head text-center"><p>Total Sampel</p></th>
+<th class="head text-center"><p>Kelas Berisik (<span class="math notranslate nohighlight">\(y=0\)</span>)</p></th>
+<th class="head text-center"><p>Kelas NonBerisik (<span class="math notranslate nohighlight">\(y=1\)</span>)</p></th>
+<th class="head text-center"><p>Rasio Kelas</p></th>
+<th class="head"><p>Fungsi dalam Pemodelan</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Training Set (80%)</strong></p></td>
+<td class="text-center"><p><strong>183</strong> file</p></td>
+<td class="text-center"><p>93 file (<span class="math notranslate nohighlight">\(50,82\%\)</span>)</p></td>
+<td class="text-center"><p>90 file (<span class="math notranslate nohighlight">\(49,18\%\)</span>)</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1,03 : 1\)</span></p></td>
+<td><p>Pembentukan model SVM dan Random Forest, serta komputasi parameter skalar <span class="math notranslate nohighlight">\((\mu, \sigma)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Testing Set (20%)</strong></p></td>
+<td class="text-center"><p><strong>46</strong> file</p></td>
+<td class="text-center"><p>23 file (<span class="math notranslate nohighlight">\(50,00\%\)</span>)</p></td>
+<td class="text-center"><p>23 file (<span class="math notranslate nohighlight">\(50,00\%\)</span>)</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1,00 : 1\)</span></p></td>
+<td><p>Evaluasi inferensi murni pada sampel yang belum pernah dilihat model (<em>unseen test data</em>)</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Total Populasi</strong></p></td>
+<td class="text-center"><p><strong>229</strong> file</p></td>
+<td class="text-center"><p>116 file (<span class="math notranslate nohighlight">\(50,65\%\)</span>)</p></td>
+<td class="text-center"><p>113 file (<span class="math notranslate nohighlight">\(49,35\%\)</span>)</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1,02 : 1\)</span></p></td>
+<td><p>Keseluruhan basis data audio tervalidasi</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="b-5-fold-stratified-cross-validation">
+<h4>B. 5-Fold Stratified Cross-Validation<a class="headerlink" href="#b-5-fold-stratified-cross-validation" title="Link to this heading">#</a></h4>
+<p>Selain hold-out test set, seluruh 229 sampel dievaluasi melalui skema validasi silang 5-lipatan bertingkat:</p>
+<ul class="simple">
+<li><p><strong>Fold 1 s.d. Fold 4:</strong> Masing-masing terdiri atas <strong>46 sampel</strong> (23 Berisik dan 23 NonBerisik).</p></li>
+<li><p><strong>Fold 5:</strong> Terdiri atas <strong>45 sampel</strong> (24 Berisik dan 21 NonBerisik).</p></li>
+<li><p>Pada setiap iterasi, 4 fold (<span class="math notranslate nohighlight">\(183-184\)</span> sampel) digunakan untuk melatih model, dan 1 fold sisanya (<span class="math notranslate nohighlight">\(45-46\)</span> sampel) berperan sebagai set validasi. Rata-rata metrik akurasi dari kelima fold dilaporkan beserta standar deviasinya (<span class="math notranslate nohighlight">\(\mu \pm \sigma\)</span>).</p></li>
+</ul>
+</section>
+<section id="c-signifikansi-keseimbangan-kelas-class-balance">
+<h4>C. Signifikansi Keseimbangan Kelas (<em>Class Balance</em>)<a class="headerlink" href="#c-signifikansi-keseimbangan-kelas-class-balance" title="Link to this heading">#</a></h4>
+<p>Rasio kelas yang sangat berimbang (<span class="math notranslate nohighlight">\(116 : 113\)</span> atau <span class="math notranslate nohighlight">\(50,65\% : 49,35\%\)</span>) memiliki signifikansi teoretis krusial:</p>
+<ol class="arabic simple">
+<li><p><strong>Mencegah Bias Fungsi Penalti SVM:</strong> Pada SVM berbobot seragam, <em>Hinge Loss</em> membebankan penalti yang simetris pada kesalahan kedua kelas. Jika terjadi ketidakseimbangan kelas berat (<em>class imbalance</em>), <em>hyperplane</em> akan bergeser mendekati kelas minoritas, menurunkan recall kelas langka.</p></li>
+<li><p><strong>Menjaga Kestabilan Kriteria Gini Random Forest:</strong> Penurunan ketidakmurnian Gini tidak terdistorsi oleh prevalensi frekuensi acak kelas mayoritas.</p></li>
+<li><p><strong>Menghindari Paradox Akurasi (<em>Accuracy Paradox</em>):</strong> Akurasi sebesar <span class="math notranslate nohighlight">\(84,78\%\)</span> pada data uji benar-benar mencerminkan kemampuan diskriminatif sejati model pada kedua kelas, bukan hasil tebakan trivial pada kelas mayoritas.</p></li>
+</ol>
+</section>
 </section>
 </section>
 <hr class="docutils" />
@@ -779,40 +956,87 @@ $<span class="math notranslate nohighlight">\(c[j] = \sum_{m=1}^{M} S[m] \cos\le
     M --&gt; N[Analisis Feature Importance &amp; Pembahasan]
 </pre></div>
 </div>
+<section id="alur-transisi-sinyal-mentah-ke-vektor-fitur">
+<h3>6.1 Alur Transisi: Sinyal Mentah ke Vektor Fitur<a class="headerlink" href="#alur-transisi-sinyal-mentah-ke-vektor-fitur" title="Link to this heading">#</a></h3>
 <ol class="arabic simple">
-<li><p><strong>Akuisisi Data &amp; Dekode:</strong> Mengakses file audio dalam direktori kelas, mengekstrak stream audio mentah melalui pustaka <code class="docutils literal notranslate"><span class="pre">librosa</span></code> yang terintegrasi dengan backend dekoder <code class="docutils literal notranslate"><span class="pre">FFmpeg</span></code>.</p></li>
-<li><p><strong>Prapemrosesan:</strong></p>
+<li><p><strong>Akuisisi Data &amp; Dekode Multi-Format:</strong>
+Berkas audio dari direktori <code class="docutils literal notranslate"><span class="pre">dataset_audio/Berisik</span></code> dan <code class="docutils literal notranslate"><span class="pre">dataset_audio/NonBerisik</span></code> dipindai. Integrasi biner <code class="docutils literal notranslate"><span class="pre">FFmpeg</span></code> memungkinkan pemuatan mulus file terkompresi tanpa kehilangan bit informasi penting.</p></li>
+<li><p><strong>Prapemrosesan Baku:</strong></p>
 <ul class="simple">
-<li><p>Melakukan konversi seluruh sinyal multi-kanal (stereo) menjadi sinyal mono melalui perataan kanal: <span class="math notranslate nohighlight">\(x_{\text{mono}}[n] = \frac{x_L[n] + x_R[n]}{2}\)</span>.</p></li>
-<li><p>Menyelaraskan frekuensi pencuplikan (<em>resampling</em>) ke standar seragam <span class="math notranslate nohighlight">\(f_s = 22.050\text{ Hz}\)</span>.</p></li>
+<li><p><strong>Konversi Mono:</strong> Saluran audio stereo digabungkan menjadi satu kanal rata-rata: <span class="math notranslate nohighlight">\(x_{\text{mono}}[n] = \frac{x_L[n] + x_R[n]}{2}\)</span>.</p></li>
+<li><p><strong>Resampling Standar:</strong> Frekuensi cuplikan diseragamkan ke <span class="math notranslate nohighlight">\(f_s = 22.050\text{ Hz}\)</span> (frekuensi Nyquist <span class="math notranslate nohighlight">\(11.025\text{ Hz}\)</span>).</p></li>
 </ul>
 </li>
-<li><p><strong>Ekstraksi Fitur Frame-by-Frame:</strong></p>
+<li><p><strong>Framing STFT &amp; Ekstraksi Fitur Per-Frame:</strong>
+Sinyal dipotong menjadi frame berukuran <span class="math notranslate nohighlight">\(N = 2048\)</span> sampel (<span class="math notranslate nohighlight">\(\approx 92,88\text{ ms}\)</span>) dengan hop size <span class="math notranslate nohighlight">\(H = 512\)</span> sampel (<span class="math notranslate nohighlight">\(\approx 23,22\text{ ms}\)</span>, overlap <span class="math notranslate nohighlight">\(75\%\)</span>). Dari setiap frame dihitung:</p>
 <ul class="simple">
-<li><p>Menghitung array RMS per frame.</p></li>
-<li><p>Menghitung array Spectral Centroid per frame (STFT).</p></li>
-<li><p>Menghitung array ZCR per frame.</p></li>
-<li><p>Menghitung matriks 13 koefisien MFCC per frame.</p></li>
-</ul>
-</li>
-<li><p><strong>Agregasi Statistik:</strong> Merangkum variasi temporal setiap fitur menjadi 2 nilai statistik per sampel audio: <strong>Rata-rata (<em>Mean</em>)</strong> untuk menangkap tingkat tendensi sentral, dan <strong>Standar Deviasi (<em>Std</em>)</strong> untuk menangkap dinamika variasi sinyal.
-$<span class="math notranslate nohighlight">\(\text{Total Dimensi Fitur} = (1\text{ RMS} + 1\text{ Centroid} + 1\text{ ZCR} + 13\text{ MFCC}) \times 2 = 32\text{ Fitur Numerik}\)</span>$</p></li>
-<li><p><strong>Penyusunan Tabel Tabular:</strong> Menggabungkan kolom metadata (<code class="docutils literal notranslate"><span class="pre">filename</span></code>, <code class="docutils literal notranslate"><span class="pre">label</span></code>, <code class="docutils literal notranslate"><span class="pre">durasi_detik</span></code>) dengan 32 kolom fitur ke dalam DataFrame Pandas dan menyimpannya sebagai file <code class="docutils literal notranslate"><span class="pre">hasil_ekstraksi_fitur_audio.csv</span></code>.</p></li>
-<li><p><strong>Pemodelan dan Evaluasi Machine Learning:</strong></p>
-<ul class="simple">
-<li><p>Melakukan normalisasi z-score dengan <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>.</p></li>
-<li><p>Menguji akurasi model pada data uji (<em>unseen test data</em>) serta stabilitas validasi silang (<em>5-Fold Stratified CV</em>).</p></li>
+<li><p>Nilai energi efektif (RMS).</p></li>
+<li><p>Titik berat spektrum magnitudo (Spectral Centroid).</p></li>
+<li><p>Laju perpotongan garis nol (ZCR).</p></li>
+<li><p>Matriks 13 koefisien Mel-Frequency Cepstral Coefficients (MFCC).</p></li>
 </ul>
 </li>
 </ol>
 </section>
+<section id="alur-transisi-vektor-fitur-ke-keputusan-klasifikasi">
+<h3>6.2 Alur Transisi: Vektor Fitur ke Keputusan Klasifikasi<a class="headerlink" href="#alur-transisi-vektor-fitur-ke-keputusan-klasifikasi" title="Link to this heading">#</a></h3>
+<p>Tahapan berikut mendeskripsikan secara matematis transformasi representasi numerik audio menjadi label keputusan klasifikasi:</p>
+<section id="tahap-4-agregasi-statistik-konstruksi-ruang-fitur-mathbb-r-32">
+<h4>Tahap 4: Agregasi Statistik &amp; Konstruksi Ruang Fitur (<span class="math notranslate nohighlight">\(\mathbb{R}^{32}\)</span>)<a class="headerlink" href="#tahap-4-agregasi-statistik-konstruksi-ruang-fitur-mathbb-r-32" title="Link to this heading">#</a></h4>
+<p>Sinyal audio yang memiliki ribuan frame dirangkum menjadi satu vektor representasi berdimensi 32 (<span class="math notranslate nohighlight">\(\mathbf{x}_i \in \mathbb{R}^{32}\)</span>) melalui operator statistik <em>mean</em> (<span class="math notranslate nohighlight">\(\mu\)</span>) dan <em>standard deviation</em> (<span class="math notranslate nohighlight">\(\sigma\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\mathbf{x}_i = \left[ \mu_{\text{RMS}}, \sigma_{\text{RMS}}, \mu_{\text{Centroid}}, \sigma_{\text{Centroid}}, \mu_{\text{ZCR}}, \sigma_{\text{ZCR}}, \mu_{\text{MFCC}_1}, \sigma_{\text{MFCC}_1}, \dots, \mu_{\text{MFCC}_{13}}, \sigma_{\text{MFCC}_{13}} \right]^T\]</div>
+<p>Seluruh 229 sampel audio disusun menjadi matriks fitur <span class="math notranslate nohighlight">\(X \in \mathbb{R}^{229 \times 32}\)</span> dan vektor target biner <span class="math notranslate nohighlight">\(y \in \{0, 1\}^{229}\)</span>.</p>
+</section>
+<section id="tahap-5-normalisasi-z-score-standardscaler-pencegahan-data-leakage">
+<h4>Tahap 5: Normalisasi Z-Score (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>) &amp; Pencegahan Data Leakage<a class="headerlink" href="#tahap-5-normalisasi-z-score-standardscaler-pencegahan-data-leakage" title="Link to this heading">#</a></h4>
+<p>Setiap kolom fitur <span class="math notranslate nohighlight">\(j \in \{1, 2, \dots, 32\}\)</span> distandardisasikan mengikuti distribusi normal baku:</p>
+<div class="math notranslate nohighlight">
+\[z_{ij} = \frac{x_{ij} - \mu_{j, \text{train}}}{\sigma_{j, \text{train}}}\]</div>
+<blockquote>
+<div><p><strong>Protokol Ketat Pencegahan Kebocoran Data (<em>Strict Anti-Data Leakage</em>):</strong>
+Nilai rata-rata <span class="math notranslate nohighlight">\(\mu_{j, \text{train}}\)</span> dan deviasi baku <span class="math notranslate nohighlight">\(\sigma_{j, \text{train}}\)</span> <strong>hanya dihitung dari set pelatihan</strong> (<span class="math notranslate nohighlight">\(X_{\text{train}}\)</span> sebanyak 183 sampel). Data uji (<span class="math notranslate nohighlight">\(X_{\text{test}}\)</span> sebanyak 46 sampel) kemudian ditransformasikan menggunakan parameter statistik latih tersebut tanpa pernah menghitung ulang parameternya sendiri. Hal ini menjamin model tidak mendapatkan informasi apriori mengenai distribusi data uji.</p>
+</div></blockquote>
+</section>
+<section id="tahap-6-mekanisme-klasifikasi-support-vector-machine-kernel-rbf">
+<h4>Tahap 6: Mekanisme Klasifikasi Support Vector Machine (Kernel RBF)<a class="headerlink" href="#tahap-6-mekanisme-klasifikasi-support-vector-machine-kernel-rbf" title="Link to this heading">#</a></h4>
+<p>SVM bertugas mencari bidang pemisah (<em>hyperplane</em>) optimal yang memaksimalkan batas jarak margin pemisah antar-kelas:</p>
+<div class="math notranslate nohighlight">
+\[\min_{\mathbf{w}, b, \boldsymbol{\xi}} \frac{1}{2} \|\mathbf{w}\|^2 + C \sum_{i=1}^{N_{\text{train}}} \xi_i \quad \text{dengan kendala} \quad y_i^* (\mathbf{w}^T \phi(\mathbf{x}_i) + b) \ge 1 - \xi_i, \quad \xi_i \ge 0\]</div>
+<p>Di mana <span class="math notranslate nohighlight">\(y_i^* \in \{-1, +1\}\)</span>, <span class="math notranslate nohighlight">\(\xi_i\)</span> adalah variabel <em>slack</em> toleransi kesalahan, dan <span class="math notranslate nohighlight">\(C = 1,0\)</span> adalah parameter regularisasi. Mengingat batas kelas akustik lingkungan tidak dapat dipisahkan secara linier murni pada ruang 32D, fungsi pemetaan non-linier <span class="math notranslate nohighlight">\(\phi(\cdot)\)</span> diimplementasikan secara implisit melalui <strong>Kernel Radial Basis Function (RBF)</strong>:</p>
+<div class="math notranslate nohighlight">
+\[K(\mathbf{x}_i, \mathbf{x}_j) = \phi(\mathbf{x}_i)^T \phi(\mathbf{x}_j) = \exp\left( -\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2 \right), \quad \gamma = \frac{1}{32 \cdot \text{Var}(X)}\]</div>
+<p>Kernel RBF memproyeksikan vektor fitur audio ke ruang Hilbert berdimensi tak terhingga, memungkinkan pembentukan permukaan keputusan (<em>decision hypersurface</em>) yang sangat fleksibel dan adaptif terhadap pola spektral kebisingan.</p>
+</section>
+<section id="tahap-7-mekanisme-klasifikasi-random-forest-100-trees">
+<h4>Tahap 7: Mekanisme Klasifikasi Random Forest (100 Trees)<a class="headerlink" href="#tahap-7-mekanisme-klasifikasi-random-forest-100-trees" title="Link to this heading">#</a></h4>
+<p>Random Forest bekerja melalui prinsip agregasi ansambel (<em>Bagging Ensemble</em>):</p>
+<ol class="arabic simple">
+<li><p><strong>Pengambilan Sampel Bootstrap:</strong> Membangun <span class="math notranslate nohighlight">\(B = 100\)</span> pohon keputusan independen. Tiap pohon dilatih pada sampel acak berukuran <span class="math notranslate nohighlight">\(N = 183\)</span> yang diambil dengan pengembalian (<em>with replacement</em>).</p></li>
+<li><p><strong>Subruang Fitur Acak (<em>Random Subspace</em>):</strong> Pada setiap simpul percabangan (<em>node split</em>), algoritma hanya mengevaluasi subset acak sebanyak <span class="math notranslate nohighlight">\(m = \lfloor\sqrt{32}\rfloor = 5\)</span> fitur untuk mencari pemisahan terbaik. Hal ini mendendekorelasikan pohon-pohon ansambel sehingga model tidak didominasi oleh satu fitur tertentu saja.</p></li>
+<li><p><strong>Kriteria Ketidakmurnian Gini (<em>Gini Impurity</em>):</strong> Titik potong cabang ditentukan berdasarkan reduksi Gini maksimal:
+$<span class="math notranslate nohighlight">\(I_G(t) = 1 - \sum_{k=0}^{1} p(k|t)^2, \quad \Delta I_G = I_G(t) - \frac{N_L}{N_t} I_G(t_L) - \frac{N_R}{N_t} I_G(t_R)\)</span>$</p></li>
+<li><p><strong>Regularisasi Kedalaman (<code class="docutils literal notranslate"><span class="pre">max_depth</span> <span class="pre">=</span> <span class="pre">8</span></code>):</strong> Membatasi pertumbuhan pohon agar tidak terjadi penghafalan derau mikro pada rekaman ponsel tertentu.</p></li>
+<li><p><strong>Agregasi Keputusan (<em>Majority Voting</em>):</strong> Prediksi kelas akhir ditentukan berdasarkan suara terbanyak dari ke-100 pohon:
+$<span class="math notranslate nohighlight">\(\hat{y} = \arg\max_{c \in \{0, 1\}} \sum_{b=1}^{100} \mathbb{I}\left( h_b(\mathbf{x}) = c \right)\)</span>$</p></li>
+</ol>
+</section>
+<section id="tahap-8-protokol-evaluasi-multi-metrik">
+<h4>Tahap 8: Protokol Evaluasi Multi-Metrik<a class="headerlink" href="#tahap-8-protokol-evaluasi-multi-metrik" title="Link to this heading">#</a></h4>
+<p>Evaluasi dilakukan secara komprehensif pada data uji independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>) serta melalui validasi silang 5 lipatan (<span class="math notranslate nohighlight">\(N = 229\)</span>) untuk memastikan konsistensi metrik Accuracy, Precision, Recall, F1-Score, dan stabilitas Confusion Matrix.</p>
+</section>
+</section>
+</section>
 <hr class="docutils" />
 <section id="implementasi-kode-python">
 <h2>7. Implementasi Kode Python<a class="headerlink" href="#implementasi-kode-python" title="Link to this heading">#</a></h2>
-<p>Berikut adalah implementasi kode Python modular yang digunakan untuk mengeksekusi pipeline analisis audio ini secara menyeluruh:</p>
+<p>Pipeline komputasi PSD dan klasifikasi machine learning diimplementasikan ke dalam modul Python yang terstruktur rapi ke dalam dua tahap utama:</p>
+<section id="kode-ekstraksi-fitur-audio-data-ingestion-audio-processing">
+<h3>7.1 Kode Ekstraksi Fitur Audio (Data Ingestion &amp; Audio Processing)<a class="headerlink" href="#kode-ekstraksi-fitur-audio-data-ingestion-audio-processing" title="Link to this heading">#</a></h3>
+<p>Modul ini bertanggung jawab memindai berkas audio multi-format, mendekode sinyal ke <span class="math notranslate nohighlight">\(22.050\text{ Hz}\)</span> mono, mengekstrak 32 fitur akustik frame-by-frame, dan mengekspor hasilnya ke format CSV:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Pipeline Pengolahan Sinyal Digital: Ekstraksi Fitur Audio dan Klasifikasi</span>
-<span class="sd">Penulis: Muhammad Zaidan Nabil Rafi (240411100068)</span>
+<span class="sd">Tahap 1: Ekstraksi Fitur Audio Multi-Format (RMS, Spectral Centroid, ZCR, MFCC 1-13)</span>
+<span class="sd">Penulis: Muhammad Zaidan Nabil Rafi, Okan Syailendraa Wahyudi, Alifah Sayyidaturrhohma</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
@@ -820,57 +1044,47 @@ $<span class="math notranslate nohighlight">\(\text{Total Dimensi Fitur} = (1\te
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">librosa.display</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="c1"># Integrasikan path binary ffmpeg agar mendukung MP3, AAC, dan M4A</span>
+<span class="c1"># Registrasi biner FFmpeg portabel agar mampu mendekode MP3, AAC, dan M4A</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">imageio_ffmpeg</span>
 <span class="n">ffmpeg_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">imageio_ffmpeg</span><span class="o">.</span><span class="n">get_ffmpeg_exe</span><span class="p">())</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ffmpeg_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">LabelEncoder</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">,</span> <span class="n">accuracy_score</span>
-
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
 
-<span class="c1"># Parameter Akustik</span>
 <span class="n">TARGET_SR</span> <span class="o">=</span> <span class="mi">22050</span>
 <span class="n">N_MFCC</span> <span class="o">=</span> <span class="mi">13</span>
 <span class="n">DATASET_DIR</span> <span class="o">=</span> <span class="s1">&#39;./dataset_audio&#39;</span>
+<span class="n">OUTPUT_CSV</span> <span class="o">=</span> <span class="s1">&#39;./output/hasil_ekstraksi_fitur_audio.csv&#39;</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">scan_dataset</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Memindai subfolder Berisik dan NonBerisik&quot;&quot;&quot;</span>
-    <span class="n">supported_ext</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;.flac&#39;</span><span class="p">,</span> <span class="s1">&#39;.ogg&#39;</span><span class="p">,</span> <span class="s1">&#39;.m4a&#39;</span><span class="p">,</span> <span class="s1">&#39;.aac&#39;</span><span class="p">}</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">scan_audio_files</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Memindai subfolder kelas dan mengumpulkan direktori file audio valid&quot;&quot;&quot;</span>
+    <span class="n">valid_extensions</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;.flac&#39;</span><span class="p">,</span> <span class="s1">&#39;.ogg&#39;</span><span class="p">,</span> <span class="s1">&#39;.m4a&#39;</span><span class="p">,</span> <span class="s1">&#39;.aac&#39;</span><span class="p">}</span>
     <span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">d</span><span class="p">))])</span>
     <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
         <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">subdir</span><span class="p">)):</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">supported_ext</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">valid_extensions</span><span class="p">:</span>
                 <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="bp">cls</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">file_list</span><span class="p">,</span> <span class="n">classes</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_audio_features</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="n">TARGET_SR</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">N_MFCC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mengekstrak 32 fitur akustik statistik dari sinyal audio&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_32_features</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="n">TARGET_SR</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">N_MFCC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mengekstrak 32 fitur statistik (mean &amp; std) dari sinyal audio&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">target_sr</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">get_duration</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">))</span>
         
-        <span class="c1"># 1. RMS</span>
+        <span class="c1"># Ekstraksi fitur frame-by-frame</span>
         <span class="n">rms</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># 2. Spectral Centroid</span>
         <span class="n">centroid</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">spectral_centroid</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># 3. ZCR</span>
         <span class="n">zcr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">zero_crossing_rate</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="c1"># 4. MFCC (13 koefisien)</span>
         <span class="n">mfcc</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">n_mfcc</span><span class="p">)</span>
         
-        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="c1"># Agregasi statistik (Mean dan Standard Deviation)</span>
+        <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span>
             <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
             <span class="s1">&#39;durasi_detik&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
@@ -882,24 +1096,128 @@ $<span class="math notranslate nohighlight">\(\text{Total Dimensi Fitur} = (1\te
             <span class="s1">&#39;zcr_std&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zcr</span><span class="p">))</span>
         <span class="p">}</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_mfcc</span><span class="p">):</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
-            <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">record</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="n">record</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
             
-        <span class="k">return</span> <span class="n">row</span>
+        <span class="k">return</span> <span class="n">record</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gagal memuat </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[GAGAL MUAT] </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-<span class="c1"># Ekstraksi seluruh file</span>
-<span class="n">file_list</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">scan_dataset</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">)</span>
-<span class="n">data_rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">extract_audio_features</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">]</span>
-<span class="n">df_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data_rows</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+<span class="c1"># Eksekusi Ekstraksi Fitur</span>
+<span class="n">files</span><span class="p">,</span> <span class="n">classes</span> <span class="o">=</span> <span class="n">scan_audio_files</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Memindai dataset: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file audio terdeteksi pada kelas </span><span class="si">{</span><span class="n">classes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Simpan ke CSV</span>
-<span class="n">df_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;output/hasil_ekstraksi_fitur_audio.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ekstraksi selesai: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> file berhasil diproses.&quot;</span><span class="p">)</span>
+<span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="n">extract_32_features</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">records</span> <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">OUTPUT_CSV</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">OUTPUT_CSV</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ekstraksi selesai: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> file berhasil disimpan ke &#39;</span><span class="si">{</span><span class="n">OUTPUT_CSV</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="kode-pipeline-klasifikasi-cross-validation-dan-evaluasi-visual">
+<h3>7.2 Kode Pipeline Klasifikasi, Cross-Validation, dan Evaluasi Visual<a class="headerlink" href="#kode-pipeline-klasifikasi-cross-validation-dan-evaluasi-visual" title="Link to this heading">#</a></h3>
+<p>Modul ini memuat data fitur tabular, melakukan partisi data terstratifikasi, penskalaan Z-score, melatih model SVM dan Random Forest, menjalankan 5-Fold Stratified Cross-Validation, serta memvisualisasikan Confusion Matrix dan Feature Importance:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tahap 2: Pipeline Klasifikasi Supervised Machine Learning (SVM &amp; Random Forest)</span>
+<span class="sd">Penulis: Muhammad Zaidan Nabil Rafi, Okan Syailendraa Wahyudi, Alifah Sayyidaturrhohma</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">,</span> <span class="n">accuracy_score</span>
+
+<span class="n">INPUT_CSV</span> <span class="o">=</span> <span class="s1">&#39;./output/hasil_ekstraksi_fitur_audio.csv&#39;</span>
+<span class="n">OUTPUT_DIR</span> <span class="o">=</span> <span class="s1">&#39;./output&#39;</span>
+
+<span class="c1"># 1. Memuat Dataset Fitur</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">INPUT_CSV</span><span class="p">)</span>
+<span class="n">meta_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;durasi_detik&#39;</span><span class="p">]</span>
+<span class="n">feature_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">meta_cols</span><span class="p">]</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># 0: Berisik, 1: NonBerisik</span>
+<span class="n">class_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">le</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+<span class="c1"># 2. Pembagian Data Terstratifikasi (80% Train, 20% Test)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Partisi Data: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> sampel latih | </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2"> sampel uji&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Standardisasi Z-score (Fit hanya pada set latih)</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_train_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">X_all_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># 4. Inisialisasi Model Klasifikasi</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;SVM&#39;</span><span class="p">:</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># 5. Pelatihan dan Evaluasi pada Data Uji Independen</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">)</span>
+    
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">==================== Model: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> ====================&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Akurasi Data Uji: </span><span class="si">{</span><span class="n">acc</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="n">class_names</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    
+    <span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="n">class_names</span><span class="p">)</span>
+    <span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span> <span class="k">if</span> <span class="n">name</span><span class="o">==</span><span class="s1">&#39;SVM&#39;</span> <span class="k">else</span> <span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">values_format</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confusion Matrix — </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">(Akurasi: </span><span class="si">{</span><span class="n">acc</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUTPUT_DIR</span><span class="p">,</span> <span class="s1">&#39;audio_cm_models.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># 6. Validasi Silang (5-Fold Stratified Cross Validation)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">================ 5-Fold Stratified Cross Validation ================&quot;</span><span class="p">)</span>
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_all_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">skf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: Rata-rata Akurasi = </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% ± </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;       Skor per fold = </span><span class="si">{</span><span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">scores</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 7. Ekstraksi dan Visualisasi Feature Importance (Random Forest)</span>
+<span class="n">rf_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">]</span>
+<span class="n">importances</span> <span class="o">=</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">feature_importances_</span>
+<span class="n">feat_importance</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">importances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">feature_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">feat_importance</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#0284c7&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Top 15 Feature Importance — Random Forest (Berisik vs Non-Berisik)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tingkat Kepentingan Fitur (Gini Importance)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUTPUT_DIR</span><span class="p">,</span> <span class="s1">&#39;audio_feature_importance.png&#39;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Visualisasi Confusion Matrix dan Feature Importance berhasil disimpan ke folder &#39;</span><span class="si">{</span><span class="n">OUTPUT_DIR</span><span class="si">}</span><span class="s2">&#39;.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Penjelasan Alur Kerja Kode:</strong></p>
+<ul class="simple">
+<li><p><strong>Modularitas &amp; Separasi Tugas:</strong> Pemisahan ke dalam dua fungsi utama menjamin komputasi berat (ekstraksi audio) hanya perlu dijalankan sekali, sedangkan eksplorasi machine learning dapat diiterasi secara instan menggunakan berkas CSV.</p></li>
+<li><p><strong>Pencegahan Data Snooping:</strong> Penggunaan objek <code class="docutils literal notranslate"><span class="pre">scaler.transform(X_test)</span></code> memastikan bahwa mean dan standar deviasi dari data pengujian sama sekali tidak mempengaruhi penentuan batas keputusan (<em>decision boundary</em>).</p></li>
+<li><p><strong>Kompatibilitas Format Luas:</strong> Penambahan path biner <code class="docutils literal notranslate"><span class="pre">imageio-ffmpeg</span></code> menjamin pustaka <code class="docutils literal notranslate"><span class="pre">librosa</span></code> dan <code class="docutils literal notranslate"><span class="pre">audioread</span></code> mampu membaca berkas kontainer audio AAC dan M4A tanpa galat decoding pada sistem operasi Windows.</p></li>
+</ul>
+</section>
 </section>
 <hr class="docutils" />
 <section id="hasil-ekstraksi-fitur-aktual">
@@ -1091,6 +1409,100 @@ $<span class="math notranslate nohighlight">\(\text{Total Dimensi Fitur} = (1\te
 </tbody>
 </table>
 </div>
+</section>
+<section id="analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler">
+<h3>8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)<a class="headerlink" href="#analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler" title="Link to this heading">#</a></h3>
+<p>Salah satu faktor terpenting yang menentukan keberhasilan klasifikasi Support Vector Machine (SVM) dengan kernel RBF adalah keseragaman skala ruang input.</p>
+<section id="a-bahaya-distorsi-geometris-fitur-mentah-scale-disparity-distortion">
+<h4>A. Bahaya Distorsi Geometris Fitur Mentah (<em>Scale Disparity Distortion</em>)<a class="headerlink" href="#a-bahaya-distorsi-geometris-fitur-mentah-scale-disparity-distortion" title="Link to this heading">#</a></h4>
+<p>Jarak Euclidean antara dua sampel audio <span class="math notranslate nohighlight">\(\mathbf{x}_A\)</span> dan <span class="math notranslate nohighlight">\(\mathbf{x}_B\)</span> dalam ruang fitur mentah dirumuskan sebagai:</p>
+<div class="math notranslate nohighlight">
+\[d(\mathbf{x}_A, \mathbf{x}_B)^2 = (\Delta \text{Centroid})^2 + (\Delta \text{RMS})^2 + (\Delta \text{ZCR})^2 + (\Delta \text{MFCC}_1)^2 + \dots\]</div>
+<p>Perhatikan implikasi matematisnya:</p>
+<ul class="simple">
+<li><p>Selisih Spectral Centroid sebesar <span class="math notranslate nohighlight">\(\Delta \text{Centroid} = 200\text{ Hz}\)</span> menyumbangkan nilai kuadrat sebesar <strong><span class="math notranslate nohighlight">\(40.000\)</span></strong> ke dalam jarak Euclidean.</p></li>
+<li><p>Selisih energi RMS sebesar <span class="math notranslate nohighlight">\(\Delta \text{RMS} = 0,05\)</span> (yang secara fisik merepresentasikan lonjakan energi masif dari hening ke bising) hanya menyumbangkan nilai kuadrat sebesar <strong><span class="math notranslate nohighlight">\(0,0025\)</span></strong>.</p></li>
+<li><p>Rasio sumbangan jaraknya adalah <span class="math notranslate nohighlight">\(\frac{40.000}{0,0025} = \mathbf{16.000.000 : 1}\)</span>!</p></li>
+</ul>
+<p>Tanpa standardisasi, fungsi kernel RBF <span class="math notranslate nohighlight">\(K(\mathbf{x}_A, \mathbf{x}_B) = \exp(-\gamma \|\mathbf{x}_A - \mathbf{x}_B\|^2)\)</span> akan <strong><span class="math notranslate nohighlight">\(100\%\)</span> buta terhadap fitur RMS dan ZCR</strong>, padahal <code class="docutils literal notranslate"><span class="pre">rms_mean</span></code> terbukti secara empiris memiliki <em>Feature Importance</em> tertinggi (<span class="math notranslate nohighlight">\(13,61\%\)</span>).</p>
+</section>
+<section id="b-perbandingan-distribusi-nilai-sebelum-vs-sesudah-z-score">
+<h4>B. Perbandingan Distribusi Nilai Sebelum vs Sesudah Z-score<a class="headerlink" href="#b-perbandingan-distribusi-nilai-sebelum-vs-sesudah-z-score" title="Link to this heading">#</a></h4>
+<p>Tabel berikut mendemonstrasikan bagaimana <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> menormalkan distribusi nilai fitur ke rentang terpadu <span class="math notranslate nohighlight">\(z \in [-3, +3]\)</span>:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Fitur Akustik</p></th>
+<th class="head text-center"><p>Rentang Nilai Mentah (Min – Max)</p></th>
+<th class="head text-center"><p>Nilai Mentah Rata-rata (<span class="math notranslate nohighlight">\(\mu \pm \sigma\)</span>)</p></th>
+<th class="head text-center"><p>Rentang Nilai Terstandardisasi (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+<th class="head text-center"><p>Nilai Terstandardisasi (<span class="math notranslate nohighlight">\(\mu \pm \sigma\)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>RMS Mean</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0052 - 0,3814\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0589 \pm 0,0582\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,92 \text{ s.d. } +5,54\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{0,00 \pm 1,00}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Spectral Centroid (Hz)</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(642,85 - 3.841,20\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.717,21 \pm 610,34\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,76 \text{ s.d. } +3,48\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{0,00 \pm 1,00}\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>ZCR Mean</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0184 - 0,2641\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0873 \pm 0,0435\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,58 \text{ s.d. } +4,06\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{0,00 \pm 1,00}\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>MFCC-1 Mean (dB)</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-562,41 \text{ s.d. } -84,12\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-281,42 \pm 128,82\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-2,18 \text{ s.d. } +1,53\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(\mathbf{0,00 \pm 1,00}\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Setelah transformasi, setiap fitur memiliki bobot geometris seimbang pada fungsi jarak kernel SVM, memungkinkan model mengekstraksi batas pemisah yang optimal.</p>
+</section>
+</section>
+<section id="analisis-daya-pisah-fitur-feature-separability-terhadap-kelas-klasifikasi">
+<h3>8.4 Analisis Daya Pisah Fitur (<em>Feature Separability</em>) terhadap Kelas Klasifikasi<a class="headerlink" href="#analisis-daya-pisah-fitur-feature-separability-terhadap-kelas-klasifikasi" title="Link to this heading">#</a></h3>
+<p>Pemisahan kelas suara Berisik dan Non-Berisik yang dicapai sistem tidak bergantung pada satu parameter tunggal, melainkan merupakan hasil sinergi ortogonal dari <strong>tiga domain representasi akustik</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                       [ RUANG FITUR 32 DIMENSI ]
+                                   │
+      ┌────────────────────────────┼────────────────────────────┐
+      ▼                            ▼                            ▼
+[ DOMAIN WAKTU ]           [ DOMAIN SPEKTRAL ]          [ DOMAIN CEPSTRAL ]
+- RMS Mean &amp; Std           - Centroid Mean &amp; Std        - MFCC 1-13 Mean &amp; Std
+- ZCR Mean &amp; Std                                        
+      │                            │                            │
+      ▼                            ▼                            ▼
+Indikator Kekuatan         Indikator Distribusi         Indikator Sidik Jari
+Energi &amp; Fluktuasi         Frekuensi Spektrum           Bentuk Spektral Non-Linier
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li><p><strong>Komplementaritas Ortogonal Antar-Domain:</strong></p>
+<ul class="simple">
+<li><p><strong>Domain Waktu (RMS &amp; ZCR):</strong> Menyediakan pemisahan linier terkuat pada sumbu amplitudo absolut. Lingkungan bising menghasilkan <code class="docutils literal notranslate"><span class="pre">rms_mean</span></code> rata-rata <span class="math notranslate nohighlight">\(0,0844\)</span>, sedangkan lingkungan hening hanya <span class="math notranslate nohighlight">\(0,0327\)</span>.</p></li>
+<li><p><strong>Domain Spektral (Spectral Centroid):</strong> Mengukur apakah energi terkonsentrasi pada frekuensi rendah atau tinggi. Memberikan daya pisah pada suara bising yang mengandung banyak desis frekuensi tinggi (<span class="math notranslate nohighlight">\(1.786\text{ Hz}\)</span> vs <span class="math notranslate nohighlight">\(1.646\text{ Hz}\)</span>).</p></li>
+<li><p><strong>Domain Cepstral (MFCC 1–13):</strong> Menangkap kontur amplop spektral (<em>spectral envelope shape</em>). MFCC-1 menangkap total log-energy (selisih masif <span class="math notranslate nohighlight">\(+120,89\text{ dB}\)</span>), sementara MFCC-3 (<span class="math notranslate nohighlight">\(-27,84\)</span> vs <span class="math notranslate nohighlight">\(-6,52\)</span>) dan standar deviasi MFCC orde tinggi (<code class="docutils literal notranslate"><span class="pre">mfcc_12_std</span></code>, <code class="docutils literal notranslate"><span class="pre">mfcc_11_std</span></code>) mendeteksi variabilitas spektral khas desau kerumunan dan kendaraan.</p></li>
+</ul>
+</li>
+<li><p><strong>Resolusi Kasus Ambigu Melalui Ortogonalitas Fitur:</strong>
+Kekuatan utama penggabungan ketiga domain ini tampak pada kemampuannya menyelesaikan kasus-kasus audio yang ambigu jika hanya dianalisis dengan satu fitur:</p>
+<ul class="simple">
+<li><p><strong>Kasus A (Bising Frekuensi Rendah - Misal Deru Mesin Diesel/Truk):</strong>
+Sampel suara ini memiliki Spectral Centroid rendah (<span class="math notranslate nohighlight">\(\approx 1.150\text{ Hz}\)</span>), yang jika hanya dinilai dari Centroid akan disangka sebagai ruangan hening. Namun, karena <code class="docutils literal notranslate"><span class="pre">rms_mean</span></code> bernilai tinggi (<span class="math notranslate nohighlight">\(&gt;0,09\)</span>) dan <code class="docutils literal notranslate"><span class="pre">mfcc_1_mean</span></code> tinggi (<span class="math notranslate nohighlight">\(&gt;-235\text{ dB}\)</span>), model SVM dan Random Forest tetap mengklasifikasikannya secara akurat sebagai <strong>Berisik</strong>.</p></li>
+<li><p><strong>Kasus B (Hening dengan Desis Mikrofon Frekuensi Tinggi):</strong>
+Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal noise floor</em> tinggi menghasilkan Spectral Centroid semu yang tinggi (<span class="math notranslate nohighlight">\(\approx 1.800\text{ Hz}\)</span>). Model tidak terkecoh karena nilai <code class="docutils literal notranslate"><span class="pre">rms_mean</span></code> (<span class="math notranslate nohighlight">\(&lt;0,02\)</span>) dan <code class="docutils literal notranslate"><span class="pre">mfcc_1_mean</span></code> (<span class="math notranslate nohighlight">\(&lt;-350\text{ dB}\)</span>) berada pada batas energi minimum, sehingga sampel tetap secara tepat diidentifikasi sebagai <strong>NonBerisik</strong>.</p></li>
+</ul>
+</li>
+</ol>
 </section>
 </section>
 <hr class="docutils" />
@@ -1618,16 +2030,46 @@ Analisis <em>Feature Importance</em> membuktikan bahwa kombinasi fitur domain wa
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perangkat-lunak-dan-library-python">4. Perangkat Lunak dan Library Python</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-dan-karakteristik-sampel-audio">5. Dataset dan Karakteristik Sampel Audio</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-dan-spesifikasi-sampel">5.1 Distribusi dan Spesifikasi Sampel</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perangkat-lunak-dan-library-python">4. Perangkat Lunak dan Library Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#arsitektur-modul-klasifikasi-scikit-learn-stack">4.1 Arsitektur Modul Klasifikasi (<code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> Stack)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-pengolahan-audio-sistematis">6. Tahapan Pengolahan Audio Sistematis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-python">7. Implementasi Kode Python</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset-dan-karakteristik-sampel-audio">5. Dataset dan Karakteristik Sampel Audio</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#distribusi-dan-spesifikasi-sampel">5.1 Distribusi dan Spesifikasi Sampel</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skema-partisi-dataset-untuk-pelatihan-dan-pengujian-klasifikasi">5.2 Skema Partisi Dataset untuk Pelatihan dan Pengujian Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-stratified-train-test-split-80-20">A. Stratified Train-Test Split (80:20)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-5-fold-stratified-cross-validation">B. 5-Fold Stratified Cross-Validation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#c-signifikansi-keseimbangan-kelas-class-balance">C. Signifikansi Keseimbangan Kelas (<em>Class Balance</em>)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tahapan-pengolahan-audio-sistematis">6. Tahapan Pengolahan Audio Sistematis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-transisi-sinyal-mentah-ke-vektor-fitur">6.1 Alur Transisi: Sinyal Mentah ke Vektor Fitur</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-transisi-vektor-fitur-ke-keputusan-klasifikasi">6.2 Alur Transisi: Vektor Fitur ke Keputusan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-4-agregasi-statistik-konstruksi-ruang-fitur-mathbb-r-32">Tahap 4: Agregasi Statistik &amp; Konstruksi Ruang Fitur (<span class="math notranslate nohighlight">\(\mathbb{R}^{32}\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-5-normalisasi-z-score-standardscaler-pencegahan-data-leakage">Tahap 5: Normalisasi Z-Score (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>) &amp; Pencegahan Data Leakage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-6-mekanisme-klasifikasi-support-vector-machine-kernel-rbf">Tahap 6: Mekanisme Klasifikasi Support Vector Machine (Kernel RBF)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-7-mekanisme-klasifikasi-random-forest-100-trees">Tahap 7: Mekanisme Klasifikasi Random Forest (100 Trees)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tahap-8-protokol-evaluasi-multi-metrik">Tahap 8: Protokol Evaluasi Multi-Metrik</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-python">7. Implementasi Kode Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-ekstraksi-fitur-audio-data-ingestion-audio-processing">7.1 Kode Ekstraksi Fitur Audio (Data Ingestion &amp; Audio Processing)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kode-pipeline-klasifikasi-cross-validation-dan-evaluasi-visual">7.2 Kode Pipeline Klasifikasi, Cross-Validation, dan Evaluasi Visual</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual">8. Hasil Ekstraksi Fitur Aktual</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pratinjau-sampel-fitur-nyata">8.1 Pratinjau Sampel Fitur Nyata</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rangkuman-statistik-komparatif-antar-kelas">8.2 Rangkuman Statistik Komparatif Antar-Kelas</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler">8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#a-bahaya-distorsi-geometris-fitur-mentah-scale-disparity-distortion">A. Bahaya Distorsi Geometris Fitur Mentah (<em>Scale Disparity Distortion</em>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-perbandingan-distribusi-nilai-sebelum-vs-sesudah-z-score">B. Perbandingan Distribusi Nilai Sebelum vs Sesudah Z-score</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-daya-pisah-fitur-feature-separability-terhadap-kelas-klasifikasi">8.4 Analisis Daya Pisah Fitur (<em>Feature Separability</em>) terhadap Kelas Klasifikasi</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-dan-analisis-komparatif">9. Visualisasi dan Analisis Komparatif</a><ul class="nav section-nav flex-column">
