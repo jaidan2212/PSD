@@ -39,7 +39,12 @@
    - 8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah StandardScaler)
    - 8.4 Analisis Daya Pisah Fitur (Feature Separability) terhadap Kelas Klasifikasi
 9. Visualisasi dan Analisis Komparatif
-10. Proses Identifikasi dan Pemodelan Klasifikasi
+10. Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model
+   - 10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi
+   - 10.2 Skema Partisi Data Training (Stratified Split 80:20)
+   - 10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, & Fitting Model
+   - 10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)
+   - 10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)
 11. Evaluasi Hasil dan Performa Model
 12. Pembahasan
 13. Kesimpulan
@@ -981,27 +986,158 @@ print("[INFO] Grafik Boxplot Distribusi Fitur berhasil disimpan ke: output/audio
 
 ---
 
-## 10. Proses Identifikasi dan Pemodelan Klasifikasi
+## 10. Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model
+
+Bagian ini membahas secara komprehensif fase pelatihan model (*Training Phase*), mencakup perbedaan konseptual antara ekstraksi fitur dan klasifikasi, skema partisi dataset terstratifikasi 80:20, eksekusi kode Python bergaya Jupyter Notebook, standardisasi Z-score pada data latih (*preventing data leakage*), perbandingan sampel data sebelum vs sesudah transformasi, serta analisis status pelatihan (*training fit status*).
+
+---
 
 ### 10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi
 
-Dalam disiplin machine learning untuk sinyal audio, penting untuk membedakan dua tahapan berikut:
-- **Ekstraksi Fitur (Fitur Audio):** Berperan sebagai representasi data (*representation learning*). Fitur seperti RMS, Centroid, ZCR, dan MFCC tidak dapat mengambil keputusan klasifikasi dengan sendirinya; mereka hanya menyederhanakan sinyal mentah jutaan sampel audio menjadi 32 parameter numerik yang padat informasi.
-- **Algoritma Klasifikasi (Classifier):** Algoritma terawasi seperti SVM dan Random Forest yang bertugas memetakan vektor fitur 32 dimensi tersebut ke dalam label diskrit $\{0: \text{Berisik}, 1: \text{NonBerisik}\}$ melalui pembentukan bidang batas keputusan (*decision boundary*).
+Dalam disiplin machine learning untuk sinyal audio, penting untuk membedakan dua tahapan esensial berikut:
+- **Ekstraksi Fitur (Representation Learning):** Fitur seperti RMS, Centroid, ZCR, dan MFCC tidak dapat mengambil keputusan klasifikasi dengan sendirinya; perannya adalah menyederhanakan sinyal mentah audio digital (yang terdiri dari ratusan ribu sampel amplitudo) menjadi 32 parameter numerik statistik yang padat informasi dan diskriminatif.
+- **Algoritma Klasifikasi (Supervised Classifier):** Algoritma terawasi seperti Support Vector Machine (SVM) dan Random Forest bertugas memetakan vektor fitur 32 dimensi tersebut ke dalam ruang keputusan $\{0: \text{Berisik}, 1: \text{NonBerisik}\}$ melalui pembentukan bidang batas keputusan (*decision boundary*) yang optimal.
 
-### 10.2 Protokol Pembagian Data dan Standardisasi
+---
 
-Untuk menghindari *data leakage* (kebocoran data) dan menjamin keandalan pengujian model:
+### 10.2 Skema Partisi Data Training (Stratified Split 80:20)
 
-1. **Pembagian Data (*Stratified Train-Test Split*):**
-   - Rasio pembagian data: **$80\%$ Data Latih ($183$ sampel)** dan **$20\%$ Data Uji ($46$ sampel)**.
-   - Stratifikasi diterapkan agar proporsi kedua kelas di data uji tepat seimbang ($23$ sampel Berisik dan $23$ sampel NonBerisik).
-2. **Standardisasi Fitur (*Z-score Scaling*):**
-   Karena satuan fitur berbeda drastis (RMS bernilai $\approx 0,08$, Centroid bernilai ribuan Hz, MFCC-1 bernilai ratusan negatif), seluruh fitur diskalakan menggunakan `StandardScaler`:
-   $$z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}$$
-3. **Spesifikasi Algoritma:**
-   - **Support Vector Machine (SVM):** Kernel Radial Basis Function (*RBF*), $C = 1,0$, $\gamma = \text{'scale'}$. Efektif dalam memetakan data berdimensi sedang ke ruang berdimensi lebih tinggi untuk mencari *hyperplane* pemisah maksimal.
-   - **Random Forest Classifier:** Ensemble dari $100$ pohon keputusan (*decision trees*), `max_depth = 8`, `random_state = 42`. Sangat tangguh terhadap *outlier* dan mampu mengukur kontribusi kepentingan fitur secara probabilistik.
+Untuk menjamin evaluasi yang tidak bias dan mencegah **Data Leakage** (kebocoran informasi data uji ke dalam proses estimasi statistik pelatihan), dataset utuh berukuran **$229$ sampel $\times$ $32$ fitur** dipartisi secara ketat menjadi dua subset independen:
+1. **Data Training ($80\%$):** Berisi **$183$ sampel**. Digunakan secara eksklusif untuk menghitung parameter statistik `StandardScaler` ($\mu_{\text{train}}$ dan $\sigma_{\text{train}}$) serta melatih bobot model klasifikasi (mencari *support vectors* pada SVM dan menyusun percabangan *split rules* pada 100 pohon Random Forest).
+2. **Data Testing ($20\%$):** Berisi **$46$ sampel**. Ditransformasikan menggunakan parameter scaler yang telah dikunci dari Data Training, lalu digunakan murni sebagai pengujian akhir (*unseen data evaluation*).
+
+Pembagian dilakukan dengan metode **Stratified Splitting** (`stratify=y, random_state=42`) sehingga rasio kedua kelas tetap seimbang sempurna:
+
+| Subset Data | Persentase | Total Sampel | Kelas Berisik (Label 0) | Kelas NonBerisik (Label 1) | Fungsi dalam Pipeline |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Data Training (`X_train`, `y_train`)** | **80%** | **183 sampel** | **93 sampel** (50,82%) | **90 sampel** (49,18%) | Menghitung parameter `StandardScaler` ($\mu, \sigma$) dan melatih bobot/pohon keputusan model |
+| **Data Testing (`X_test`, `y_test`)** | **20%** | **46 sampel** | **23 sampel** (50,00%) | **23 sampel** (50,00%) | Evaluasi performa akhir pada data yang belum pernah dilihat (*unseen data*) |
+| **Total Keseluruhan** | **100%** | **229 sampel** | **116 sampel** (50,65%) | **113 sampel** (49,35%) | Dataset utuh untuk pengujian *5-Fold Stratified Cross-Validation* |
+
+---
+
+### 10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, & Fitting Model
+
+Berikut adalah blok kode Python yang mengeksekusi pemisahan data training, standardisasi fitur, dan proses fitting model:
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# 1. Memuat dataset hasil ekstraksi 32 fitur audio
+df_features = pd.read_csv('output/hasil_ekstraksi_fitur_audio.csv')
+
+# 2. Memisahkan Matriks Fitur (X: 32 kolom numerik) dan Vektor Target (y)
+feature_cols = [c for c in df_features.columns if c not in ['filename', 'label', 'durasi_detik']]
+X = df_features[feature_cols].values
+
+le = LabelEncoder()
+y = le.fit_transform(df_features['label'].values)  # 0 = Berisik, 1 = NonBerisik
+
+# 3. Stratified Splitting (80% Data Training : 20% Data Testing)
+X_train, X_test, y_train, y_test, idx_train, idx_test = train_test_split(
+    X, y, df_features.index, test_size=0.20, stratify=y, random_state=42
+)
+
+# 4. Standardisasi Fitur (Fit HANYA pada Data Training untuk mencegah Data Leakage)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled  = scaler.transform(X_test)
+
+print("=== RINGKASAN PARTISI DATA TRAINING ===")
+print(f"Dimensi X_train (Mentah)       : {X_train.shape} (183 sampel x 32 fitur)")
+print(f"Dimensi X_train_scaled (Z-Score): {X_train_scaled.shape}")
+print(f"Distribusi Kelas Data Training : Berisik (0) = {np.sum(y_train == 0)} | NonBerisik (1) = {np.sum(y_train == 1)}")
+print(f"Mean X_train_scaled            : {np.mean(X_train_scaled):.6f} (Mendekati 0)")
+print(f"Std  X_train_scaled            : {np.std(X_train_scaled):.6f} (Mendekati 1)\n")
+
+# 5. Proses Pelatihan (Training) Model pada Data Latih (183 Sampel)
+svm_model = SVC(kernel='rbf', C=1.0, gamma='scale', probability=True, random_state=42)
+rf_model  = RandomForestClassifier(n_estimators=100, max_depth=8, criterion='gini', random_state=42)
+
+svm_model.fit(X_train_scaled, y_train)
+rf_model.fit(X_train_scaled, y_train)
+
+# 6. Evaluasi Akurasi pada Data Training vs Data Testing
+train_acc_svm = accuracy_score(y_train, svm_model.predict(X_train_scaled)) * 100
+test_acc_svm  = accuracy_score(y_test, svm_model.predict(X_test_scaled)) * 100
+
+train_acc_rf  = accuracy_score(y_train, rf_model.predict(X_train_scaled)) * 100
+test_acc_rf   = accuracy_score(y_test, rf_model.predict(X_test_scaled)) * 100
+
+print("=== LOG PROSES PELATIHAN MODEL (TRAINING PHASE) ===")
+print(f"[SVM RBF] Jumlah Support Vectors : {svm_model.n_support_} (Total: {sum(svm_model.n_support_)} dari 183 sampel latih)")
+print(f"[SVM RBF] Akurasi Data Training  : {train_acc_svm:.2f}% | Akurasi Data Testing: {test_acc_svm:.2f}%")
+print(f"[RF 100]  Jumlah Pohon Keputusan : {len(rf_model.estimators_)} Trees (Max Depth = {rf_model.max_depth})")
+print(f"[RF 100]  Akurasi Data Training  : {train_acc_rf:.2f}% | Akurasi Data Testing: {test_acc_rf:.2f}%")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+=== RINGKASAN PARTISI DATA TRAINING ===
+Dimensi X_train (Mentah)       : (183, 32) (183 sampel x 32 fitur)
+Dimensi X_train_scaled (Z-Score): (183, 32)
+Distribusi Kelas Data Training : Berisik (0) = 93 | NonBerisik (1) = 90
+Mean X_train_scaled            : 0.000000 (Mendekati 0)
+Std  X_train_scaled            : 1.000000 (Mendekati 1)
+
+=== LOG PROSES PELATIHAN MODEL (TRAINING PHASE) ===
+[SVM RBF] Jumlah Support Vectors : [61 59] (Total: 120 dari 183 sampel latih)
+[SVM RBF] Akurasi Data Training  : 93.99% | Akurasi Data Testing: 84.78%
+[RF 100]  Jumlah Pohon Keputusan : 100 Trees (Max Depth = 8)
+[RF 100]  Akurasi Data Training  : 100.00% | Akurasi Data Testing: 82.61%
+```
+
+---
+
+### 10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)
+
+Fungsi `StandardScaler.fit_transform(X_train)` menghitung nilai rata-rata $\mu_{\text{train}}$ dan deviasi standar $\sigma_{\text{train}}$ untuk setiap kolom fitur pada 183 sampel latih, kemudian mengonversinya ke skor-$z$:
+
+$$z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}$$
+
+Parameter transformasi yang diperoleh dari Data Training dirangkum pada tabel berikut:
+
+| Fitur Akustik Utama | Nilai Rata-rata Latih ($\mu_{\text{train}}$) | Deviasi Standar Latih ($\sigma_{\text{train}}$) | Rentang Mentah Data Latih | Rentang Terstandardisasi ($z$) |
+|:---|:---:|:---:|:---:|:---:|
+| `rms_mean` | $0,060868$ | $0,058107$ | $0,0007 - 0,2914$ | $-1,04\text{ s.d. }+3,97$ |
+| `rms_std` | $0,037091$ | $0,032393$ | $0,0005 - 0,1770$ | $-1,13\text{ s.d. }+4,32$ |
+| `centroid_mean` | $1.707,17\text{ Hz}$ | $601,27\text{ Hz}$ | $716,39 - 3.935,05\text{ Hz}$ | $-1,65\text{ s.d. }+3,71$ |
+| `zcr_mean` | $0,086595$ | $0,042109$ | $0,0316 - 0,2887$ | $-1,31\text{ s.d. }+4,80$ |
+| `mfcc_1_mean` | $-279,39\text{ dB}$ | $133,07\text{ dB}$ | $-761,73\text{ s.d. }+2,19\text{ dB}$ | $-3,62\text{ s.d. }+2,12$ |
+| `mfcc_3_mean` | $-17,21$ | $24,67$ | $-122,71\text{ s.d. }+35,21$ | $-4,28\text{ s.d. }+2,13$ |
+
+Tabel berikut memperlihatkan perbandingan nilai mentah (*raw*) vs nilai terstandardisasi (*scaled*) pada 5 rekaman audio sampel latih nyata:
+
+| File Sampel Audio Latih | Label Kelas | RMS Mentah | RMS Scaled ($z$) | Centroid Mentah | Centroid Scaled ($z$) | ZCR Mentah | ZCR Scaled ($z$) | MFCC-1 Mentah | MFCC-1 Scaled ($z$) |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| `24-115_sampel no ber...` | NonBerisik | $0,1338$ | $+1,26$ | $1.286,3\text{ Hz}$ | $-0,70$ | $0,0661$ | $-0,49$ | $-177,1\text{ dB}$ | $+0,77$ |
+| `24-007 berisikkk 2.mp3` | Berisik | $0,0317$ | $-0,50$ | $1.061,1\text{ Hz}$ | $-1,07$ | $0,0633$ | $-0,55$ | $-414,6\text{ dB}$ | $-1,02$ |
+| `24-119 berisik 2.mp3` | Berisik | $0,1155$ | $+0,94$ | $2.069,0\text{ Hz}$ | $+0,60$ | $0,1143$ | $+0,66$ | $-135,5\text{ dB}$ | $+1,08$ |
+| `Okan rame 1.aac` | Berisik | $0,0444$ | $-0,28$ | $1.380,3\text{ Hz}$ | $-0,54$ | $0,0714$ | $-0,36$ | $-264,0\text{ dB}$ | $+0,12$ |
+| `24-169 berisik 3.mp3` | Berisik | $0,0954$ | $+0,59$ | $1.164,5\text{ Hz}$ | $-0,90$ | $0,0624$ | $-0,57$ | $-262,2\text{ dB}$ | $+0,13$ |
+
+---
+
+### 10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)
+
+Perbandingan arsitektur, parameter pelatihan, serta analisis status fitting antara Support Vector Machine dan Random Forest dirangkum pada tabel berikut:
+
+| Parameter / Karakteristik Pelatihan | Support Vector Machine (SVM) | Random Forest Classifier (RF) |
+|:---|:---|:---|
+| **Arsitektur Model** | Kernel Radial Basis Function (RBF) | Ensemble dari 100 Decision Trees |
+| **Parameter Regulerisasi / Pembatas** | Parameter Penalti $C = 1,0$ | `max_depth = 8`, `criterion = 'gini'` |
+| **Koefisien Kernel ($\gamma$)** | `scale` ($\gamma = \frac{1}{32 \times \text{Var}(X)}$) | Tidak menggunakan fungsi kernel |
+| **Ukuran Data Latih Input** | $183$ sampel $\times$ $32$ fitur terstandardisasi | $183$ sampel $\times$ $32$ fitur terstandardisasi |
+| **Elemen Penentu Keputusan Model** | **120 Support Vectors** (61 Berisik, 59 NonBerisik) | **100 Pohon Keputusan** (fitur acak per split: $\approx \sqrt{32} = 5$) |
+| **Akurasi Data Latih (*Training Accuracy*)** | $\mathbf{93,99\%}$ (172 dari 183 sampel terprediksi benar) | $\mathbf{100,00\%}$ (183 dari 183 sampel terprediksi benar) |
+| **Akurasi Data Uji (*Testing Accuracy*)** | $\mathbf{84,78\%}$ (39 dari 46 sampel terprediksi benar) | $\mathbf{82,61\%}$ (38 dari 46 sampel terprediksi benar) |
+| **Analisis Generalisasi (*Fit Status*)** | **Generalisasi Sangat Baik** (Selisih Train vs Test $9,21\%$, tanpa indikasi overfitting ekstrem) | **Optimal Fit dengan Ensemble** (Akurasi latih $100\%$ teredam oleh mekanisme agregasi *bagging* sehingga menghasilkan akurasi uji $82,61\%$) |
 
 ---
 
