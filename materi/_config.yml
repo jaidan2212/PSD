@@ -3,3 +3,5 @@ author: Zaidan
 logo: foto.png
 execute:
   execute_notebooks: off
+parse:
+  myst_heading_anchors: 3
