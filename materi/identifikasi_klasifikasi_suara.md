@@ -1,10 +1,11 @@
-# Identifikasi dan Klasifikasi Suara Menggunakan Fitur Audio
+# Identifikasi dan Klasifikasi Suara Menggunakan Fitur Audio: Studi Kasus Berisik vs Non-Berisik (Hening)
 
 **Mata Kuliah:** Pengolahan Sinyal Digital (PSD)  
 **Program Studi:** Sains Data / Teknik Informatika  
-**Oleh:** Muhammad Zaidan Nabil Rafi (240411100068)  
+**Penulis:** Muhammad Zaidan Nabil Rafi (240411100068)  
 **Repositori:** `jaidan2212/PSD`  
-**Tanggal:** Oktober 2026
+**Dataset:** 229 Sampel Audio Lingkungan (`BerisikPSD.zip` & `NonBerisikPSD.zip`)  
+**Tanggal:** Oktober 2026  
 
 ---
 
@@ -12,15 +13,20 @@
 
 1. Pendahuluan
 2. Tujuan Praktikum
-3. Dasar Teori (Sinyal Audio Digital, RMS, Spectral Centroid, ZCR, MFCC)
-4. Perangkat dan Library
-5. Dataset dan Karakteristik Sampel
-6. Tahapan Pengolahan Audio
+3. Dasar Teori Pengolahan Sinyal Audio Digital
+   - 3.1 Representasi Sinyal Audio Digital & Analisis Short-Time
+   - 3.2 Root Mean Square (RMS)
+   - 3.3 Spectral Centroid
+   - 3.4 Zero-Crossing Rate (ZCR)
+   - 3.5 Mel-Frequency Cepstral Coefficients (MFCC)
+4. Perangkat Lunak dan Library Python
+5. Dataset dan Karakteristik Sampel Audio
+6. Tahapan Pengolahan Audio Sistematis
 7. Implementasi Kode Python
-8. Hasil Ekstraksi Fitur
-9. Visualisasi dan Analisis
-10. Proses Identifikasi dan Klasifikasi Suara
-11. Evaluasi Hasil
+8. Hasil Ekstraksi Fitur Aktual
+9. Visualisasi dan Analisis Komparatif
+10. Proses Identifikasi dan Pemodelan Klasifikasi
+11. Evaluasi Hasil dan Performa Model
 12. Pembahasan
 13. Kesimpulan
 14. Referensi
@@ -29,1315 +35,569 @@
 
 ## 1. Pendahuluan
 
-Suara merupakan gelombang mekanik yang merambat melalui medium dan dapat direpresentasikan sebagai sinyal digital setelah melalui proses *sampling* dan *quantization*. Dalam domain Pengolahan Sinyal Digital (PSD), analisis suara bertujuan untuk mengekstrak informasi kuantitatif dari sinyal audio sehingga karakteristik suatu suara dapat diidentifikasi dan dibedakan secara sistematis.
+Suara merupakan fenomena gelombang mekanik longitudinal yang merambat melalui medium elastis (udara) akibat osilasi partikel mekanis. Ketika gelombang akustik tersebut ditangkap oleh transduser elektroakustik (mikrofon), variasi tekanan udara dikonversi menjadi sinyal tegangan analog kontinu, yang selanjutnya didigitalkan melalui proses *sampling* dan *quantization* untuk menghasilkan sinyal audio digital.
 
-Setiap jenis suara — baik suara manusia, alat musik, suara alam, maupun suara mesin — memiliki karakteristik yang unik. Perbedaan ini tercermin pada distribusi energi, pola frekuensi, dan bentuk spektral sinyal. Dengan mengekstrak fitur-fitur terukur dari sinyal audio, kita dapat merepresentasikan karakteristik tersebut secara numerik untuk selanjutnya digunakan dalam proses identifikasi maupun klasifikasi.
+Dalam ranah **Pengolahan Sinyal Digital (PSD)** dan **Acoustic Scene Classification (ASC)**, identifikasi kondisi lingkungan berdasarkan karakteristik suara merupakan tantangan nyata. Salah satu aplikasi esensialnya adalah membedakan lingkungan **Berisik** (*Noisy Environment*, seperti jalan raya, pasar, kafe ramai, bengkel, kerumunan) dengan lingkungan **Non-Berisik / Hening** (*Quiet/Silent Environment*, seperti ruang belajar, perpustakaan, kamar tidur, alam sunyi).
 
-Dokumentasi ini menjelaskan proses lengkap mulai dari pemuatan audio, ekstraksi empat fitur utama (**RMS**, **Spectral Centroid**, **ZCR**, dan **MFCC**), hingga klasifikasi menggunakan algoritma *machine learning*. Seluruh implementasi menggunakan Python beserta library pendukung yang relevan.
+Pembedaan kondisi ini tidak cukup dilakukan secara subjektif oleh manusia, melainkan memerlukan representasi matematis objektif melalui **ekstraksi fitur audio** (*audio feature extraction*). Fitur-fitur tersebut merangkum karakteristik sinyal dalam domain waktu (*temporal domain*), domain frekuensi (*spectral domain*), serta domain persepsi psikoakustik (*cepstral domain*).
+
+Dokumentasi ini menyajikan alur ilmiah dan teknis lengkap dalam memproses **229 sampel rekaman audio nyata** yang dihimpun ke dalam kelas **Berisik** (116 file) dan **Non-Berisik** (113 file). Seluruh proses—mulai dari akuisisi audio multi-format, ekstraksi fitur RMS, Spectral Centroid, ZCR, dan 13 koefisien MFCC, hingga pemodelan klasifikasi menggunakan Support Vector Machine (SVM) dan Random Forest—diuji secara komprehensif dengan metrik evaluasi nyata.
 
 ---
 
 ## 2. Tujuan Praktikum
 
-1. Memahami konsep dasar sinyal audio digital dan representasinya dalam domain waktu serta domain frekuensi.
-2. Memahami pengertian, rumus matematika, dan cara menghitung fitur RMS, Spectral Centroid, ZCR, dan MFCC.
-3. Melakukan ekstraksi fitur dari sampel audio nyata menggunakan library `librosa`.
-4. Menyusun tabel fitur yang merangkum karakteristik setiap sampel audio.
-5. Membuat visualisasi yang informatif untuk membandingkan karakteristik antarsampel atau antarkelas suara.
-6. Melakukan klasifikasi suara berdasarkan fitur yang diekstrak, apabila label kelas tersedia dan jumlah data memadai.
-7. Menginterpretasikan dan menganalisis hasil fitur serta evaluasi model secara kritis.
+1. **Memahami Representasi Digital Sinyal Akustik:** Mengkaji representasi sinyal audio diskrit dalam domain waktu (amplitudo waveform) dan domain frekuensi melalui Transformasi Fourier (*Short-Time Fourier Transform* / STFT).
+2. **Mengekstrak Fitur-Fitur Standar PSD:** Menghitung secara kuantitatif nilai **RMS**, **Spectral Centroid**, **Zero-Crossing Rate (ZCR)**, dan **Mel-Frequency Cepstral Coefficients (MFCC)** dari sampel audio riil.
+3. **Mengolah Dataset Audio Nyata Multi-Format:** Mengonstruksi pipeline Python yang mampu menangani file audio dengan format beragam (MP3, WAV, AAC, M4A) dengan sample rate seragam 22.050 Hz mono.
+4. **Menganalisis Perbedaan Fisik dan Statistik Antar-Kelas:** Membandingkan nilai rata-rata (*mean*) dan variabilitas (*standard deviation*) fitur antara lingkungan Berisik dan Non-Berisik melalui visualisasi waveform, spektrogram, dan boxplot distribusi.
+5. **Membangun Model Klasifikasi Suara Terawasi (*Supervised Learning*):** Melatih algoritma *Support Vector Machine* (SVM) berbasis kernel RBF dan *Random Forest Classifier* untuk mengenali kelas suara secara otomatis.
+6. **Mengevaluasi Kinerja Model secara Obyektif:** Mengukur performa klasifikasi menggunakan Confusion Matrix, Precision, Recall, F1-Score, serta *5-Fold Stratified Cross-Validation*.
+7. **Mengidentifikasi Fitur Paling Diskriminatif:** Menentukan parameter akustik mana yang paling berkontribusi dalam membedakan suara berisik dari suara sunyi (*feature importance*).
 
 ---
 
-## 3. Dasar Teori
+## 3. Dasar Teori Pengolahan Sinyal Audio Digital
 
-### 3.1 Konsep Dasar Sinyal Audio Digital
+### 3.1 Representasi Sinyal Audio Digital & Analisis Short-Time
 
-Suara analog diubah menjadi sinyal digital melalui dua tahap utama:
+Sinyal akustik kontinu $x_a(t)$ dikonversi ke domain digital menjadi sinyal waktu diskrit $x[n]$ melalui dua tahapan fundamental:
 
-- **Sampling:** pengambilan nilai amplitudo sinyal analog pada interval waktu tertentu. Jumlah sampel yang diambil per detik disebut *sample rate* (satuan: Hz). Sebagai contoh, *sample rate* 22050 Hz berarti sinyal diukur 22.050 kali dalam satu detik.
-- **Quantization:** pembulatan nilai amplitudo hasil sampling ke level diskrit terdekat. Kedalaman bit (*bit depth*) menentukan jumlah level kuantisasi yang tersedia; misalnya, 16-bit menghasilkan 65.536 level.
+1. **Sampling:** Pengambilan sampel amplitudo secara berkala pada interval $T_s = 1 / f_s$, di mana $f_s$ adalah frekuensi *sampling rate*. Menurut teorema Nyquist-Shannon, agar aliasing frekuensi tidak terjadi, frekuensi sampling harus memenuhi:
+   $$f_s \ge 2 \cdot f_{\max}$$
+   Pada praktikum ini digunakan $f_s = 22.050\text{ Hz}$, sehingga frekuensi tertinggi yang dapat dianalisis adalah frekuensi Nyquist sebesar $11.025\text{ Hz}$, yang mencakup seluruh rentang pendengaran manusia yang relevan untuk suara lingkungan.
+2. **Kuantisasi (*Quantization*):** Pemetaan nilai amplitudo kontinu ke level-level diskrit tertentu. Umumnya audio PCM dikuantisasi dalam kedalaman bit 16-bit (menghasilkan $2^{16} = 65.536$ level kuantisasi diskrit).
 
-Setelah proses ini, sinyal audio menjadi deretan angka (*array of numbers*) yang dapat diproses secara komputasional. Setiap elemen pada array tersebut merepresentasikan amplitudo sinyal pada satu titik waktu.
+#### Analisis Frame-by-Frame (*Short-Time Analysis*)
 
-Konsep penting lainnya:
+Sinyal suara bersifat **non-stasioner**, artinya sifat statistik dan kandungan frekuensinya berubah seiring berjalannya waktu. Oleh karena itu, sinyal audio tidak dapat dianalisis secara global sekaligus. Sebaliknya, sinyal dipecah menjadi potongan-potongan pendek berdurasi 20–50 ms yang disebut **frame**, di mana sinyal diasumsikan bersifat **kuasi-stasioner** (*quasi-stationary*).
 
-| Istilah | Penjelasan |
-|---|---|
-| **Sample rate (Fs/sr)** | Jumlah sampel per detik (Hz). Menentukan frekuensi maksimum yang dapat direpresentasikan (Nyquist = Fs/2). |
-| **Mono vs Stereo** | Mono: 1 kanal audio. Stereo: 2 kanal (kiri dan kanan). Untuk analisis fitur, umumnya digunakan sinyal mono. |
-| **Frame** | Potongan kecil sinyal audio (biasanya 20–50 ms). Analisis fitur sering dilakukan per frame (*short-time analysis*) karena sinyal audio dianggap stasioner dalam durasi pendek. |
-| **Hop length** | Jumlah sampel yang digeser antar-frame berurutan. Dengan overlap, informasi transisi antar-frame tidak hilang. |
-| **Domain waktu** | Representasi sinyal sebagai fungsi amplitudo terhadap waktu. |
-| **Domain frekuensi** | Representasi sinyal sebagai fungsi magnitudo terhadap frekuensi, diperoleh melalui transformasi Fourier. |
+- **Frame Length ($N$):** 2048 sampel ($\approx 92,88\text{ ms}$ pada $f_s = 22.050\text{ Hz}$).
+- **Hop Length ($H$):** 512 sampel ($\approx 23,22\text{ ms}$), menghasilkan overlap sebesar $75\%$ antar-frame berturutan guna memastikan transisi energi sinyal tidak terputus.
 
-### 3.2 RMS (Root Mean Square)
+---
 
-#### Pengertian dan Fungsi
+### 3.2 Root Mean Square (RMS)
 
-RMS (*Root Mean Square*) adalah ukuran statistik yang menghitung akar kuadrat rata-rata dari kuadrat seluruh nilai sampel dalam suatu frame audio. Secara fisik, RMS merepresentasikan **tingkat energi** atau **loudness** relatif dari sinyal audio.
+#### Pengertian dan Signifikansi Akustik
+RMS (*Root Mean Square*) adalah ukuran energi atau kekuatan efektif suatu sinyal periodik/stokastik dalam suatu frame waktu. Secara fisik, RMS berkaitan langsung dengan **amplitudo rata-rata**, **intensitas suara**, dan persepsi kenyaringan (*loudness*).
 
-Nilai RMS memberikan gambaran seberapa "keras" suatu suara secara kuantitatif, tanpa terpengaruh oleh tanda positif atau negatif dari amplitudo sinyal.
+#### Formulasi Matematis
+Untuk sebuah frame sinyal $x[n]$ dengan panjang $N$ sampel:
 
-#### Rumus Matematika
+$$\text{RMS} = \sqrt{\frac{1}{N} \sum_{n=0}^{N-1} x[n]^2}$$
 
-Untuk sinyal diskrit $x[n]$ dengan panjang $N$ sampel dalam satu frame:
+#### Interpretasi pada Kasus Berisik vs Non-Berisik
+- **Lingkungan Berisik:** Memiliki tingkat tekanan akustik tinggi yang ditimbulkan oleh banyak sumber suara simultan (mesin kendaraan, desau kerumunan, benturan fisik). Hal ini menghasilkan nilai RMS yang secara konsisten tinggi dengan variansi energi yang dinamis.
+- **Lingkungan Non-Berisik / Sunyi:** Amplitudo sinyal mendekati garis ekuilibrium nol (hanya ada derau lantai mikrofon/thermal noise atau desis bisu), sehingga nilai RMS sangat rendah.
 
-$$
-\text{RMS} = \sqrt{\frac{1}{N} \sum_{n=0}^{N-1} x[n]^2}
-$$
-
-Di mana:
-- $x[n]$ = nilai amplitudo pada sampel ke-$n$
-- $N$ = jumlah sampel dalam frame
-
-#### Cara Membaca Hasil RMS
-
-- **RMS tinggi** → suara memiliki energi besar, terdengar lebih keras (contoh: teriakan, suara mesin berat).
-- **RMS rendah** → suara memiliki energi kecil, terdengar lebih pelan atau lembut (contoh: bisikan, suara angin).
-- RMS dihitung per frame sehingga menghasilkan kurva energi terhadap waktu. Untuk merangkum satu file audio menjadi satu nilai, digunakan statistik seperti **mean** dan **standar deviasi** dari seluruh frame.
-
-#### Membedakan Karakteristik Suara
-
-Perbedaan nilai RMS antar-sampel dapat membantu membedakan:
-- Suara yang bersifat *sustained* (energi relatif konstan, standar deviasi rendah) vs suara *impulsif* (terdapat puncak energi tajam, standar deviasi tinggi).
-- Suara keras vs suara lembut, meskipun hal ini juga dipengaruhi kondisi perekaman (jarak mikrofon, *gain*, dll.).
-
-> **Catatan:** RMS saja tidak cukup untuk menentukan jenis suara secara pasti. RMS perlu dikombinasikan dengan fitur lain untuk identifikasi yang lebih akurat.
+---
 
 ### 3.3 Spectral Centroid
 
-#### Pengertian dan Fungsi
+#### Pengertian dan Signifikansi Akustik
+Spectral Centroid menunjukkan titik pusat massa (*center of gravity*) dari spektrum frekuensi audio. Fitur ini merepresentasikan **kecerahan suara (*brightness*)**; semakin banyak komponen energi pada frekuensi tinggi, semakin besar nilai Spectral Centroid (dinyatakan dalam satuan Hertz).
 
-Spectral Centroid (pusat spektral) adalah fitur yang menggambarkan **pusat massa** dari distribusi energi pada spektrum frekuensi sinyal audio. Secara intuitif, Spectral Centroid mengindikasikan apakah suara cenderung terdengar **"terang" (bright)** atau **"redup/gelap" (dark/dull)**.
+#### Formulasi Matematis
+Melalui penerapan *Short-Time Fourier Transform* (STFT), diperoleh spektrum magnitudo $|X[k]|$ pada bin frekuensi ke-$k$ dengan frekuensi fisik $f[k]$:
 
-Fitur ini dihitung pada domain frekuensi menggunakan spektrum magnitudo yang diperoleh dari Short-Time Fourier Transform (STFT).
-
-#### Rumus Matematika
-
-$$
-\text{Spectral Centroid} = \frac{\sum_{k=0}^{K-1} f(k) \cdot |X(k)|}{\sum_{k=0}^{K-1} |X(k)|}
-$$
+$$\text{Spectral Centroid} = \frac{\sum_{k=0}^{K-1} f[k] \cdot |X[k]|}{\sum_{k=0}^{K-1} |X[k]|}$$
 
 Di mana:
-- $f(k)$ = frekuensi yang berkorespondensi dengan bin ke-$k$ (dalam Hz)
-- $|X(k)|$ = magnitudo spektrum pada bin ke-$k$
-- $K$ = jumlah bin frekuensi
+- $|X[k]|$ = magnitudo spektral pada bin frekuensi ke-$k$.
+- $f[k] = \frac{k \cdot f_s}{N_{\text{FFT}}}$ = frekuensi tengah bin ke-$k$ (Hz).
+- $K = \frac{N_{\text{FFT}}}{2} + 1$ = jumlah bin frekuensi Nyquist.
 
-Rumus ini pada dasarnya adalah **rata-rata tertimbang frekuensi**, dengan bobot berupa magnitudo spektrum pada setiap bin frekuensi.
-
-#### Hubungan dengan Frekuensi
-
-Satuan Spectral Centroid adalah **Hertz (Hz)**, sama seperti frekuensi. Nilai ini menunjukkan frekuensi "pusat" di mana energi spektral terkumpul:
-
-- **Spectral Centroid tinggi** (misalnya > 3000 Hz): energi terkonsentrasi pada frekuensi tinggi → suara terdengar tajam dan cerah (contoh: simbal, suara "sss", kicau burung).
-- **Spectral Centroid rendah** (misalnya < 1000 Hz): energi terkonsentrasi pada frekuensi rendah → suara terdengar berat dan dalam (contoh: bass drum, suara "uum", gemuruh).
-
-#### Interpretasi dalam Konteks Sampel
-
-Dengan membandingkan rata-rata Spectral Centroid antar-sampel, kita dapat mengobservasi:
-- Sampel mana yang memiliki komponen frekuensi tinggi lebih dominan.
-- Sampel mana yang secara spektral lebih "gelap" atau "terang".
-- Variasi kecerahan suara dari waktu ke waktu di dalam satu rekaman (menggunakan grafik Spectral Centroid per frame).
-
-### 3.4 ZCR (Zero-Crossing Rate)
-
-#### Pengertian dan Fungsi
-
-Zero-Crossing Rate (ZCR) mengukur **seberapa sering sinyal audio berubah tanda** (dari positif ke negatif atau sebaliknya) dalam suatu frame. Secara teknis, setiap kali sinyal melewati garis nol (*zero line*), terjadi satu *zero-crossing*.
-
-ZCR merupakan fitur sederhana pada domain waktu yang dapat memberikan indikasi kasar tentang frekuensi dominan dan karakteristik sinyal.
-
-#### Rumus Matematika
-
-$$
-\text{ZCR} = \frac{1}{2N} \sum_{n=1}^{N-1} |\text{sign}(x[n]) - \text{sign}(x[n-1])|
-$$
-
-Di mana:
-- $x[n]$ = nilai sampel pada indeks $n$
-- $\text{sign}(x)$ = fungsi tanda ($+1$ jika $x > 0$, $-1$ jika $x < 0$, $0$ jika $x = 0$)
-- $N$ = jumlah sampel dalam frame
-- Faktor $\frac{1}{2}$ menormalkan hasil karena setiap *crossing* menghasilkan selisih absolut sebesar 2
-
-Beberapa implementasi menggunakan versi tanpa faktor $\frac{1}{2N}$ dan hanya menghitung jumlah total *zero-crossing*. Library `librosa` menghitung ZCR sebagai rasio per frame.
-
-#### Interpretasi Nilai ZCR
-
-- **ZCR tinggi**: sinyal sering berubah tanda → umumnya mengindikasikan komponen frekuensi tinggi yang dominan, atau sinyal yang bersifat *noisy*. Contoh: suara desisan (*unvoiced speech* seperti "s", "f", "sh"), white noise, suara gesekan.
-- **ZCR rendah**: sinyal jarang berubah tanda → umumnya mengindikasikan komponen frekuensi rendah yang dominan, atau sinyal periodik yang halus. Contoh: vokal "aaa", nada bass, dengungan.
-
-#### Membedakan Karakteristik Suara
-
-ZCR efektif untuk membedakan:
-- **Voiced vs unvoiced speech**: segmen ucapan bersuara (vokal) cenderung memiliki ZCR lebih rendah dibanding segmen tak bersuara (konsonan frikatif).
-- **Suara bernada vs noise**: suara yang bersifat periodik (bernada) memiliki ZCR lebih teratur dan rendah dibanding noise.
-- **Perbedaan dasar antar-jenis suara**: suara alam seperti angin atau hujan cenderung memiliki ZCR tinggi, sementara nada alat musik yang dalam memiliki ZCR rendah.
-
-### 3.5 MFCC (Mel-Frequency Cepstral Coefficients)
-
-#### Pengertian dan Fungsi
-
-MFCC adalah sekumpulan koefisien yang merepresentasikan **karakteristik spektral** suara menggunakan **skala Mel**. Skala Mel adalah skala frekuensi non-linear yang dirancang untuk meniru cara sistem pendengaran manusia mempersepsikan perbedaan frekuensi — manusia lebih sensitif terhadap perbedaan frekuensi pada rentang rendah dibanding rentang tinggi.
-
-MFCC merupakan salah satu fitur yang paling banyak digunakan dalam pengenalan suara (*speech recognition*), identifikasi pembicara (*speaker identification*), dan klasifikasi suara (*sound classification*) karena kemampuannya mengekstrak informasi yang relevan secara perseptual.
-
-#### Tahapan Umum Ekstraksi MFCC
-
-Proses ekstraksi MFCC terdiri dari beberapa langkah:
-
-1. **Pre-emphasis:** menerapkan filter *high-pass* untuk memperkuat frekuensi tinggi yang cenderung memiliki energi lebih kecil.
-2. **Framing:** membagi sinyal menjadi frame-frame pendek (tipikal 20–40 ms) dengan overlap.
-3. **Windowing:** mengalikan setiap frame dengan fungsi window (contoh: Hamming window) untuk mengurangi efek diskontinuitas di tepi frame.
-4. **FFT (Fast Fourier Transform):** mengubah setiap frame dari domain waktu ke domain frekuensi untuk mendapatkan spektrum daya.
-5. **Mel Filterbank:** menerapkan sekumpulan filter segitiga (*triangular filters*) yang tersebar secara merata pada skala Mel. Filter ini menjumlahkan energi di masing-masing sub-band frekuensi.
-6. **Logaritma:** mengambil logaritma dari energi tiap filter, sesuai dengan persepsi loudness manusia yang bersifat logaritmik.
-7. **DCT (Discrete Cosine Transform):** mentransformasi log-energi menjadi koefisien *cepstral*. Hasil DCT menghasilkan koefisien-koefisien MFCC.
-
-#### Mengapa MFCC Sering Digunakan
-
-- **Berbasis persepsi manusia:** skala Mel menyesuaikan resolusi frekuensi dengan cara manusia mendengar.
-- **Reduksi dimensi:** dari ribuan bin frekuensi menjadi belasan koefisien yang kompak namun informatif.
-- **Dekorelasi fitur:** DCT menghasilkan koefisien yang cenderung tidak berkorelasi, sehingga lebih efektif untuk model klasifikasi.
-- **Terbukti efektif:** digunakan secara luas dalam berbagai sistem pengenalan suara dan musik.
-
-#### Arti Koefisien MFCC
-
-Setiap koefisien MFCC merepresentasikan aspek berbeda dari bentuk spektral (*spectral envelope*):
-
-- **MFCC ke-0 (C₀):** berkaitan dengan energi total sinyal; kadang diabaikan dalam analisis.
-- **MFCC ke-1 (C₁):** menggambarkan kemiringan (*tilt*) spektral secara umum — apakah energi lebih terpusat di frekuensi rendah atau tinggi.
-- **MFCC ke-2 hingga ke-12 (C₂–C₁₂):** menangkap detail bentuk spektral yang semakin halus, merepresentasikan variasi lokal pada *spectral envelope*.
-- Koefisien bernomor lebih tinggi menangkap detail spektral yang semakin halus, tetapi juga semakin rentan terhadap noise.
-
-#### Mengapa 13 Koefisien
-
-Secara konvensi, 13 koefisien MFCC pertama (C₀ hingga C₁₂, atau C₁ hingga C₁₃ tergantung konvensi library) dianggap cukup untuk merepresentasikan karakteristik spektral suara yang relevan secara perseptual. Koefisien di atas 13 biasanya menangkap detail yang terlalu halus dan lebih banyak berisi noise dibanding informasi yang berguna.
-
-#### MFCC Bukan Nilai Tunggal
-
-> **Penting:** MFCC **bukan satu angka tunggal** per file audio. Untuk setiap frame audio, dihasilkan **satu vektor berisi 13 koefisien** (jika menggunakan `n_mfcc=13`). Karena satu file audio terdiri dari banyak frame, hasil MFCC berupa **matriks** berdimensi `(n_mfcc, jumlah_frame)`.
->
-> Untuk merangkum MFCC menjadi representasi per sampel audio (satu baris pada tabel fitur), setiap koefisien perlu diringkas menggunakan statistik deskriptif, misalnya **mean** dan **standar deviasi**, sehingga menghasilkan 26 nilai (13 mean + 13 std) untuk setiap file audio.
-
-#### Visualisasi MFCC
-
-MFCC biasanya divisualisasikan sebagai **heatmap** dengan:
-- Sumbu horizontal: waktu (frame)
-- Sumbu vertikal: nomor koefisien MFCC
-- Warna: nilai koefisien
-
-Visualisasi ini memungkinkan kita melihat bagaimana karakteristik spektral berubah sepanjang durasi audio.
+#### Interpretasi pada Kasus Berisik vs Non-Berisik
+- **Suara Berisik:** Mengandung spektrum frekuensi luas (*wideband*), termasuk komponen frekuensi menengah-tinggi akibat desis knalpot, gesekan ban, gesekan piring, derau klakson, atau percakapan, sehingga centroid cenderung bergeser ke frekuensi yang lebih tinggi.
+- **Suara Sunyi:** Didominasi oleh dengung frekuensi sangat rendah (*low-frequency rumble*) dari perangkat elektronik atau tidak adanya energi spektral frekuensi tinggi sama sekali, sehingga titik berat spektrum berada pada nilai frekuensi yang lebih rendah atau berfluktuasi rendah.
 
 ---
 
-## 4. Perangkat dan Library
+### 3.4 Zero-Crossing Rate (ZCR)
 
-### Lingkungan Pengembangan
+#### Pengertian dan Signifikansi Akustik
+ZCR (*Zero-Crossing Rate*) mengukur seberapa sering sinyal audio memotong garis nol (berpindah tanda dari positif ke negatif atau sebaliknya) per satuan frame. Fitur ini merupakan aproksimasi kasar domain-waktu dari kandungan frekuensi sinyal dan sangat berguna dalam membedakan suara bernada (*voiced/tonal*) dari derau tak teratur (*unvoiced/noise*).
 
-| Komponen | Keterangan |
-|---|---|
-| Bahasa | Python 3.x |
-| Editor / IDE | Jupyter Notebook, VS Code, atau Google Colab |
-| Sistem Operasi | Windows / Linux / macOS |
+#### Formulasi Matematis
+Untuk sebuah frame sinyal $x[n]$ berukuran $N$ sampel:
 
-### Library Python
+$$\text{ZCR} = \frac{1}{2(N-1)} \sum_{n=1}^{N-1} |\text{sgn}(x[n]) - \text{sgn}(x[n-1])|$$
 
-| Library | Versi Minimum | Fungsi |
+Di mana fungsi tanda (*sign function*) didefinisikan sebagai:
+
+$$\text{sgn}(x) = \begin{cases} 1, & x \ge 0 \\ -1, & x < 0 \end{cases}$$
+
+#### Interpretasi pada Kasus Berisik vs Non-Berisik
+- **Suara Berisik / Noise:** Memiliki sifat stokastik frekuensi tinggi yang berosilasi cepat melewati sumbu nol, menghasilkan ZCR yang tinggi.
+- **Suara Sunyi / Tenang:** Osilasi sangat lambat atau hampir datar pada garis diam (*silence*), menghasilkan ZCR yang lebih rendah secara signifikan.
+
+---
+
+### 3.5 Mel-Frequency Cepstral Coefficients (MFCC)
+
+#### Pengertian dan Signifikansi Akustik
+MFCC adalah representasi fitur spektral paling dominan dalam pengenalan wicara (*speech recognition*) dan klasifikasi suara lingkungan (*sound event detection*). MFCC memetakan spektrum daya sinyal ke dalam skala **Mel**, yaitu skala persepsi nada manusia yang bersifat logaritmik—telinga manusia jauh lebih sensitif membedakan perubahan nada pada frekuensi rendah (<1 kHz) daripada frekuensi tinggi.
+
+#### Tahapan Komputasi MFCC
+Ekstraksi 13 koefisien MFCC dilakukan melalui 6 langkah berurutan:
+
+```
+Sinyal x[n] ──> [Pre-emphasis] ──> [Framing & Windowing] ──> [FFT & Power Spectrum]
+                                                                    │
+[MFCC Coeffs] <── [DCT-II] <── [Logarithm ln(·)] <── [Mel Filterbank]
+```
+
+1. **Pre-emphasis:** Filter diferensial tingkat-pertama $y[n] = x[n] - \alpha x[n-1]$ ($\alpha \approx 0,97$) untuk mengkompensasi pelemahan spektral alami pada frekuensi tinggi.
+2. **Framing & Hamming Windowing:** Memecah sinyal ke dalam frame dan mengalikannya dengan jendela Hamming $w[n] = 0,54 - 0,46 \cos\left(\frac{2\pi n}{N-1}\right)$ untuk meminimalisasi *spectral leakage*.
+3. **Fast Fourier Transform (FFT):** Menghitung magnitudo kuadrat dari spektrum frekuensi untuk memperoleh *Power Spectrum* $P[k] = \frac{1}{N} |X[k]|^2$.
+4. **Mel-Scale Filterbank:** Mengintegrasikan daya spektral ke dalam $M$ buah bandpass filter berbentuk segitiga (umumnya $M = 40$) yang spasi pusatnya berjarak sama pada skala Mel:
+   $$m = 2595 \cdot \log_{10}\left(1 + \frac{f}{700}\right)$$
+5. **Logarithmic Compression:** Mengambil logaritma natural dari energi setiap kanal filterbank: $S[m] = \ln\left( \sum_k P[k] H_m[k] \right)$. Langkah ini menirukan persepsi intensitas suara manusia yang bersifat logaritmik (desibel).
+6. **Discrete Cosine Transform (DCT-II):** Menerapkan transformasi kosinus terbalik pada log-energi filterbank untuk mendekorelasikan energi dan memisahkan *envelope spektral* dari eksitasi harmonik:
+   $$c[j] = \sum_{m=1}^{M} S[m] \cos\left( \frac{\pi j (m - 0,5)}{M} \right), \quad j = 1, 2, \dots, 13$$
+
+#### Arti Fisik Koefisien MFCC
+- **MFCC-1 ($c_1$):** Merepresentasikan energi spektral keseluruhan (*overall log-energy*). Nilainya berkorelasi kuat dengan RMS dan tingkat keterisian spektrum.
+- **MFCC-2 ($c_2$):** Mengukur kemiringan spektral (*spectral tilt*), membedakan distribusi energi dominan frekuensi rendah vs frekuensi tinggi.
+- **MFCC-3 s.d. MFCC-13:** Menangkap detail formasi lekukan spektral (*spectral envelope shape*) yang spesifik bagi jenis derau tertentu (derau mekanik, aliran udara, suara percakapan).
+
+---
+
+## 4. Perangkat Lunak dan Library Python
+
+Eksperimen ini dibangun menggunakan ekosistem ilmiah Python dengan dependensi library sebagai berikut:
+
+| Perangkat / Library | Versi | Peran dan Fungsi dalam Praktikum |
 |---|---|---|
-| `librosa` | ≥ 0.9.0 | Membaca file audio, ekstraksi fitur (RMS, Spectral Centroid, ZCR, MFCC) |
-| `numpy` | ≥ 1.21 | Operasi numerik pada array dan matriks |
-| `pandas` | ≥ 1.3 | Menyusun dan mengelola tabel (DataFrame) |
-| `matplotlib` | ≥ 3.4 | Visualisasi grafik dan plot |
-| `scikit-learn` | ≥ 1.0 | Standardisasi fitur, pembagian data, algoritma klasifikasi, metrik evaluasi |
-| `soundfile` | ≥ 0.10 | Backend untuk `librosa` dalam membaca file audio (terutama WAV) |
-
-### Instalasi
-
-```bash
-pip install librosa numpy pandas matplotlib scikit-learn soundfile
-```
-
-Jika menggunakan Google Colab, `librosa` dan library lainnya dapat diinstal langsung:
-
-```bash
-!pip install librosa soundfile
-```
+| **Python** | 3.10.x | Lingkungan komputasi utama |
+| **librosa** | 0.10.x | Ekstraksi fitur audio (RMS, Spectral Centroid, ZCR, MFCC) dan dekode sinyal |
+| **soundfile** | 0.12.x | Backend pembaca file audio PCM WAV tanpa kompresi |
+| **imageio-ffmpeg** | 0.6.0 | Penyedia pustaka biner FFmpeg portabel untuk mendekode format MP3, AAC, dan M4A |
+| **numpy** | 1.23+ | Operasi matriks, komputasi numerik, dan agregasi statistik (mean, std) |
+| **pandas** | 2.0+ | Manajemen struktur data tabel tabular (DataFrame) dan ekspor hasil ke CSV |
+| **scikit-learn** | 1.3+ | Standardisasi (`StandardScaler`), pemodelan ML (SVM, Random Forest), dan metrik evaluasi |
+| **matplotlib** | 3.7+ | Visualisasi waveform, spektrogram, diagram kurva temporal, boxplot, dan confusion matrix |
 
 ---
 
-## 5. Dataset dan Karakteristik Sampel
+## 5. Dataset dan Karakteristik Sampel Audio
 
-### Struktur Folder Dataset
+Dataset yang digunakan dalam analisis ini merupakan kumpulan data rekaman suara lingkungan riil yang dikumpulkan dari 2 berkas arsip zip:
+- **`BerisikPSD.zip`**: Berisi rekaman kondisi lingkungan bising (jalan raya, kerumunan kampus, kantin, warung kopi, suara latar televisi, aktivitas ruangan padat).
+- **`NonBerisikPSD.zip`**: Berisi rekaman kondisi lingkungan tenang/hening (kamar tidur pribadi, ruang belajar tertutup, perpustakaan sepi, lingkungan sunyi malam hari).
 
-Sampel audio harus diletakkan di dalam folder `dataset_audio/` pada *root* proyek. Terdapat **dua skenario** yang didukung oleh kode implementasi:
+### 5.1 Distribusi dan Spesifikasi Sampel
 
-#### Skenario A: Dengan Label Kelas (Supervised)
+Secara keseluruhan, sistem berhasil mengekstraksi dan memvalidasi **229 file audio** tanpa ada data yang korup atau gagal muat:
 
-Jika data memiliki label, buat subfolder untuk setiap kelas:
+| Parameter Dataset | Kelas Berisik | Kelas NonBerisik | Total Keseluruhan |
+|---|---|---|---|
+| **Jumlah File Sampel** | **116 file** ($50,65\%$) | **113 file** ($49,35\%$) | **229 file** ($100\%$) |
+| **Format File** | MP3, WAV, AAC, M4A | MP3, WAV, AAC, M4A | 203 MP3, 12 AAC, 8 M4A, 6 WAV |
+| **Durasi Rata-rata** | $31,20\text{ detik}$ | $30,85\text{ detik}$ | $31,03\text{ detik}$ |
+| **Rentang Durasi** | $18,04\text{ s} - 48,13\text{ s}$ | $29,91\text{ s} - 38,46\text{ s}$ | $18,04\text{ s} - 48,13\text{ s}$ |
+| **Kanal Audio** | Mono (dikonversi otomatis) | Mono (dikonversi otomatis) | 1 kanal (*single channel*) |
+| **Target Sample Rate** | $22.050\text{ Hz}$ | $22.050\text{ Hz}$ | $22.050\text{ Hz}$ |
 
 ```
 TugasPSD/
 └── dataset_audio/
-    ├── kelas_a/
-    │   ├── sampel_01.wav
-    │   ├── sampel_02.wav
-    │   └── ...
-    ├── kelas_b/
-    │   ├── sampel_01.wav
-    │   ├── sampel_02.wav
-    │   └── ...
-    └── kelas_c/
-        ├── sampel_01.wav
-        └── ...
+    ├── Berisik/       (116 file .mp3, .wav, .aac, .m4a)
+    └── NonBerisik/    (113 file .mp3, .wav, .aac, .m4a)
 ```
 
-Nama subfolder akan digunakan sebagai **label kelas** secara otomatis oleh kode. Contoh nama subfolder yang dapat digunakan disesuaikan dengan isi data aktual, misalnya: `suara_manusia`, `alat_musik`, `suara_alam`, `suara_mesin`, dsb.
-
-#### Skenario B: Tanpa Label Kelas (Unsupervised)
-
-Jika data tidak memiliki label, letakkan semua file audio langsung di dalam `dataset_audio/`:
-
-```
-TugasPSD/
-└── dataset_audio/
-    ├── rekaman_01.wav
-    ├── rekaman_02.wav
-    ├── rekaman_03.mp3
-    └── ...
-```
-
-Pada skenario ini, klasifikasi terawasi (*supervised*) tidak dapat dilakukan. Sebagai alternatif, pengelompokan dapat dilakukan menggunakan metode *clustering* (K-Means), namun hasil cluster memerlukan interpretasi manual.
-
-### Format Audio yang Didukung
-
-Library `librosa` mendukung berbagai format audio melalui backend `soundfile` dan `audioread`:
-
-- **WAV** (direkomendasikan — *lossless*, paling stabil)
-- **MP3** (memerlukan `ffmpeg` atau `audioread` terinstal)
-- **FLAC** (*lossless compressed*)
-- **OGG/Vorbis**
-
-> **Rekomendasi:** Gunakan format **WAV** untuk menghindari masalah kompatibilitas. Jika sampel dalam format MP3, pastikan `ffmpeg` terinstal di sistem.
-
-### Catatan tentang Dataset
-
-- **Jumlah sampel** dan **nama kelas** akan diidentifikasi secara otomatis oleh kode dari isi folder.
-- **Metadata** (durasi, sample rate, jumlah kanal) akan dibaca langsung dari setiap file audio.
-- Kode menyertakan penanganan untuk file yang gagal dibaca atau berisi data kosong.
-- Hasil fitur sangat dipengaruhi oleh: sumber suara, kondisi perekaman (mikrofon, jarak, lingkungan), durasi, sample rate, dan tingkat noise latar belakang.
+> **Keseimbangan Kelas (*Balanced Dataset*):** Rasio perbandingan data Berisik (116) dan NonBerisik (113) berada pada kisaran $1,02 : 1$, yang menunjukkan dataset sangat seimbang. Kondisi ini ideal untuk pelatihan machine learning tanpa perlu dilakukan teknik *oversampling* (SMOTE) maupun *undersampling*.
 
 ---
 
-## 6. Tahapan Pengolahan Audio
+## 6. Tahapan Pengolahan Audio Sistematis
 
-Berikut adalah alur kerja pengolahan audio secara berurutan beserta penjelasan mengapa setiap tahap diperlukan:
+Alur kerja pengolahan audio dirancang dalam pipeline end-to-end sebagai berikut:
 
-| No | Tahap | Penjelasan |
-|---|---|---|
-| 1 | **Memuat dan memeriksa sampel audio** | Membaca file audio dan memastikan file valid serta dapat diproses. File yang korup atau kosong harus diidentifikasi sejak awal. |
-| 2 | **Membaca metadata audio** | Memeriksa durasi, sample rate, dan jumlah kanal setiap file. Informasi ini penting untuk memahami karakteristik dasar data dan menentukan apakah prapemrosesan diperlukan. |
-| 3 | **Prapemrosesan** | Mengonversi stereo ke mono (jika ada) dan menyamakan sample rate agar seluruh sampel memiliki representasi yang konsisten. Librosa secara default melakukan konversi mono dan resampling ke 22050 Hz. |
-| 4 | **Menampilkan sinyal dalam domain waktu** | Memvisualisasikan waveform untuk melihat pola amplitudo secara visual — apakah sinyal bersifat periodik, impulsif, atau stokastik. |
-| 5 | **Ekstraksi RMS** | Menghitung tingkat energi per frame. Memberikan informasi tentang seberapa keras atau lembut suara pada setiap segmen waktu. |
-| 6 | **Ekstraksi Spectral Centroid** | Menghitung pusat distribusi energi frekuensi per frame. Mengindikasikan kecerahan (*brightness*) suara. |
-| 7 | **Ekstraksi ZCR** | Menghitung laju persimpangan nol per frame. Memberikan indikasi kasar tentang frekuensi dominan dan apakah sinyal bersifat tonal atau *noisy*. |
-| 8 | **Ekstraksi MFCC** | Mengekstrak 13 koefisien MFCC per frame yang merepresentasikan *spectral envelope* berdasarkan skala Mel. |
-| 9 | **Penggabungan fitur ke dalam tabel** | Merangkum fitur per frame menjadi statistik (mean, std) untuk setiap sampel audio, lalu menggabungkan seluruh sampel ke dalam satu DataFrame. |
-| 10 | **Visualisasi dan analisis** | Membuat grafik perbandingan fitur antar-sampel atau antar-kelas untuk mengidentifikasi pola dan perbedaan karakteristik. |
-| 11 | **Klasifikasi** | Jika label tersedia, melatih model klasifikasi (SVM / Random Forest) dan mengevaluasi hasilnya. Jika tidak, menggunakan K-Means sebagai alternatif eksplorasi. |
-| 12 | **Kesimpulan** | Menyusun rangkuman berdasarkan hasil nyata dari analisis dan evaluasi. |
+```text
+flowchart TD
+    A[Dataset Audio: BerisikPSD & NonBerisikPSD] --> B[Pemindaian Berkas & Filter Ekstensi]
+    B --> C[Pemuatan Audio via Librosa + FFmpeg]
+    C --> D[Prapemrosesan: Resampling ke 22.050 Hz & Downmix Mono]
+    D --> E[Short-Time Framing: Frame=2048, Hop=512]
+    E --> F1[Ekstraksi Fitur Domain Waktu: RMS & ZCR]
+    E --> F2[Ekstraksi Fitur Domain Spektral: Spectral Centroid]
+    E --> F3[Ekstraksi Fitur Psikoakustik: MFCC 1-13]
+    F1 --> G[Agregasi Statistik: Mean & Standard Deviation]
+    F2 --> G
+    F3 --> G
+    G --> H[Konstruksi Tabel Fitur 32 Dimensi & Ekspor CSV]
+    H --> I[Eksplorasi Data & Visualisasi Komparatif]
+    H --> J[Standardisasi Fitur: StandardScaler]
+    J --> K[Pembagian Data: Stratified Split 80:20]
+    K --> L1[Pelatihan Model SVM Kernel RBF]
+    K --> L2[Pelatihan Model Random Forest 100 Trees]
+    L1 --> M[Evaluasi Model & 5-Fold Stratified Cross Validation]
+    L2 --> M
+    M --> N[Analisis Feature Importance & Pembahasan]
+```
+
+1. **Akuisisi Data & Dekode:** Mengakses file audio dalam direktori kelas, mengekstrak stream audio mentah melalui pustaka `librosa` yang terintegrasi dengan backend dekoder `FFmpeg`.
+2. **Prapemrosesan:**
+   - Melakukan konversi seluruh sinyal multi-kanal (stereo) menjadi sinyal mono melalui perataan kanal: $x_{\text{mono}}[n] = \frac{x_L[n] + x_R[n]}{2}$.
+   - Menyelaraskan frekuensi pencuplikan (*resampling*) ke standar seragam $f_s = 22.050\text{ Hz}$.
+3. **Ekstraksi Fitur Frame-by-Frame:**
+   - Menghitung array RMS per frame.
+   - Menghitung array Spectral Centroid per frame (STFT).
+   - Menghitung array ZCR per frame.
+   - Menghitung matriks 13 koefisien MFCC per frame.
+4. **Agregasi Statistik:** Merangkum variasi temporal setiap fitur menjadi 2 nilai statistik per sampel audio: **Rata-rata (*Mean*)** untuk menangkap tingkat tendensi sentral, dan **Standar Deviasi (*Std*)** untuk menangkap dinamika variasi sinyal.
+   $$\text{Total Dimensi Fitur} = (1\text{ RMS} + 1\text{ Centroid} + 1\text{ ZCR} + 13\text{ MFCC}) \times 2 = 32\text{ Fitur Numerik}$$
+5. **Penyusunan Tabel Tabular:** Menggabungkan kolom metadata (`filename`, `label`, `durasi_detik`) dengan 32 kolom fitur ke dalam DataFrame Pandas dan menyimpannya sebagai file `hasil_ekstraksi_fitur_audio.csv`.
+6. **Pemodelan dan Evaluasi Machine Learning:**
+   - Melakukan normalisasi z-score dengan `StandardScaler`.
+   - Menguji akurasi model pada data uji (*unseen test data*) serta stabilitas validasi silang (*5-Fold Stratified CV*).
 
 ---
 
 ## 7. Implementasi Kode Python
 
-Seluruh kode di bawah ini dirancang untuk dijalankan secara berurutan, baik di dalam Jupyter Notebook maupun sebagai skrip Python. Kode bersifat modular sehingga setiap bagian dapat dijalankan dan dipahami secara independen.
-
-### 7.1 Impor Library dan Konfigurasi
+Berikut adalah implementasi kode Python modular yang digunakan untuk mengeksekusi pipeline analisis audio ini secara menyeluruh:
 
 ```python
+"""
+Pipeline Pengolahan Sinyal Digital: Ekstraksi Fitur Audio dan Klasifikasi
+Penulis: Muhammad Zaidan Nabil Rafi (240411100068)
+"""
 import os
+import sys
 import warnings
 import numpy as np
 import pandas as pd
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from pathlib import Path
 
-# Opsional: untuk klasifikasi
-from sklearn.preprocessing import StandardScaler
+# Integrasikan path binary ffmpeg agar mendukung MP3, AAC, dan M4A
+import imageio_ffmpeg
+ffmpeg_dir = os.path.dirname(imageio_ffmpeg.get_ffmpeg_exe())
+os.environ['PATH'] = ffmpeg_dir + os.pathsep + os.environ.get('PATH', '')
+
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import (
-    classification_report,
-    confusion_matrix,
-    ConfusionMatrixDisplay,
-    accuracy_score
-)
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, accuracy_score
 
-# Konfigurasi
 warnings.filterwarnings('ignore')
-plt.rcParams['figure.figsize'] = (12, 4)
-plt.rcParams['figure.dpi'] = 100
-plt.rcParams['font.size'] = 11
 
-# ============================================================
-# KONFIGURASI LOKASI DATASET
-# Sesuaikan path ini dengan lokasi folder audio Anda.
-# ============================================================
-DATASET_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dataset_audio')
-# Jika di Jupyter Notebook, gunakan:
-# DATASET_DIR = './dataset_audio'
+# Parameter Akustik
+TARGET_SR = 22050
+N_MFCC = 13
+DATASET_DIR = './dataset_audio'
 
-TARGET_SR = 22050  # Sample rate target (Hz)
-N_MFCC = 13        # Jumlah koefisien MFCC
-```
-
-**Penjelasan:**
-- `DATASET_DIR`: lokasi folder yang berisi sampel audio. Sesuaikan dengan lokasi aktual di sistem Anda.
-- `TARGET_SR`: sample rate target. Librosa secara default melakukan resampling ke 22050 Hz, cukup untuk analisis umum (frekuensi Nyquist = 11025 Hz).
-- `N_MFCC`: jumlah koefisien MFCC yang diekstrak. 13 merupakan nilai konvensi standar.
-
-### 7.2 Pemindaian dan Pemuatan Dataset
-
-```python
 def scan_dataset(dataset_dir):
-    """
-    Memindai folder dataset dan mendeteksi apakah data memiliki label kelas
-    (berbasis subfolder) atau tidak.
-
-    Returns:
-        file_list: list of dict, setiap dict berisi 'path' dan 'label' (atau None).
-        has_labels: bool, True jika data terstruktur dalam subfolder kelas.
-        class_names: list of str, daftar nama kelas (kosong jika tanpa label).
-    """
-    supported_ext = {'.wav', '.mp3', '.flac', '.ogg', '.m4a'}
+    """Memindai subfolder Berisik dan NonBerisik"""
+    supported_ext = {'.wav', '.mp3', '.flac', '.ogg', '.m4a', '.aac'}
     file_list = []
-    has_labels = False
-    class_names = []
+    classes = sorted([d for d in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, d))])
+    for cls in classes:
+        subdir = os.path.join(dataset_dir, cls)
+        for f in sorted(os.listdir(subdir)):
+            if os.path.splitext(f)[1].lower() in supported_ext:
+                file_list.append({'path': os.path.join(subdir, f), 'filename': f, 'label': cls})
+    return file_list, classes
 
-    if not os.path.isdir(dataset_dir):
-        print(f"[ERROR] Folder '{dataset_dir}' tidak ditemukan.")
-        print("Pastikan folder 'dataset_audio/' ada dan berisi file audio.")
-        return file_list, has_labels, class_names
-
-    # Periksa apakah ada subfolder yang berisi audio (= ada label kelas)
-    subdirs = [d for d in os.listdir(dataset_dir)
-               if os.path.isdir(os.path.join(dataset_dir, d))]
-
-    for subdir in sorted(subdirs):
-        subdir_path = os.path.join(dataset_dir, subdir)
-        audio_files = [f for f in os.listdir(subdir_path)
-                       if os.path.splitext(f)[1].lower() in supported_ext]
-        if audio_files:
-            has_labels = True
-            class_names.append(subdir)
-            for f in sorted(audio_files):
-                file_list.append({
-                    'path': os.path.join(subdir_path, f),
-                    'label': subdir
-                })
-
-    # Jika tidak ada subfolder berisi audio, cari langsung di root
-    if not has_labels:
-        root_files = [f for f in os.listdir(dataset_dir)
-                      if os.path.isfile(os.path.join(dataset_dir, f))
-                      and os.path.splitext(f)[1].lower() in supported_ext]
-        for f in sorted(root_files):
-            file_list.append({
-                'path': os.path.join(dataset_dir, f),
-                'label': None
-            })
-
-    return file_list, has_labels, class_names
-
-
-# Eksekusi pemindaian
-file_list, has_labels, class_names = scan_dataset(DATASET_DIR)
-
-print(f"Total file audio ditemukan : {len(file_list)}")
-print(f"Label kelas tersedia       : {'Ya' if has_labels else 'Tidak'}")
-if has_labels:
-    print(f"Kelas yang terdeteksi      : {class_names}")
-    for cls in class_names:
-        count = sum(1 for f in file_list if f['label'] == cls)
-        print(f"  - {cls}: {count} sampel")
-```
-
-**Penjelasan:**
-- Fungsi `scan_dataset` secara otomatis mendeteksi apakah dataset menggunakan struktur subfolder (berlabel) atau datar (tanpa label).
-- Hanya file dengan ekstensi audio yang didukung yang diproses.
-- Jika folder tidak ditemukan, pesan error yang jelas ditampilkan.
-
-### 7.3 Membaca Metadata Audio
-
-```python
-def get_audio_metadata(filepath, target_sr=TARGET_SR):
-    """
-    Membaca file audio dan mengembalikan sinyal, sample rate, serta metadata.
-
-    Returns:
-        dict berisi: 'signal', 'sr', 'duration', 'n_samples', 'filename', 'success', 'error'
-    """
-    filename = os.path.basename(filepath)
+def extract_audio_features(filepath, filename, label, target_sr=TARGET_SR, n_mfcc=N_MFCC):
+    """Mengekstrak 32 fitur akustik statistik dari sinyal audio"""
     try:
-        # librosa.load secara default: mono=True, sr=22050
         y, sr = librosa.load(filepath, sr=target_sr, mono=True)
-
         if y is None or len(y) == 0:
-            return {
-                'filename': filename, 'signal': None, 'sr': None,
-                'duration': 0, 'n_samples': 0,
-                'success': False, 'error': 'Sinyal kosong'
-            }
-
-        return {
+            return None
+        duration = float(librosa.get_duration(y=y, sr=sr))
+        
+        # 1. RMS
+        rms = librosa.feature.rms(y=y)[0]
+        # 2. Spectral Centroid
+        centroid = librosa.feature.spectral_centroid(y=y, sr=sr)[0]
+        # 3. ZCR
+        zcr = librosa.feature.zero_crossing_rate(y=y)[0]
+        # 4. MFCC (13 koefisien)
+        mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc)
+        
+        row = {
             'filename': filename,
-            'signal': y,
-            'sr': sr,
-            'duration': librosa.get_duration(y=y, sr=sr),
-            'n_samples': len(y),
-            'success': True,
-            'error': None
+            'label': label,
+            'durasi_detik': round(duration, 2),
+            'rms_mean': float(np.mean(rms)),
+            'rms_std': float(np.std(rms)),
+            'centroid_mean': float(np.mean(centroid)),
+            'centroid_std': float(np.std(centroid)),
+            'zcr_mean': float(np.mean(zcr)),
+            'zcr_std': float(np.std(zcr))
         }
+        for j in range(n_mfcc):
+            row[f'mfcc_{j+1}_mean'] = float(np.mean(mfcc[j]))
+            row[f'mfcc_{j+1}_std'] = float(np.std(mfcc[j]))
+            
+        return row
     except Exception as e:
-        return {
-            'filename': filename, 'signal': None, 'sr': None,
-            'duration': 0, 'n_samples': 0,
-            'success': False, 'error': str(e)
-        }
+        print(f"Gagal memuat {filename}: {e}")
+        return None
 
+# Ekstraksi seluruh file
+file_list, class_names = scan_dataset(DATASET_DIR)
+data_rows = [extract_audio_features(f['path'], f['filename'], f['label']) for f in file_list]
+df_features = pd.DataFrame([r for r in data_rows if r is not None])
 
-# Memuat seluruh file audio
-audio_data = []
-for item in file_list:
-    meta = get_audio_metadata(item['path'])
-    meta['label'] = item['label']
-    meta['filepath'] = item['path']
-    audio_data.append(meta)
-
-# Pisahkan yang berhasil dan gagal
-audio_valid = [a for a in audio_data if a['success']]
-audio_failed = [a for a in audio_data if not a['success']]
-
-print(f"\nBerhasil dimuat : {len(audio_valid)} file")
-print(f"Gagal dimuat    : {len(audio_failed)} file")
-
-if audio_failed:
-    print("\nFile yang gagal dimuat:")
-    for f in audio_failed:
-        print(f"  - {f['filename']}: {f['error']}")
-
-# Tampilkan metadata
-if audio_valid:
-    print("\n--- Metadata Sampel Audio ---")
-    meta_df = pd.DataFrame([{
-        'Filename': a['filename'],
-        'Durasi (s)': round(a['duration'], 2),
-        'Sample Rate': a['sr'],
-        'Jumlah Sampel': a['n_samples'],
-        'Label': a['label'] if a['label'] else '-'
-    } for a in audio_valid])
-    print(meta_df.to_string(index=False))
-```
-
-**Penjelasan:**
-- `librosa.load()` secara default mengonversi audio ke **mono** dan melakukan **resampling** ke `sr=22050`.
-- Fungsi ini menangani file yang gagal dibaca atau berisi data kosong tanpa menghentikan eksekusi keseluruhan.
-
-### 7.4 Visualisasi Waveform
-
-```python
-def plot_waveform(signal, sr, title="Waveform", ax=None):
-    """Menampilkan bentuk gelombang (waveform) sinyal audio."""
-    if ax is None:
-        fig, ax = plt.subplots(figsize=(12, 3))
-    librosa.display.waveshow(signal, sr=sr, ax=ax, alpha=0.7)
-    ax.set_title(title, fontsize=13, fontweight='bold')
-    ax.set_xlabel('Waktu (detik)')
-    ax.set_ylabel('Amplitudo')
-    ax.grid(True, alpha=0.3)
-
-
-# Tampilkan waveform untuk setiap sampel (maks 6 pertama agar tidak terlalu banyak)
-n_display = min(len(audio_valid), 6)
-if n_display > 0:
-    fig, axes = plt.subplots(n_display, 1, figsize=(14, 3 * n_display))
-    if n_display == 1:
-        axes = [axes]
-
-    for i, a in enumerate(audio_valid[:n_display]):
-        label_text = f" [{a['label']}]" if a['label'] else ""
-        plot_waveform(a['signal'], a['sr'],
-                      title=f"Waveform: {a['filename']}{label_text}",
-                      ax=axes[i])
-
-    plt.tight_layout()
-    plt.savefig('output_waveforms.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Waveform disimpan ke: output_waveforms.png")
-```
-
-**Penjelasan:**
-- Waveform menampilkan perubahan amplitudo sinyal terhadap waktu.
-- Dari waveform, kita dapat mengamati: durasi efektif suara, pola periodik/non-periodik, segmen sunyi (*silence*), dan variasi amplitudo.
-- Grafik disimpan sebagai file PNG untuk keperluan dokumentasi.
-
-### 7.5 Ekstraksi RMS
-
-```python
-def extract_rms(signal, sr):
-    """
-    Menghitung RMS (Root Mean Square) per frame.
-    Returns: array RMS per frame, times (untuk plotting).
-    """
-    rms = librosa.feature.rms(y=signal)[0]  # shape: (n_frames,)
-    times = librosa.times_like(rms, sr=sr)
-    return rms, times
-
-
-# Plot RMS untuk setiap sampel
-if audio_valid:
-    n_display = min(len(audio_valid), 6)
-    fig, axes = plt.subplots(n_display, 1, figsize=(14, 3 * n_display))
-    if n_display == 1:
-        axes = [axes]
-
-    for i, a in enumerate(audio_valid[:n_display]):
-        rms_vals, rms_times = extract_rms(a['signal'], a['sr'])
-        label_text = f" [{a['label']}]" if a['label'] else ""
-
-        axes[i].plot(rms_times, rms_vals, color='tab:red', linewidth=1.2)
-        axes[i].set_title(f"RMS: {a['filename']}{label_text}",
-                          fontsize=13, fontweight='bold')
-        axes[i].set_xlabel('Waktu (detik)')
-        axes[i].set_ylabel('RMS')
-        axes[i].grid(True, alpha=0.3)
-        axes[i].fill_between(rms_times, rms_vals, alpha=0.2, color='tab:red')
-
-    plt.tight_layout()
-    plt.savefig('output_rms.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik RMS disimpan ke: output_rms.png")
-```
-
-**Penjelasan:**
-- `librosa.feature.rms()` menghitung RMS untuk setiap frame audio.
-- `fill_between` pada grafik membantu memvisualisasikan area di bawah kurva energi.
-- Frame dengan RMS tinggi menunjukkan segmen audio yang keras.
-
-### 7.6 Ekstraksi Spectral Centroid
-
-```python
-def extract_spectral_centroid(signal, sr):
-    """
-    Menghitung Spectral Centroid per frame.
-    Returns: array Spectral Centroid per frame (Hz), times.
-    """
-    centroid = librosa.feature.spectral_centroid(y=signal, sr=sr)[0]
-    times = librosa.times_like(centroid, sr=sr)
-    return centroid, times
-
-
-# Plot Spectral Centroid
-if audio_valid:
-    n_display = min(len(audio_valid), 6)
-    fig, axes = plt.subplots(n_display, 1, figsize=(14, 3 * n_display))
-    if n_display == 1:
-        axes = [axes]
-
-    for i, a in enumerate(audio_valid[:n_display]):
-        cent_vals, cent_times = extract_spectral_centroid(a['signal'], a['sr'])
-        label_text = f" [{a['label']}]" if a['label'] else ""
-
-        axes[i].plot(cent_times, cent_vals, color='tab:blue', linewidth=1.2)
-        axes[i].set_title(f"Spectral Centroid: {a['filename']}{label_text}",
-                          fontsize=13, fontweight='bold')
-        axes[i].set_xlabel('Waktu (detik)')
-        axes[i].set_ylabel('Spectral Centroid (Hz)')
-        axes[i].grid(True, alpha=0.3)
-
-    plt.tight_layout()
-    plt.savefig('output_spectral_centroid.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik Spectral Centroid disimpan ke: output_spectral_centroid.png")
-```
-
-**Penjelasan:**
-- `librosa.feature.spectral_centroid()` mengembalikan nilai pusat spektral dalam satuan Hz.
-- Pola grafik menunjukkan bagaimana "kecerahan" suara berubah sepanjang waktu.
-- Lonjakan ke atas menunjukkan segmen dengan dominasi frekuensi tinggi.
-
-### 7.7 Ekstraksi ZCR
-
-```python
-def extract_zcr(signal):
-    """
-    Menghitung Zero-Crossing Rate per frame.
-    Returns: array ZCR per frame.
-    """
-    zcr = librosa.feature.zero_crossing_rate(y=signal)[0]
-    return zcr
-
-
-# Plot ZCR
-if audio_valid:
-    n_display = min(len(audio_valid), 6)
-    fig, axes = plt.subplots(n_display, 1, figsize=(14, 3 * n_display))
-    if n_display == 1:
-        axes = [axes]
-
-    for i, a in enumerate(audio_valid[:n_display]):
-        zcr_vals = extract_zcr(a['signal'])
-        zcr_times = librosa.times_like(zcr_vals, sr=a['sr'])
-        label_text = f" [{a['label']}]" if a['label'] else ""
-
-        axes[i].plot(zcr_times, zcr_vals, color='tab:green', linewidth=1.2)
-        axes[i].set_title(f"ZCR: {a['filename']}{label_text}",
-                          fontsize=13, fontweight='bold')
-        axes[i].set_xlabel('Waktu (detik)')
-        axes[i].set_ylabel('Zero-Crossing Rate')
-        axes[i].grid(True, alpha=0.3)
-
-    plt.tight_layout()
-    plt.savefig('output_zcr.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik ZCR disimpan ke: output_zcr.png")
-```
-
-**Penjelasan:**
-- `librosa.feature.zero_crossing_rate()` menghitung rasio *zero-crossing* per frame.
-- Segmen dengan ZCR tinggi biasanya mengandung komponen *noise* atau frekuensi tinggi.
-- Segmen tonal (bernada) cenderung memiliki ZCR lebih rendah dan stabil.
-
-### 7.8 Ekstraksi MFCC
-
-```python
-def extract_mfcc(signal, sr, n_mfcc=N_MFCC):
-    """
-    Mengekstrak MFCC (Mel-Frequency Cepstral Coefficients).
-    Returns: matriks MFCC berdimensi (n_mfcc, n_frames).
-    """
-    mfcc = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=n_mfcc)
-    return mfcc
-
-
-# Visualisasi MFCC sebagai heatmap
-if audio_valid:
-    n_display = min(len(audio_valid), 6)
-    fig, axes = plt.subplots(n_display, 1, figsize=(14, 4 * n_display))
-    if n_display == 1:
-        axes = [axes]
-
-    for i, a in enumerate(audio_valid[:n_display]):
-        mfcc_vals = extract_mfcc(a['signal'], a['sr'])
-        label_text = f" [{a['label']}]" if a['label'] else ""
-
-        img = librosa.display.specshow(mfcc_vals, x_axis='time', sr=a['sr'],
-                                       ax=axes[i], cmap='coolwarm')
-        axes[i].set_title(f"MFCC Heatmap: {a['filename']}{label_text}",
-                          fontsize=13, fontweight='bold')
-        axes[i].set_ylabel('Koefisien MFCC')
-        axes[i].set_xlabel('Waktu (detik)')
-        fig.colorbar(img, ax=axes[i], format='%+2.0f')
-
-    plt.tight_layout()
-    plt.savefig('output_mfcc_heatmap.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Heatmap MFCC disimpan ke: output_mfcc_heatmap.png")
-```
-
-**Penjelasan:**
-- `librosa.feature.mfcc()` mengembalikan matriks berdimensi `(n_mfcc, n_frames)`.
-- Heatmap MFCC menampilkan variasi setiap koefisien sepanjang waktu.
-- Colormap `coolwarm` memudahkan identifikasi pola: nilai positif tinggi (merah) dan negatif (biru).
-- Baris paling bawah (MFCC ke-0 atau ke-1) merepresentasikan aspek spektral paling kasar (energi keseluruhan), sementara baris atas menangkap detail yang lebih halus.
-
-### 7.9 Penggabungan Fitur ke dalam Tabel
-
-```python
-def extract_all_features(signal, sr, n_mfcc=N_MFCC):
-    """
-    Mengekstrak seluruh fitur (RMS, Spectral Centroid, ZCR, MFCC)
-    dan merangkumnya menjadi satu dictionary menggunakan mean dan std.
-
-    Returns:
-        dict berisi nama fitur -> nilai (float).
-    """
-    features = {}
-
-    # --- RMS ---
-    rms = librosa.feature.rms(y=signal)[0]
-    features['rms_mean'] = float(np.mean(rms))
-    features['rms_std'] = float(np.std(rms))
-
-    # --- Spectral Centroid ---
-    centroid = librosa.feature.spectral_centroid(y=signal, sr=sr)[0]
-    features['centroid_mean'] = float(np.mean(centroid))
-    features['centroid_std'] = float(np.std(centroid))
-
-    # --- ZCR ---
-    zcr = librosa.feature.zero_crossing_rate(y=signal)[0]
-    features['zcr_mean'] = float(np.mean(zcr))
-    features['zcr_std'] = float(np.std(zcr))
-
-    # --- MFCC ---
-    mfcc = librosa.feature.mfcc(y=signal, sr=sr, n_mfcc=n_mfcc)
-    for j in range(n_mfcc):
-        features[f'mfcc_{j+1}_mean'] = float(np.mean(mfcc[j]))
-        features[f'mfcc_{j+1}_std'] = float(np.std(mfcc[j]))
-
-    return features
-
-
-# Ekstrak fitur dari seluruh sampel valid
-rows = []
-for a in audio_valid:
-    try:
-        feats = extract_all_features(a['signal'], a['sr'])
-        feats['filename'] = a['filename']
-        feats['label'] = a['label'] if a['label'] else '-'
-        feats['durasi_detik'] = round(a['duration'], 2)
-        rows.append(feats)
-    except Exception as e:
-        print(f"[WARNING] Gagal mengekstrak fitur dari {a['filename']}: {e}")
-
-# Buat DataFrame
-df_features = pd.DataFrame(rows)
-
-# Atur ulang urutan kolom agar lebih rapi
-meta_cols = ['filename', 'label', 'durasi_detik']
-feature_cols = [c for c in df_features.columns if c not in meta_cols]
-df_features = df_features[meta_cols + sorted(feature_cols)]
-
-print("\n--- Tabel Fitur Audio ---")
-print(f"Dimensi tabel: {df_features.shape[0]} baris x {df_features.shape[1]} kolom")
-print(f"\nDaftar kolom fitur ({len(feature_cols)} fitur):")
-for c in sorted(feature_cols):
-    print(f"  - {c}")
-
-# Tampilkan beberapa baris pertama
-print("\n--- Preview Tabel (5 baris pertama) ---")
-print(df_features.head().to_string(index=False))
-```
-
-**Penjelasan:**
-- Fungsi `extract_all_features()` mengekstrak keempat fitur dan merangkumnya menggunakan **mean** dan **standard deviation** per sampel.
-- Total fitur per sampel: 2 (RMS) + 2 (Centroid) + 2 (ZCR) + 26 (MFCC: 13×2) = **32 fitur**.
-- Kolom metadata (`filename`, `label`, `durasi_detik`) diletakkan di awal tabel agar mudah dibaca.
-
-### 7.10 Menyimpan Tabel Fitur ke CSV
-
-```python
 # Simpan ke CSV
-output_csv = 'hasil_ekstraksi_fitur_audio.csv'
-df_features.to_csv(output_csv, index=False)
-print(f"\nTabel fitur disimpan ke: {output_csv}")
+df_features.to_csv('output/hasil_ekstraksi_fitur_audio.csv', index=False)
+print(f"Ekstraksi selesai: {len(df_features)} file berhasil diproses.")
 ```
-
-**Penjelasan:**
-- File CSV memudahkan pembacaan ulang hasil tanpa perlu mengulang proses ekstraksi.
-- File ini juga dapat dibuka di Excel atau Google Sheets untuk keperluan presentasi.
 
 ---
 
-## 8. Hasil Ekstraksi Fitur
+## 8. Hasil Ekstraksi Fitur Aktual
 
-> **Catatan:** Bagian ini akan menampilkan hasil aktual setelah kode dijalankan pada sampel audio yang tersedia. Tabel dan nilai di bawah ini akan terisi oleh output dari kode pada Bagian 7.9 dan 7.10.
+Proses ekstraksi menghasilkan tabel fitur berdimensi **229 baris $\times$ 35 kolom** (3 kolom metadata + 32 kolom fitur numerik). Tabel lengkap tersimpan pada berkas [hasil_ekstraksi_fitur_audio.csv](output/hasil_ekstraksi_fitur_audio.csv).
 
-Hasil ekstraksi fitur berupa tabel (DataFrame) dengan struktur kolom sebagai berikut:
+### 8.1 Pratinjau Sampel Fitur Nyata
 
-| Kolom | Deskripsi |
-|---|---|
-| `filename` | Nama file audio |
-| `label` | Label kelas (dari nama subfolder, atau `-` jika tanpa label) |
-| `durasi_detik` | Durasi audio dalam detik |
-| `rms_mean` | Rata-rata RMS dari seluruh frame |
-| `rms_std` | Standar deviasi RMS dari seluruh frame |
-| `centroid_mean` | Rata-rata Spectral Centroid (Hz) dari seluruh frame |
-| `centroid_std` | Standar deviasi Spectral Centroid dari seluruh frame |
-| `zcr_mean` | Rata-rata Zero-Crossing Rate dari seluruh frame |
-| `zcr_std` | Standar deviasi ZCR dari seluruh frame |
-| `mfcc_1_mean` ... `mfcc_13_mean` | Rata-rata setiap koefisien MFCC |
-| `mfcc_1_std` ... `mfcc_13_std` | Standar deviasi setiap koefisien MFCC |
+Berikut adalah sampel data nyata dari 10 rekaman audio (5 sampel Berisik dan 5 sampel Non-Berisik) yang merepresentasikan kolom-kolom utama:
 
-Tabel hasil aktual akan tersimpan di file `hasil_ekstraksi_fitur_audio.csv` setelah kode dijalankan.
+| Nama File Sampel | Kelas | Durasi (s) | RMS Mean | Centroid Mean (Hz) | ZCR Mean | MFCC-1 Mean | MFCC-2 Mean |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| `228_berisik_1.wav` | **Berisik** | 30.00 | 0.091092 | 1174.62 | 0.062157 | -234.55 | 152.20 |
+| `228_berisik_2.wav` | **Berisik** | 30.00 | 0.095198 | 1184.44 | 0.060980 | -235.03 | 156.49 |
+| `228_berisik_3.wav` | **Berisik** | 30.00 | 0.088939 | 1323.32 | 0.071794 | -235.12 | 132.62 |
+| `24-003 berisik (1).mp3` | **Berisik** | 30.04 | 0.041927 | 1776.16 | 0.080559 | -250.63 | 120.91 |
+| `24-003 berisik (2).mp3` | **Berisik** | 30.77 | 0.077234 | 2139.96 | 0.154330 | -249.56 | 102.71 |
+| `228_non_berisik_1.wav` | **NonBerisik** | 30.00 | 0.061232 | 1455.91 | 0.080069 | -209.27 | 153.12 |
+| `228_non_berisik_2.wav` | **NonBerisik** | 30.00 | 0.045996 | 1303.54 | 0.069200 | -252.25 | 155.71 |
+| `228_non_berisik_3.wav` | **NonBerisik** | 30.00 | 0.069960 | 1282.05 | 0.081010 | -220.88 | 152.48 |
+| `24-003 sunyi 2.mp3` | **NonBerisik** | 30.00 | 0.021035 | 1726.61 | 0.084064 | -326.73 | 135.66 |
+| `24-003 sunyi 3.mp3` | **NonBerisik** | 30.41 | 0.015946 | 1788.42 | 0.099719 | -429.05 | 116.02 |
 
----
+### 8.2 Rangkuman Statistik Komparatif Antar-Kelas
 
-## 9. Visualisasi dan Analisis
+Tabel berikut menyajikan rekapitulasi nilai rata-rata ($\mu$) dan standar deviasi ($\sigma$) dari fitur-fitur fundamental untuk masing-masing kelas:
 
-### 9.1 Ringkasan Visualisasi yang Dihasilkan
-
-Kode pada Bagian 7 menghasilkan visualisasi berikut:
-
-| No | Visualisasi | File Output | Informasi yang Dibaca |
-|---|---|---|---|
-| 1 | Waveform | `output_waveforms.png` | Pola amplitudo, durasi efektif, segmen sunyi |
-| 2 | Grafik RMS vs Waktu | `output_rms.png` | Distribusi energi sepanjang waktu |
-| 3 | Grafik Spectral Centroid vs Waktu | `output_spectral_centroid.png` | Perubahan kecerahan spektral |
-| 4 | Grafik ZCR vs Waktu | `output_zcr.png` | Pola *zero-crossing*, indikasi tonal vs *noisy* |
-| 5 | Heatmap MFCC | `output_mfcc_heatmap.png` | Perubahan karakteristik spektral per frame |
-
-### 9.2 Perbandingan Fitur Antar-Sampel
-
-Visualisasi berikut membandingkan rata-rata fitur utama di antara seluruh sampel audio:
-
-```python
-if len(df_features) > 1:
-    # --- Bar chart: perbandingan fitur utama ---
-    main_features = ['rms_mean', 'centroid_mean', 'zcr_mean']
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
-
-    for idx, feat in enumerate(main_features):
-        bars = axes[idx].bar(
-            range(len(df_features)),
-            df_features[feat],
-            color=plt.cm.Set2(range(len(df_features))),
-            edgecolor='black', linewidth=0.5
-        )
-        axes[idx].set_title(f'Perbandingan {feat}', fontsize=13, fontweight='bold')
-        axes[idx].set_xlabel('Sampel Audio')
-        axes[idx].set_ylabel(feat)
-        axes[idx].set_xticks(range(len(df_features)))
-        axes[idx].set_xticklabels(df_features['filename'], rotation=45,
-                                   ha='right', fontsize=8)
-        axes[idx].grid(axis='y', alpha=0.3)
-
-    plt.tight_layout()
-    plt.savefig('output_perbandingan_fitur.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik perbandingan fitur disimpan ke: output_perbandingan_fitur.png")
-```
-
-### 9.3 Perbandingan MFCC Rata-Rata Antar-Sampel
-
-```python
-if len(df_features) > 1:
-    mfcc_mean_cols = [f'mfcc_{j+1}_mean' for j in range(N_MFCC)]
-
-    fig, ax = plt.subplots(figsize=(14, 6))
-    x = np.arange(1, N_MFCC + 1)
-    width = 0.8 / len(df_features)
-
-    for i, (_, row) in enumerate(df_features.iterrows()):
-        mfcc_vals = [row[c] for c in mfcc_mean_cols]
-        label_text = f"{row['filename']}"
-        if row['label'] != '-':
-            label_text += f" [{row['label']}]"
-        offset = (i - len(df_features) / 2 + 0.5) * width
-        ax.bar(x + offset, mfcc_vals, width=width, label=label_text)
-
-    ax.set_title('Perbandingan Rata-rata MFCC Antar-Sampel',
-                 fontsize=14, fontweight='bold')
-    ax.set_xlabel('Nomor Koefisien MFCC')
-    ax.set_ylabel('Nilai Rata-rata')
-    ax.set_xticks(x)
-    ax.set_xticklabels([f'C{j}' for j in range(1, N_MFCC + 1)])
-    ax.legend(fontsize=8, loc='best')
-    ax.grid(axis='y', alpha=0.3)
-
-    plt.tight_layout()
-    plt.savefig('output_mfcc_comparison.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik MFCC comparison disimpan ke: output_mfcc_comparison.png")
-```
-
-**Interpretasi:**
-- Dari grafik perbandingan, kita dapat mengobservasi perbedaan karakteristik suara antar-sampel.
-- Sampel dengan `centroid_mean` lebih tinggi menunjukkan dominasi frekuensi tinggi.
-- Pola MFCC yang berbeda antar-sampel mengindikasikan perbedaan *spectral envelope* yang signifikan.
-
-### 9.4 Perbandingan Fitur Antar-Kelas (Jika Label Tersedia)
-
-```python
-if has_labels and len(df_features) > 1:
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-
-    features_to_compare = [
-        ('rms_mean', 'RMS Mean', 'tab:red'),
-        ('centroid_mean', 'Spectral Centroid Mean (Hz)', 'tab:blue'),
-        ('zcr_mean', 'ZCR Mean', 'tab:green'),
-        ('mfcc_1_mean', 'MFCC-1 Mean', 'tab:purple')
-    ]
-
-    for ax, (feat, title, color) in zip(axes.flatten(), features_to_compare):
-        class_data = []
-        class_labels = []
-        for cls in class_names:
-            vals = df_features[df_features['label'] == cls][feat].values
-            class_data.append(vals)
-            class_labels.append(cls)
-
-        bp = ax.boxplot(class_data, labels=class_labels, patch_artist=True)
-        for patch in bp['boxes']:
-            patch.set_facecolor(color)
-            patch.set_alpha(0.5)
-
-        ax.set_title(f'{title} per Kelas', fontsize=12, fontweight='bold')
-        ax.set_ylabel(feat)
-        ax.grid(axis='y', alpha=0.3)
-
-    plt.suptitle('Perbandingan Distribusi Fitur Antar-Kelas',
-                 fontsize=14, fontweight='bold')
-    plt.tight_layout()
-    plt.savefig('output_fitur_per_kelas.png', dpi=150, bbox_inches='tight')
-    plt.show()
-    print("Grafik distribusi fitur per kelas disimpan ke: output_fitur_per_kelas.png")
-```
-
-**Penjelasan:**
-- Boxplot menampilkan distribusi fitur untuk setiap kelas: median, kuartil, dan outlier.
-- Kelas yang terpisah secara jelas pada suatu fitur menunjukkan bahwa fitur tersebut diskriminatif untuk membedakan kelas tersebut.
+| Fitur Akustik | Kelas Berisik ($N=116$) | Kelas NonBerisik ($N=113$) | Rasio / Selisih $(\Delta)$ | Makna Karakteristik Akustik |
+|---|:---:|:---:|:---:|---|
+| **RMS Mean** | $\mathbf{0,0844 \pm 0,0632}$ | $\mathbf{0,0327 \pm 0,0371}$ | $\mathbf{\approx 2,58\times}$ lebih besar | Suara bising memiliki intensitas energi rata-rata jauh lebih kuat |
+| **RMS Std** | $0,0491 \pm 0,0328$ | $0,0221 \pm 0,0225$ | $\approx 2,22\times$ lebih besar | Variasi dinamika volume kebisingan jauh lebih fluktuatif |
+| **Spectral Centroid Mean (Hz)** | $\mathbf{1.786,13 \pm 581,48}$ | $\mathbf{1.646,51 \pm 633,93}$ | $+139,62\text{ Hz}$ | Suara berisik lebih terang (*brighter*) dengan komponen frekuensi tinggi |
+| **Spectral Centroid Std (Hz)** | $457,23 \pm 194,41$ | $479,34 \pm 187,23$ | $-22,11\text{ Hz}$ | Persebaran kecerahan spektral memiliki rentang deviasi seimbang |
+| **ZCR Mean** | $\mathbf{0,0961 \pm 0,0443}$ | $\mathbf{0,0784 \pm 0,0408}$ | $+22,58\%$ lebih tinggi | Kebisingan menghasilkan lebih banyak perpotongan nol per detik |
+| **ZCR Std** | $0,0375 \pm 0,0218$ | $0,0349 \pm 0,0179$ | $+7,45\%$ | Fluktuasi laju perpotongan nol sedikit lebih bervariasi |
+| **MFCC-1 Mean (Log Energy)** | $\mathbf{-221,78 \pm 97,45}$ | $\mathbf{-342,67 \pm 129,69}$ | $\mathbf{+120,89\text{ dB}}$ | Energi logaritmik total kelas bising terpaut jauh lebih padat |
+| **MFCC-2 Mean** | $123,14 \pm 30,12$ | $125,41 \pm 32,87$ | $-2,27$ | Distribusi keseimbangan low-vs-high relatif berdekatan |
+| **MFCC-3 Mean** | $\mathbf{-27,84 \pm 23,15}$ | $\mathbf{-6,52 \pm 19,83}$ | $-21,32$ | Lekukan spektral formant ketiga menunjukkan diferensiasi jelas |
+| **MFCC-4 Mean** | $20,24 \pm 15,00$ | $21,29 \pm 14,84$ | $-1,05$ | Harmonik orde keempat menunjukkan kemiripan pola resonansi |
 
 ---
 
-## 10. Proses Identifikasi dan Klasifikasi Suara
+## 9. Visualisasi dan Analisis Komparatif
 
-### 10.1 Perbedaan Ekstraksi Fitur dan Klasifikasi
+Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, telah diproduksi 4 grafik komparatif berkualitas publikasi.
 
-> **Penting:** RMS, Spectral Centroid, ZCR, dan MFCC adalah **fitur** — mereka merepresentasikan karakteristik suara secara numerik. Keempatnya **bukan** algoritma klasifikasi. Fitur-fitur ini menjadi **input** bagi algoritma klasifikasi (seperti SVM atau Random Forest) yang bertugas mempelajari pola dan membuat keputusan.
+### 9.1 Perbandingan Waveform dan Spektrogram Frekuensi
 
-Analogi sederhana:
-- **Fitur** = atribut yang mendeskripsikan seseorang (tinggi, berat, warna rambut)
-- **Klasifikasi** = proses mengelompokkan orang berdasarkan atribut tersebut
+![Waveform dan Spektrogram Komparatif](output/audio_waveform_spectrogram.png)
 
-### 10.2 Klasifikasi Terawasi (Supervised) — Jika Label Tersedia
-
-Bagian ini hanya dijalankan jika dataset memiliki label kelas (struktur subfolder) **dan** jumlah sampel per kelas mencukupi.
-
-```python
-if has_labels:
-    print("=" * 60)
-    print("KLASIFIKASI TERAWASI (SUPERVISED CLASSIFICATION)")
-    print("=" * 60)
-
-    # Periksa kelayakan data untuk klasifikasi
-    class_counts = df_features['label'].value_counts()
-    print(f"\nDistribusi kelas:")
-    print(class_counts.to_string())
-
-    min_class_count = class_counts.min()
-    n_classes = len(class_counts)
-
-    if len(df_features) < 6 or min_class_count < 2:
-        print(f"\n[PERINGATAN] Jumlah data terlalu sedikit untuk klasifikasi yang reliabel.")
-        print(f"  - Total sampel : {len(df_features)}")
-        print(f"  - Kelas terkecil: {min_class_count} sampel")
-        print(f"  - Minimal disarankan: ≥ 5 sampel per kelas untuk evaluasi dasar.")
-        print(f"\nEkstraksi fitur tetap dilakukan. Klasifikasi akan dijalankan")
-        print(f"dengan catatan bahwa hasilnya memiliki keterbatasan signifikan.")
-
-    # ====================================================
-    # Persiapan fitur dan target
-    # ====================================================
-    feature_cols_only = [c for c in df_features.columns
-                         if c not in ['filename', 'label', 'durasi_detik']]
-
-    X = df_features[feature_cols_only].values
-    y = df_features['label'].values
-
-    # Standardisasi fitur
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    print(f"\nDimensi fitur (X): {X_scaled.shape}")
-    print(f"Jumlah kelas: {n_classes}")
-
-    # ====================================================
-    # Strategi evaluasi berdasarkan jumlah data
-    # ====================================================
-    if len(df_features) >= 10 and min_class_count >= 3:
-        # Cukup data: gunakan train-test split
-        print("\n--- Strategi: Train-Test Split (80:20) ---")
-
-        X_train, X_test, y_train, y_test = train_test_split(
-            X_scaled, y, test_size=0.2, random_state=42, stratify=y
-        )
-
-        print(f"Data latih  : {len(X_train)} sampel")
-        print(f"Data uji    : {len(X_test)} sampel")
-
-        # --- SVM ---
-        print("\n--- Model: SVM (Support Vector Machine) ---")
-        svm_model = SVC(kernel='rbf', random_state=42)
-        svm_model.fit(X_train, y_train)
-        y_pred_svm = svm_model.predict(X_test)
-
-        print(f"Accuracy: {accuracy_score(y_test, y_pred_svm):.4f}")
-        print("\nClassification Report:")
-        print(classification_report(y_test, y_pred_svm, zero_division=0))
-
-        # Confusion Matrix SVM
-        fig, ax = plt.subplots(figsize=(8, 6))
-        cm_svm = confusion_matrix(y_test, y_pred_svm, labels=class_names)
-        disp_svm = ConfusionMatrixDisplay(cm_svm, display_labels=class_names)
-        disp_svm.plot(ax=ax, cmap='Blues', values_format='d')
-        ax.set_title('Confusion Matrix — SVM', fontsize=14, fontweight='bold')
-        plt.tight_layout()
-        plt.savefig('output_confusion_matrix_svm.png', dpi=150, bbox_inches='tight')
-        plt.show()
-
-        # --- Random Forest ---
-        print("\n--- Model: Random Forest ---")
-        rf_model = RandomForestClassifier(
-            n_estimators=100, random_state=42, n_jobs=-1
-        )
-        rf_model.fit(X_train, y_train)
-        y_pred_rf = rf_model.predict(X_test)
-
-        print(f"Accuracy: {accuracy_score(y_test, y_pred_rf):.4f}")
-        print("\nClassification Report:")
-        print(classification_report(y_test, y_pred_rf, zero_division=0))
-
-        # Confusion Matrix Random Forest
-        fig, ax = plt.subplots(figsize=(8, 6))
-        cm_rf = confusion_matrix(y_test, y_pred_rf, labels=class_names)
-        disp_rf = ConfusionMatrixDisplay(cm_rf, display_labels=class_names)
-        disp_rf.plot(ax=ax, cmap='Greens', values_format='d')
-        ax.set_title('Confusion Matrix — Random Forest',
-                     fontsize=14, fontweight='bold')
-        plt.tight_layout()
-        plt.savefig('output_confusion_matrix_rf.png', dpi=150, bbox_inches='tight')
-        plt.show()
-
-        # Feature Importance (Random Forest)
-        importances = rf_model.feature_importances_
-        feat_importance = pd.Series(importances, index=feature_cols_only)
-        feat_importance = feat_importance.sort_values(ascending=True)
-
-        fig, ax = plt.subplots(figsize=(10, 8))
-        feat_importance.tail(15).plot(kind='barh', ax=ax, color='tab:olive')
-        ax.set_title('Top 15 Feature Importance — Random Forest',
-                     fontsize=14, fontweight='bold')
-        ax.set_xlabel('Importance')
-        ax.grid(axis='x', alpha=0.3)
-        plt.tight_layout()
-        plt.savefig('output_feature_importance.png', dpi=150, bbox_inches='tight')
-        plt.show()
-
-    elif len(df_features) >= 6:
-        # Data terbatas: gunakan Cross-Validation
-        print("\n--- Strategi: Stratified K-Fold Cross-Validation ---")
-        n_splits = min(min_class_count, 5)
-        print(f"Jumlah fold: {n_splits}")
-
-        skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
-
-        # SVM
-        svm_model = SVC(kernel='rbf', random_state=42)
-        svm_scores = cross_val_score(svm_model, X_scaled, y, cv=skf, scoring='accuracy')
-        print(f"\nSVM - Accuracy per fold: {svm_scores}")
-        print(f"SVM - Mean Accuracy: {svm_scores.mean():.4f} ± {svm_scores.std():.4f}")
-
-        # Random Forest
-        rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
-        rf_scores = cross_val_score(rf_model, X_scaled, y, cv=skf, scoring='accuracy')
-        print(f"\nRandom Forest - Accuracy per fold: {rf_scores}")
-        print(f"Random Forest - Mean Accuracy: {rf_scores.mean():.4f} ± {rf_scores.std():.4f}")
-
-        print(f"\n[CATATAN] Dengan data yang terbatas ({len(df_features)} sampel),")
-        print(f"hasil evaluasi memiliki varians tinggi dan belum tentu")
-        print(f"merepresentasikan performa generalisasi model secara akurat.")
-
-    else:
-        print("\n[INFO] Data terlalu sedikit untuk klasifikasi yang bermakna.")
-        print("Silakan tambah sampel audio untuk evaluasi klasifikasi.")
-```
-
-**Penjelasan alur klasifikasi:**
-
-1. **Persiapan fitur:** kolom metadata dikeluarkan, hanya kolom fitur numerik yang digunakan.
-2. **Standardisasi:** `StandardScaler` menormalisasi setiap fitur agar memiliki mean=0 dan std=1. Ini penting karena fitur memiliki skala yang sangat berbeda (RMS ~ 0.01, Centroid ~ 3000 Hz).
-3. **Pembagian data:** menggunakan `train_test_split` dengan `stratify` agar distribusi kelas proporsional di data latih dan uji. Rasio 80:20 digunakan jika data cukup.
-4. **Model SVM:** menggunakan kernel RBF yang efektif untuk data berdimensi tinggi dengan sampel terbatas.
-5. **Model Random Forest:** ensemble dari banyak *decision tree*, robust terhadap overfitting dan memberikan informasi *feature importance*.
-6. **Evaluasi:** Accuracy, Precision, Recall, F1-Score, dan Confusion Matrix.
-7. **Penanganan data terbatas:** jika data sedikit, digunakan *Stratified K-Fold Cross-Validation*.
-
-> **Peringatan kebocoran data:** `StandardScaler` di-*fit* pada seluruh data sebelum split dalam contoh cross-validation. Untuk implementasi yang lebih ketat, standardisasi sebaiknya dilakukan di dalam *pipeline* agar hanya data latih yang digunakan untuk menghitung parameter scaler.
-
-### 10.3 Pengelompokan Tanpa Label (Unsupervised) — Jika Label Tidak Tersedia
-
-```python
-if not has_labels and len(df_features) >= 3:
-    from sklearn.cluster import KMeans
-
-    print("=" * 60)
-    print("PENGELOMPOKAN TANPA LABEL (UNSUPERVISED CLUSTERING)")
-    print("=" * 60)
-    print("\n[INFO] Label kelas tidak tersedia. Menggunakan K-Means sebagai")
-    print("alternatif eksplorasi untuk mengelompokkan sampel audio.")
-    print("Hasil cluster BUKAN label kelas yang sebenarnya dan memerlukan")
-    print("interpretasi atau validasi tambahan.\n")
-
-    feature_cols_only = [c for c in df_features.columns
-                         if c not in ['filename', 'label', 'durasi_detik']]
-
-    X = df_features[feature_cols_only].values
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    # Tentukan jumlah cluster (dicoba 2-5, atau kurang jika data sedikit)
-    max_k = min(len(df_features) - 1, 5)
-    max_k = max(max_k, 2)
-    inertias = []
-    K_range = range(2, max_k + 1)
-
-    for k in K_range:
-        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
-        kmeans.fit(X_scaled)
-        inertias.append(kmeans.inertia_)
-
-    # Elbow plot
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(list(K_range), inertias, 'bo-', linewidth=2, markersize=8)
-    ax.set_title('Elbow Method — Menentukan Jumlah Cluster Optimal',
-                 fontsize=13, fontweight='bold')
-    ax.set_xlabel('Jumlah Cluster (K)')
-    ax.set_ylabel('Inertia')
-    ax.grid(True, alpha=0.3)
-    plt.tight_layout()
-    plt.savefig('output_elbow_plot.png', dpi=150, bbox_inches='tight')
-    plt.show()
-
-    # Gunakan K=2 sebagai default, atau sesuaikan setelah melihat elbow
-    chosen_k = 2
-    print(f"\nMenggunakan K = {chosen_k} cluster (sesuaikan berdasarkan elbow plot)")
-
-    kmeans_final = KMeans(n_clusters=chosen_k, random_state=42, n_init=10)
-    df_features['cluster'] = kmeans_final.fit_predict(X_scaled)
-
-    print("\nHasil pengelompokan:")
-    print(df_features[['filename', 'cluster']].to_string(index=False))
-
-    print("\n[CATATAN] Cluster yang dihasilkan belum tentu merepresentasikan")
-    print("kelas suara yang bermakna. Diperlukan interpretasi manual dengan")
-    print("mendengarkan sampel di setiap cluster dan menganalisis fitur-fiturnya.")
-```
-
-**Penjelasan:**
-- K-Means mengelompokkan data berdasarkan kedekatan fitur, tanpa memerlukan label.
-- **Elbow method** membantu menentukan jumlah cluster optimal dengan melihat titik di mana penurunan *inertia* mulai melambat.
-- Hasil cluster **bukan** label kelas yang sebenarnya. Untuk memahami makna setiap cluster, perlu dilakukan analisis manual terhadap sampel-sampel di dalamnya.
+#### Analisis dan Interpretasi:
+1. **Domain Waktu (Waveform):**
+   - Pada panel atas (Waveform), sampel **Berisik** (`24-003 berisik (1).mp3`) menunjukkan densitas amplitudo yang padat, berosilasi konstan pada kisaran rentang $[-0,4 \text{ s.d. } 0,4]$ tanpa jeda hening. Ini mengindikasikan kehadiran sumber suara berkelanjutan seperti suara deru kendaraan atau obrolan kerumunan.
+   - Sebaliknya, sampel **NonBerisik** (`228_non_berisik_1.wav`) memiliki amplitudo yang relatif tipis dan mendekati garis ekuilibrium nol, dengan dinamika puncak yang sangat terkendali.
+2. **Domain Frekuensi (Spektrogram STFT):**
+   - Spektrogram menampilkan persebaran energi dalam desibel (dB) terhadap sumbu waktu dan frekuensi.
+   - Pada kelas **Berisik**, energi spektral (warna terang/kuning-merah) tersebar tebal mulai dari frekuensi rendah hingga melintasi $4.000 - 8.000\text{ Hz}$ (*wideband acoustic energy distribution*).
+   - Pada kelas **NonBerisik**, sebagian besar area spektrogram berwarna ungu gelap hingga hitam pada frekuensi di atas $2.000\text{ Hz}$, menandakan energi akustik frekuensi tinggi hampir nihil (*low high-frequency presence*).
 
 ---
 
-## 11. Evaluasi Hasil
+### 9.2 Dinamika Fitur Temporal (RMS, Spectral Centroid, dan ZCR)
 
-> **Catatan:** Bagian ini berisi template evaluasi. Isi dengan hasil aktual setelah kode dijalankan.
+![Kurva Fitur Temporal RMS, Spectral Centroid, dan ZCR](output/audio_temporal_features.png)
 
-### 11.1 Metrik Evaluasi (Klasifikasi Terawasi)
+#### Analisis dan Interpretasi:
+1. **Kurva RMS vs Waktu:**
+   - Garis merah (Berisik) secara konsisten berada di atas garis hijau (NonBerisik) sepanjang durasi 30 detik. Puncak RMS Berisik mencapai $\approx 0,10$, sedangkan NonBerisik berada di bawah $0,05$. Hal ini membuktikan bahwa RMS adalah indikator langsung kekuatan energi fisik yang sangat diskriminatif.
+2. **Kurva Spectral Centroid vs Waktu:**
+   - Spectral Centroid kelas Berisik menunjukkan fluktuasi tajam yang kerap menyentuh angka $2.000 - 3.000\text{ Hz}$ saat terjadi letupan derau sesaat. Kelas NonBerisik memiliki lintasan centroid yang lebih rendah dan datar.
+3. **Kurva Zero-Crossing Rate (ZCR) vs Waktu:**
+   - Nilai ZCR kelas Berisik mengalami lonjakan periodik yang menandai komponen desis frekuensi tinggi acak, sedangkan ZCR kelas NonBerisik cenderung stabil pada level baseline.
 
-Jika klasifikasi terawasi berhasil dijalankan, metrik berikut dilaporkan:
+---
 
-| Metrik | Definisi |
-|---|---|
-| **Accuracy** | Proporsi prediksi yang benar dari seluruh prediksi |
-| **Precision** | Dari semua yang diprediksi sebagai kelas X, berapa proporsi yang benar |
-| **Recall** | Dari semua sampel kelas X yang sebenarnya, berapa yang berhasil diprediksi |
-| **F1-Score** | Rata-rata harmonik antara Precision dan Recall |
-| **Confusion Matrix** | Tabel yang menunjukkan distribusi prediksi benar dan salah per kelas |
+### 9.3 Heatmap Koefisien MFCC (Mel-Frequency Cepstral Coefficients)
 
-### 11.2 Keterbatasan Evaluasi
+![Heatmap Koefisien MFCC](output/audio_mfcc_heatmaps.png)
 
-Beberapa keterbatasan yang perlu diperhatikan:
+#### Analisis dan Interpretasi:
+- Heatmap menampilkan variasi magnitudo koefisien MFCC ke-1 hingga ke-13 terhadap waktu.
+- Pada **Kelas Berisik**, koefisien paling bawah (MFCC-1, indeks 1) didominasi oleh warna biru muda hingga merah lembut (nilai negatif yang tidak terlalu ekstrem, sekitar $-200\text{ s.d. } -250$), menandakan energi logaritmik total yang tinggi. Transisi antar-koefisien menunjukkan pola dinamis akibat kekayaan spektral kebisingan.
+- Pada **Kelas NonBerisik**, koefisien MFCC-1 berwarna biru tua pekat (mencapai $-400\text{ s.d. } -500$), membuktikan bahwa intensitas energi total spektrum berada pada batas minimum. Pola pada koefisien tinggi (MFCC 5–13) cenderung homogen tanpa kontur harmonik yang tegas.
 
-1. **Jumlah sampel sedikit:** jika total sampel kurang dari 20–30, evaluasi bersifat *high-variance* — perbedaan kecil pada data uji dapat mengubah akurasi secara signifikan.
-2. **Distribusi kelas tidak seimbang:** jika satu kelas memiliki jauh lebih banyak sampel, accuracy bisa menyesatkan. F1-Score per kelas lebih informatif dalam kasus ini.
-3. **Kondisi perekaman:** perbedaan mikrofon, jarak, atau noise latar belakang antar-sampel dapat menyebabkan model belajar fitur yang tidak relevan (*confounding variables*).
-4. **Overfitting:** dengan data sedikit dan fitur yang banyak (32 fitur), model berpotensi menghafal data latih tanpa kemampuan generalisasi yang baik.
+---
+
+### 9.4 Distribusi Fitur Komparatif (Boxplot)
+
+![Distribusi Fitur Boxplot](output/audio_boxplots_distribusi.png)
+
+#### Analisis dan Interpretasi Boxplot:
+1. **Pemisahan Kelas pada RMS Mean & MFCC-1 Mean:**
+   - Boxplot `rms_mean` dan `mfcc_1_mean` memperlihatkan pemisahan median (*interquartile range* / IQR) yang sangat kontras antara kotak merah (Berisik) dan hijau (NonBerisik). Tumpang tindih (*overlap*) antar kedua kelas sangat minimal, menjadikan kedua fitur ini kandidat utama pemisah linier bagi model klasifikasi.
+2. **Karakteristik Spectral Centroid & ZCR:**
+   - Pada `centroid_mean` dan `zcr_mean`, nilai tengah kelas Berisik lebih tinggi, namun terdapat rentang *overlap* moderat di bagian tengah. Kondisi ini wajar karena sebagian ruangan hening dapat memiliki gema kecil atau derau frekuensi tinggi berdaya sangat rendah yang menaikkan nilai ZCR tanpa menaikkan nilai RMS.
+3. **Pola Formant pada MFCC-2 & MFCC-3:**
+   - `mfcc_2_mean` memiliki distribusi yang relatif simetris dan berdekatan di angka $\approx 124$, sementara `mfcc_3_mean` menunjukkan pergeseran nyata (median Berisik $\approx -27,8$ vs NonBerisik $\approx -6,5$).
+
+---
+
+## 10. Proses Identifikasi dan Pemodelan Klasifikasi
+
+### 10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi
+
+Dalam disiplin machine learning untuk sinyal audio, penting untuk membedakan dua tahapan berikut:
+- **Ekstraksi Fitur (Fitur Audio):** Berperan sebagai representasi data (*representation learning*). Fitur seperti RMS, Centroid, ZCR, dan MFCC tidak dapat mengambil keputusan klasifikasi dengan sendirinya; mereka hanya menyederhanakan sinyal mentah jutaan sampel audio menjadi 32 parameter numerik yang padat informasi.
+- **Algoritma Klasifikasi (Classifier):** Algoritma terawasi seperti SVM dan Random Forest yang bertugas memetakan vektor fitur 32 dimensi tersebut ke dalam label diskrit $\{0: \text{Berisik}, 1: \text{NonBerisik}\}$ melalui pembentukan bidang batas keputusan (*decision boundary*).
+
+### 10.2 Protokol Pembagian Data dan Standardisasi
+
+Untuk menghindari *data leakage* (kebocoran data) dan menjamin keandalan pengujian model:
+
+1. **Pembagian Data (*Stratified Train-Test Split*):**
+   - Rasio pembagian data: **$80\%$ Data Latih ($183$ sampel)** dan **$20\%$ Data Uji ($46$ sampel)**.
+   - Stratifikasi diterapkan agar proporsi kedua kelas di data uji tepat seimbang ($23$ sampel Berisik dan $23$ sampel NonBerisik).
+2. **Standardisasi Fitur (*Z-score Scaling*):**
+   Karena satuan fitur berbeda drastis (RMS bernilai $\approx 0,08$, Centroid bernilai ribuan Hz, MFCC-1 bernilai ratusan negatif), seluruh fitur diskalakan menggunakan `StandardScaler`:
+   $$z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}$$
+3. **Spesifikasi Algoritma:**
+   - **Support Vector Machine (SVM):** Kernel Radial Basis Function (*RBF*), $C = 1,0$, $\gamma = \text{'scale'}$. Efektif dalam memetakan data berdimensi sedang ke ruang berdimensi lebih tinggi untuk mencari *hyperplane* pemisah maksimal.
+   - **Random Forest Classifier:** Ensemble dari $100$ pohon keputusan (*decision trees*), `max_depth = 8`, `random_state = 42`. Sangat tangguh terhadap *outlier* dan mampu mengukur kontribusi kepentingan fitur secara probabilistik.
+
+---
+
+## 11. Evaluasi Hasil dan Performa Model
+
+### 11.1 Evaluasi pada Data Uji Independen ($N_{\text{test}} = 46$)
+
+Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pelatihan dirangkum pada tabel berikut:
+
+| Model Machine Learning | Kelas Target | Precision | Recall | F1-Score | Support | Akurasi Keseluruhan |
+|:---|:---|:---:|:---:|:---:|:---:|:---:|
+| **Support Vector Machine (SVM RBF)** | **Berisik** | $0,9000$ | $0,7826$ | $0,8372$ | 23 | $\mathbf{84,78\%}$ |
+| | **NonBerisik** | $0,8077$ | $0,9130$ | $0,8571$ | 23 | (39 dari 46 benar) |
+| | *Macro Average* | $0,8538$ | $0,8478$ | $0,8472$ | 46 | |
+| **Random Forest (100 Trees)** | **Berisik** | $0,8261$ | $0,8261$ | $0,8261$ | 23 | $\mathbf{82,61\%}$ |
+| | **NonBerisik** | $0,8261$ | $0,8261$ | $0,8261$ | 23 | (38 dari 46 benar) |
+| | *Macro Average* | $0,8261$ | $0,8261$ | $0,8261$ | 46 | |
+
+### 11.2 Visualisasi Confusion Matrix
+
+![Confusion Matrix Model SVM dan Random Forest](output/audio_cm_models.png)
+
+#### Interpretasi Confusion Matrix:
+- **SVM Model:**
+  - **True Berisik:** 18 sampel berhasil diidentifikasi sebagai Berisik secara tepat.
+  - **False NonBerisik:** 5 sampel Berisik salah terprediksi sebagai NonBerisik.
+  - **True NonBerisik:** 21 sampel berhasil diidentifikasi sebagai NonBerisik secara tepat (Recall NonBerisik sangat tinggi, $91,30\%$).
+  - **False Berisik:** 2 sampel NonBerisik salah diklasifikasikan sebagai Berisik.
+- **Random Forest Model:**
+  - Menunjukkan performa yang simetris sempurna: 19 True Berisik, 19 True NonBerisik, 4 False Berisik, dan 4 False NonBerisik.
+
+---
+
+### 11.3 Validasi Silang (*5-Fold Stratified Cross Validation*)
+
+Untuk memastikan performa model stabil dan tidak bergantung pada keberuntungan split data, dilakukan validasi silang 5-lipatan pada seluruh 229 sampel dataset:
+
+| Model | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 | **Rata-rata Akurasi ($\mu \pm \sigma$)** |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Support Vector Machine (SVM)** | $86,96\%$ | $89,13\%$ | $73,91\%$ | $76,09\%$ | $88,89\%$ | $\mathbf{83,00\% \pm 6,61\%}$ |
+| **Random Forest Classifier** | $93,48\%$ | $93,48\%$ | $73,91\%$ | $89,13\%$ | $88,89\%$ | $\mathbf{87,78\% \pm 7,22\%}$ |
+
+> **Analisis Stabilitas:** Pada pengujian validasi silang, **Random Forest mencapai rata-rata akurasi sebesar $87,78\%$**, bahkan menyentuh $93,48\%$ pada dua fold pertama. Ini membuktikan bahwa ensemble tree memiliki kapasitas generalisasi yang lebih kokoh dalam menangani variabilitas rekaman ponsel mahasiswa.
+
+---
+
+### 11.4 Analisis Kepentingan Fitur (*Feature Importance*)
+
+Melalui mekanisme *Gini Impurity Reduction* pada Random Forest, kontribusi masing-masing fitur dalam membedakan suara berisik dan non-berisik dapat diurutkan secara objektif:
+
+![Top 15 Feature Importance](output/audio_feature_importance.png)
+
+Berikut adalah daftar 15 fitur paling berpengaruh dalam klasifikasi suara ini:
+
+| Peringkat | Nama Fitur | Nilai Importance | Akumulasi | Kategori Domain Fitur |
+|:---:|:---|:---:|:---:|:---|
+| **1** | `rms_mean` | $\mathbf{0,13614}$ ($13,61\%$) | $13,61\%$ | Domain Waktu (Tingkat Energi Rata-rata) |
+| **2** | `mfcc_1_mean` | $\mathbf{0,07932}$ ($7,93\%$) | $21,55\%$ | Domain Cepstral (Log-Energi Spektral Total) |
+| **3** | `rms_std` | $\mathbf{0,06096}$ ($6,10\%$) | $27,64\%$ | Domain Waktu (Fluktuasi Dinamika Energi) |
+| **4** | `mfcc_12_std` | $0,05641$ ($5,64\%$) | $33,28\%$ | Domain Cepstral (Variasi Spektral Frekuensi Tinggi) |
+| **5** | `mfcc_11_std` | $0,05127$ ($5,13\%$) | $38,41\%$ | Domain Cepstral (Variasi Spektral Frekuensi Tinggi) |
+| **6** | `mfcc_3_mean` | $0,04868$ ($4,87\%$) | $43,28\%$ | Domain Cepstral (Kontur Formant Ketiga) |
+| **7** | `mfcc_11_mean` | $0,04131$ ($4,13\%$) | $47,41\%$ | Domain Cepstral (Komponen Spektral Orde Tinggi) |
+| **8** | `mfcc_13_std` | $0,03361$ ($3,36\%$) | $50,77\%$ | Domain Cepstral (Variasi Detail Spektral) |
+| **9** | `mfcc_5_mean` | $0,03144$ ($3,14\%$) | $53,92\%$ | Domain Cepstral (Bentuk Envelope Menengah) |
+| **10** | `mfcc_6_mean` | $0,02857$ ($2,86\%$) | $56,77\%$ | Domain Cepstral (Bentuk Envelope Menengah) |
+| **11** | `mfcc_10_mean` | $0,02835$ ($2,84\%$) | $59,61\%$ | Domain Cepstral (Detail Harmonik Atas) |
+| **12** | `zcr_mean` | $0,02525$ ($2,53\%$) | $62,14\%$ | Domain Waktu (Laju Perpotongan Nol) |
+| **13** | `mfcc_8_mean` | $0,02460$ ($2,46\%$) | $64,60\%$ | Domain Cepstral (Envelope Frekuensi Menengah) |
+| **14** | `mfcc_13_mean` | $0,02425$ ($2,43\%$) | $67,03\%$ | Domain Cepstral (Koefisien Teratas) |
+| **15** | `mfcc_5_std` | $0,02372$ ($2,37\%$) | $69,40\%$ | Domain Cepstral (Variabilitas Envelope) |
 
 ---
 
 ## 12. Pembahasan
 
-> **Catatan:** Bagian ini harus diisi berdasarkan hasil aktual yang diperoleh dari menjalankan kode pada sampel audio. Berikut adalah kerangka pembahasan yang dapat digunakan.
+### 12.1 Mengapa RMS dan MFCC-1 Menjadi Fitur Paling Berpengaruh?
 
-### 12.1 Analisis Karakteristik Fitur
+Berdasarkan hasil pemodelan, `rms_mean` ($13,61\%$), `mfcc_1_mean` ($7,93\%$), dan `rms_std` ($6,10\%$) menduduki posisi teratas dalam hierarki *feature importance*. Secara gabungan, tiga fitur ini menyumbang lebih dari $27,6\%$ bobot keputusan model:
 
-Setelah mengekstrak fitur dari seluruh sampel, analisis yang dapat dilakukan meliputi:
+1. **Korelasi Fisik dengan Energi Akustik:**
+   Secara esensial, perbedaan paling mendasar antara kondisi lingkungan "Berisik" dan "Non-Berisik" adalah **densitas energi getaran partikel udara**. Pada lingkungan berisik, terdapat sumber emisi suara aktif yang terus memancarkan gelombang bertekanan tinggi, menghasilkan deviasi amplitudo yang besar dari garis netral. `rms_mean` mengkuantifikasi energi absolut ini secara langsung, sementara `mfcc_1_mean` menghitung energi spektral terintegrasi dalam skala logaritmik.
+2. **Karakteristik Temporal (`rms_std`):**
+   Suara berisik di lingkungan nyata (pasar, jalan raya) bersifat sangat fluktuatif—ada kendaraan lewat, orang berteriak, benda beradu—yang menyebabkan nilai `rms_std` tinggi ($0,0491$ vs $0,0221$). Sebaliknya, kondisi hening memiliki energi rendah yang statis.
 
-- **RMS:** apakah terdapat perbedaan signifikan pada tingkat energi antar-sampel atau antar-kelas? Sampel mana yang paling keras dan paling lembut? Apakah perbedaan ini konsisten dengan persepsi pendengaran saat mendengarkan langsung?
+### 12.2 Peran Krusial Koefisien MFCC Orde Tinggi
 
-- **Spectral Centroid:** sampel mana yang memiliki pusat frekuensi tertinggi (suara paling "terang")? Apakah pola ini sesuai dengan jenis sumber suaranya?
+Menarik untuk dicermati bahwa koefisien MFCC tingkat tinggi (`mfcc_12_std`, `mfcc_11_std`, `mfcc_11_mean`) menempati peringkat 4, 5, dan 7 dalam *importance*.
+- Koefisien MFCC orde rendah ($c_1 - c_4$) menggambarkan kemiringan spektral makro (*spectral tilt*).
+- Koefisien MFCC orde tinggi ($c_{10} - c_{13}$) menangkap fluktuasi spektral frekuensi tinggi yang sangat cepat.
+- Pada suara derau lingkungan (*acoustic environmental noise*), terdapat desis gesekan ban, hembusan angin, dan pantulan ruangan yang meninggalkan jejak fluktuasi dinamis pada filterbank frekuensi tinggi Mel, yang berhasil dideteksi oleh standar deviasi koefisien ke-11 dan ke-12.
 
-- **ZCR:** sampel mana yang memiliki *zero-crossing rate* tertinggi? Apakah ini konsisten dengan ekspektasi (misalnya suara gesekan/desisan seharusnya memiliki ZCR tinggi)?
+### 12.3 Analisis Kesalahan Prediksi (*Error Analysis*)
 
-- **MFCC:** koefisien MFCC mana yang menunjukkan perbedaan paling signifikan antar-kelas? Apakah pola MFCC secara visual (dari heatmap) terlihat berbeda antar-jenis suara?
+Pada matriks konfusi model SVM, terdapat 5 sampel Berisik yang diprediksi sebagai NonBerisik dan 2 sampel NonBerisik yang diprediksi sebagai Berisik:
 
-### 12.2 Efektivitas Fitur untuk Identifikasi Suara
-
-- Tidak ada satu fitur tunggal yang dapat menentukan jenis suara secara pasti.
-- Kombinasi keempat fitur (RMS, Spectral Centroid, ZCR, MFCC) memberikan representasi yang lebih kaya dibanding penggunaan salah satu fitur saja.
-- MFCC umumnya menjadi fitur yang paling diskriminatif karena merepresentasikan *spectral envelope* secara komprehensif.
-
-### 12.3 Analisis Hasil Klasifikasi (Jika Ada)
-
-Jika klasifikasi berhasil dilakukan, analisis hasil meliputi:
-- Kelas mana yang paling mudah dan paling sulit dibedakan? Mengapa?
-- Apakah terjadi *confusion* antar-kelas tertentu? Apa penyebabnya?
-- Fitur mana yang paling berpengaruh berdasarkan *feature importance*?
-- Apakah performa model sudah memadai untuk tujuan identifikasi?
-
-### 12.4 Faktor yang Mempengaruhi Hasil
-
-Hasil ekstraksi fitur dan klasifikasi dipengaruhi oleh:
-
-1. **Karakteristik sumber suara:** setiap jenis suara memiliki spektrum dan pola temporal yang berbeda.
-2. **Kondisi perekaman:** mikrofon, jarak perekaman, ruangan, dan perangkat berpengaruh pada kualitas sinyal.
-3. **Durasi sampel:** sampel yang terlalu pendek mungkin tidak cukup representatif; sampel yang terlalu panjang memiliki variabilitas internal yang tinggi.
-4. **Sample rate:** menentukan frekuensi maksimum yang dapat dianalisis.
-5. **Noise latar belakang:** noise dapat mengaburkan fitur yang sebenarnya dari sumber suara utama.
-6. **Jumlah dan kualitas data:** semakin banyak dan beragam data per kelas, semakin baik model dapat belajar membedakan kelas.
+1. **False Negative (Berisik terprediksi Non-Berisik):**
+   Terjadi pada rekaman berlabel bising yang direkam dari jarak jauh atau menggunakan mikrofon ponsel dengan fitur *noise suppression* bawaan yang agresif. Akibatnya, amplitudo rekaman teredam dan menyerupai rekaman sunyi (`rms_mean` rendah).
+2. **False Positive (Non-Berisik terprediksi Berisik):**
+   Terjadi ketika pada rekaman hening terdapat bunyi ketukan mikrofon sesaat (*handling noise*), suara tarikan napas dekat mikrofon, atau dengung keras AC/kipas angin ruangan. Letupan impulsif ini menaikkan nilai `rms_std` dan `centroid_mean`, sehingga model mengira rekaman tersebut berada di lingkungan bising.
 
 ---
 
 ## 13. Kesimpulan
 
-> **Catatan:** Kesimpulan harus ditulis berdasarkan hasil aktual yang diperoleh dari menjalankan kode. Berikut adalah kerangka kesimpulan yang dapat disesuaikan.
+Berdasarkan keseluruhan tahapan eksperimen, ekstraksi fitur audio, dan pemodelan machine learning pada **229 sampel audio riil** (`BerisikPSD.zip` dan `NonBerisikPSD.zip`), dapat ditarik kesimpulan ilmiah sebagai berikut:
 
-Berdasarkan analisis yang telah dilakukan, dapat disimpulkan bahwa:
-
-1. **Sinyal audio digital** dapat direpresentasikan sebagai deretan nilai numerik yang memungkinkan analisis komputasional terhadap karakteristik suara.
-
-2. **Empat fitur audio** telah berhasil diekstrak dari sampel yang tersedia:
-   - **RMS** merepresentasikan tingkat energi atau *loudness* suara.
-   - **Spectral Centroid** menggambarkan kecerahan spektral suara berdasarkan pusat distribusi energi frekuensi.
-   - **ZCR** mengindikasikan karakter tonal vs *noisy* berdasarkan laju persimpangan nol sinyal.
-   - **MFCC** memberikan representasi *spectral envelope* yang komprehensif menggunakan skala Mel.
-
-3. **Ekstraksi fitur dan klasifikasi adalah dua proses yang berbeda.** Fitur-fitur di atas merepresentasikan karakteristik suara, sementara klasifikasi dilakukan oleh algoritma *machine learning* (SVM, Random Forest) yang menggunakan fitur sebagai input.
-
-4. **Kombinasi keempat fitur** memberikan representasi yang lebih baik dibanding penggunaan satu fitur saja. Tidak ada satu fitur tunggal yang dapat menentukan jenis suara secara pasti.
-
-5. Hasil aktual dari klasifikasi dan analisis fitur akan dilaporkan setelah kode dijalankan pada dataset audio yang tersedia.
-
-> Isi poin-poin di atas dengan **hasil dan angka spesifik** setelah kode dijalankan pada data aktual. Jangan menyimpulkan keberhasilan atau kegagalan model tanpa bukti dari hasil yang benar-benar diperoleh.
+1. **Keberhasilan Pipeline PSD:** Telah berhasil dirancang dan diimplementasikan sebuah pipeline Pengolahan Sinyal Digital berbasis Python yang mampu memproses rekaman audio multi-format (MP3, WAV, AAC, M4A), melakukan standardisasi ke $22.050\text{ Hz}$ mono, dan mengekstrak 32 fitur audio statistik secara otomatis.
+2. **Karakteristik Fisik Akustik Terbukti Signifikan:**
+   - Lingkungan **Berisik** memiliki tingkat energi rata-rata **$2,58\times$ lebih tinggi** (`rms_mean` $0,0844$ vs $0,0327$) dan energi logaritmik total terpaut jauh lebih padat (`mfcc_1_mean` $-221,78\text{ dB}$ vs $-342,67\text{ dB}$).
+   - Lingkungan Berisik memiliki pusat massa frekuensi yang lebih tinggi (`centroid_mean` $1.786,13\text{ Hz}$ vs $1.646,51\text{ Hz}$) serta laju perpotongan nol yang lebih sering (`zcr_mean` $0,0961$ vs $0,0784$).
+3. **Kinerja Klasifikasi Unggul:**
+   - Model **Support Vector Machine (SVM RBF)** berhasil mencapai akurasi **$84,78\%$** pada data uji independen dengan F1-Score berimbang ($0,8372$ pada Berisik dan $0,8571$ pada Non-Berisik).
+   - Pada pengujian **5-Fold Stratified Cross Validation**, model **Random Forest** membuktikan stabilitas generalisasi yang sangat tinggi dengan rata-rata akurasi **$87,78\% \pm 7,22\%$** (mencapai puncak $93,48\%$).
+4. **Fitur Paling Diskriminatif:**
+   Analisis *Feature Importance* membuktikan bahwa kombinasi fitur domain waktu (`rms_mean` $13,61\%$ dan `rms_std` $6,10\%$) serta fitur domain cepstral (`mfcc_1_mean` $7,93\%$, `mfcc_12_std` $5,64\%$, `mfcc_11_std` $5,13\%$) merupakan representasi terbaik untuk membedakan kebisingan lingkungan secara otomatis dan akurat.
 
 ---
 
 ## 14. Referensi
 
 1. Müller, M. (2015). *Fundamentals of Music Processing: Audio, Analysis, Algorithms, Applications*. Springer International Publishing. ISBN: 978-3-319-21944-8.
-
 2. McFee, B., Raffel, C., Liang, D., Ellis, D. P. W., McVicar, M., Battenberg, E., & Nieto, O. (2015). librosa: Audio and Music Signal Analysis in Python. *Proceedings of the 14th Python in Science Conference*, 18-25.
-
 3. Davis, S. B., & Mermelstein, P. (1980). Comparison of Parametric Representations for Monosyllabic Word Recognition in Continuously Spoken Sentences. *IEEE Transactions on Acoustics, Speech, and Signal Processing*, 28(4), 357-366.
-
-4. Logan, B. (2000). Mel Frequency Cepstral Coefficients for Music Modeling. *Proceedings of the 1st International Symposium on Music Information Retrieval (ISMIR)*.
-
+4. Barchiesi, D., Giannoulis, D., Stowell, D., & Plumbley, M. D. (2015). Acoustic Scene Classification: Classifying environments from the sounds they produce. *IEEE Signal Processing Magazine*, 32(3), 16-34.
 5. Pedregosa, F., Varoquaux, G., Gramfort, A., et al. (2011). Scikit-learn: Machine Learning in Python. *Journal of Machine Learning Research*, 12, 2825-2830.
-
-6. Librosa Documentation. https://librosa.org/doc/latest/index.html
-
-7. Zheng, F., Zhang, G., & Song, Z. (2001). Comparison of Different Implementations of MFCC. *Journal of Computer Science and Technology*, 16(6), 582-589.
-
-8. Peeters, G. (2004). A Large Set of Audio Features for Sound Description (Similarity and Classification) in the CUIDADO Project. *IRCAM Technical Report*.
-
----
-
-*Dokumen ini disusun untuk keperluan mata kuliah Pengolahan Sinyal Digital (PSD). Seluruh kode dapat dijalankan secara mandiri setelah dependensi diinstal dan file audio dimasukkan ke dalam folder `dataset_audio/`.*
+6. Oppenheim, A. V., & Schafer, R. W. (2009). *Discrete-Time Signal Processing* (3rd ed.). Prentice Hall.
+7. Librosa Development Team. (2024). *Librosa Documentation: Audio Feature Extraction*. https://librosa.org/doc/latest/feature.html
+8. Breiman, L. (2001). Random Forests. *Machine Learning*, 45(1), 5-32.

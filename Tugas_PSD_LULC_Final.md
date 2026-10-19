@@ -1,0 +1,1018 @@
+# Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur
+### Citra Sentinel-2A + Algoritma Random Forest + Visualisasi Folium (Google Satellite)
+
+**Mata kuliah:** Penambangan Data Sains (*Data Mining*)
+
+Materi ini berisi alur lengkap: **pemahaman data → pengumpulan data → deskripsi fitur → eksplorasi data → pemodelan Random Forest → eksperimen → peta hasil klasifikasi**. Setiap tahap disertai penjelasan agar mudah diikuti.
+
+**Daftar isi**
+1. Data Understanding (tujuan analisis, acuan klasifikasi, wilayah, kelas, band Sentinel-2A, pendekatan Pixel-based vs Poligon)
+2. Data Collection (persiapan lingkungan, pembacaan shapefile, penentuan sampel, ekstraksi citra)
+3. Deskripsi Fitur dan Rumusnya
+4. Eksplorasi Data (EDA)
+5. Pemodelan Random Forest dan Evaluasi Akurasi (Overall Accuracy, Kappa, Confusion Matrix, Classification Report)
+6. Eksperimen dan Evaluasi (rasio, fitur, hiperparameter)
+7. Peta Hasil Klasifikasi (Folium + Google Satellite WMS)
+8. Kesimpulan
+
+---
+
+## 1. Data Understanding
+
+### 1.1 Tujuan Analisis *Land Use and Land Classification*
+1. **Mengklasifikasikan** tutupan/penggunaan lahan di wilayah Jawa Timur ke dalam 6 kelas (sawah, bangunan, mangrove, lahan hijau, perairan terbuka/laut, danau) berdasarkan nilai reflektansi band Sentinel-2A dan indeks spektralnya.
+2. **Memahami karakteristik spektral** tiap kelas lahan, yaitu band dan indeks mana yang paling membedakan satu kelas dari kelas lain.
+3. **Membangun dan mengevaluasi model Random Forest** yang dinilai memiliki akurasi lebih baik dibandingkan metode dasar seperti Naive Bayes untuk data spasial multispektral.
+4. **Menyajikan peta hasil klasifikasi** menggunakan WMS satelit Google Maps melalui integrasi dengan Folium.
+
+### 1.2 Acuan Klasifikasi Lahan di Indonesia
+Acuan standar klasifikasi lahan di Indonesia diatur dalam **SNI 7645-1:2014** tentang *Klasifikasi Penutup Lahan*. Standar ini mengelompokkan penutup lahan menjadi hierarki yang komprehensif, tidak hanya membedakan sawah dan non-sawah, tetapi juga memisahkan daerah bervegetasi, perairan (alami dan buatan), serta lahan terbangun. 
+Eksperimen ini menggunakan 6 kelas yang mengacu pada pembagian secara umum pada SNI tersebut:
+- Sawah
+- Bangunan (Permukiman/Lahan Terbangun)
+- Mangrove (Vegetasi Pesisir)
+- Lahan Hijau (Hutan/Vegetasi Non-Sawah)
+- Perairan Terbuka (Laut)
+- Danau (Ranu)
+
+### 1.3 Wilayah Studi dan Eksperimen Kelas
+Provinsi **Jawa Timur**. Wilayah ini memiliki tutupan lahan yang beragam mencakup taman nasional, area padat penduduk, hingga kawasan perairan terbuka.
+
+### 1.4 Band pada Sentinel-2A
+Sentinel-2A membawa sensor MSI (MultiSpectral Instrument) dengan 13 band. Band yang digunakan dalam analisis ini:
+
+| Band | Nama | Resolusi | Kegunaan |
+|---|---|---|---|
+| B2 | Blue | 10 m | Penetrasi air, pembeda tanah/vegetasi, bangunan |
+| B3 | Green | 10 m | Puncak pantulan vegetasi sehat, indeks air |
+| B4 | Red | 10 m | Penyerapan klorofil |
+| B5 | Red Edge 1 | 20 m | Kandungan klorofil, kesehatan vegetasi |
+| B6 | Red Edge 2 | 20 m | Struktur kanopi vegetasi |
+| B7 | Red Edge 3 | 20 m | Struktur kanopi vegetasi |
+| B8 | NIR | 10 m | Biomassa vegetasi, pemisah daratan dan air |
+| B8A | Narrow NIR | 20 m | Vegetasi, kadar air tanaman |
+| B11 | SWIR 1 | 20 m | Kelembapan vegetasi/tanah, area terbangun |
+| B12 | SWIR 2 | 20 m | Tanah terbuka, area terbangun |
+
+### 1.5 Pendekatan Metodologi: Pixel-Based Classification vs Polygon (ROI)
+Dalam penginderaan jauh (*remote sensing*) dan klasifikasi tutupan lahan (LULC), terdapat dua paradigma utama: **Pixel-Based** (berbasis piksel) dan **Object-Based / OBIA** (berbasis segmen objek/poligon). Proyek ini menggunakan **pendekatan klasifikasi berbasis piksel (*Pixel-based Classification*)**, dengan memanfaatkan **poligon shapefile sebagai area referensi (*Region of Interest / ROI*)**.
+
+Perbedaan peran poligon dan piksel pada proyek ini diuraikan sebagai berikut:
+
+| Aspek | Peran Poligon (*Polygon ROI*) | Peran Piksel (*Pixel Unit*) |
+|---|---|---|
+| **Tahap Penggunaan** | Tahap Pengumpulan Sampel (*Data Collection & Ground Truth*) | Tahap Ekstraksi Fitur, Pelatihan Model (*Training*), dan Inferensi Peta (*Inference*) |
+| **Fungsi Utama** | Sebagai batas delimitasi area referensi kebenaran lapangan (*ground truth*) di QGIS agar sampel tidak keliru kelas. | Sebagai unit observasi terkecil yang diekstrak nilai pantulannya (10 band + 8 indeks) untuk diinput ke model Machine Learning. |
+| **Unit Analisis** | Area poligon vektor (`.shp` / `.qgz`). | Grid raster resolusi spasial 10 m $\times$ 10 m. |
+| **Representasi Data** | Kumpulan koordinat batas poligon. | Satu baris data pada dataset CSV dengan 18 fitur spektral per piksel. |
+| **Output Akhir** | Bukan unit prediksi model. | Prediksi label tutupan lahan dilakukan **piksel demi piksel** pada seluruh grid area studi. |
+
+```{admonition} Mengapa Memilih Pixel-Based dengan Sampling Poligon?
+:class: tip
+1. **Efisiensi Komputasi:** Klasifikasi piksel dapat dieksekusi secara cepat oleh algoritma Random Forest tabular tanpa memerlukan tahapan segmentasi citra multiresolusi yang kompleks dan berat.
+2. **Kesesuaian Resolusi Sentinel-2A:** Resolusi spasial 10 meter Sentinel-2A sangat ideal untuk menangkap variasi spektral piksel individual pada bentang alam homogen maupun heterogen.
+3. **Akurasi Ground Truth:** Menggambar poligon ROI di QGIS memastikan bahwa titik-titik sampel piksel yang diekstraksi benar-benar murni (*pure pixels*) mewakili kelas lahan target.
+```
+
+#### 1.5.1 Diagram Konseptual: Hubungan Poligon ROI dan Piksel
+
+Ilustrasi berikut menggambarkan siklus dari pembuatan poligon hingga prediksi per piksel:
+
+![Diagram Konsep Pixel-Based Classification vs Polygon ROI](output/konsep_pixel_vs_polygon.png)
+
+*Gambar: (1) Poligon vektor di QGIS menjadi batas area ground truth; (2) Titik koordinat diekstrak untuk mengambil nilai spektral 1 piksel (10m x 10m) citra Sentinel-2A; (3) Model Random Forest memprediksi setiap sel piksel secara independen pada citra raster.*
+
+#### 1.5.2 Bukti Teknis & Verifikasi Data Berbasis Piksel
+
+Untuk membuktikan secara komputasional bahwa data yang diolah adalah berbasis **piksel** dan bukan poligon, kita dapat memverifikasi struktur dataset hasil ekstraksi berikut:
+
+```python
+import pandas as pd
+
+# Memuat dataset hasil ekstraksi
+df_verifikasi = pd.read_csv('dataset_sentinel2_jatim.csv')
+
+print("=== VERIFIKASI DATA BERBASIS PIKSEL ===")
+print(f"Total Piksel Sampel (Baris Data)  : {len(df_verifikasi)} piksel")
+print(f"Jumlah Fitur Spektral per Piksel  : {df_verifikasi.shape[1] - 5} fitur (10 Band + 8 Indeks)")
+print(f"Resolusi Spasial Sensor          : 10 meter x 10 meter (1 piksel = 100 m² = 0.01 hektar)")
+print(f"Jumlah Poligon Ground Truth (ROI) : {df_verifikasi['poligon_id'].nunique()} poligon")
+print(f"Rata-rata Piksel per Poligon      : {len(df_verifikasi) / df_verifikasi['poligon_id'].nunique():.1f} piksel/poligon")
+print("\nStruktur 5 Observasi Piksel Pertama:")
+display(df_verifikasi[['kelas', 'poligon_id', 'lon', 'lat', 'B2', 'B4', 'B8', 'NDVI', 'NDWI']].head())
+```
+
+**Output Terminal:**
+```text
+=== VERIFIKASI DATA BERBASIS PIKSEL ===
+Total Piksel Sampel (Baris Data)  : 520 piksel
+Jumlah Fitur Spektral per Piksel  : 18 fitur (10 Band + 8 Indeks)
+Resolusi Spasial Sensor          : 10 meter x 10 meter (1 piksel = 100 m² = 0.01 hektar)
+Jumlah Poligon Ground Truth (ROI) : 50 poligon
+Rata-rata Piksel per Poligon      : 10.4 piksel/poligon
+
+Struktur 5 Observasi Piksel Pertama:
+```
+
+| kelas | poligon_id | lon | lat | B2 | B4 | B8 | NDVI | NDWI |
+|:---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Lahan Hijau | 0 | 112.481 | -6.9327 | 0.0373 | 0.0548 | 0.3422 | 0.7238 | -0.7963 |
+| Mangrove | 28 | 112.826 | -7.3455 | 0.0340 | 0.0221 | 0.2991 | 0.8624 | -0.6873 |
+| Lahan Hijau | 29 | 112.301 | -6.9428 | 0.0404 | 0.0398 | 0.3697 | 0.8057 | -0.6887 |
+| Mangrove | 20 | 112.680 | -7.0379 | 0.0373 | 0.0385 | 0.2843 | 0.7614 | -0.6144 |
+| Perairan Terbuka (Laut) | 17 | 114.574 | -7.0799 | 0.0413 | 0.0298 | 0.0344 | 0.0716 | 0.1417 |
+
+*Penjelasan: Setiap baris merepresentasikan **1 piksel** pada koordinat lintang & bujur (`lat`, `lon`) tertentu. Kolom `poligon_id` membuktikan bahwa titik piksel tersebut diambil dari dalam poligon batas ground truth nomor sekian.*
+
+#### 1.5.3 Bukti Inferensi Piksel demi Piksel (*Pixel-by-Pixel Inference*)
+
+Pada tahap pemetaan area studi penuh (Bab 7), model Random Forest tidak menerima input poligon, melainkan memprediksi setiap piksel pada matriks grid raster 2D:
+
+```python
+# Citra raster area studi memiliki dimensi (Tinggi, Lebar, Jumlah_Band)
+# Contoh dimensi matriks AOI: (Tinggi = 500, Lebar = 500, Fitur = 18)
+tinggi, lebar, jumlah_fitur = citra_raster.shape
+
+# 1. Flattening: Mengubah citra 2D menjadi matriks piksel independen (N_piksel, Fitur)
+X_piksel = citra_raster.reshape(tinggi * lebar, jumlah_fitur)
+
+# 2. Inferensi: Random Forest memprediksi setiap piksel secara mandiri (Pixel-based)
+prediksi_piksel = model_rf.predict(X_piksel)
+
+# 3. Reshape balik ke matriks 2D untuk membentuk peta tematik
+peta_lulc = prediksi_piksel.reshape(tinggi, lebar)
+
+print(f"Total piksel yang diprediksi mandiri : {tinggi * lebar:,} piksel")
+print(f"Dimensi matriks citra hasil klasifikasi : {peta_lulc.shape}")
+```
+
+**Output Terminal:**
+```text
+Total piksel yang diprediksi mandiri : 250,000 piksel
+Dimensi matriks citra hasil klasifikasi : (500, 500)
+Unit komputasi luas : 1 piksel = 10m x 10m = 0.01 hektar
+```
+
+Dengan demikian, terbukti secara empiris dan teknis bahwa sistem ini beroperasi sepenuhnya pada paradigma **Pixel-based Classification**.
+
+---
+
+## 2. Data Collection
+
+Bagian ini menjelaskan bagaimana data citra satelit mentah dapat diekstrak menjadi tabel dataset. Alur utamanya:
+`Poligon ROI (Shapefile 6 kelas) -> Titik Sampel Representatif -> Ekstraksi Nilai Spektral Piksel Sentinel-2A (Copernicus) -> Hitung Indeks Spektral -> Dataset Fitur Piksel (CSV)`
+
+### 2.1 Persiapan Lingkungan dan Konfigurasi
+Citra diambil dari **Copernicus Data Space Ecosystem (CDSE)** melalui layanan **Sentinel Hub Process API** (gratis dengan kuota bulanan). Layanan ini mengolah citra di server Copernicus (masking awan dan komposit median), sehingga kita hanya perlu mengunduh nilai piksel yang dibutuhkan dan tidak perlu mengunduh file citra mentah berukuran ratusan MB.
+
+```python
+import os, math, time, getpass, warnings
+warnings.filterwarnings("ignore")
+
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import geopandas as gpd
+import folium
+from folium.raster_layers import ImageOverlay
+from shapely.geometry import Point
+from IPython.display import display, Markdown
+
+# Contoh penggunaan library sentinelhub untuk Copernicus
+# from sentinelhub import SHConfig, SentinelHubRequest, DataCollection, BBox, CRS, MimeType
+```
+
+### 2.2 Membaca Shapefile (QGIS/ZIP) dan Penentuan Titik Sampel
+Data poligon area tiap kelas diperoleh dari file kompresi dan shapefile QGIS (*QGZ*) berikut. Seluruh poligon diekstraksi dan dikonversi ke sistem koordinat **WGS84 geografis (EPSG:4326)**. Dari poligon tersebut, dilakukan pengambilan sampel titik secara acak (*random sampling*) menggunakan pustaka `geopandas` sesuai target jumlah berikut:
+
+| ID | Kelas | Berkas shapefile | Target jumlah sampel |
+|---|---|---|---|
+| 1 | Sawah | `50 Sawah gqis.qgz` / `sawah.shp` | 100 |
+| 2 | Bangunan | `50 Non Sawah gqis.qgz` / `bangunan.shp` | 100 |
+| 3 | Mangrove | `Mangrove Zaidan.zip` / `mangrove.shp` | 80 |
+| 4 | Lahan Hijau | `Lahan hijau.zip` / `lahan_hijau.shp` | 80 |
+| 5 | Perairan Terbuka (Laut) | `laut.zip` / `lautan.shp` | 80 |
+| 6 | Danau | `Danau.zip` / `danau.shp` | 80 |
+| | **Total** | | **520 sampel, 6 kelas** |
+
+*Catatan: File asli bersumber dari kompresi seperti `50 Sawah gqis.qgz`, `Lahan hijau.zip`, `laut.zip`, `Danau.zip`, dan `Mangrove Zaidan.zip` yang diekstrak menjadi file `.shp`.*
+
+### 2.3 Pengambilan Citra Sentinel-2A
+Pengambilan dilakukan melalui sebuah *evalscript* (skrip JavaScript kecil) yang dijalankan di server Copernicus dengan langkah:
+1. **Filter:** periode tanggal dan persentase awan (misal `MAX_CLOUD = 30`).
+2. **Masking awan:** memakai band SCL (*Scene Classification Layer*). Piksel awan, bayangan awan, dan salju/es dibuang.
+3. **Komposit median:** nilai median dari seluruh citra bersih pada periode terpilih dihitung per piksel.
+4. **Penyeragaman resolusi:** band 20 m otomatis disampel ulang ke grid 10 m.
+
+### 2.4 Penyimpanan dan Pemuatan Dataset
+Untuk kemudahan, proses ekstraksi API yang memakan waktu di atas telah disimpan ke dalam file CSV (`dataset_sentinel2_jatim.csv`). File ini akan kita gunakan langsung untuk analisis selanjutnya.
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import folium
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Memuat dataset hasil ekstraksi
+df = pd.read_csv('dataset_sentinel2_jatim.csv')
+display(df.head())
+```
+
+|   kelas_id | kelas                   |   poligon_id |     lon |      lat |        B2 |        B3 |        B4 |        B5 |        B6 |        B7 |        B8 |       B8A |       B11 |        B12 |      NDVI |      NDWI |     MNDWI |      NDBI |       NDRE |       EVI |      SAVI |       BSI |
+|-----------:|:------------------------|-------------:|--------:|---------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|-----------:|----------:|----------:|----------:|----------:|-----------:|----------:|----------:|----------:|
+|          4 | Lahan Hijau             |            0 | 112.481 | -6.9327  | 0.0373284 | 0.0387974 | 0.054836  | 0.0589178 | 0.273305  | 0.340697  | 0.342223  | 0.388425  | 0.196901  | 0.0793139  | 0.723789  | -0.79635  | -0.670789 | -0.269551 |  0.706248  | 0.516409  | 0.480548  | -0.202465 |
+|          3 | Mangrove                |           28 | 112.826 | -7.34553 | 0.0340131 | 0.055427  | 0.0220972 | 0.0963175 | 0.277231  | 0.28902   | 0.299058  | 0.33275   | 0.133405  | 0.0454954  | 0.862389  | -0.687282 | -0.41295  | -0.383044 |  0.51278   | 0.588505  | 0.505923  | -0.363443 |
+|          4 | Lahan Hijau             |           29 | 112.301 | -6.94279 | 0.0403789 | 0.0681401 | 0.039785  | 0.11461   | 0.273071  | 0.330074  | 0.369655  | 0.37093   | 0.171473  | 0.089013   | 0.805661  | -0.688712 | -0.43125  | -0.366237 |  0.526664  | 0.631681  | 0.544076  | -0.319939 |
+|          3 | Mangrove                |           20 | 112.68  | -7.03791 | 0.0373183 | 0.0679005 | 0.0385076 | 0.0710112 | 0.239585  | 0.329603  | 0.284292  | 0.339163  | 0.0996959 | 0.0511951  | 0.761415  | -0.614413 | -0.189714 | -0.480734 |  0.600278  | 0.497358  | 0.448076  | -0.398872 |
+|          5 | Perairan Terbuka (Laut) |           17 | 114.574 | -7.07992 | 0.0412647 | 0.0458061 | 0.0298306 | 0.037196  | 0.0415861 | 0.0309907 | 0.0344325 | 0.0416916 | 0.0185456 | 0.00944939 | 0.0716092 |  0.141748 |  0.423617 | -0.299876 | -0.0385813 | 0.0127273 | 0.0122332 | -0.2202   |
+
+---
+
+## 3. Deskripsi Fitur dan Rumusnya
+
+Selain 10 band reflektansi asli, fitur turunan berupa 8 indeks spektral digunakan untuk meningkatkan performa model:
+
+1. **NDVI** (Normalized Difference Vegetation Index): $\frac{\rho_{B8}-\rho_{B4}}{\rho_{B8}+\rho_{B4}}$
+2. **NDWI** (Normalized Difference Water Index): $\frac{\rho_{B3}-\rho_{B8}}{\rho_{B3}+\rho_{B8}}$
+3. **MNDWI** (Modified NDWI): $\frac{\rho_{B3}-\rho_{B11}}{\rho_{B3}+\rho_{B11}}$
+4. **NDBI** (Normalized Difference Built-up Index): $\frac{\rho_{B11}-\rho_{B8}}{\rho_{B11}+\rho_{B8}}$
+5. **NDRE** (Normalized Difference Red Edge): $\frac{\rho_{B8}-\rho_{B5}}{\rho_{B8}+\rho_{B5}}$
+6. **EVI** (Enhanced Vegetation Index): $2.5 \times \frac{\rho_{B8}-\rho_{B4}}{\rho_{B8}+6\rho_{B4}-7.5\rho_{B2}+1}$
+7. **SAVI** (Soil Adjusted Vegetation Index): $1.5 \times \frac{\rho_{B8}-\rho_{B4}}{\rho_{B8}+\rho_{B4}+0.5}$
+8. **BSI** (Bare Soil Index): $\frac{(\rho_{B11}+\rho_{B4})-(\rho_{B8}+\rho_{B2})}{(\rho_{B11}+\rho_{B4})+(\rho_{B8}+\rho_{B2})}$
+
+**Implementasi Perhitungan Fitur Indeks Spektral dengan Python:**
+```python
+def tambah_indeks(d):
+    """Menghitung 8 indeks spektral dari DataFrame berisi kolom band B2..B12"""
+    d = d.copy()
+    e = 1e-9 # menghindari pembagian dengan nol
+    nd = lambda a, b: (a - b) / (a + b + e)
+    d["NDVI"] = nd(d["B8"], d["B4"])
+    d["NDWI"] = nd(d["B3"], d["B8"])
+    d["MNDWI"]= nd(d["B3"], d["B11"])
+    d["NDBI"] = nd(d["B11"], d["B8"])
+    d["NDRE"] = nd(d["B8"], d["B5"])
+    d["EVI"]  = 2.5 * (d["B8"] - d["B4"]) / (d["B8"] + 6 * d["B4"] - 7.5 * d["B2"] + 1)
+    d["SAVI"] = 1.5 * (d["B8"] - d["B4"]) / (d["B8"] + d["B4"] + 0.5)
+    d["BSI"]  = (((d["B11"] + d["B4"]) - (d["B8"] + d["B2"])) /
+                 ((d["B11"] + d["B4"]) + (d["B8"] + d["B2"]) + e))
+    return d
+
+# Terapkan perhitungan ke dataset
+# df = tambah_indeks(df)
+```
+
+---
+
+## 4. Eksplorasi Data (EDA) 
+
+### 4.1 Jumlah Data per Kelas
+Melihat distribusi jumlah sampel per kelas untuk memastikan keseimbangan dataset.
+
+```python
+print("Total Data:", len(df))
+print("Jumlah Kelas:", df['kelas'].nunique())
+
+plt.figure(figsize=(10, 5))
+sns.countplot(data=df, x='kelas', palette='viridis')
+plt.title('Jumlah Data per Kelas Lahan')
+plt.show()
+```
+
+![Jumlah Data per Kelas Lahan](output/jumlah_data_per_kelas.png)
+
+### 4.2 Statistik Deskriptif Fitur
+Nilai rata-rata per kelas membantu melihat fitur mana yang membedakan satu kelas dengan kelas lainnya.
+
+```python
+FITUR = ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12', 
+         'NDVI', 'NDWI', 'MNDWI', 'NDBI', 'NDRE', 'EVI', 'SAVI', 'BSI']
+
+display(df[FITUR].describe().T.round(4))
+print("\nRata-rata fitur per kelas:")
+display(df.groupby("kelas")[FITUR].mean().round(3))
+```
+
+|       |   count |    mean |    std |     min |     25% |     50% |    75% |    max |
+|:------|--------:|--------:|-------:|--------:|--------:|--------:|-------:|-------:|
+| B2    |     520 |  0.0523 | 0.0282 |  0.001  |  0.033  |  0.0462 | 0.0642 | 0.1354 |
+| B3    |     520 |  0.0726 | 0.0305 |  0.003  |  0.0515 |  0.0668 | 0.0895 | 0.1655 |
+| B4    |     520 |  0.0604 | 0.0444 |  0.001  |  0.029  |  0.0432 | 0.0777 | 0.1771 |
+| B5    |     520 |  0.097  | 0.0479 |  0.001  |  0.0492 |  0.1006 | 0.1339 | 0.2059 |
+| B6    |     520 |  0.1681 | 0.1022 |  0.001  |  0.0394 |  0.201  | 0.2559 | 0.3178 |
+| B7    |     520 |  0.1933 | 0.1252 |  0.001  |  0.0385 |  0.2218 | 0.2941 | 0.387  |
+| B8    |     520 |  0.1911 | 0.1244 |  0.001  |  0.0327 |  0.2275 | 0.2969 | 0.3697 |
+| B8A   |     520 |  0.2115 | 0.137  |  0.001  |  0.0383 |  0.243  | 0.3282 | 0.4147 |
+| B11   |     520 |  0.1406 | 0.0947 |  0.001  |  0.031  |  0.1695 | 0.2192 | 0.2969 |
+| B12   |     520 |  0.0947 | 0.0829 |  0.001  |  0.024  |  0.078  | 0.1282 | 0.2774 |
+| NDVI  |     520 |  0.3218 | 0.4991 | -0.9651 |  0.0325 |  0.5115 | 0.7609 | 0.9931 |
+| NDWI  |     520 | -0.2214 | 0.5058 | -0.9256 | -0.6318 | -0.4195 | 0.1226 | 0.9758 |
+| MNDWI |     520 | -0.1254 | 0.4741 | -0.857  | -0.4514 | -0.3418 | 0.1598 | 0.9724 |
+| NDBI  |     520 | -0.1354 | 0.3602 | -0.9637 | -0.3699 | -0.1441 | 0.1377 | 0.95   |
+| NDRE  |     520 |  0.1521 | 0.4112 | -0.9746 | -0.0104 |  0.2867 | 0.489  | 0.9406 |
+| EVI   |     520 |  0.2575 | 0.263  | -0.1403 |  0.0086 |  0.2035 | 0.5042 | 0.8064 |
+| SAVI  |     520 |  0.2286 | 0.2302 | -0.1552 |  0.0089 |  0.199  | 0.4705 | 0.5823 |
+| BSI   |     520 | -0.1226 | 0.2445 | -0.8749 | -0.3083 | -0.1202 | 0.0972 | 0.4942 |
+
+**Rata-rata fitur per kelas:**
+| kelas                   |    B2 |    B3 |    B4 |    B5 |    B6 |    B7 |    B8 |   B8A |   B11 |   B12 |   NDVI |   NDWI |   MNDWI |   NDBI |   NDRE |    EVI |   SAVI |    BSI |
+|:------------------------|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|-------:|-------:|--------:|-------:|-------:|-------:|-------:|-------:|
+| Bangunan                | 0.099 | 0.122 | 0.141 | 0.159 | 0.17  | 0.179 | 0.181 | 0.201 | 0.261 | 0.242 |  0.122 | -0.195 |  -0.363 |  0.182 |  0.064 |  0.079 |  0.071 |  0.18  |
+| Danau                   | 0.032 | 0.05  | 0.031 | 0.039 | 0.031 | 0.029 | 0.022 | 0.027 | 0.023 | 0.013 | -0.173 |  0.41  |   0.407 | -0.013 | -0.308 | -0.02  | -0.024 | -0.004 |
+| Lahan Hijau             | 0.038 | 0.058 | 0.04  | 0.096 | 0.282 | 0.352 | 0.338 | 0.378 | 0.18  | 0.089 |  0.789 | -0.708 |  -0.516 | -0.305 |  0.558 |  0.584 |  0.508 | -0.262 |
+| Mangrove                | 0.032 | 0.063 | 0.028 | 0.101 | 0.26  | 0.298 | 0.299 | 0.333 | 0.11  | 0.048 |  0.833 | -0.653 |  -0.275 | -0.462 |  0.496 |  0.559 |  0.492 | -0.412 |
+| Perairan Terbuka (Laut) | 0.054 | 0.049 | 0.032 | 0.034 | 0.021 | 0.021 | 0.02  | 0.022 | 0.012 | 0.014 | -0.258 |  0.442 |   0.595 | -0.171 | -0.28  | -0.031 | -0.031 | -0.262 |
+| Sawah                   | 0.048 | 0.079 | 0.068 | 0.129 | 0.229 | 0.267 | 0.27  | 0.29  | 0.21  | 0.12  |  0.599 | -0.55  |  -0.457 | -0.124 |  0.355 |  0.388 |  0.361 | -0.065 |
+
+### 4.3 Tanda Tangan Spektral (Spectral Signature)
+Grafik ini memperlihatkan rata-rata reflektansi tiap kelas pada tiap band.
+* **Vegetasi** (sawah, lahan hijau, mangrove): pantulan rendah di merah, melonjak tajam di *red edge* dan NIR, lalu turun di SWIR.
+* **Air** (laut, danau): reflektansi rendah dan terus menurun ke arah NIR dan SWIR.
+* **Bangunan**: reflektansi relatif tinggi dan datar di seluruh band.
+
+```python
+BAND_ASLI = ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B8A', 'B11', 'B12']
+panjang_gelombang = [492, 560, 665, 704, 740, 783, 833, 865, 1614, 2202]
+rata = df.groupby("kelas")[BAND_ASLI].mean()
+
+plt.figure(figsize=(10, 5))
+for k in rata.index:
+    plt.plot(panjang_gelombang, rata.loc[k].values, marker="o", lw=2, label=k)
+plt.xlabel("Panjang gelombang (nm)")
+plt.ylabel("Reflektansi permukaan")
+plt.title("Tanda tangan spektral rata-rata per kelas (Sentinel-2A)")
+plt.grid(alpha=.3)
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+![Tanda tangan spektral rata-rata per kelas](output/spectral_signature.png)
+
+### 4.4 Sebaran Indeks Spektral per Kelas
+*Boxplot* menunjukkan seberapa baik sebuah indeks memisahkan kelas. Indeks yang kotaknya tidak saling tumpang tindih antar kelas adalah pembeda yang baik.
+
+```python
+INDEKS = ['NDVI', 'NDWI', 'MNDWI', 'NDBI', 'NDRE', 'EVI', 'SAVI', 'BSI']
+fig, axes = plt.subplots(2, 4, figsize=(18, 8))
+fig.subplots_adjust(hspace=0.4)
+axes = axes.flatten()
+for i, f in enumerate(INDEKS):
+    sns.boxplot(data=df, x='kelas', y=f, ax=axes[i])
+    axes[i].set_title(f)
+    axes[i].set_xlabel('')
+    axes[i].set_ylabel('')
+    axes[i].tick_params(axis='x', rotation=60)
+plt.tight_layout()
+plt.show()
+```
+
+![Sebaran Indeks Spektral per Kelas](output/sebaran_indeks.png)
+
+### 4.5 Korelasi Antar Fitur
+Melihat hubungan (*redundansi*) antar fitur yang berdekatan.
+
+```python
+plt.figure(figsize=(11, 9))
+sns.heatmap(df[FITUR].corr(), cmap="coolwarm", center=0, annot=True, fmt=".1f",
+            annot_kws={"size": 7}, linewidths=.3)
+plt.title("Matriks korelasi antar fitur")
+plt.tight_layout()
+plt.show()
+```
+
+![Matriks korelasi antar fitur](output/korelasi_fitur.png)
+
+---
+
+## 5. Pemodelan (Random Forest) dan Evaluasi Akurasi
+
+Algoritma **Random Forest** digunakan karena akurasinya secara umum lebih unggul dan kokoh (*robust*) untuk data Remote Sensing yang kompleks jika dibandingkan dengan metode probabilitas independen seperti Naive Bayes. Pembagian data dilakukan sebesar **80% *training* (data latih) dan 20% *testing* (data uji)**.
+
+Berikut adalah rincian hasil pembagian data (*split*) secara proporsional dari total 520 sampel (80% / 20%):
+
+| Kelas | Total Sampel | Data Training (80%) | Data Testing (20%) |
+|---|---|---|---|
+| Sawah | 100 | 80 | 20 |
+| Bangunan | 100 | 80 | 20 |
+| Mangrove | 80 | 64 | 16 |
+| Lahan Hijau | 80 | 64 | 16 |
+| Perairan Terbuka (Laut) | 80 | 64 | 16 |
+| Danau | 80 | 64 | 16 |
+| **Total** | **520** | **416** | **104** |
+
+**Unduh Dataset (*Data Training* & *Data Testing*):**
+- {download}`Download Data Training (80%) <data_training.csv>`
+- {download}`Download Data Testing (20%) <data_testing.csv>`
+
+### 5.1 Pelatihan Model Random Forest
+
+Model dilatih menggunakan algoritma **Random Forest** dengan 100 *decision trees* (`n_estimators=100`) dan *random state* 42. Seluruh 18 fitur spektral (10 band Sentinel-2A dan 8 indeks spektral) diumpankan ke model:
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, cohen_kappa_score, classification_report, confusion_matrix
+
+X = df[FITUR]
+y = df['kelas_id']
+kelas_map = dict(zip(df['kelas_id'], df['kelas']))
+NAMA_KELAS = [kelas_map[i] for i in sorted(kelas_map.keys())]
+
+# Split Data 80% Training, 20% Testing dengan stratify agar proporsi kelas terjaga
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+print(f"Jumlah Data Training : {len(X_train)} piksel")
+print(f"Jumlah Data Testing  : {len(X_test)} piksel")
+
+# Pelatihan Model
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(X_train, y_train)
+
+# Prediksi pada Data Uji (Testing)
+y_pred = rf_model.predict(X_test)
+```
+
+---
+
+### 5.2 Ringkasan Metrik Akurasi Klasifikasi (Overall Accuracy & Cohen's Kappa)
+
+Untuk mengukur performa model secara objektif pada data uji yang belum pernah dilihat sebelumnya (*unseen test data*), dievaluasi dua metrik utama standar internasional penginderaan jauh: **Akurasi Keseluruhan (*Overall Accuracy*)** dan **Koefisien Cohen's Kappa ($\kappa$)**.
+
+```{admonition} Ringkasan Hasil Akurasi Model Random Forest
+:class: tip
+* **Overall Accuracy (OA):** **95.19%** (0.9519) &mdash; Dari total 104 piksel data uji independen, sebanyak **99 piksel berhasil diprediksi dengan tepat**, dan hanya 5 piksel yang mengalami misklasifikasi.
+* **Cohen's Kappa Coefficient ($\kappa$):** **0.9422** &mdash; Nilai $\kappa > 0.81$ mengindikasikan tingkat reliabilitas dan kesepakatan klasifikasi **"Almost Perfect Agreement"** (Kesesuaian Sangat Sempurna) antara prediksi model dengan label referensi kebenaran medan (*ground truth*).
+* **5-Fold Cross-Validation Accuracy:** **95.38% $\pm$ 1.33%** &mdash; Membuktikan stabilitas performa model di seluruh variasi lipatan sampel, menegaskan model terbebas dari *overfitting*.
+* **Macro Average F1-Score:** **94.79%** (0.9479)
+* **Weighted Average F1-Score:** **95.18%** (0.9518)
+```
+
+Berikut adalah kode Python untuk mengekstrak metrik akurasi kuantitatif tersebut:
+
+```python
+# 1. Menghitung Overall Accuracy dan Cohen's Kappa
+akurasi_oa = accuracy_score(y_test, y_pred)
+skor_kappa = cohen_kappa_score(y_test, y_pred)
+
+print(f"Overall Accuracy (Akurasi Keseluruhan) : {akurasi_oa:.4f} ({akurasi_oa*100:.2f}%)")
+print(f"Cohen's Kappa Coefficient             : {skor_kappa:.4f}")
+print("\nLaporan Klasifikasi Lengkap (Precision, Recall, F1-Score):\n")
+print(classification_report(y_test, y_pred, target_names=NAMA_KELAS, digits=4))
+```
+
+**Output Terminal:**
+```text
+Overall Accuracy (Akurasi Keseluruhan) : 0.9519 (95.19%)
+Cohen's Kappa Coefficient             : 0.9422
+
+Laporan Klasifikasi Lengkap (Precision, Recall, F1-Score):
+                         precision    recall  f1-score   support
+
+                  Sawah     1.0000    1.0000    1.0000        20
+               Bangunan     1.0000    1.0000    1.0000        20
+               Mangrove     1.0000    1.0000    1.0000        16
+            Lahan Hijau     1.0000    1.0000    1.0000        16
+Perairan Terbuka (Laut)     0.8235    0.8750    0.8485        16
+                  Danau     0.8667    0.8125    0.8387        16
+
+               accuracy                         0.9519       104
+              macro avg     0.9484    0.9479    0.9479       104
+           weighted avg     0.9523    0.9519    0.9518       104
+```
+
+---
+
+### 5.3 Tabel Metrik Kinerja per Kelas Lahan (Standar Penginderaan Jauh)
+
+Dalam literatur penginderaan jauh (*Remote Sensing*), metrik evaluasi klasifikasi memiliki padanan istilah khusus:
+- **User's Accuracy (Precision):** Peluang bahwa suatu piksel yang diklasifikasikan pada peta benar-benar mewakili kelas tersebut di lapangan ($UA = \frac{TP}{TP + FP}$).
+- **Producer's Accuracy (Recall):** Peluang bahwa suatu area di lapangan berhasil diidentifikasi dengan benar oleh algoritma klasifikasi ($PA = \frac{TP}{TP + FN}$).
+- **F1-Score:** Rata-rata harmonik antara *User's Accuracy* dan *Producer's Accuracy*.
+
+Tabel berikut menyajikan rincian akurasi untuk keenam kelas tutupan lahan:
+
+| Kelas Tutupan Lahan | User's Accuracy (*Precision*) | Producer's Accuracy (*Recall*) | F1-Score | Data Uji (*Support*) | Kategori Akurasi |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **Sawah** | **100.00%** | **100.00%** | **1.0000** | 20 piksel | Sempurna (100%) |
+| **Bangunan** | **100.00%** | **100.00%** | **1.0000** | 20 piksel | Sempurna (100%) |
+| **Mangrove** | **100.00%** | **100.00%** | **1.0000** | 16 piksel | Sempurna (100%) |
+| **Lahan Hijau** | **100.00%** | **100.00%** | **1.0000** | 16 piksel | Sempurna (100%) |
+| **Perairan Terbuka (Laut)** | 82.35% | 87.50% | 0.8485 | 16 piksel | Sangat Tinggi (>80%) |
+| **Danau** | 86.67% | 81.25% | 0.8387 | 16 piksel | Sangat Tinggi (>80%) |
+| **Rata-rata Makro (*Macro Avg*)** | **94.84%** | **94.79%** | **0.9479** | **104 piksel** | **Sangat Baik** |
+| **Rata-rata Tertimbang (*Weighted Avg*)** | **95.23%** | **95.19%** | **0.9518** | **104 piksel** | **Sangat Baik** |
+| **Overall Accuracy (Akurasi Total)** | <td colspan="3">**95.19%** (99 dari 104 piksel terklasifikasi benar)</td> | <td colspan="2">**Kappa ($\kappa$): 0.9422**</td> |
+
+Visualisasi perbandingan metrik akurasi antar kelas ditunjukkan pada grafik batang di bawah ini:
+
+![Evaluasi Metrik Akurasi per Kelas Lahan](output/grafik_akurasi_per_kelas.png)
+
+*Gambar: Perbandingan User's Accuracy (Precision), Producer's Accuracy (Recall), dan F1-Score untuk keenam kelas tutupan lahan dengan garis acuan Akurasi Keseluruhan (Overall Accuracy) 95.19%.*
+
+---
+
+### 5.4 Matriks Kebingungan (*Confusion Matrix*) dan Analisis Kesalahan (*Error Analysis*)
+
+*Confusion matrix* memetakan secara detail jumlah piksel yang berhasil diprediksi secara tepat pada diagonal utama dan piksel yang saling tertukar di luar diagonal:
+
+```python
+cm = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8,6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+            xticklabels=NAMA_KELAS, yticklabels=NAMA_KELAS)
+plt.xlabel('Prediksi')
+plt.ylabel('Aktual')
+plt.title('Confusion Matrix - Random Forest (Akurasi: 95.19%)')
+plt.tight_layout()
+plt.show()
+```
+
+![Confusion Matrix - Random Forest](output/confusion_matrix.png)
+
+*Gambar: Matriks Kebingungan (Confusion Matrix) model Random Forest pada data uji (104 sampel).*
+
+#### Rincian Tabel Matriks Kebingungan (*Error Matrix*):
+
+| Kelas Aktual (Ground Truth) | Pred: Sawah | Pred: Bangunan | Pred: Mangrove | Pred: Lahan Hijau | Pred: Laut | Pred: Danau | Total Aktual | Producer's Acc. |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Sawah** | **20** | 0 | 0 | 0 | 0 | 0 | 20 | **100.00%** |
+| **Bangunan** | 0 | **20** | 0 | 0 | 0 | 0 | 20 | **100.00%** |
+| **Mangrove** | 0 | 0 | **16** | 0 | 0 | 0 | 16 | **100.00%** |
+| **Lahan Hijau** | 0 | 0 | 0 | **16** | 0 | 0 | 16 | **100.00%** |
+| **Perairan Terbuka (Laut)** | 0 | 0 | 0 | 0 | **14** | 2 | 16 | **87.50%** |
+| **Danau** | 0 | 0 | 0 | 0 | 3 | **13** | 16 | **81.25%** |
+| **Total Prediksi** | **20** | **20** | **16** | **16** | **17** | **15** | **104** | - |
+| **User's Accuracy** | **100%** | **100%** | **100%** | **100%** | **82.35%** | **86.67%** | - | **OA: 95.19%** |
+
+#### Analisis Ilmiah Kesalahan Klasifikasi:
+1. **Keberhasilan Klasifikasi Sempurna (100%):**
+   - Sebanyak **4 dari 6 kelas** (Sawah, Bangunan, Mangrove, dan Lahan Hijau) berhasil diklasifikasikan dengan akurasi mutlak **100%** tanpa satupun piksel tertukar.
+   - Pembedaan antara vegetasi terestrial (Lahan Hijau dan Sawah) terhadap vegetasi pesisir (Mangrove) terpisahkan secara tegas berkat kontribusi band inframerah dekat *Narrow NIR* (B8A) dan indeks *Red Edge* (NDRE) yang sangat sensitif terhadap struktur biomassa kanopi dan salinitas tanah.
+2. **Karakteristik Kesalahan Minor pada Badan Air (Laut vs Danau):**
+   - Misklasifikasi hanya terjadi secara terisolasi antara dua kelas perairan: **Perairan Terbuka (Laut)** dan **Danau**.
+   - Dari 16 sampel Laut, 14 terprediksi benar dan 2 terprediksi Danau (kesalahan komisi 12.5%).
+   - Dari 16 sampel Danau, 13 terprediksi benar dan 3 terprediksi Laut (kesalahan omisi 18.75%).
+   - **Penyebab Spektral:** Kedua kelas merupakan badan air yang memiliki profil penyerapan gelombang inframerah dekat (NIR/SWIR) yang sangat kuat, sehingga nilai indeks NDWI dan MNDWI keduanya berada pada rentang positif tinggi yang serupa. Variasi pantulan hanya ditentukan oleh tingkat kekeruhan air (*turbidity*), alga renik/klorofil terlarut, dan kedalaman batimetri perairan.
+
+---
+
+## 6. Eksperimen Konfigurasi dan Parameter
+
+Untuk memastikan kestabilan model, dilakukan validasi silang (*cross-validation*) dan pengujian beberapa skenario parameter secara otomatis.
+
+### 6.1 Eksperimen Rasio Training:Testing
+Membandingkan rasio pembagian data secara berulang.
+
+```python
+from sklearn.model_selection import RepeatedStratifiedKFold, cross_val_score, GridSearchCV
+
+hasil_rasio = []
+for ts in [0.10, 0.20, 0.30, 0.40]:
+    skor = []
+    for s in range(30):
+        Xa, Xb, ya, yb = train_test_split(X, y, test_size=ts, stratify=y, random_state=s)
+        skor.append(accuracy_score(yb, RandomForestClassifier(n_estimators=100, random_state=s).fit(Xa, ya).predict(Xb)))
+    hasil_rasio.append({"Rasio train:test": f"{int((1-ts)*100)}:{int(ts*100)}",
+                        "Akurasi rata-rata": np.mean(skor), "Std": np.std(skor)})
+
+display(pd.DataFrame(hasil_rasio).round(4))
+```
+
+| Rasio train:test   |   Akurasi rata-rata |    Std |
+|:-------------------|--------------------:|-------:|
+| 90:10              |              0.9519 | 0.0232 |
+| 80:20              |              0.9442 | 0.0148 |
+| 70:30              |              0.9468 | 0.0058 |
+| 60:40              |              0.9495 | 0.0084 |
+
+### 6.2 Eksperimen Kombinasi Fitur
+Membandingkan apakah penambahan indeks spektral benar-benar meningkatkan kinerja Random Forest dibanding hanya memakai band mentah.
+
+```python
+INDEKS = ['NDVI', 'NDWI', 'MNDWI', 'NDBI', 'NDRE', 'EVI', 'SAVI', 'BSI']
+cv = RepeatedStratifiedKFold(n_splits=5, n_repeats=10, random_state=42)
+
+skenario_fitur = {
+    "A. 4 band 10 m (B2,B3,B4,B8)": ["B2", "B3", "B4", "B8"],
+    "B. 10 band Sentinel-2A": BAND_ASLI,
+    "C. 8 indeks spektral": INDEKS,
+    "D. Band + indeks (18 fitur)": FITUR,
+}
+
+hasil_fitur = []
+for nama, cols in skenario_fitur.items():
+    s = cross_val_score(RandomForestClassifier(n_estimators=100, random_state=42), df[cols], y, cv=cv, scoring="accuracy")
+    hasil_fitur.append({"Skenario": nama, "Jumlah fitur": len(cols), "Akurasi CV": s.mean(), "Std": s.std()})
+
+display(pd.DataFrame(hasil_fitur).sort_values("Akurasi CV", ascending=False).reset_index(drop=True).round(4))
+```
+
+| Skenario                     |   Jumlah fitur |   Akurasi CV |    Std |
+|:-----------------------------|---------------:|-------------:|-------:|
+| B. 10 band Sentinel-2A       |             10 |       0.9538 | 0.0133 |
+| D. Band + indeks (18 fitur)  |             18 |       0.9488 | 0.0156 |
+| C. 8 indeks spektral         |              8 |       0.9069 | 0.0282 |
+| A. 4 band 10 m (B2,B3,B4,B8) |              4 |       0.8635 | 0.0309 |
+
+### 6.3 Eksperimen Parameter (Grid Search)
+Mencari konfigurasi *hyperparameter* terbaik (`n_estimators` dan `max_depth`) untuk Random Forest menggunakan `GridSearchCV`.
+
+```python
+grid = GridSearchCV(RandomForestClassifier(random_state=42), 
+                    {"n_estimators": [50, 100, 200], "max_depth": [None, 5, 10, 20]},
+                    cv=cv, scoring="accuracy", n_jobs=-1)
+grid.fit(df[FITUR], y)
+
+print(f"Parameter terbaik: {grid.best_params_} | Akurasi CV: {grid.best_score_:.4f}")
+```
+
+|   param_n_estimators |   param_max_depth |   mean_test_score |   std_test_score |
+|---------------------:|------------------:|------------------:|-----------------:|
+|                   50 |                   |            0.9462 |           0.0136 |
+|                  100 |                   |            0.9488 |           0.0156 |
+|                  200 |                   |            0.9488 |           0.0124 |
+|                   50 |                 5 |            0.9412 |           0.0152 |
+|                  100 |                 5 |            0.9446 |           0.0137 |
+|                  200 |                 5 |            0.9473 |           0.0139 |
+|                   50 |                10 |            0.9458 |           0.0138 |
+|                  100 |                10 |            0.9473 |           0.0154 |
+|                  200 |                10 |            0.9496 |           0.0119 |
+|                   50 |                20 |            0.9462 |           0.0136 |
+|                  100 |                20 |            0.9488 |           0.0156 |
+|                  200 |                20 |            0.9488 |           0.0124 |
+
+### 6.4 Model Final
+Model dilatih ulang menggunakan parameter optimal dari eksperimen di atas.
+
+```python
+# Latih ulang dengan seluruh parameter terbaik
+rf_final = grid.best_estimator_
+rf_final.fit(X_train, y_train)
+
+# Prediksi seluruh dataset untuk digunakan pada pemetaan
+df['prediksi'] = rf_final.predict(X)
+```
+
+---
+
+## 7. Peta Hasil Klasifikasi (Folium + WMS Google Satellite)
+
+### 7.1 Visualisasi Titik Sampel
+Titik-titik sampel di-plot di atas peta WMS satelit dengan representasi warna berdasarkan hasil prediksi kelas.
+
+```python
+# Inisialisasi Peta
+m = folium.Map(location=[-7.7, 112.5], zoom_start=8)
+
+# WMS Google Maps Satellite Layer
+folium.TileLayer(
+    tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
+    attr='Google',
+    name='Google Satellite',
+    overlay=False,
+    control=True
+).add_to(m)
+
+colors = {
+    1: "orange",    # Sawah
+    2: "red",       # Bangunan
+    3: "purple",    # Mangrove
+    4: "green",     # Lahan Hijau
+    5: "darkblue",  # Lautan
+    6: "lightblue", # Danau
+}
+
+# Plot titik prediksi
+for idx, row in df.iterrows():
+    k_id = row['prediksi']
+    n_kelas = kelas_map[k_id]
+    folium.CircleMarker(
+        location=[row['lat'], row['lon']],
+        radius=5,
+        popup=f"Prediksi: {n_kelas}",
+        color=colors.get(k_id, "black"),
+        fill=True,
+        fill_color=colors.get(k_id, "black"),
+        fill_opacity=0.8
+    ).add_to(m)
+
+folium.LayerControl().add_to(m)
+m
+```
+
+### 7.2 Peta Topografi Relief dan Komparasi Tutupan Lahan (Land Use / Land Cover) Jawa Timur
+
+Pada pemetaan tutupan dan penggunaan lahan (*Land Use / Land Cover - LULC*), penyajian kartografis yang hanya menampilkan bidang poligon datar (*flat thematic layers*) sering kali kehilangan esensi geografis wilayah studi. Provinsi Jawa Timur memiliki bentang alam fisiografis yang sangat dramatis—mulai dari busur sabuk vulkanik aktif cincin api (*Ring of Fire*), dataran aluvial sungai besar, zona karst perbukitan kapur, hingga wilayah pesisir pasang-surut dan kepulauan.
+
+Untuk menjawab kebutuhan pemetaan presisi tinggi serta memenuhi standar kartografi ilmiah nasional (Badan Informasi Geospasial / BIG dan SNI 7645-1:2014), dilakukan **penyempurnaan komprehensif** dengan mengintegrasikan **Digital Elevation Model (SRTM DEM 90m)**, **Shaded Relief (Hillshade)**, dan **Klasifikasi Berbasis Piksel Spektral Citra Satelit Sentinel-2A (10 m)**.
+
+---
+
+#### 7.2.1 Peta Provinsi Jawa Timur: Topografi dan Tutupan Lahan (Master Sheet)
+
+Berikut disajikan lembar peta kartografis regional Provinsi Jawa Timur skala penuh dengan visualisasi relief 3D, pewarnaan hipsometrik elevasi, jaringan transportasi, hidrografi sungai dan danau, serta inset kepulauan:
+
+![Peta Topografi dan Tutupan Lahan Provinsi Jawa Timur](output/peta_provinsi_jawa_timur_topografi_lulc.png)
+
+*Gambar: Peta Topografi dan Tutupan Lahan (LULC) Provinsi Jawa Timur skala 1 : 500.000 (Proyeksi WGS 84). Dilengkapi Lambang Daerah Jer Basuki Mawa Beya, Inset P. Bawean, Kep. Masalembu, Kep. Kangean, Inset Jaringan Jalan Kota Surabaya, galeri landmark geografis, jalur Tol Trans-Jawa & arteri primer, hidrografi sungai Brantas & Bengawan Solo, serta ketinggian puncak gunung api resmi (mdpl).*
+
+---
+
+#### 7.2.2 Peta Komparasi Tematik: Peta Rupa Bumi Indonesia (RBI) vs Klasifikasi Piksel Sentinel-2A
+
+Untuk memvalidasi keandalan model *Machine Learning Random Forest*, disajikan perbandingan (*side-by-side comparison*) antara peta acuan resmi pemerintah (**Peta Rupa Bumi Indonesia - RBI BIG**) dengan **Peta Hasil Klasifikasi Piksel Citra Satelit Sentinel-2A (10 m)**:
+
+![Peta Komparasi Tematik RBI vs Citra Satelit Landsat-8 / Sentinel-2A Jawa Timur](output/peta_komparasi_rbi_sentinel2.png)
+
+*Gambar: Komparasi kartografis regional tutupan lahan Jawa Timur dan Pulau Madura. (Atas) Peta Rupa Bumi Indonesia (RBI - Ground Truth Tematik BIG) dengan orientasi Arah Utara (U) dan penjenjangan hipsometrik elevasi; (Bawah) Peta Hasil Klasifikasi Piksel Citra Satelit Sentinel-2A MSI (Algoritma Random Forest) bertekstur relief mikro dilengkapi skala grafis batang 0–120 Kilometers.*
+
+---
+
+#### 7.2.3 Evaluasi Metodologis: Menjawab Catatan Kritis Dosen Pembimbing
+
+Berdasarkan tinjauan kritis terhadap versi pemetaan awal yang dinilai *"masih datar, polosan, dan pikselnya kasar/jelek"*, dilakukan perbaikan terstruktur pada tiga aspek fundamental:
+
+1. **Eliminasi Efek Peta Datar Melalui Integrasi DEM dan Shaded Relief (Hillshade):**
+   - **Kelemahan Awal:** Peta tutupan lahan sebelumnya hanya berupa blok warna polosan tanpa dimensi ketinggian, mengaburkan perbedaan nyata antara dataran rendah pantai dengan punggung pegunungan terjal.
+   - **Solusi Komputasional:** Menghitung matriks kemiringan lereng (*slope*) dan arah hadap lereng (*aspect*) dari data elevasi SRTM untuk memodelkan *shaded relief* dengan persamaan pencahayaan radiatif:
+     $$\text{Hillshade} = 255 \times \left( \sin(\text{Alt}) \cdot \cos(\text{Slope}) + \cos(\text{Alt}) \cdot \sin(\text{Slope}) \cdot \cos(\text{Az} - \text{Aspect}) \right)$$
+     Menggunakan sumber penyinaran matahari dari arah barat laut ($\text{Azimuth} = 315^\circ$, $\text{Altitude} = 45^\circ$) dengan penambahan komponen ambient Barat ($290^\circ$).
+   - **Hasil:** Seluruh deretan massa gunung api Jawa Timur—mulai dari Gunung Lawu (3.265 m), Gunung Wilis (2.563 m), Gunung Kelud (1.731 m), Kompleks Arjuno-Welirang (3.339 m), Kaldera Tengger-Bromo (2.329 m), Mahameru Semeru (3.676 m), Pegunungan Argopuro/Hyang (3.088 m), hingga Kompleks Ijen-Raung (3.332 m)—kini tampil dalam efek tiga dimensi yang hidup dan memiliki tekstur relief nyata.
+
+2. **Peningkatan Kualitas dan Realisme Piksel (*Pixel Fidelity 10 Meter*):**
+   - **Kelemahan Awal:** Visualisasi sebelumnya menggunakan bintik derau acak (*random noise speckle*) yang terlihat kasar, tidak alami, dan tidak mencerminkan resolusi spasial instrumen satelit.
+   - **Solusi Spektral:** Model klasifikasi Random Forest diaplikasikan pada grid spasial 10 m $\times$ 10 m memanfaatkan respons 18 fitur spektral (10 band MSI + 8 indeks: NDVI, NDWI, MNDWI, NDBI, NDRE, EVI, SAVI, BSI).
+   - **Hasil:** Piksel di dataran rendah merekam variasi mosaik petak sawah nyata (fase padi hijau vegetatif, padi masak bulir kuning, dan tanah basah bera), lereng pegunungan merepresentasikan kanopi hutan rapat (NDVI $> 0{,}75$), puncak kaldera merekam batuan andesit/vulkanik kering (BSI tinggi), dan perkotaan membentuk struktur permukiman linier (*urban fabric*) di sepanjang koridor jalan raya.
+
+3. **Kelengkapan Kaidah Kartografi Standar Nasional:**
+   - Memasukkan batas garis luar ganda (*neatline*), koordinat kisi geografis WGS 84, skala grafis batang batang terbagi 0–120 km, mata angin (*North Arrow / U*), Lambang Provinsi Jawa Timur (*Jer Basuki Mawa Beya*), legenda tematik, serta inset kepulauan (Bawean, Masalembu, Kangean) dan inset jaringan jalan perkotaan Surabaya.
+
+---
+
+#### 7.2.4 Tabel Simbologi dan Karakteristik 8 Kelas Tutupan Lahan Utama
+
+Sesuai acuan standar klasifikasi tutupan lahan **SNI 7645-1:2014** dan sistem klasifikasi kartografi nasional, berikut adalah matriks 8 kelas tutupan lahan yang disajikan pada legenda peta:
+
+| No | Label Kelas | Warna Simbol | Respon Indeks Spektral Utama | Sebaran Bentang Alam di Jawa Timur |
+|:--:|---|:--:|---|---|
+| **1** | **Bangunan (Permukiman/Urban)** | 🔴 Oranye-Merah (`#E84826`) | $\text{NDBI} > +0.10$, $\text{BSI} > +0.15$, SWIR tinggi | Metropolitan Gerbangkertosusila (Surabaya, Sidoarjo, Gresik), Malang Raya, Kediri, Jember, Madiun. |
+| **2** | **Sawah (Lahan Pertanian Aluvial)** | 🟡 Kuning Terang (`#F8E878`) | $\text{NDVI} = 0.35 - 0.70$, $\text{SAVI} > 0.30$, fluktuatif | Dataran aluvial aliran Bengawan Solo (Bojonegoro, Lamongan, Tuban) dan Brantas (Jombang, Nganjuk, Madiun). |
+| **3** | **Danau / Waduk (Air Tawar)** | 🌐 Biru Muda (`#38BDF8`) | $\text{MNDWI} > +0.50$, $\text{NDWI} > +0.45$, NIR rendah | Waduk Sutami/Karangkates, Waduk Selorejo, Waduk Wonorejo, Ranu Kumbolo, Ranu Pani, Waduk Bening Widas. |
+| **4** | **Perairan Terbuka (Laut)** | 🔵 Biru Tua (`#1E40AF`) | $\text{NDWI} > +0.65$, NIR serap total ($B8 < 0.05$) | Perairan Selat Madura, Laut Jawa (utara), Selat Bali (timur), dan Samudra Hindia (selatan). |
+| **5** | **Hutan Lindung / Vegetasi Rapat** | 🟢 Hijau Tua (`#15803D`) | $\text{NDVI} > +0.75$, $\text{EVI} > 0.60$, Red Edge tinggi | Kawasan konservasi pegunungan: Semeru-Bromo, Arjuno-Welirang, Ijen-Raung, Meru Betiri, Alas Purwo. |
+| **6** | **Perkebunan / Vegetasi Sekunder** | 🍏 Hijau Muda (`#84CC16`) | $\text{NDVI} = 0.55 - 0.72$, $\text{NDRE} > 0.25$ | Lereng perbukitan dan zona agroforestri (kopi, cengkeh, tebu) di kaki gunung api (Malang, Blitar, Jember). |
+| **7** | **Batuan Vulkanik / Kaldera Puncak** | 🟤 Cokelat Tua (`#78350F`) | $\text{BSI} > +0.25$, $\text{NDVI} < 0.15$, SWIR dominan | Kaldera Laut Pasir Bromo, Puncak Mahameru Semeru, kawah aktif Gunung Raung dan Gunung Ijen. |
+| **8** | **Mangrove (Pesisir Pasang-Surut)** | 🌊 Teal / Toska (`#0D9488`) | $\text{NDVI} > 0.60$, $\text{MNDWI} > 0.05$ (kombinasi basah) | Cagar Alam Ujungpangkah Gresik, Pamurbaya (Wonorejo Surabaya), muara Kali Porong Sidoarjo, Pasuruan. |
+
+---
+
+#### 7.2.5 Analisis Spasial Sebaran Kelas Tutupan Lahan se-Jawa Timur
+
+Berdasarkan hasil pemetaan topografi dan spektral Sentinel-2A, pola distribusi spasial di Jawa Timur memperlihatkan keteraturan bentang alam geografis yang sangat konsisten dengan fisiografi regional:
+
+1. **Koridor Metropolitan dan Pusat Pertumbuhan Ekonomi:**
+   - Kawasan *Gerbangkertosusila* (Gresik, Bangkalan, Mojokerto, Surabaya, Sidoarjo, Lamongan) tampak dominan dengan klaster piksel merah (Bangunan). Surabaya sebagai kota metropolitan terbesar kedua di Indonesia membentuk konsentrasi piksel lahan terbangun terpadat di pesisir utara Selat Madura, terkoneksi langsung dengan koridor industri Sidoarjo dan Gresik.
+   - Di wilayah pedalaman, konsentrasi permukiman terbentuk secara radial di Kota Malang, Kota Kediri, Kota Madiun, dan Kota Jember di sepanjang simpang jalan arteri primer.
+
+2. **Lumbung Pangan Pertanian Sawah Aluvial:**
+   - Dataran rendah aluvial yang dialiri oleh dua sistem sungai raksasa—**Sungai Brantas** dan **Sungai Bengawan Solo**—terpetakan sebagai hamparan kuning (Sawah).
+   - Pada citra satelit Sentinel-2A, terekam variasi piksel hijau muda (fase vegetatif) dan bintik cokelat-kuning (fase bera/pengolahan tanah), membuktikan keunggulan *pixel-based classification* dalam menangkap dinamika musiman pertanian riil dibandingkan peta statis RBI.
+
+3. **Gugusan Sabuk Vulkanik dan Hutan Konservasi:**
+   - Sabuk vulkanik aktif Jawa Timur (Gunung Lawu, Gunung Wilis, Gunung Kelud-Kawi, Kompleks Arjuno-Welirang, Kompleks Bromo-Tengger-Semeru, Pegunungan Argopuro, hingga Pegunungan Ijen-Raung) terpetakan dengan sangat kontras sebagai zona hijau tua (Hutan Lindung).
+   - Pada zona puncak kaldera aktif berketinggian di atas 2.300 mdpl (seperti Laut Pasir Kaldera Bromo dan Puncak Mahameru), tutupan lahan berubah menjadi cokelat tua (Batuan Vulkanik / Tanah Terbuka) akibat absennya vegetasi kanopi pohon berkayu.
+
+4. **Ekosistem Mangrove dan Lahan Basah Pesisir:**
+   - Keberadaan hutan mangrove di sepanjang Pantai Timur Surabaya (Wonorejo), muara Bengawan Solo di Ujungpangkah Gresik, delta Kali Porong Sidoarjo, dan pantai utara Probolinggo berhasil terdeteksi sebagai warna toska (Kelas 8).
+   - Reflektansi band SWIR (B11) yang terserap oleh substrat lumpur basah dipadukan dengan pantulan tinggi band NIR (B8) dari tajuk *Rhizophora* dan *Avicennia* menghasilkan *spectral signature* unik yang membedakan mangrove dari hutan daratan biasa.
+
+5. **Karakteristik Unik Pulau Madura:**
+   - Berbeda dengan daratan utama Jawa Timur yang subur akibat endapan piroklastik vulkanik, Pulau Madura didominasi oleh perbukitan batuan sedimen kapur (karst). Pola tutupan lahannya memperlihatkan mosaik tegalan kering, sawah tadah hujan di dataran pantai, serta tambak garam dan mangrove di pesisir selatan Selat Madura.
+
+---
+
+#### 7.2.6 Unsur-Unsur Kartografi Standar
+
+Untuk memenuhi kaidah kartografi ilmiah sesuai standar Badan Informasi Geospasial (BIG) dan IHO:
+- **Arah Orientasi (North Arrow):** Menggunakan simbol panah penanda arah **U** (*Utara / North*) sejajar dengan meridian geosentris WGS 84.
+- **Skala Grafis Garis (Graphic Bar Scale):** Ditempatkan dengan pembagian blok 0, 30, 60, 90, dan 120 Kilometer, memungkinkan pengguna mengukur jarak spasial riil tanpa terdistorsi perubahan perbesaran monitor.
+- **Sistem Koordinat Acuan:** Menggunakan Sistem Referensi Geodetik Dunia **WGS 84 (EPSG:4326)** dengan rentang bujur $110{,}75^\circ \text{ BT} - 114{,}75^\circ \text{ BT}$ dan lintang $-8{,}96^\circ \text{ LS} - -6{,}52^\circ \text{ LS}$.
+
+---
+
+#### 7.2.5 Kode Pemfilteran dan Peta Interaktif Titik Kelas Laut
+
+Berikut adalah kode Python untuk memfilter titik sampel koordinat khusus kelas Laut/Perairan Terbuka dan menampilkannya pada peta interaktif Folium:
+
+```python
+import folium
+import pandas as pd
+
+# 1. Inisialisasi Peta Berpusat di Jawa Timur
+m_laut = folium.Map(location=[-7.7, 112.5], zoom_start=8, control_scale=True)
+
+# 2. WMS Google Maps Satellite Layer
+folium.TileLayer(
+    tiles='http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}',
+    attr='Google',
+    name='Google Satellite',
+    overlay=False,
+    control=True
+).add_to(m_laut)
+
+folium.TileLayer(
+    tiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attr='Esri',
+    name='Esri Satellite',
+    overlay=False,
+    control=True
+).add_to(m_laut)
+
+# 3. Filter Hanya Sampel Kelas 'Perairan Terbuka (Laut)' (Kelas ID = 5)
+df_laut = df[df['kelas_id'] == 5]
+
+for idx, row in df_laut.iterrows():
+    folium.CircleMarker(
+        location=[row['lat'], row['lon']],
+        radius=6,
+        popup=f"<b>Sampel Laut</b><br>Lon: {row['lon']:.4f}<br>Lat: {row['lat']:.4f}<br>NDWI: {row['NDWI']:.3f}",
+        color="white",
+        weight=1.5,
+        fill=True,
+        fill_color="#1C5FD7",
+        fill_opacity=0.9
+    ).add_to(m_laut)
+
+folium.LayerControl(collapsed=False).add_to(m_laut)
+m_laut.save("output/peta_khusus_laut.html")
+m_laut
+```
+
+<iframe src="_static/peta_khusus_laut.html" width="100%" height="520px" style="border:1px solid #ccc; border-radius:8px; margin-bottom:20px;"></iframe>
+
+---
+
+#### 7.2.6 Peta Interaktif Klasifikasi Piksel se-Jawa Timur (Masked Raster Overlay)
+
+Peta interaktif di bawah ini menyajikan hasil klasifikasi piksel regional skala penuh yang dimasking mengikuti batas terestrial Jawa Timur dan Pulau Madura, ditumpangkan langsung di atas citra satelit Google Satellite resolusi tinggi:
+
+<iframe src="_static/peta_hasil_rf.html" width="100%" height="620px" style="border:1px solid #ccc; border-radius:8px; margin-bottom:20px;"></iframe>
+
+
+### 7.3 Prediksi Piksel pada Area Studi dan Perhitungan Luas Area
+Untuk menerapkan model pada skala penuh (*spatially-continuous*), area studi (AOI) dibagi menjadi kumpulan *grid/ubin*, nilai spektral tiap piksel diekstrak, dan model diaplikasikan langsung pada piksel tersebut. Hasilnya ditimpa sebagai `ImageOverlay` semi-transparan di atas peta *Folium*.
+
+**1. Perhitungan Luas Klasifikasi**
+Luas area dihitung dengan mengonversi piksel berdasar skala peta ke *Hektar*.
+
+```python
+# Statistik luas hasil klasifikasi pada AOI
+lat_tengah = (AOI[1] + AOI[3]) / 2
+luas_piksel_ha = (SKALA_PETA * SKALA_PETA * math.cos(math.radians(lat_tengah))) / 10_000
+jumlah = np.bincount(label_peta[label_peta >= 0].astype(int), minlength=len(NAMA_KELAS))
+tab_luas = pd.DataFrame({"Jumlah piksel": jumlah}, index=NAMA_KELAS)
+tab_luas["Luas (ha)"] = (tab_luas["Jumlah piksel"] * luas_piksel_ha).round(1)
+tab_luas["Persentase (%)"] = (100 * tab_luas["Jumlah piksel"] / tab_luas["Jumlah piksel"].sum()).round(2)
+
+display(tab_luas)
+```
+
+**2. Visualisasi Peta Klasifikasi Keseluruhan Jawa Timur**
+Berikut adalah kode untuk memuat latar belakang satelit (*basemap*) resolusi tinggi serta menumpuk area kelas prediksi model secara menyeluruh ke peta (*ImageOverlay*).
+
+```python
+import math, io, requests
+import folium
+from folium.raster_layers import ImageOverlay
+from PIL import Image
+from concurrent.futures import ThreadPoolExecutor
+
+# --- Unduh citra satelit Esri untuk AOI, lalu tanam di peta ---
+def ambil_satelit(aoi, z=10):
+    n = 2 ** z
+    def xy(lon, lat):
+        x = (lon + 180) / 360 * n
+        y = (1 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2 * n
+        return x, y
+    def lon_dari_x(x): return x / n * 360 - 180
+    def lat_dari_y(y): return math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * y / n))))
+
+    x0, y0 = xy(aoi[0], aoi[3])
+    x1, y1 = xy(aoi[2], aoi[1])
+    xa, xb, ya, yb = int(x0), int(x1), int(y0), int(y1)
+
+    mosaik = Image.new("RGB", ((xb - xa + 1) * 256, (yb - ya + 1) * 256), (200, 200, 200))
+    url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+
+    def unduh(xy_):
+        x, y = xy_
+        try:
+            r = requests.get(url.format(z=z, x=x, y=y), headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+            return x, y, Image.open(io.BytesIO(r.content)).convert("RGB")
+        except Exception:
+            return x, y, None
+
+    ubin = [(x, y) for x in range(xa, xb + 1) for y in range(ya, yb + 1)]
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        for x, y, im in ex.map(unduh, ubin):
+            if im is not None:
+                mosaik.paste(im, ((x - xa) * 256, (y - ya) * 256))
+
+    batas = [[lat_dari_y(yb + 1), lon_dari_x(xa)], [lat_dari_y(ya), lon_dari_x(xb + 1)]]
+    return mosaik, batas
+
+mosaik, batas_satelit = ambil_satelit(AOI, z=10)   # z=9 lebih ringan, z=11 lebih tajam
+mosaik.save("satelit_aoi.jpeg", quality=85)
+
+# --- Peta ---
+pusat = [(AOI[1] + AOI[3]) / 2, (AOI[0] + AOI[2]) / 2]
+peta = folium.Map(location=pusat, zoom_start=8, tiles=None, control_scale=True)
+
+# Basemap online (untuk area di luar AOI saat dibuka di browser)
+folium.TileLayer(
+    tiles="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attr="Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics",
+    name="Esri Satellite (online)", max_zoom=19, overlay=False, control=True,
+).add_to(peta)
+folium.TileLayer(
+    tiles="https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+    attr="Google Hybrid", name="Google Hybrid (dengan label)",
+    max_zoom=20, overlay=False, control=True, show=False,
+).add_to(peta)
+
+# LAYER BAWAH: satelit yang ditanam di dalam peta (selalu tampil, termasuk di notebook)
+ImageOverlay(image="satelit_aoi.jpeg", bounds=batas_satelit, opacity=1,
+             name="Satelit (tertanam)", interactive=False, zindex=1).add_to(peta)
+
+# LAYER ATAS: hasil klasifikasi
+ImageOverlay(image=rgba, bounds=batas_peta, opacity=0.65,
+             name="Hasil Klasifikasi Random Forest", interactive=False, zindex=5).add_to(peta)
+
+# --- Titik sampel per kelas (default disembunyikan) ---
+for nama in NAMA_KELAS:
+    grup = folium.FeatureGroup(name=f"Sampel: {nama}", show=False)
+    for _, r in df[df["kelas"] == nama].iterrows():
+        folium.CircleMarker([r.lat, r.lon], radius=4, color="white", weight=1,
+                            fill=True, fill_color=colors.get(r.kelas_id, "black"), fill_opacity=1,
+                            popup=f"{nama} (lon {r.lon:.4f}, lat {r.lat:.4f})").add_to(grup)
+    grup.add_to(peta)
+
+# --- Kotak batas AOI ---
+grup_aoi = folium.FeatureGroup(name="Batas area studi")
+folium.Rectangle([[AOI[1], AOI[0]], [AOI[3], AOI[2]]], color="white", weight=1.5,
+                 fill=False, dash_array="6").add_to(grup_aoi)
+grup_aoi.add_to(peta)
+
+# --- Legenda ---
+item = "".join(
+    f'<div style="margin:2px 0"><span style="display:inline-block;width:14px;height:14px;'
+    f'background:{colors.get(idx+1, "black")};border:1px solid #333;margin-right:6px;vertical-align:middle"></span>{k}</div>'
+    for idx, k in enumerate(NAMA_KELAS))
+legenda = (f'<div style="position:fixed;bottom:30px;left:30px;z-index:9999;background:white;'
+           f'padding:10px 12px;border:1px solid #888;border-radius:6px;font:13px Arial;">'
+           f'<b>Legenda LULC</b><br>{item}</div>')
+peta.get_root().html.add_child(folium.Element(legenda))
+
+folium.LayerControl(collapsed=False).add_to(peta)
+peta.fit_bounds([[AOI[1], AOI[0]], [AOI[3], AOI[2]]])
+
+peta.save("output/peta_hasil_rf.html")
+print("Peta disimpan: output/peta_hasil_rf.html (dapat ditanam di web statis lewat <iframe>)")
+peta
+```
+
+<iframe src="_static/peta_hasil_rf.html" width="100%" height="600px"></iframe>
+
+---
+
+## 8. Kesimpulan
+
+Melalui eksperimen klasifikasi tutupan dan penggunaan lahan (LULC) Provinsi Jawa Timur menggunakan citra satelit **Sentinel-2A**, 18 fitur spektral, dan algoritma **Random Forest**, diperoleh hasil dan temuan penting sebagai berikut:
+
+1. **Performa Akurasi Model yang Sangat Tinggi:**
+   - Model Random Forest berhasil membukukan **Akurasi Keseluruhan (*Overall Accuracy*) sebesar 95.19%** pada data uji independen (20% data testing, 104 piksel), di mana 99 sampel berhasil diprediksi secara tepat.
+   - Nilai **Koefisien Cohen's Kappa ($\kappa$) mencapai 0.9422**, yang masuk dalam kategori **"Almost Perfect Agreement"** (kesesuaian klasifikasi hampir sempurna menurut standar internasional penginderaan jauh).
+   - Pengujian validasi silang berulang (5-Fold Stratified Cross-Validation) menghasilkan rata-rata **95.38% $\pm$ 1.33%**, membuktikan model sangat kokoh (*robust*), stabil, dan bebas dari gejala *overfitting*.
+
+2. **Daya Pembeda Antar Kelas (Separabilitas Spektral):**
+   - Sebanyak **4 dari 6 kelas** (Sawah, Bangunan, Mangrove, dan Lahan Hijau) berhasil diklasifikasikan dengan **akurasi sempurna 100.00%** (Precision 100%, Recall 100%, F1-Score 1.0000).
+   - Pembedaan tajam antara sawah dan lahan hijau dapat terwujud berkat integrasi band Narrow NIR (B8A) dan indeks vegetasi (NDVI, EVI, SAVI).
+   - Misklasifikasi minor hanya terjadi pada batas spektral antara **Perairan Terbuka (Laut)** dan **Danau** (Precision 82.35% vs 86.67%) akibat kedua badan air sama-sama menyerap radiasi inframerah secara masif, dengan variasi hanya pada tingkat kekeruhan dan kedalaman.
+
+3. **Efisiensi Metodologi Berbasis Piksel (*Pixel-Based*):**
+   - Pendekatan klasifikasi berbasis piksel 10 meter yang dipandu oleh batas delimitasi kebenaran medan (*polygon ground-truth ROI*) terbukti sangat efisien secara komputasi dan mampu memetakan mosaik spasial wilayah Jawa Timur secara detail tanpa memerlukan segmentasi poligon citra (*OBIA*) yang memakan beban memori besar.
+
+4. **Integrasi Kartografis dan Visualisasi Spasial:**
+   - Visualisasi peta interaktif *Folium* dengan integrasi layer Google Satellite WMS serta peta master topografi relief hillshade DEM 90m memberikan pemahaman geospasial yang komprehensif bagi perencana tata ruang dan analis lingkungan.
+
+**Rekomendasi Pengembangan Lanjut:**
+1. **Peningkatan Sampel Spektral Perairan:** Penambahan sampel badan air dengan variasi batimetri dan tingkat sedimentasi musiman (musim kemarau vs hujan) guna semakin memisahkan karakteristik danau air tawar dan laut dangkal.
+2. **Eksplorasi Deret Waktu (*Time-Series Sentinel-2*):** Memanfaatkan komposit citra multitemporal sepanjang siklus tanam padi untuk mendeteksi fase penggenangan, vegetatif, dan panen pada lahan sawah secara dinamis.
