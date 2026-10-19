@@ -417,6 +417,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual">8. Hasil Ekstraksi Fitur Aktual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-ekstraksi-fitur-tahap-1">Eksekusi Ekstraksi Fitur (Tahap 1)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pratinjau-sampel-fitur-nyata">8.1 Pratinjau Sampel Fitur Nyata</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rangkuman-statistik-komparatif-antar-kelas">8.2 Rangkuman Statistik Komparatif Antar-Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler">8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</a><ul class="nav section-nav flex-column">
@@ -452,8 +453,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-hasil-dan-performa-model">11. Evaluasi Hasil dan Performa Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-pada-data-uji-independen-n-text-test-46">11.1 Evaluasi pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-confusion-matrix">11.2 Visualisasi Confusion Matrix</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pelatihan-model-dan-evaluasi-data-uji-independen-n-text-test-46">11.1 Pelatihan Model dan Evaluasi Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-dan-interpretasi-confusion-matrix">11.2 Visualisasi dan Interpretasi Confusion Matrix</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-confusion-matrix">Interpretasi Confusion Matrix:</a></li>
 </ul>
 </li>
@@ -1223,6 +1224,73 @@ $<span class="math notranslate nohighlight">\(\hat{y} = \arg\max_{c \in \{0, 1\}
 <section id="hasil-ekstraksi-fitur-aktual">
 <h2>8. Hasil Ekstraksi Fitur Aktual<a class="headerlink" href="#hasil-ekstraksi-fitur-aktual" title="Link to this heading">#</a></h2>
 <p>Proses ekstraksi menghasilkan tabel fitur berdimensi <strong>229 baris <span class="math notranslate nohighlight">\(\times\)</span> 35 kolom</strong> (3 kolom metadata + 32 kolom fitur numerik). Tabel lengkap tersimpan pada berkas <a class="reference download internal" download="" href="_downloads/cc18599139efcc80f8b1629715076ab5/hasil_ekstraksi_fitur_audio.csv"><span class="xref download myst">hasil_ekstraksi_fitur_audio.csv</span></a>.</p>
+<section id="eksekusi-ekstraksi-fitur-tahap-1">
+<h3>Eksekusi Ekstraksi Fitur (Tahap 1)<a class="headerlink" href="#eksekusi-ekstraksi-fitur-tahap-1" title="Link to this heading">#</a></h3>
+<p>Berikut adalah kode Python yang mengeksekusi pemindaian berkas audio, ekstraksi 32 fitur akustik, dan penyimpanan dataset ke format CSV:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">imageio_ffmpeg</span>
+
+<span class="c1"># Integrasi FFmpeg untuk dekode MP3, AAC, M4A</span>
+<span class="n">ffmpeg_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">imageio_ffmpeg</span><span class="o">.</span><span class="n">get_ffmpeg_exe</span><span class="p">())</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ffmpeg_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="n">TARGET_SR</span> <span class="o">=</span> <span class="mi">22050</span>
+<span class="n">N_MFCC</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">DATASET_DIR</span> <span class="o">=</span> <span class="s1">&#39;./dataset_audio&#39;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">scan_dataset</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">):</span>
+    <span class="n">supported_ext</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;.mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;.flac&#39;</span><span class="p">,</span> <span class="s1">&#39;.ogg&#39;</span><span class="p">,</span> <span class="s1">&#39;.m4a&#39;</span><span class="p">,</span> <span class="s1">&#39;.aac&#39;</span><span class="p">}</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="n">d</span><span class="p">))])</span>
+    <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+        <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dataset_dir</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">subdir</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">supported_ext</span><span class="p">:</span>
+                <span class="n">file_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span> <span class="n">f</span><span class="p">),</span> <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="bp">cls</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">file_list</span><span class="p">,</span> <span class="n">classes</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_audio_features</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">target_sr</span><span class="o">=</span><span class="n">TARGET_SR</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">N_MFCC</span><span class="p">):</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">target_sr</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">duration</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">get_duration</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">))</span>
+    
+    <span class="n">rms</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">frame_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">centroid</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">spectral_centroid</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">zcr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">zero_crossing_rate</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">frame_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mfcc</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="n">n_mfcc</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    
+    <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span> <span class="s1">&#39;durasi_detik&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s1">&#39;rms_mean&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rms</span><span class="p">)),</span> <span class="s1">&#39;rms_std&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">rms</span><span class="p">)),</span>
+        <span class="s1">&#39;centroid_mean&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">centroid</span><span class="p">)),</span> <span class="s1">&#39;centroid_std&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">centroid</span><span class="p">)),</span>
+        <span class="s1">&#39;zcr_mean&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">zcr</span><span class="p">)),</span> <span class="s1">&#39;zcr_std&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">zcr</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_mfcc</span><span class="p">):</span>
+        <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+        <span class="n">row</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;mfcc_</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">_std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mfcc</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">row</span>
+
+<span class="n">file_list</span><span class="p">,</span> <span class="n">class_names</span> <span class="o">=</span> <span class="n">scan_dataset</span><span class="p">(</span><span class="n">DATASET_DIR</span><span class="p">)</span>
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">extract_audio_features</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;path&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">])</span>
+<span class="n">df_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;output/hasil_ekstraksi_fitur_audio.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Total file berhasil diekstraksi : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_features</span><span class="p">)</span><span class="si">}</span><span class="s2"> sampel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Distribusi Kelas               :</span><span class="se">\n</span><span class="si">{</span><span class="n">df_features</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] Dimensi Tabel Fitur            : </span><span class="si">{</span><span class="n">df_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> baris x </span><span class="si">{</span><span class="n">df_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> kolom&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Total file berhasil diekstraksi : 229 sampel
+[INFO] Distribusi Kelas               :
+Berisik       116
+NonBerisik    113
+[INFO] Dimensi Tabel Fitur            : 229 baris x 35 kolom
+</pre></div>
+</div>
+</section>
 <section id="pratinjau-sampel-fitur-nyata">
 <h3>8.1 Pratinjau Sampel Fitur Nyata<a class="headerlink" href="#pratinjau-sampel-fitur-nyata" title="Link to this heading">#</a></h3>
 <p>Berikut adalah sampel data nyata dari 10 rekaman audio (5 sampel Berisik dan 5 sampel Non-Berisik) yang merepresentasikan kolom-kolom utama:</p>
@@ -1508,9 +1576,67 @@ Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal no
 <hr class="docutils" />
 <section id="visualisasi-dan-analisis-komparatif">
 <h2>9. Visualisasi dan Analisis Komparatif<a class="headerlink" href="#visualisasi-dan-analisis-komparatif" title="Link to this heading">#</a></h2>
-<p>Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, telah diproduksi 4 grafik komparatif berkualitas publikasi.</p>
+<p>Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, telah diproduksi 4 visualisasi komparatif berkualitas publikasi melalui alur komputasi Python step-by-step:</p>
 <section id="perbandingan-waveform-dan-spektrogram-frekuensi">
 <h3>9.1 Perbandingan Waveform dan Spektrogram Frekuensi<a class="headerlink" href="#perbandingan-waveform-dan-spektrogram-frekuensi" title="Link to this heading">#</a></h3>
+<p>Visualisasi ini membandingkan bentuk gelombang amplitudo domain waktu (<em>waveform</em>) dan kerapatan energi spektrum frekuensi (<em>STFT spectrogram</em>) antara sampel kelas Berisik dan NonBerisik.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">librosa.display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Pemuatan sampel representatif dari masing-masing kelas</span>
+<span class="n">sample_berisik</span> <span class="o">=</span> <span class="s1">&#39;dataset_audio/Berisik/24-003 berisik (1).mp3&#39;</span>
+<span class="n">sample_nonberisik</span> <span class="o">=</span> <span class="s1">&#39;dataset_audio/NonBerisik/228_non_berisik_1.wav&#39;</span>
+
+<span class="n">y_b</span><span class="p">,</span> <span class="n">sr_b</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sample_berisik</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">22050</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y_nb</span><span class="p">,</span> <span class="n">sr_nb</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sample_nonberisik</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">22050</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="c1"># 1. Waveform Berisik &amp; NonBerisik</span>
+<span class="n">t_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_b</span><span class="p">)</span><span class="o">/</span><span class="n">sr_b</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_b</span><span class="p">))</span>
+<span class="n">t_nb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_nb</span><span class="p">)</span><span class="o">/</span><span class="n">sr_nb</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_nb</span><span class="p">))</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_b</span><span class="p">,</span> <span class="n">y_b</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#2563eb&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Waveform: Kelas Berisik</span><span class="se">\n</span><span class="s2">(24-003 berisik (1).mp3)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Waktu (detik)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitudo&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_nb</span><span class="p">,</span> <span class="n">y_nb</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#059669&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Waveform: Kelas NonBerisik</span><span class="se">\n</span><span class="s2">(228_non_berisik_1.wav)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Waktu (detik)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Amplitudo&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">1.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
+
+<span class="c1"># 2. Spektrogram Frekuensi STFT</span>
+<span class="n">D_b</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">amplitude_to_db</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">y_b</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)),</span> <span class="n">ref</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+<span class="n">img_b</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">D_b</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr_b</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">y_axis</span><span class="o">=</span><span class="s1">&#39;hz&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Spektrogram Frekuensi: Kelas Berisik&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Waktu (detik)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frekuensi (Hz)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">img_b</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%+2.0f</span><span class="s2"> dB&quot;</span><span class="p">)</span>
+
+<span class="n">D_nb</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">amplitude_to_db</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">librosa</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">y_nb</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)),</span> <span class="n">ref</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+<span class="n">img_nb</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">D_nb</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr_nb</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">y_axis</span><span class="o">=</span><span class="s1">&#39;hz&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Spektrogram Frekuensi: Kelas NonBerisik&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Waktu (detik)&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frekuensi (Hz)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">img_nb</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%+2.0f</span><span class="s2"> dB&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_waveform_spectrogram.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Waveform &amp; Spektrogram berhasil disimpan ke: output/audio_waveform_spectrogram.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Grafik Waveform &amp; Spektrogram berhasil disimpan ke: output/audio_waveform_spectrogram.png
+</pre></div>
+</div>
 <p><img alt="Waveform dan Spektrogram Komparatif" src="_images/audio_waveform_spectrogram.png" /></p>
 <section id="analisis-dan-interpretasi">
 <h4>Analisis dan Interpretasi:<a class="headerlink" href="#analisis-dan-interpretasi" title="Link to this heading">#</a></h4>
@@ -1534,6 +1660,52 @@ Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal no
 <hr class="docutils" />
 <section id="dinamika-fitur-temporal-rms-spectral-centroid-dan-zcr">
 <h3>9.2 Dinamika Fitur Temporal (RMS, Spectral Centroid, dan ZCR)<a class="headerlink" href="#dinamika-fitur-temporal-rms-spectral-centroid-dan-zcr" title="Link to this heading">#</a></h3>
+<p>Visualisasi ini menampilkan fluktuasi frame-by-frame dari energi RMS, kecerahan frekuensi Spectral Centroid, dan Zero-Crossing Rate sepanjang waktu untuk melihat sifat kestabilan temporal sinyal.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;dataset_audio/Berisik/24-003 berisik (1).mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;Berisik&#39;</span><span class="p">,</span> <span class="s1">&#39;#dc2626&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;dataset_audio/NonBerisik/228_non_berisik_1.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;NonBerisik&#39;</span><span class="p">,</span> <span class="s1">&#39;#16a34a&#39;</span><span class="p">)</span>
+<span class="p">]:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">22050</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rms</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">rms</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">frame_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">centroid</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">spectral_centroid</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">zcr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">zero_crossing_rate</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">frame_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="n">t_rms</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">times_like</span><span class="p">(</span><span class="n">rms</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="n">t_cent</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">times_like</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="n">t_zcr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">times_like</span><span class="p">(</span><span class="n">zcr</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_rms</span><span class="p">,</span> <span class="n">rms</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_cent</span><span class="p">,</span> <span class="n">centroid</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_zcr</span><span class="p">,</span> <span class="n">zcr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Perbandingan Energi Temporal (RMS)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;RMS (Amplitudo)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Perbandingan Kecerahan Spektral (Spectral Centroid)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Centroid (Hz)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Perbandingan Zero-Crossing Rate (ZCR)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Waktu (detik)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Laju Perpotongan Nol&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_temporal_features.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Fitur Temporal berhasil disimpan ke: output/audio_temporal_features.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Grafik Fitur Temporal berhasil disimpan ke: output/audio_temporal_features.png
+</pre></div>
+</div>
 <p><img alt="Kurva Fitur Temporal RMS, Spectral Centroid, dan ZCR" src="_images/audio_temporal_features.png" /></p>
 <section id="id8">
 <h4>Analisis dan Interpretasi:<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
@@ -1559,6 +1731,31 @@ Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal no
 <hr class="docutils" />
 <section id="heatmap-koefisien-mfcc-mel-frequency-cepstral-coefficients">
 <h3>9.3 Heatmap Koefisien MFCC (Mel-Frequency Cepstral Coefficients)<a class="headerlink" href="#heatmap-koefisien-mfcc-mel-frequency-cepstral-coefficients" title="Link to this heading">#</a></h3>
+<p>Visualisasi ini menampilkan variasi matriks amplop spektral Mel (koefisien ke-1 hingga ke-13) terhadap waktu untuk kedua kelas suara.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">&#39;dataset_audio/Berisik/24-003 berisik (1).mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;Berisik&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;dataset_audio/NonBerisik/228_non_berisik_1.wav&#39;</span><span class="p">,</span> <span class="s1">&#39;NonBerisik&#39;</span><span class="p">)</span>
+<span class="p">]):</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">22050</span><span class="p">,</span> <span class="n">mono</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">mfcc</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">mfcc</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">13</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">specshow</span><span class="p">(</span><span class="n">mfcc</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">x_axis</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;coolwarm&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Heatmap MFCC (1-13): </span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Waktu (detik)&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Indeks MFCC&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%+2.0f</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_mfcc_heatmaps.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Heatmap MFCC berhasil disimpan ke: output/audio_mfcc_heatmaps.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Grafik Heatmap MFCC berhasil disimpan ke: output/audio_mfcc_heatmaps.png
+</pre></div>
+</div>
 <p><img alt="Heatmap Koefisien MFCC" src="_images/audio_mfcc_heatmaps.png" /></p>
 <section id="id9">
 <h4>Analisis dan Interpretasi:<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
@@ -1572,6 +1769,39 @@ Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal no
 <hr class="docutils" />
 <section id="distribusi-fitur-komparatif-boxplot">
 <h3>9.4 Distribusi Fitur Komparatif (Boxplot)<a class="headerlink" href="#distribusi-fitur-komparatif-boxplot" title="Link to this heading">#</a></h3>
+<p>Visualisasi boxplot membandingkan sebaran statistik (median, kuartil, dan outlier) dari 6 fitur utama pada seluruh populasi 229 sampel audio.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">feats_to_plot</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;rms_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;RMS Mean (Energi)&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;centroid_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;Spectral Centroid Mean (Hz)&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;zcr_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;ZCR Mean (Perpotongan Nol)&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;mfcc_1_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;MFCC-1 Mean (Energi Spektral Makro)&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;mfcc_2_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;MFCC-2 Mean (Distribusi Low-High)&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">&#39;mfcc_3_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;MFCC-3 Mean (Bentuk Formant)&#39;</span><span class="p">)</span>
+<span class="p">]</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">f_name</span><span class="p">,</span> <span class="n">f_title</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">feats_to_plot</span><span class="p">):</span>
+    <span class="n">data_berisik</span> <span class="o">=</span> <span class="n">df_features</span><span class="p">[</span><span class="n">df_features</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Berisik&#39;</span><span class="p">][</span><span class="n">f_name</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">data_non</span> <span class="o">=</span> <span class="n">df_features</span><span class="p">[</span><span class="n">df_features</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;NonBerisik&#39;</span><span class="p">][</span><span class="n">f_name</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">bp</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">([</span><span class="n">data_berisik</span><span class="p">,</span> <span class="n">data_non</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Berisik&#39;</span><span class="p">,</span> <span class="s1">&#39;NonBerisik&#39;</span><span class="p">],</span> <span class="n">patch_artist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">widths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">bp</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#ef4444&#39;</span><span class="p">)</span>
+    <span class="n">bp</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">bp</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;#10b981&#39;</span><span class="p">)</span>
+    <span class="n">bp</span><span class="p">[</span><span class="s1">&#39;boxes&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">f_title</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Distribusi Perbandingan Fitur Audio: Berisik vs Non-Berisik (N=229)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_boxplots_distribusi.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Boxplot Distribusi Fitur berhasil disimpan ke: output/audio_boxplots_distribusi.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Grafik Boxplot Distribusi Fitur berhasil disimpan ke: output/audio_boxplots_distribusi.png
+</pre></div>
+</div>
 <p><img alt="Distribusi Fitur Boxplot" src="_images/audio_boxplots_distribusi.png" /></p>
 <section id="analisis-dan-interpretasi-boxplot">
 <h4>Analisis dan Interpretasi Boxplot:<a class="headerlink" href="#analisis-dan-interpretasi-boxplot" title="Link to this heading">#</a></h4>
@@ -1631,9 +1861,102 @@ $<span class="math notranslate nohighlight">\(z = \frac{x - \mu_{\text{train}}}{
 <hr class="docutils" />
 <section id="evaluasi-hasil-dan-performa-model">
 <h2>11. Evaluasi Hasil dan Performa Model<a class="headerlink" href="#evaluasi-hasil-dan-performa-model" title="Link to this heading">#</a></h2>
-<section id="evaluasi-pada-data-uji-independen-n-text-test-46">
-<h3>11.1 Evaluasi pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)<a class="headerlink" href="#evaluasi-pada-data-uji-independen-n-text-test-46" title="Link to this heading">#</a></h3>
-<p>Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pelatihan dirangkum pada tabel berikut:</p>
+<p>Bagian ini mengevaluasi kinerja model klasifikasi machine learning secara komprehensif, mencakup pengujian inferensi pada data uji independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>), visualisasi matriks konfusi, validasi silang 5-lipatan (<em>5-Fold Stratified Cross Validation</em>), dan analisis kepentingan fitur (<em>Feature Importance</em>).</p>
+<hr class="docutils" />
+<section id="pelatihan-model-dan-evaluasi-data-uji-independen-n-text-test-46">
+<h3>11.1 Pelatihan Model dan Evaluasi Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)<a class="headerlink" href="#pelatihan-model-dan-evaluasi-data-uji-independen-n-text-test-46" title="Link to this heading">#</a></h3>
+<p>Pada tahap ini, matriks 32 fitur audio diskalakan menggunakan <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>, dibagi menjadi data latih (<span class="math notranslate nohighlight">\(80\%\)</span>) dan data uji (<span class="math notranslate nohighlight">\(20\%\)</span>) secara berimbang (stratified), kemudian dilatih menggunakan <strong>Support Vector Machine (SVM RBF)</strong> dan <strong>Random Forest (100 Trees)</strong>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">,</span> <span class="n">accuracy_score</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># 1. Menyiapkan Matriks Fitur (X) dan Target Label (y)</span>
+<span class="n">meta_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;durasi_detik&#39;</span><span class="p">]</span>
+<span class="n">feat_cols</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_features</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">meta_cols</span><span class="p">])</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">df_features</span><span class="p">[</span><span class="n">feat_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_features</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># 0: Berisik, 1: NonBerisik</span>
+<span class="n">class_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">le</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+<span class="c1"># 2. Pembagian Data (Stratified 80:20) &amp; Standarisasi Fitur</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Inisialisasi Model</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;SVM&#39;</span><span class="p">:</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="s1">&#39;Random Forest&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># 4. Pelatihan &amp; Evaluasi Confusion Matrix</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ax_idx</span><span class="p">,</span> <span class="p">(</span><span class="n">m_name</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Model: </span><span class="si">{</span><span class="n">m_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Accuracy: </span><span class="si">{</span><span class="n">acc</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="n">class_labels</span><span class="p">,</span> <span class="n">digits</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Confusion Matrix:</span><span class="se">\n</span><span class="si">{</span><span class="n">cm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="n">class_labels</span><span class="p">)</span>
+    <span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">ax_idx</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span> <span class="k">if</span> <span class="n">m_name</span> <span class="o">==</span> <span class="s1">&#39;SVM&#39;</span> <span class="k">else</span> <span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">values_format</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="n">ax_idx</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confusion Matrix — </span><span class="si">{</span><span class="n">m_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">(Akurasi: </span><span class="si">{</span><span class="n">acc</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_cm_models.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Confusion Matrix berhasil disimpan ke: output/audio_cm_models.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Model: SVM
+  Accuracy: 84.78%
+              precision    recall  f1-score   support
+
+     Berisik     0.9000    0.7826    0.8372        23
+  NonBerisik     0.8077    0.9130    0.8571        23
+
+    accuracy                         0.8478        46
+   macro avg     0.8538    0.8478    0.8472        46
+weighted avg     0.8538    0.8478    0.8472        46
+
+  Confusion Matrix:
+[[18  5]
+ [ 2 21]]
+
+Model: Random Forest
+  Accuracy: 82.61%
+              precision    recall  f1-score   support
+
+     Berisik     0.8261    0.8261    0.8261        23
+  NonBerisik     0.8261    0.8261    0.8261        23
+
+    accuracy                         0.8261        46
+   macro avg     0.8261    0.8261    0.8261        46
+weighted avg     0.8261    0.8261    0.8261        46
+
+  Confusion Matrix:
+[[19  4]
+ [ 4 19]]
+
+[INFO] Grafik Confusion Matrix berhasil disimpan ke: output/audio_cm_models.png
+</pre></div>
+</div>
+<p>Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pelatihan dirangkum secara terstruktur pada tabel berikut:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-left"><p>Model Machine Learning</p></th>
@@ -1698,23 +2021,25 @@ $<span class="math notranslate nohighlight">\(z = \frac{x - \mu_{\text{train}}}{
 </table>
 </div>
 </section>
-<section id="visualisasi-confusion-matrix">
-<h3>11.2 Visualisasi Confusion Matrix<a class="headerlink" href="#visualisasi-confusion-matrix" title="Link to this heading">#</a></h3>
+<hr class="docutils" />
+<section id="visualisasi-dan-interpretasi-confusion-matrix">
+<h3>11.2 Visualisasi dan Interpretasi Confusion Matrix<a class="headerlink" href="#visualisasi-dan-interpretasi-confusion-matrix" title="Link to this heading">#</a></h3>
+<p>Visualisasi matriks konfusi menunjukkan persebaran prediksi benar dan galat klasifikasi pada masing-masing sel kuadran.</p>
 <p><img alt="Confusion Matrix Model SVM dan Random Forest" src="_images/audio_cm_models.png" /></p>
 <section id="interpretasi-confusion-matrix">
 <h4>Interpretasi Confusion Matrix:<a class="headerlink" href="#interpretasi-confusion-matrix" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p><strong>SVM Model:</strong></p>
+<li><p><strong>SVM Model (Akurasi <span class="math notranslate nohighlight">\(84,78\%\)</span>):</strong></p>
 <ul>
 <li><p><strong>True Berisik:</strong> 18 sampel berhasil diidentifikasi sebagai Berisik secara tepat.</p></li>
-<li><p><strong>False NonBerisik:</strong> 5 sampel Berisik salah terprediksi sebagai NonBerisik.</p></li>
+<li><p><strong>False NonBerisik:</strong> 5 sampel Berisik salah terprediksi sebagai NonBerisik (kemungkinan rekaman bising berjarak jauh dengan amplitudo rendah).</p></li>
 <li><p><strong>True NonBerisik:</strong> 21 sampel berhasil diidentifikasi sebagai NonBerisik secara tepat (Recall NonBerisik sangat tinggi, <span class="math notranslate nohighlight">\(91,30\%\)</span>).</p></li>
-<li><p><strong>False Berisik:</strong> 2 sampel NonBerisik salah diklasifikasikan sebagai Berisik.</p></li>
+<li><p><strong>False Berisik:</strong> 2 sampel NonBerisik salah diklasifikasikan sebagai Berisik akibat adanya interferensi sesaat seperti gesekan mikrofon.</p></li>
 </ul>
 </li>
-<li><p><strong>Random Forest Model:</strong></p>
+<li><p><strong>Random Forest Model (Akurasi <span class="math notranslate nohighlight">\(82,61\%\)</span>):</strong></p>
 <ul>
-<li><p>Menunjukkan performa yang simetris sempurna: 19 True Berisik, 19 True NonBerisik, 4 False Berisik, dan 4 False NonBerisik.</p></li>
+<li><p>Menunjukkan performa yang simetris sempurna pada kedua kelas: 19 True Berisik, 19 True NonBerisik, 4 False Berisik, dan 4 False NonBerisik. Precision, Recall, dan F1-Score bernilai identik (<span class="math notranslate nohighlight">\(0,8261\)</span>).</p></li>
 </ul>
 </li>
 </ul>
@@ -1723,7 +2048,32 @@ $<span class="math notranslate nohighlight">\(z = \frac{x - \mu_{\text{train}}}{
 <hr class="docutils" />
 <section id="validasi-silang-5-fold-stratified-cross-validation">
 <h3>11.3 Validasi Silang (<em>5-Fold Stratified Cross Validation</em>)<a class="headerlink" href="#validasi-silang-5-fold-stratified-cross-validation" title="Link to this heading">#</a></h3>
-<p>Untuk memastikan performa model stabil dan tidak bergantung pada keberuntungan split data, dilakukan validasi silang 5-lipatan pada seluruh 229 sampel dataset:</p>
+<p>Untuk membuktikan bahwa akurasi model tidak bergantung pada faktor kebetulan saat pembagian data tunggal (<em>train-test split</em>), dilakukan validasi silang 5-lipatan terstratifikasi pada seluruh 229 sampel dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span>
+
+<span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[5-Fold Stratified Cross Validation]&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">m_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">X_scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">skf</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">)</span>
+    <span class="n">fold_str</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">scores</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">m_name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Skor Tiap Fold : </span><span class="si">{</span><span class="n">fold_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Rata-rata      : </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% ± </span><span class="si">{</span><span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[5-Fold Stratified Cross Validation]
+  SVM:
+    Skor Tiap Fold : [&#39;86.96%&#39;, &#39;89.13%&#39;, &#39;73.91%&#39;, &#39;76.09%&#39;, &#39;88.89%&#39;]
+    Rata-rata      : 83.00% ± 6.61%
+
+  Random Forest:
+    Skor Tiap Fold : [&#39;93.48%&#39;, &#39;93.48%&#39;, &#39;73.91%&#39;, &#39;89.13%&#39;, &#39;88.89%&#39;]
+    Rata-rata      : 87.78% ± 7.22%
+</pre></div>
+</div>
+<p>Tabel komparasi skor validasi silang antar-fold disajikan pada tabel di bawah ini:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-left"><p>Model</p></th>
@@ -1756,15 +2106,60 @@ $<span class="math notranslate nohighlight">\(z = \frac{x - \mu_{\text{train}}}{
 </table>
 </div>
 <blockquote>
-<div><p><strong>Analisis Stabilitas:</strong> Pada pengujian validasi silang, <strong>Random Forest mencapai rata-rata akurasi sebesar <span class="math notranslate nohighlight">\(87,78\%\)</span></strong>, bahkan menyentuh <span class="math notranslate nohighlight">\(93,48\%\)</span> pada dua fold pertama. Ini membuktikan bahwa ensemble tree memiliki kapasitas generalisasi yang lebih kokoh dalam menangani variabilitas rekaman ponsel mahasiswa.</p>
+<div><p><strong>Analisis Stabilitas:</strong> Pada pengujian validasi silang, <strong>Random Forest mencapai rata-rata akurasi sebesar <span class="math notranslate nohighlight">\(87,78\%\)</span></strong>, bahkan menyentuh <span class="math notranslate nohighlight">\(93,48\%\)</span> pada dua fold pertama. Ini membuktikan bahwa arsitektur ensemble pohon keputusan memiliki kapasitas generalisasi yang lebih stabil dan kokoh dalam menangani variabilitas akustik rekaman ponsel mahasiswa.</p>
 </div></blockquote>
 </section>
 <hr class="docutils" />
 <section id="analisis-kepentingan-fitur-feature-importance">
 <h3>11.4 Analisis Kepentingan Fitur (<em>Feature Importance</em>)<a class="headerlink" href="#analisis-kepentingan-fitur-feature-importance" title="Link to this heading">#</a></h3>
-<p>Melalui mekanisme <em>Gini Impurity Reduction</em> pada Random Forest, kontribusi masing-masing fitur dalam membedakan suara berisik dan non-berisik dapat diurutkan secara objektif:</p>
+<p>Melalui mekanisme reduksi ketidakmurnian Gini (<em>Gini Impurity Reduction</em>) pada 100 decision trees Random Forest, kontribusi masing-masing fitur dalam membedakan suara berisik dan non-berisik dapat diurutkan secara matematis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Ekstraksi Feature Importance dari Random Forest</span>
+<span class="n">rf_model</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s1">&#39;Random Forest&#39;</span><span class="p">]</span>
+<span class="n">importances</span> <span class="o">=</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">feature_importances_</span>
+<span class="n">feat_series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">importances</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">feat_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Top 15 Feature Importance (Random Forest):&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="p">(</span><span class="n">feat</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">feat_series</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">rank</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">. </span><span class="si">{</span><span class="n">feat</span><span class="si">:</span><span class="s2">&lt;15</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">val</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="p">)</span>
+
+<span class="c1"># Visualisasi Horizontal Bar Plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">feat_series</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;#0284c7&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Top 15 Feature Importance — Random Forest (Berisik vs Non-Berisik)&quot;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tingkat Kepentingan Fitur (Gini Importance)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;output/audio_feature_importance.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">180</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[INFO] Grafik Feature Importance berhasil disimpan ke: output/audio_feature_importance.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[INFO] Top 15 Feature Importance (Random Forest):
+   1. rms_mean        : 0.13614 (13.61%)
+   2. mfcc_1_mean     : 0.07932 (7.93%)
+   3. rms_std         : 0.06096 (6.10%)
+   4. mfcc_12_std     : 0.05641 (5.64%)
+   5. mfcc_11_std     : 0.05127 (5.13%)
+   6. mfcc_3_mean     : 0.04868 (4.87%)
+   7. mfcc_11_mean    : 0.04131 (4.13%)
+   8. mfcc_13_std     : 0.03361 (3.36%)
+   9. mfcc_5_mean     : 0.03144 (3.14%)
+  10. mfcc_6_mean     : 0.02857 (2.86%)
+  11. mfcc_10_mean    : 0.02835 (2.84%)
+  12. zcr_mean        : 0.02525 (2.53%)
+  13. mfcc_8_mean     : 0.02460 (2.46%)
+  14. mfcc_13_mean    : 0.02425 (2.43%)
+  15. mfcc_5_std      : 0.02372 (2.37%)
+[INFO] Grafik Feature Importance berhasil disimpan ke: output/audio_feature_importance.png
+</pre></div>
+</div>
 <p><img alt="Top 15 Feature Importance" src="_images/audio_feature_importance.png" /></p>
-<p>Berikut adalah daftar 15 fitur paling berpengaruh dalam klasifikasi suara ini:</p>
+<p>Berikut adalah daftar rincian 15 fitur paling berpengaruh dalam klasifikasi suara beserta domain akustiknya:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-center"><p>Peringkat</p></th>
@@ -2062,6 +2457,7 @@ Analisis <em>Feature Importance</em> membuktikan bahwa kombinasi fitur domain wa
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual">8. Hasil Ekstraksi Fitur Aktual</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-ekstraksi-fitur-tahap-1">Eksekusi Ekstraksi Fitur (Tahap 1)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pratinjau-sampel-fitur-nyata">8.1 Pratinjau Sampel Fitur Nyata</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rangkuman-statistik-komparatif-antar-kelas">8.2 Rangkuman Statistik Komparatif Antar-Kelas</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-transformasi-standardisasi-fitur-sebelum-vs-sesudah-standardscaler">8.3 Analisis Transformasi Standardisasi Fitur (Sebelum vs Sesudah <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</a><ul class="nav section-nav flex-column">
@@ -2097,8 +2493,8 @@ Analisis <em>Feature Importance</em> membuktikan bahwa kombinasi fitur domain wa
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-hasil-dan-performa-model">11. Evaluasi Hasil dan Performa Model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-pada-data-uji-independen-n-text-test-46">11.1 Evaluasi pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-confusion-matrix">11.2 Visualisasi Confusion Matrix</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pelatihan-model-dan-evaluasi-data-uji-independen-n-text-test-46">11.1 Pelatihan Model dan Evaluasi Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 46\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-dan-interpretasi-confusion-matrix">11.2 Visualisasi dan Interpretasi Confusion Matrix</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-confusion-matrix">Interpretasi Confusion Matrix:</a></li>
 </ul>
 </li>

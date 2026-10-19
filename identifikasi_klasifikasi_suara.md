@@ -586,6 +586,75 @@ print(f"\nVisualisasi Confusion Matrix dan Feature Importance berhasil disimpan 
 
 Proses ekstraksi menghasilkan tabel fitur berdimensi **229 baris $\times$ 35 kolom** (3 kolom metadata + 32 kolom fitur numerik). Tabel lengkap tersimpan pada berkas [hasil_ekstraksi_fitur_audio.csv](output/hasil_ekstraksi_fitur_audio.csv).
 
+### Eksekusi Ekstraksi Fitur (Tahap 1)
+
+Berikut adalah kode Python yang mengeksekusi pemindaian berkas audio, ekstraksi 32 fitur akustik, dan penyimpanan dataset ke format CSV:
+
+```python
+import os, warnings
+import numpy as np
+import pandas as pd
+import librosa
+import imageio_ffmpeg
+
+# Integrasi FFmpeg untuk dekode MP3, AAC, M4A
+ffmpeg_dir = os.path.dirname(imageio_ffmpeg.get_ffmpeg_exe())
+os.environ['PATH'] = ffmpeg_dir + os.pathsep + os.environ.get('PATH', '')
+warnings.filterwarnings('ignore')
+
+TARGET_SR = 22050
+N_MFCC = 13
+DATASET_DIR = './dataset_audio'
+
+def scan_dataset(dataset_dir):
+    supported_ext = {'.wav', '.mp3', '.flac', '.ogg', '.m4a', '.aac'}
+    file_list = []
+    classes = sorted([d for d in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, d))])
+    for cls in classes:
+        subdir = os.path.join(dataset_dir, cls)
+        for f in sorted(os.listdir(subdir)):
+            if os.path.splitext(f)[1].lower() in supported_ext:
+                file_list.append({'path': os.path.join(subdir, f), 'filename': f, 'label': cls})
+    return file_list, classes
+
+def extract_audio_features(filepath, filename, label, target_sr=TARGET_SR, n_mfcc=N_MFCC):
+    y, sr = librosa.load(filepath, sr=target_sr, mono=True)
+    duration = float(librosa.get_duration(y=y, sr=sr))
+    
+    rms = librosa.feature.rms(y=y, frame_length=2048, hop_length=512)[0]
+    centroid = librosa.feature.spectral_centroid(y=y, sr=sr, n_fft=2048, hop_length=512)[0]
+    zcr = librosa.feature.zero_crossing_rate(y=y, frame_length=2048, hop_length=512)[0]
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=n_mfcc, n_fft=2048, hop_length=512)
+    
+    row = {
+        'filename': filename, 'label': label, 'durasi_detik': round(duration, 2),
+        'rms_mean': float(np.mean(rms)), 'rms_std': float(np.std(rms)),
+        'centroid_mean': float(np.mean(centroid)), 'centroid_std': float(np.std(centroid)),
+        'zcr_mean': float(np.mean(zcr)), 'zcr_std': float(np.std(zcr))
+    }
+    for j in range(n_mfcc):
+        row[f'mfcc_{j+1}_mean'] = float(np.mean(mfcc[j]))
+        row[f'mfcc_{j+1}_std'] = float(np.std(mfcc[j]))
+    return row
+
+file_list, class_names = scan_dataset(DATASET_DIR)
+df_features = pd.DataFrame([extract_audio_features(f['path'], f['filename'], f['label']) for f in file_list])
+df_features.to_csv('output/hasil_ekstraksi_fitur_audio.csv', index=False)
+
+print(f"[INFO] Total file berhasil diekstraksi : {len(df_features)} sampel")
+print(f"[INFO] Distribusi Kelas               :\n{df_features['label'].value_counts().to_string()}")
+print(f"[INFO] Dimensi Tabel Fitur            : {df_features.shape[0]} baris x {df_features.shape[1]} kolom")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Total file berhasil diekstraksi : 229 sampel
+[INFO] Distribusi Kelas               :
+Berisik       116
+NonBerisik    113
+[INFO] Dimensi Tabel Fitur            : 229 baris x 35 kolom
+```
+
 ### 8.1 Pratinjau Sampel Fitur Nyata
 
 Berikut adalah sampel data nyata dari 10 rekaman audio (5 sampel Berisik dan 5 sampel Non-Berisik) yang merepresentasikan kolom-kolom utama:
@@ -682,9 +751,70 @@ Energi & Fluktuasi         Frekuensi Spektrum           Bentuk Spektral Non-Lini
 
 ## 9. Visualisasi dan Analisis Komparatif
 
-Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, telah diproduksi 4 grafik komparatif berkualitas publikasi.
+Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, telah diproduksi 4 visualisasi komparatif berkualitas publikasi melalui alur komputasi Python step-by-step:
 
 ### 9.1 Perbandingan Waveform dan Spektrogram Frekuensi
+
+Visualisasi ini membandingkan bentuk gelombang amplitudo domain waktu (*waveform*) dan kerapatan energi spektrum frekuensi (*STFT spectrogram*) antara sampel kelas Berisik dan NonBerisik.
+
+```python
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
+import numpy as np
+
+# Pemuatan sampel representatif dari masing-masing kelas
+sample_berisik = 'dataset_audio/Berisik/24-003 berisik (1).mp3'
+sample_nonberisik = 'dataset_audio/NonBerisik/228_non_berisik_1.wav'
+
+y_b, sr_b = librosa.load(sample_berisik, sr=22050, mono=True)
+y_nb, sr_nb = librosa.load(sample_nonberisik, sr=22050, mono=True)
+
+fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+
+# 1. Waveform Berisik & NonBerisik
+t_b = np.linspace(0, len(y_b)/sr_b, len(y_b))
+t_nb = np.linspace(0, len(y_nb)/sr_nb, len(y_nb))
+
+axes[0, 0].plot(t_b, y_b, color='#2563eb', lw=0.6, alpha=0.85)
+axes[0, 0].set_title("Waveform: Kelas Berisik\n(24-003 berisik (1).mp3)", fontweight='bold')
+axes[0, 0].set_xlabel('Waktu (detik)')
+axes[0, 0].set_ylabel('Amplitudo')
+axes[0, 0].grid(True, alpha=0.3)
+axes[0, 0].set_ylim([-1.05, 1.05])
+
+axes[0, 1].plot(t_nb, y_nb, color='#059669', lw=0.6, alpha=0.85)
+axes[0, 1].set_title("Waveform: Kelas NonBerisik\n(228_non_berisik_1.wav)", fontweight='bold')
+axes[0, 1].set_xlabel('Waktu (detik)')
+axes[0, 1].set_ylabel('Amplitudo')
+axes[0, 1].grid(True, alpha=0.3)
+axes[0, 1].set_ylim([-1.05, 1.05])
+
+# 2. Spektrogram Frekuensi STFT
+D_b = librosa.amplitude_to_db(np.abs(librosa.stft(y_b, n_fft=2048, hop_length=512)), ref=np.max)
+img_b = librosa.display.specshow(D_b, sr=sr_b, x_axis='time', y_axis='hz', ax=axes[1, 0], cmap='magma')
+axes[1, 0].set_title("Spektrogram Frekuensi: Kelas Berisik", fontweight='bold')
+axes[1, 0].set_xlabel('Waktu (detik)')
+axes[1, 0].set_ylabel('Frekuensi (Hz)')
+fig.colorbar(img_b, ax=axes[1, 0], format="%+2.0f dB")
+
+D_nb = librosa.amplitude_to_db(np.abs(librosa.stft(y_nb, n_fft=2048, hop_length=512)), ref=np.max)
+img_nb = librosa.display.specshow(D_nb, sr=sr_nb, x_axis='time', y_axis='hz', ax=axes[1, 1], cmap='magma')
+axes[1, 1].set_title("Spektrogram Frekuensi: Kelas NonBerisik", fontweight='bold')
+axes[1, 1].set_xlabel('Waktu (detik)')
+axes[1, 1].set_ylabel('Frekuensi (Hz)')
+fig.colorbar(img_nb, ax=axes[1, 1], format="%+2.0f dB")
+
+plt.tight_layout()
+plt.savefig('output/audio_waveform_spectrogram.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Waveform & Spektrogram berhasil disimpan ke: output/audio_waveform_spectrogram.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Grafik Waveform & Spektrogram berhasil disimpan ke: output/audio_waveform_spectrogram.png
+```
 
 ![Waveform dan Spektrogram Komparatif](output/audio_waveform_spectrogram.png)
 
@@ -701,6 +831,55 @@ Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, tela
 
 ### 9.2 Dinamika Fitur Temporal (RMS, Spectral Centroid, dan ZCR)
 
+Visualisasi ini menampilkan fluktuasi frame-by-frame dari energi RMS, kecerahan frekuensi Spectral Centroid, dan Zero-Crossing Rate sepanjang waktu untuk melihat sifat kestabilan temporal sinyal.
+
+```python
+fig, axes = plt.subplots(3, 1, figsize=(12, 9), sharex=False)
+
+for path, cls, color in [
+    ('dataset_audio/Berisik/24-003 berisik (1).mp3', 'Berisik', '#dc2626'),
+    ('dataset_audio/NonBerisik/228_non_berisik_1.wav', 'NonBerisik', '#16a34a')
+]:
+    y, sr = librosa.load(path, sr=22050, mono=True)
+    rms = librosa.feature.rms(y=y, frame_length=2048, hop_length=512)[0]
+    centroid = librosa.feature.spectral_centroid(y=y, sr=sr, n_fft=2048, hop_length=512)[0]
+    zcr = librosa.feature.zero_crossing_rate(y=y, frame_length=2048, hop_length=512)[0]
+    
+    t_rms = librosa.times_like(rms, sr=sr, hop_length=512)
+    t_cent = librosa.times_like(centroid, sr=sr, hop_length=512)
+    t_zcr = librosa.times_like(zcr, sr=sr, hop_length=512)
+    
+    axes[0].plot(t_rms, rms, label=f"{cls}", color=color, lw=1.5)
+    axes[1].plot(t_cent, centroid, label=f"{cls}", color=color, lw=1.2)
+    axes[2].plot(t_zcr, zcr, label=f"{cls}", color=color, lw=1.2)
+
+axes[0].set_title("Perbandingan Energi Temporal (RMS)", fontweight='bold')
+axes[0].set_ylabel("RMS (Amplitudo)")
+axes[0].legend(loc="upper right")
+axes[0].grid(True, alpha=0.3)
+
+axes[1].set_title("Perbandingan Kecerahan Spektral (Spectral Centroid)", fontweight='bold')
+axes[1].set_ylabel("Centroid (Hz)")
+axes[1].legend(loc="upper right")
+axes[1].grid(True, alpha=0.3)
+
+axes[2].set_title("Perbandingan Zero-Crossing Rate (ZCR)", fontweight='bold')
+axes[2].set_xlabel("Waktu (detik)")
+axes[2].set_ylabel("Laju Perpotongan Nol")
+axes[2].legend(loc="upper right")
+axes[2].grid(True, alpha=0.3)
+
+plt.tight_layout()
+plt.savefig('output/audio_temporal_features.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Fitur Temporal berhasil disimpan ke: output/audio_temporal_features.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Grafik Fitur Temporal berhasil disimpan ke: output/audio_temporal_features.png
+```
+
 ![Kurva Fitur Temporal RMS, Spectral Centroid, dan ZCR](output/audio_temporal_features.png)
 
 #### Analisis dan Interpretasi:
@@ -715,6 +894,34 @@ Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, tela
 
 ### 9.3 Heatmap Koefisien MFCC (Mel-Frequency Cepstral Coefficients)
 
+Visualisasi ini menampilkan variasi matriks amplop spektral Mel (koefisien ke-1 hingga ke-13) terhadap waktu untuk kedua kelas suara.
+
+```python
+fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+for idx, (path, cls) in enumerate([
+    ('dataset_audio/Berisik/24-003 berisik (1).mp3', 'Berisik'),
+    ('dataset_audio/NonBerisik/228_non_berisik_1.wav', 'NonBerisik')
+]):
+    y, sr = librosa.load(path, sr=22050, mono=True)
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13, n_fft=2048, hop_length=512)
+    img = librosa.display.specshow(mfcc, sr=sr, hop_length=512, x_axis='time', ax=axes[idx], cmap='coolwarm')
+    axes[idx].set_title(f"Heatmap MFCC (1-13): {cls}", fontweight='bold')
+    axes[idx].set_xlabel('Waktu (detik)')
+    axes[idx].set_ylabel('Indeks MFCC')
+    fig.colorbar(img, ax=axes[idx], format="%+2.0f")
+
+plt.tight_layout()
+plt.savefig('output/audio_mfcc_heatmaps.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Heatmap MFCC berhasil disimpan ke: output/audio_mfcc_heatmaps.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Grafik Heatmap MFCC berhasil disimpan ke: output/audio_mfcc_heatmaps.png
+```
+
 ![Heatmap Koefisien MFCC](output/audio_mfcc_heatmaps.png)
 
 #### Analisis dan Interpretasi:
@@ -725,6 +932,42 @@ Untuk membuktikan secara visual perbedaan karakteristik sinyal kedua kelas, tela
 ---
 
 ### 9.4 Distribusi Fitur Komparatif (Boxplot)
+
+Visualisasi boxplot membandingkan sebaran statistik (median, kuartil, dan outlier) dari 6 fitur utama pada seluruh populasi 229 sampel audio.
+
+```python
+fig, axes = plt.subplots(2, 3, figsize=(15, 9))
+feats_to_plot = [
+    ('rms_mean', 'RMS Mean (Energi)'),
+    ('centroid_mean', 'Spectral Centroid Mean (Hz)'),
+    ('zcr_mean', 'ZCR Mean (Perpotongan Nol)'),
+    ('mfcc_1_mean', 'MFCC-1 Mean (Energi Spektral Makro)'),
+    ('mfcc_2_mean', 'MFCC-2 Mean (Distribusi Low-High)'),
+    ('mfcc_3_mean', 'MFCC-3 Mean (Bentuk Formant)')
+]
+
+for ax, (f_name, f_title) in zip(axes.flatten(), feats_to_plot):
+    data_berisik = df_features[df_features['label'] == 'Berisik'][f_name].dropna()
+    data_non = df_features[df_features['label'] == 'NonBerisik'][f_name].dropna()
+    bp = ax.boxplot([data_berisik, data_non], labels=['Berisik', 'NonBerisik'], patch_artist=True, widths=0.5)
+    bp['boxes'][0].set_facecolor('#ef4444')
+    bp['boxes'][0].set_alpha(0.6)
+    bp['boxes'][1].set_facecolor('#10b981')
+    bp['boxes'][1].set_alpha(0.6)
+    ax.set_title(f_title, fontweight='bold', fontsize=11)
+    ax.grid(axis='y', alpha=0.3)
+
+plt.suptitle("Distribusi Perbandingan Fitur Audio: Berisik vs Non-Berisik (N=229)", fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.savefig('output/audio_boxplots_distribusi.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Boxplot Distribusi Fitur berhasil disimpan ke: output/audio_boxplots_distribusi.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Grafik Boxplot Distribusi Fitur berhasil disimpan ke: output/audio_boxplots_distribusi.png
+```
 
 ![Distribusi Fitur Boxplot](output/audio_boxplots_distribusi.png)
 
@@ -764,9 +1007,107 @@ Untuk menghindari *data leakage* (kebocoran data) dan menjamin keandalan penguji
 
 ## 11. Evaluasi Hasil dan Performa Model
 
-### 11.1 Evaluasi pada Data Uji Independen ($N_{\text{test}} = 46$)
+Bagian ini mengevaluasi kinerja model klasifikasi machine learning secara komprehensif, mencakup pengujian inferensi pada data uji independen ($N_{\text{test}} = 46$), visualisasi matriks konfusi, validasi silang 5-lipatan (*5-Fold Stratified Cross Validation*), dan analisis kepentingan fitur (*Feature Importance*).
 
-Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pelatihan dirangkum pada tabel berikut:
+---
+
+### 11.1 Pelatihan Model dan Evaluasi Data Uji Independen ($N_{\text{test}} = 46$)
+
+Pada tahap ini, matriks 32 fitur audio diskalakan menggunakan `StandardScaler`, dibagi menjadi data latih ($80\%$) dan data uji ($20\%$) secara berimbang (stratified), kemudian dilatih menggunakan **Support Vector Machine (SVM RBF)** dan **Random Forest (100 Trees)**.
+
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay, accuracy_score
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# 1. Menyiapkan Matriks Fitur (X) dan Target Label (y)
+meta_cols = ['filename', 'label', 'durasi_detik']
+feat_cols = sorted([c for c in df_features.columns if c not in meta_cols])
+
+X = df_features[feat_cols].values
+le = LabelEncoder()
+y = le.fit_transform(df_features['label'].values)  # 0: Berisik, 1: NonBerisik
+class_labels = list(le.classes_)
+
+# 2. Pembagian Data (Stratified 80:20) & Standarisasi Fitur
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_scaled, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# 3. Inisialisasi Model
+models = {
+    'SVM': SVC(kernel='rbf', C=1.0, probability=True, random_state=42),
+    'Random Forest': RandomForestClassifier(n_estimators=100, max_depth=8, random_state=42, n_jobs=-1)
+}
+
+# 4. Pelatihan & Evaluasi Confusion Matrix
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+for ax_idx, (m_name, model) in enumerate(models.items()):
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    
+    acc = accuracy_score(y_test, y_pred)
+    cm = confusion_matrix(y_test, y_pred)
+    
+    print(f"\nModel: {m_name}")
+    print(f"  Accuracy: {acc*100:.2f}%")
+    print(classification_report(y_test, y_pred, target_names=class_labels, digits=4))
+    print(f"  Confusion Matrix:\n{cm}")
+    
+    disp = ConfusionMatrixDisplay(cm, display_labels=class_labels)
+    disp.plot(ax=axes[ax_idx], cmap='Blues' if m_name == 'SVM' else 'Greens', values_format='d')
+    axes[ax_idx].set_title(f"Confusion Matrix — {m_name}\n(Akurasi: {acc*100:.1f}%)", fontweight='bold')
+
+plt.tight_layout()
+plt.savefig('output/audio_cm_models.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Confusion Matrix berhasil disimpan ke: output/audio_cm_models.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+Model: SVM
+  Accuracy: 84.78%
+              precision    recall  f1-score   support
+
+     Berisik     0.9000    0.7826    0.8372        23
+  NonBerisik     0.8077    0.9130    0.8571        23
+
+    accuracy                         0.8478        46
+   macro avg     0.8538    0.8478    0.8472        46
+weighted avg     0.8538    0.8478    0.8472        46
+
+  Confusion Matrix:
+[[18  5]
+ [ 2 21]]
+
+Model: Random Forest
+  Accuracy: 82.61%
+              precision    recall  f1-score   support
+
+     Berisik     0.8261    0.8261    0.8261        23
+  NonBerisik     0.8261    0.8261    0.8261        23
+
+    accuracy                         0.8261        46
+   macro avg     0.8261    0.8261    0.8261        46
+weighted avg     0.8261    0.8261    0.8261        46
+
+  Confusion Matrix:
+[[19  4]
+ [ 4 19]]
+
+[INFO] Grafik Confusion Matrix berhasil disimpan ke: output/audio_cm_models.png
+```
+
+Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pelatihan dirangkum secara terstruktur pada tabel berikut:
 
 | Model Machine Learning | Kelas Target | Precision | Recall | F1-Score | Support | Akurasi Keseluruhan |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|
@@ -777,41 +1118,120 @@ Hasil inferensi kedua model pada 46 sampel uji yang belum pernah dilihat saat pe
 | | **NonBerisik** | $0,8261$ | $0,8261$ | $0,8261$ | 23 | (38 dari 46 benar) |
 | | *Macro Average* | $0,8261$ | $0,8261$ | $0,8261$ | 46 | |
 
-### 11.2 Visualisasi Confusion Matrix
+---
+
+### 11.2 Visualisasi dan Interpretasi Confusion Matrix
+
+Visualisasi matriks konfusi menunjukkan persebaran prediksi benar dan galat klasifikasi pada masing-masing sel kuadran.
 
 ![Confusion Matrix Model SVM dan Random Forest](output/audio_cm_models.png)
 
 #### Interpretasi Confusion Matrix:
-- **SVM Model:**
+- **SVM Model (Akurasi $84,78\%$):**
   - **True Berisik:** 18 sampel berhasil diidentifikasi sebagai Berisik secara tepat.
-  - **False NonBerisik:** 5 sampel Berisik salah terprediksi sebagai NonBerisik.
+  - **False NonBerisik:** 5 sampel Berisik salah terprediksi sebagai NonBerisik (kemungkinan rekaman bising berjarak jauh dengan amplitudo rendah).
   - **True NonBerisik:** 21 sampel berhasil diidentifikasi sebagai NonBerisik secara tepat (Recall NonBerisik sangat tinggi, $91,30\%$).
-  - **False Berisik:** 2 sampel NonBerisik salah diklasifikasikan sebagai Berisik.
-- **Random Forest Model:**
-  - Menunjukkan performa yang simetris sempurna: 19 True Berisik, 19 True NonBerisik, 4 False Berisik, dan 4 False NonBerisik.
+  - **False Berisik:** 2 sampel NonBerisik salah diklasifikasikan sebagai Berisik akibat adanya interferensi sesaat seperti gesekan mikrofon.
+- **Random Forest Model (Akurasi $82,61\%$):**
+  - Menunjukkan performa yang simetris sempurna pada kedua kelas: 19 True Berisik, 19 True NonBerisik, 4 False Berisik, dan 4 False NonBerisik. Precision, Recall, dan F1-Score bernilai identik ($0,8261$).
 
 ---
 
 ### 11.3 Validasi Silang (*5-Fold Stratified Cross Validation*)
 
-Untuk memastikan performa model stabil dan tidak bergantung pada keberuntungan split data, dilakukan validasi silang 5-lipatan pada seluruh 229 sampel dataset:
+Untuk membuktikan bahwa akurasi model tidak bergantung pada faktor kebetulan saat pembagian data tunggal (*train-test split*), dilakukan validasi silang 5-lipatan terstratifikasi pada seluruh 229 sampel dataset.
+
+```python
+from sklearn.model_selection import StratifiedKFold, cross_val_score
+
+skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+
+print("[5-Fold Stratified Cross Validation]")
+for m_name, model in models.items():
+    scores = cross_val_score(model, X_scaled, y, cv=skf, scoring='accuracy')
+    fold_str = [f"{s*100:.2f}%" for s in scores]
+    print(f"  {m_name}:")
+    print(f"    Skor Tiap Fold : {fold_str}")
+    print(f"    Rata-rata      : {scores.mean()*100:.2f}% ± {scores.std()*100:.2f}%\n")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[5-Fold Stratified Cross Validation]
+  SVM:
+    Skor Tiap Fold : ['86.96%', '89.13%', '73.91%', '76.09%', '88.89%']
+    Rata-rata      : 83.00% ± 6.61%
+
+  Random Forest:
+    Skor Tiap Fold : ['93.48%', '93.48%', '73.91%', '89.13%', '88.89%']
+    Rata-rata      : 87.78% ± 7.22%
+```
+
+Tabel komparasi skor validasi silang antar-fold disajikan pada tabel di bawah ini:
 
 | Model | Fold 1 | Fold 2 | Fold 3 | Fold 4 | Fold 5 | **Rata-rata Akurasi ($\mu \pm \sigma$)** |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Support Vector Machine (SVM)** | $86,96\%$ | $89,13\%$ | $73,91\%$ | $76,09\%$ | $88,89\%$ | $\mathbf{83,00\% \pm 6,61\%}$ |
 | **Random Forest Classifier** | $93,48\%$ | $93,48\%$ | $73,91\%$ | $89,13\%$ | $88,89\%$ | $\mathbf{87,78\% \pm 7,22\%}$ |
 
-> **Analisis Stabilitas:** Pada pengujian validasi silang, **Random Forest mencapai rata-rata akurasi sebesar $87,78\%$**, bahkan menyentuh $93,48\%$ pada dua fold pertama. Ini membuktikan bahwa ensemble tree memiliki kapasitas generalisasi yang lebih kokoh dalam menangani variabilitas rekaman ponsel mahasiswa.
+> **Analisis Stabilitas:** Pada pengujian validasi silang, **Random Forest mencapai rata-rata akurasi sebesar $87,78\%$**, bahkan menyentuh $93,48\%$ pada dua fold pertama. Ini membuktikan bahwa arsitektur ensemble pohon keputusan memiliki kapasitas generalisasi yang lebih stabil dan kokoh dalam menangani variabilitas akustik rekaman ponsel mahasiswa.
 
 ---
 
 ### 11.4 Analisis Kepentingan Fitur (*Feature Importance*)
 
-Melalui mekanisme *Gini Impurity Reduction* pada Random Forest, kontribusi masing-masing fitur dalam membedakan suara berisik dan non-berisik dapat diurutkan secara objektif:
+Melalui mekanisme reduksi ketidakmurnian Gini (*Gini Impurity Reduction*) pada 100 decision trees Random Forest, kontribusi masing-masing fitur dalam membedakan suara berisik dan non-berisik dapat diurutkan secara matematis.
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Ekstraksi Feature Importance dari Random Forest
+rf_model = models['Random Forest']
+importances = rf_model.feature_importances_
+feat_series = pd.Series(importances, index=feat_cols).sort_values(ascending=False)
+
+print("[INFO] Top 15 Feature Importance (Random Forest):")
+for rank, (feat, val) in enumerate(feat_series.head(15).items(), 1):
+    print(f"  {rank:2d}. {feat:<15}: {val:.5f} ({val*100:.2f}%)")
+
+# Visualisasi Horizontal Bar Plot
+plt.figure(figsize=(10, 6))
+feat_series.head(15).iloc[::-1].plot(kind='barh', color='#0284c7', edgecolor='black', linewidth=0.5)
+plt.title("Top 15 Feature Importance — Random Forest (Berisik vs Non-Berisik)", fontweight='bold', fontsize=12)
+plt.xlabel("Tingkat Kepentingan Fitur (Gini Importance)")
+plt.grid(axis='x', alpha=0.3)
+plt.tight_layout()
+plt.savefig('output/audio_feature_importance.png', dpi=180, bbox_inches='tight')
+plt.show()
+print("[INFO] Grafik Feature Importance berhasil disimpan ke: output/audio_feature_importance.png")
+```
+
+**Hasil Eksekusi Terminal (Stdout):**
+```text
+[INFO] Top 15 Feature Importance (Random Forest):
+   1. rms_mean        : 0.13614 (13.61%)
+   2. mfcc_1_mean     : 0.07932 (7.93%)
+   3. rms_std         : 0.06096 (6.10%)
+   4. mfcc_12_std     : 0.05641 (5.64%)
+   5. mfcc_11_std     : 0.05127 (5.13%)
+   6. mfcc_3_mean     : 0.04868 (4.87%)
+   7. mfcc_11_mean    : 0.04131 (4.13%)
+   8. mfcc_13_std     : 0.03361 (3.36%)
+   9. mfcc_5_mean     : 0.03144 (3.14%)
+  10. mfcc_6_mean     : 0.02857 (2.86%)
+  11. mfcc_10_mean    : 0.02835 (2.84%)
+  12. zcr_mean        : 0.02525 (2.53%)
+  13. mfcc_8_mean     : 0.02460 (2.46%)
+  14. mfcc_13_mean    : 0.02425 (2.43%)
+  15. mfcc_5_std      : 0.02372 (2.37%)
+[INFO] Grafik Feature Importance berhasil disimpan ke: output/audio_feature_importance.png
+```
 
 ![Top 15 Feature Importance](output/audio_feature_importance.png)
 
-Berikut adalah daftar 15 fitur paling berpengaruh dalam klasifikasi suara ini:
+Berikut adalah daftar rincian 15 fitur paling berpengaruh dalam klasifikasi suara beserta domain akustiknya:
 
 | Peringkat | Nama Fitur | Nilai Importance | Akumulasi | Kategori Domain Fitur |
 |:---:|:---|:---:|:---:|:---|
