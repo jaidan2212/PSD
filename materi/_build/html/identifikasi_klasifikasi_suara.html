@@ -447,9 +447,12 @@ document.write(`
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-identifikasi-dan-pemodelan-klasifikasi">10. Proses Identifikasi dan Pemodelan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-identifikasi-persiapan-data-training-dan-pelatihan-model">10. Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perbedaan-konseptual-ekstraksi-fitur-vs-klasifikasi">10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protokol-pembagian-data-dan-standardisasi">10.2 Protokol Pembagian Data dan Standardisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skema-partisi-data-training-stratified-split-80-20">10.2 Skema Partisi Data Training (Stratified Split 80:20)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-kode-persiapan-data-training-standardisasi-z-score-fitting-model">10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, &amp; Fitting Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-sampel-data-training-sebelum-vs-sesudah-scaling">10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-konfigurasi-pelatihan-model-training-setup">10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-hasil-dan-performa-model">11. Evaluasi Hasil dan Performa Model</a><ul class="nav section-nav flex-column">
@@ -541,7 +544,16 @@ document.write(`
 </ul>
 </li>
 <li><p>Visualisasi dan Analisis Komparatif</p></li>
-<li><p>Proses Identifikasi dan Pemodelan Klasifikasi</p></li>
+<li><p>Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model</p></li>
+</ol>
+<ul class="simple">
+<li><p>10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi</p></li>
+<li><p>10.2 Skema Partisi Data Training (Stratified Split 80:20)</p></li>
+<li><p>10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, &amp; Fitting Model</p></li>
+<li><p>10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)</p></li>
+<li><p>10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)</p></li>
+</ul>
+<ol class="arabic simple" start="11">
 <li><p>Evaluasi Hasil dan Performa Model</p></li>
 <li><p>Pembahasan</p></li>
 <li><p>Kesimpulan</p></li>
@@ -1826,36 +1838,317 @@ Rekaman kamar tidur yang hening namun menggunakan mikrofon dengan <em>thermal no
 </section>
 </section>
 <hr class="docutils" />
-<section id="proses-identifikasi-dan-pemodelan-klasifikasi">
-<h2>10. Proses Identifikasi dan Pemodelan Klasifikasi<a class="headerlink" href="#proses-identifikasi-dan-pemodelan-klasifikasi" title="Link to this heading">#</a></h2>
+<section id="proses-identifikasi-persiapan-data-training-dan-pelatihan-model">
+<h2>10. Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model<a class="headerlink" href="#proses-identifikasi-persiapan-data-training-dan-pelatihan-model" title="Link to this heading">#</a></h2>
+<p>Bagian ini membahas secara komprehensif fase pelatihan model (<em>Training Phase</em>), mencakup perbedaan konseptual antara ekstraksi fitur dan klasifikasi, skema partisi dataset terstratifikasi 80:20, eksekusi kode Python bergaya Jupyter Notebook, standardisasi Z-score pada data latih (<em>preventing data leakage</em>), perbandingan sampel data sebelum vs sesudah transformasi, serta analisis status pelatihan (<em>training fit status</em>).</p>
+<hr class="docutils" />
 <section id="perbedaan-konseptual-ekstraksi-fitur-vs-klasifikasi">
 <h3>10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi<a class="headerlink" href="#perbedaan-konseptual-ekstraksi-fitur-vs-klasifikasi" title="Link to this heading">#</a></h3>
-<p>Dalam disiplin machine learning untuk sinyal audio, penting untuk membedakan dua tahapan berikut:</p>
+<p>Dalam disiplin machine learning untuk sinyal audio, penting untuk membedakan dua tahapan esensial berikut:</p>
 <ul class="simple">
-<li><p><strong>Ekstraksi Fitur (Fitur Audio):</strong> Berperan sebagai representasi data (<em>representation learning</em>). Fitur seperti RMS, Centroid, ZCR, dan MFCC tidak dapat mengambil keputusan klasifikasi dengan sendirinya; mereka hanya menyederhanakan sinyal mentah jutaan sampel audio menjadi 32 parameter numerik yang padat informasi.</p></li>
-<li><p><strong>Algoritma Klasifikasi (Classifier):</strong> Algoritma terawasi seperti SVM dan Random Forest yang bertugas memetakan vektor fitur 32 dimensi tersebut ke dalam label diskrit <span class="math notranslate nohighlight">\(\{0: \text{Berisik}, 1: \text{NonBerisik}\}\)</span> melalui pembentukan bidang batas keputusan (<em>decision boundary</em>).</p></li>
+<li><p><strong>Ekstraksi Fitur (Representation Learning):</strong> Fitur seperti RMS, Centroid, ZCR, dan MFCC tidak dapat mengambil keputusan klasifikasi dengan sendirinya; perannya adalah menyederhanakan sinyal mentah audio digital (yang terdiri dari ratusan ribu sampel amplitudo) menjadi 32 parameter numerik statistik yang padat informasi dan diskriminatif.</p></li>
+<li><p><strong>Algoritma Klasifikasi (Supervised Classifier):</strong> Algoritma terawasi seperti Support Vector Machine (SVM) dan Random Forest bertugas memetakan vektor fitur 32 dimensi tersebut ke dalam ruang keputusan <span class="math notranslate nohighlight">\(\{0: \text{Berisik}, 1: \text{NonBerisik}\}\)</span> melalui pembentukan bidang batas keputusan (<em>decision boundary</em>) yang optimal.</p></li>
 </ul>
 </section>
-<section id="protokol-pembagian-data-dan-standardisasi">
-<h3>10.2 Protokol Pembagian Data dan Standardisasi<a class="headerlink" href="#protokol-pembagian-data-dan-standardisasi" title="Link to this heading">#</a></h3>
-<p>Untuk menghindari <em>data leakage</em> (kebocoran data) dan menjamin keandalan pengujian model:</p>
+<hr class="docutils" />
+<section id="skema-partisi-data-training-stratified-split-80-20">
+<h3>10.2 Skema Partisi Data Training (Stratified Split 80:20)<a class="headerlink" href="#skema-partisi-data-training-stratified-split-80-20" title="Link to this heading">#</a></h3>
+<p>Untuk menjamin evaluasi yang tidak bias dan mencegah <strong>Data Leakage</strong> (kebocoran informasi data uji ke dalam proses estimasi statistik pelatihan), dataset utuh berukuran <strong><span class="math notranslate nohighlight">\(229\)</span> sampel <span class="math notranslate nohighlight">\(\times\)</span> <span class="math notranslate nohighlight">\(32\)</span> fitur</strong> dipartisi secara ketat menjadi dua subset independen:</p>
 <ol class="arabic simple">
-<li><p><strong>Pembagian Data (<em>Stratified Train-Test Split</em>):</strong></p>
-<ul class="simple">
-<li><p>Rasio pembagian data: <strong><span class="math notranslate nohighlight">\(80\%\)</span> Data Latih (<span class="math notranslate nohighlight">\(183\)</span> sampel)</strong> dan <strong><span class="math notranslate nohighlight">\(20\%\)</span> Data Uji (<span class="math notranslate nohighlight">\(46\)</span> sampel)</strong>.</p></li>
-<li><p>Stratifikasi diterapkan agar proporsi kedua kelas di data uji tepat seimbang (<span class="math notranslate nohighlight">\(23\)</span> sampel Berisik dan <span class="math notranslate nohighlight">\(23\)</span> sampel NonBerisik).</p></li>
-</ul>
-</li>
-<li><p><strong>Standardisasi Fitur (<em>Z-score Scaling</em>):</strong>
-Karena satuan fitur berbeda drastis (RMS bernilai <span class="math notranslate nohighlight">\(\approx 0,08\)</span>, Centroid bernilai ribuan Hz, MFCC-1 bernilai ratusan negatif), seluruh fitur diskalakan menggunakan <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>:
-$<span class="math notranslate nohighlight">\(z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}\)</span>$</p></li>
-<li><p><strong>Spesifikasi Algoritma:</strong></p>
-<ul class="simple">
-<li><p><strong>Support Vector Machine (SVM):</strong> Kernel Radial Basis Function (<em>RBF</em>), <span class="math notranslate nohighlight">\(C = 1,0\)</span>, <span class="math notranslate nohighlight">\(\gamma = \text{'scale'}\)</span>. Efektif dalam memetakan data berdimensi sedang ke ruang berdimensi lebih tinggi untuk mencari <em>hyperplane</em> pemisah maksimal.</p></li>
-<li><p><strong>Random Forest Classifier:</strong> Ensemble dari <span class="math notranslate nohighlight">\(100\)</span> pohon keputusan (<em>decision trees</em>), <code class="docutils literal notranslate"><span class="pre">max_depth</span> <span class="pre">=</span> <span class="pre">8</span></code>, <code class="docutils literal notranslate"><span class="pre">random_state</span> <span class="pre">=</span> <span class="pre">42</span></code>. Sangat tangguh terhadap <em>outlier</em> dan mampu mengukur kontribusi kepentingan fitur secara probabilistik.</p></li>
-</ul>
-</li>
+<li><p><strong>Data Training (<span class="math notranslate nohighlight">\(80\%\)</span>):</strong> Berisi <strong><span class="math notranslate nohighlight">\(183\)</span> sampel</strong>. Digunakan secara eksklusif untuk menghitung parameter statistik <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> (<span class="math notranslate nohighlight">\(\mu_{\text{train}}\)</span> dan <span class="math notranslate nohighlight">\(\sigma_{\text{train}}\)</span>) serta melatih bobot model klasifikasi (mencari <em>support vectors</em> pada SVM dan menyusun percabangan <em>split rules</em> pada 100 pohon Random Forest).</p></li>
+<li><p><strong>Data Testing (<span class="math notranslate nohighlight">\(20\%\)</span>):</strong> Berisi <strong><span class="math notranslate nohighlight">\(46\)</span> sampel</strong>. Ditransformasikan menggunakan parameter scaler yang telah dikunci dari Data Training, lalu digunakan murni sebagai pengujian akhir (<em>unseen data evaluation</em>).</p></li>
 </ol>
+<p>Pembagian dilakukan dengan metode <strong>Stratified Splitting</strong> (<code class="docutils literal notranslate"><span class="pre">stratify=y,</span> <span class="pre">random_state=42</span></code>) sehingga rasio kedua kelas tetap seimbang sempurna:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Subset Data</p></th>
+<th class="head text-center"><p>Persentase</p></th>
+<th class="head text-center"><p>Total Sampel</p></th>
+<th class="head text-center"><p>Kelas Berisik (Label 0)</p></th>
+<th class="head text-center"><p>Kelas NonBerisik (Label 1)</p></th>
+<th class="head text-left"><p>Fungsi dalam Pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Data Training (<code class="docutils literal notranslate"><span class="pre">X_train</span></code>, <code class="docutils literal notranslate"><span class="pre">y_train</span></code>)</strong></p></td>
+<td class="text-center"><p><strong>80%</strong></p></td>
+<td class="text-center"><p><strong>183 sampel</strong></p></td>
+<td class="text-center"><p><strong>93 sampel</strong> (50,82%)</p></td>
+<td class="text-center"><p><strong>90 sampel</strong> (49,18%)</p></td>
+<td class="text-left"><p>Menghitung parameter <code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code> (<span class="math notranslate nohighlight">\(\mu, \sigma\)</span>) dan melatih bobot/pohon keputusan model</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Data Testing (<code class="docutils literal notranslate"><span class="pre">X_test</span></code>, <code class="docutils literal notranslate"><span class="pre">y_test</span></code>)</strong></p></td>
+<td class="text-center"><p><strong>20%</strong></p></td>
+<td class="text-center"><p><strong>46 sampel</strong></p></td>
+<td class="text-center"><p><strong>23 sampel</strong> (50,00%)</p></td>
+<td class="text-center"><p><strong>23 sampel</strong> (50,00%)</p></td>
+<td class="text-left"><p>Evaluasi performa akhir pada data yang belum pernah dilihat (<em>unseen data</em>)</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Total Keseluruhan</strong></p></td>
+<td class="text-center"><p><strong>100%</strong></p></td>
+<td class="text-center"><p><strong>229 sampel</strong></p></td>
+<td class="text-center"><p><strong>116 sampel</strong> (50,65%)</p></td>
+<td class="text-center"><p><strong>113 sampel</strong> (49,35%)</p></td>
+<td class="text-left"><p>Dataset utuh untuk pengujian <em>5-Fold Stratified Cross-Validation</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="eksekusi-kode-persiapan-data-training-standardisasi-z-score-fitting-model">
+<h3>10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, &amp; Fitting Model<a class="headerlink" href="#eksekusi-kode-persiapan-data-training-standardisasi-z-score-fitting-model" title="Link to this heading">#</a></h3>
+<p>Berikut adalah blok kode Python yang mengeksekusi pemisahan data training, standardisasi fitur, dan proses fitting model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span>
+
+<span class="c1"># 1. Memuat dataset hasil ekstraksi 32 fitur audio</span>
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;output/hasil_ekstraksi_fitur_audio.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># 2. Memisahkan Matriks Fitur (X: 32 kolom numerik) dan Vektor Target (y)</span>
+<span class="n">feature_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_features</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;durasi_detik&#39;</span><span class="p">]]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df_features</span><span class="p">[</span><span class="n">feature_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df_features</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># 0 = Berisik, 1 = NonBerisik</span>
+
+<span class="c1"># 3. Stratified Splitting (80% Data Training : 20% Data Testing)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">idx_train</span><span class="p">,</span> <span class="n">idx_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">df_features</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Standardisasi Fitur (Fit HANYA pada Data Training untuk mencegah Data Leakage)</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_train_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_scaled</span>  <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== RINGKASAN PARTISI DATA TRAINING ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensi X_train (Mentah)       : </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> (183 sampel x 32 fitur)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dimensi X_train_scaled (Z-Score): </span><span class="si">{</span><span class="n">X_train_scaled</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Distribusi Kelas Data Training : Berisik (0) = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_train</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2"> | NonBerisik (1) = </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_train</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean X_train_scaled            : </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (Mendekati 0)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Std  X_train_scaled            : </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">)</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> (Mendekati 1)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 5. Proses Pelatihan (Training) Model pada Data Latih (183 Sampel)</span>
+<span class="n">svm_model</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">rf_model</span>  <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_depth</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="n">svm_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">rf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1"># 6. Evaluasi Akurasi pada Data Training vs Data Testing</span>
+<span class="n">train_acc_svm</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">svm_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">test_acc_svm</span>  <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">svm_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="n">train_acc_rf</span>  <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">test_acc_rf</span>   <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== LOG PROSES PELATIHAN MODEL (TRAINING PHASE) ===&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SVM RBF] Jumlah Support Vectors : </span><span class="si">{</span><span class="n">svm_model</span><span class="o">.</span><span class="n">n_support_</span><span class="si">}</span><span class="s2"> (Total: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">svm_model</span><span class="o">.</span><span class="n">n_support_</span><span class="p">)</span><span class="si">}</span><span class="s2"> dari 183 sampel latih)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[SVM RBF] Akurasi Data Training  : </span><span class="si">{</span><span class="n">train_acc_svm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% | Akurasi Data Testing: </span><span class="si">{</span><span class="n">test_acc_svm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[RF 100]  Jumlah Pohon Keputusan : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rf_model</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span><span class="si">}</span><span class="s2"> Trees (Max Depth = </span><span class="si">{</span><span class="n">rf_model</span><span class="o">.</span><span class="n">max_depth</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[RF 100]  Akurasi Data Training  : </span><span class="si">{</span><span class="n">train_acc_rf</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">% | Akurasi Data Testing: </span><span class="si">{</span><span class="n">test_acc_rf</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Hasil Eksekusi Terminal (Stdout):</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>=== RINGKASAN PARTISI DATA TRAINING ===
+Dimensi X_train (Mentah)       : (183, 32) (183 sampel x 32 fitur)
+Dimensi X_train_scaled (Z-Score): (183, 32)
+Distribusi Kelas Data Training : Berisik (0) = 93 | NonBerisik (1) = 90
+Mean X_train_scaled            : 0.000000 (Mendekati 0)
+Std  X_train_scaled            : 1.000000 (Mendekati 1)
+
+=== LOG PROSES PELATIHAN MODEL (TRAINING PHASE) ===
+[SVM RBF] Jumlah Support Vectors : [61 59] (Total: 120 dari 183 sampel latih)
+[SVM RBF] Akurasi Data Training  : 93.99% | Akurasi Data Testing: 84.78%
+[RF 100]  Jumlah Pohon Keputusan : 100 Trees (Max Depth = 8)
+[RF 100]  Akurasi Data Training  : 100.00% | Akurasi Data Testing: 82.61%
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="perbandingan-sampel-data-training-sebelum-vs-sesudah-scaling">
+<h3>10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)<a class="headerlink" href="#perbandingan-sampel-data-training-sebelum-vs-sesudah-scaling" title="Link to this heading">#</a></h3>
+<p>Fungsi <code class="docutils literal notranslate"><span class="pre">StandardScaler.fit_transform(X_train)</span></code> menghitung nilai rata-rata <span class="math notranslate nohighlight">\(\mu_{\text{train}}\)</span> dan deviasi standar <span class="math notranslate nohighlight">\(\sigma_{\text{train}}\)</span> untuk setiap kolom fitur pada 183 sampel latih, kemudian mengonversinya ke skor-<span class="math notranslate nohighlight">\(z\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[z = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}\]</div>
+<p>Parameter transformasi yang diperoleh dari Data Training dirangkum pada tabel berikut:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Fitur Akustik Utama</p></th>
+<th class="head text-center"><p>Nilai Rata-rata Latih (<span class="math notranslate nohighlight">\(\mu_{\text{train}}\)</span>)</p></th>
+<th class="head text-center"><p>Deviasi Standar Latih (<span class="math notranslate nohighlight">\(\sigma_{\text{train}}\)</span>)</p></th>
+<th class="head text-center"><p>Rentang Mentah Data Latih</p></th>
+<th class="head text-center"><p>Rentang Terstandardisasi (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">rms_mean</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,060868\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,058107\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0007 - 0,2914\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,04\text{ s.d. }+3,97\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">rms_std</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,037091\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,032393\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0005 - 0,1770\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,13\text{ s.d. }+4,32\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">centroid_mean</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.707,17\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(601,27\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(716,39 - 3.935,05\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,65\text{ s.d. }+3,71\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">zcr_mean</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,086595\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,042109\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0316 - 0,2887\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,31\text{ s.d. }+4,80\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">mfcc_1_mean</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-279,39\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(133,07\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-761,73\text{ s.d. }+2,19\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-3,62\text{ s.d. }+2,12\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">mfcc_3_mean</span></code></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-17,21\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(24,67\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-122,71\text{ s.d. }+35,21\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-4,28\text{ s.d. }+2,13\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Tabel berikut memperlihatkan perbandingan nilai mentah (<em>raw</em>) vs nilai terstandardisasi (<em>scaled</em>) pada 5 rekaman audio sampel latih nyata:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>File Sampel Audio Latih</p></th>
+<th class="head text-center"><p>Label Kelas</p></th>
+<th class="head text-center"><p>RMS Mentah</p></th>
+<th class="head text-center"><p>RMS Scaled (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+<th class="head text-center"><p>Centroid Mentah</p></th>
+<th class="head text-center"><p>Centroid Scaled (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+<th class="head text-center"><p>ZCR Mentah</p></th>
+<th class="head text-center"><p>ZCR Scaled (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+<th class="head text-center"><p>MFCC-1 Mentah</p></th>
+<th class="head text-center"><p>MFCC-1 Scaled (<span class="math notranslate nohighlight">\(z\)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-115_sampel</span> <span class="pre">no</span> <span class="pre">ber...</span></code></p></td>
+<td class="text-center"><p>NonBerisik</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,1338\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+1,26\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.286,3\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,70\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0661\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,49\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-177,1\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,77\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-007</span> <span class="pre">berisikkk</span> <span class="pre">2.mp3</span></code></p></td>
+<td class="text-center"><p>Berisik</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0317\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,50\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.061,1\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,07\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0633\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,55\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-414,6\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-1,02\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-119</span> <span class="pre">berisik</span> <span class="pre">2.mp3</span></code></p></td>
+<td class="text-center"><p>Berisik</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,1155\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,94\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(2.069,0\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,60\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,1143\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,66\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-135,5\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+1,08\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">Okan</span> <span class="pre">rame</span> <span class="pre">1.aac</span></code></p></td>
+<td class="text-center"><p>Berisik</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0444\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,28\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.380,3\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,54\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0714\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,36\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-264,0\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,12\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-169</span> <span class="pre">berisik</span> <span class="pre">3.mp3</span></code></p></td>
+<td class="text-center"><p>Berisik</p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0954\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,59\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.164,5\text{ Hz}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,90\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0,0624\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-0,57\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(-262,2\text{ dB}\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(+0,13\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ringkasan-konfigurasi-pelatihan-model-training-setup">
+<h3>10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)<a class="headerlink" href="#ringkasan-konfigurasi-pelatihan-model-training-setup" title="Link to this heading">#</a></h3>
+<p>Perbandingan arsitektur, parameter pelatihan, serta analisis status fitting antara Support Vector Machine dan Random Forest dirangkum pada tabel berikut:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Parameter / Karakteristik Pelatihan</p></th>
+<th class="head text-left"><p>Support Vector Machine (SVM)</p></th>
+<th class="head text-left"><p>Random Forest Classifier (RF)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Arsitektur Model</strong></p></td>
+<td class="text-left"><p>Kernel Radial Basis Function (RBF)</p></td>
+<td class="text-left"><p>Ensemble dari 100 Decision Trees</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Parameter Regulerisasi / Pembatas</strong></p></td>
+<td class="text-left"><p>Parameter Penalti <span class="math notranslate nohighlight">\(C = 1,0\)</span></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">max_depth</span> <span class="pre">=</span> <span class="pre">8</span></code>, <code class="docutils literal notranslate"><span class="pre">criterion</span> <span class="pre">=</span> <span class="pre">'gini'</span></code></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Koefisien Kernel (<span class="math notranslate nohighlight">\(\gamma\)</span>)</strong></p></td>
+<td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">scale</span></code> (<span class="math notranslate nohighlight">\(\gamma = \frac{1}{32 \times \text{Var}(X)}\)</span>)</p></td>
+<td class="text-left"><p>Tidak menggunakan fungsi kernel</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Ukuran Data Latih Input</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(183\)</span> sampel <span class="math notranslate nohighlight">\(\times\)</span> <span class="math notranslate nohighlight">\(32\)</span> fitur terstandardisasi</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(183\)</span> sampel <span class="math notranslate nohighlight">\(\times\)</span> <span class="math notranslate nohighlight">\(32\)</span> fitur terstandardisasi</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Elemen Penentu Keputusan Model</strong></p></td>
+<td class="text-left"><p><strong>120 Support Vectors</strong> (61 Berisik, 59 NonBerisik)</p></td>
+<td class="text-left"><p><strong>100 Pohon Keputusan</strong> (fitur acak per split: <span class="math notranslate nohighlight">\(\approx \sqrt{32} = 5\)</span>)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Akurasi Data Latih (<em>Training Accuracy</em>)</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\mathbf{93,99\%}\)</span> (172 dari 183 sampel terprediksi benar)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\mathbf{100,00\%}\)</span> (183 dari 183 sampel terprediksi benar)</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Akurasi Data Uji (<em>Testing Accuracy</em>)</strong></p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\mathbf{84,78\%}\)</span> (39 dari 46 sampel terprediksi benar)</p></td>
+<td class="text-left"><p><span class="math notranslate nohighlight">\(\mathbf{82,61\%}\)</span> (38 dari 46 sampel terprediksi benar)</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Analisis Generalisasi (<em>Fit Status</em>)</strong></p></td>
+<td class="text-left"><p><strong>Generalisasi Sangat Baik</strong> (Selisih Train vs Test <span class="math notranslate nohighlight">\(9,21\%\)</span>, tanpa indikasi overfitting ekstrem)</p></td>
+<td class="text-left"><p><strong>Optimal Fit dengan Ensemble</strong> (Akurasi latih <span class="math notranslate nohighlight">\(100\%\)</span> teredam oleh mekanisme agregasi <em>bagging</em> sehingga menghasilkan akurasi uji <span class="math notranslate nohighlight">\(82,61\%\)</span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 </section>
 <hr class="docutils" />
@@ -2487,9 +2780,12 @@ Analisis <em>Feature Importance</em> membuktikan bahwa kombinasi fitur domain wa
 </li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-identifikasi-dan-pemodelan-klasifikasi">10. Proses Identifikasi dan Pemodelan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#proses-identifikasi-persiapan-data-training-dan-pelatihan-model">10. Proses Identifikasi, Persiapan Data Training, dan Pelatihan Model</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perbedaan-konseptual-ekstraksi-fitur-vs-klasifikasi">10.1 Perbedaan Konseptual: Ekstraksi Fitur vs Klasifikasi</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#protokol-pembagian-data-dan-standardisasi">10.2 Protokol Pembagian Data dan Standardisasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skema-partisi-data-training-stratified-split-80-20">10.2 Skema Partisi Data Training (Stratified Split 80:20)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#eksekusi-kode-persiapan-data-training-standardisasi-z-score-fitting-model">10.3 Eksekusi Kode: Persiapan Data Training, Standardisasi Z-Score, &amp; Fitting Model</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perbandingan-sampel-data-training-sebelum-vs-sesudah-scaling">10.4 Perbandingan Sampel Data Training (Sebelum vs Sesudah Scaling)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ringkasan-konfigurasi-pelatihan-model-training-setup">10.5 Ringkasan Konfigurasi Pelatihan Model (Training Setup)</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluasi-hasil-dan-performa-model">11. Evaluasi Hasil dan Performa Model</a><ul class="nav section-nav flex-column">
