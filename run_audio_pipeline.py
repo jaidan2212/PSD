@@ -1,7 +1,10 @@
 """
 Pipeline Analisis Fitur Audio dan Klasifikasi Berisik vs Non-Berisik
 Mata Kuliah: Pengolahan Sinyal Digital (PSD)
-Penulis: Muhammad Zaidan Nabil Rafi (240411100068)
+Penulis:
+- Muhammad Zaidan Nabil Rafi (240411100068)
+- Okan Syailendraa Wahyudi (240411100179)
+- Alifah Sayyidaturrhohma (240411100145)
 """
 
 import os
