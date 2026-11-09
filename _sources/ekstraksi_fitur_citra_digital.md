@@ -1,8 +1,10 @@
-# Ekstraksi Fitur Citra Digital: Analisis Mean dan Standar Deviasi Kanal RGB (Red, Green, Blue)
+# Ekstraksi Fitur Citra Digital: Momen Warna RGB, Konversi Grayscale 8-Bit, Fitur Statistik, Tekstur (GLCM & Tamura), dan Morfologi Geometri
 
 **Mata Kuliah:** Pengolahan Sinyal Digital (PSD)  
-**Topik:** Pengolahan Citra Digital (Digital Image Processing)  
-**Program Studi:** Sains Data / Teknik Informatika  
+**Topik:** Pengolahan Citra Digital (Digital Image Processing & Feature Extraction)  
+**Referensi Utama:**  
+- *Teknik Ekstraksi Fitur Citra*, Dr. Mulaab, S.Si., M.Kom. (Teknik Informatika, Universitas Trunojoyo Madura)  
+- *Image Feature Extraction Techniques: A Comprehensive Review*, S. Hallur & A. Gavade, *Franklin Open* (Elsevier, 2025)  
 **Penulis:** Muhammad Zaidan Nabil Rafi (NIM: 240411100068)  
 **Sampel Citra Fokus:** `24-068 Berantakan 1.jpeg`  
 **Dataset Pendukung:** Direktori `Foto citra/` (6 Sampel Citra Berantakan vs Rapi)  
@@ -12,170 +14,485 @@
 
 ## Daftar Isi
 
-1. Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D
-2. Karakteristik dan Representasi Citra Sampel
-   - 2.1 Identitas dan Resolusi Citra
+1. Pendahuluan: Urgensi dan Taksonomi Ekstraksi Fitur Citra
+   - 1.1 Mengapa Ekstraksi Fitur Penting?
+   - 1.2 Domain Aplikasi Ekstraksi Fitur
+   - 1.3 Taksonomi Empat Kategori Fitur Citra
+2. Karakteristik dan Representasi Citra Sampel (`24-068 Berantakan 1.jpeg`)
+   - 2.1 Dimensi Spasial dan Tensor 3D
    - 2.2 Dekomposisi Kanal Warna RGB
-3. Landasan Teori dan Formulasi Matematis
-   - 3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)
-   - 3.2 Formulasi Nilai Rata-rata (Mean / $\mu$)
-   - 3.3 Formulasi Simpangan Baku (Standar Deviasi / $\sigma$)
-   - 3.4 Formulasi Mean Gabungan Kanal RGB
-4. Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks $5 \times 5$)
-   - 4.1 Ekstraksi Patch Numerik Piksel Nyata
-   - 4.2 Perhitungan Manual Kanal Merah (R)
-   - 4.3 Perhitungan Manual Kanal Hijau (G)
-   - 4.4 Perhitungan Manual Kanal Biru (B)
-   - 4.5 Rekapitulasi Perhitungan Manual Patch
-5. Implementasi Kode Komputasi dengan Python
-   - 5.1 Skrip Ekstraksi Fitur Citra Tunggal (`24-068 Berantakan 1.jpeg`)
-   - 5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra
-6. Hasil Ekstraksi Fitur Aktual pada Citra `24-068 Berantakan 1`
-   - 6.1 Tabel Statistik Lengkap
-   - 6.2 Analisis Distribusi Histogram Intensitas Piksel
-7. Interpretasi Fisis dan Analisis Karakteristik Citra
-   - 7.1 Makna Nilai Rata-rata Kanal (Mean RGB)
-   - 7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)
-8. Studi Komparatif: Citra Kondisi "Berantakan" vs "Rapi"
-9. Relevansi dalam Kecerdasan Buatan dan Computer Vision
-10. Kesimpulan
-11. Referensi
+3. Materi Khusus: Transformasi Citra RGB ke Grayscale 8-Bit
+   - 3.1 Rasionalitas Konversi ke Grayscale
+   - 3.2 Landasan Fisiologis Penglihatan Manusia
+   - 3.3 Formulasi Matematis Metode Konversi
+   - 3.4 Kuantisasi dan Representasi Diskrit 8-Bit
+   - 3.5 Visualisasi Perbandingan Metode Konversi
+4. Kategori 1: Fitur Warna (Color Features)
+   - 4.1 Momen Warna (Color Moments) Orde 1 hingga 4
+   - 4.2 Histogram Warna (Color Histogram)
+   - 4.3 Rata-rata RGB (Average RGB)
+   - 4.4 Analisis Kompleksitas Komputasi dan Memori
+5. Kategori 2: Fitur Statistik Intensitas Global (Statistical Features)
+   - 5.1 Mean dan Varians
+   - 5.2 Standar Deviasi (Simpangan Baku / Kontras Global)
+   - 5.3 Skewness (Kemiringan Asimetri)
+   - 5.4 Kurtosis (Kepuncakan Distribusi)
+   - 5.5 Root Mean Square (RMS) dan Total Energy
+   - 5.6 Entropi Shannon (Ketidakteraturan Sinyal)
+   - 5.7 Smoothness (Tingkat Kehalusan Relatif)
+6. Kategori 3: Fitur Tekstur Spasial (Spatial Texture Features)
+   - 6.1 Gray-Level Co-occurrence Matrix (GLCM) Haralick
+   - 6.2 Simulasi Pembentukan GLCM Langkah demi Langkah (Matriks $3 \times 3$)
+   - 6.3 Lima Atribut Tekstur GLCM (Kontras, Energi, Korelasi, Entropi, Homogenitas)
+   - 6.4 Enam Atribut Tekstur Tamura (Persepsi Visual Manusia)
+7. Kategori 4: Fitur Bentuk dan Geometri (Shape & Geometry Features)
+   - 7.1 Binarisasi dan Deteksi Region of Interest (ROI)
+   - 7.2 Luas (Area) dan Keliling (Perimeter)
+   - 7.3 Sentroid / Pusat Massa
+   - 7.4 Kemiringan Garis (Slope)
+   - 7.5 Indeks Irregularitas (Irregularity Index)
+   - 7.6 Diameter Ekuivalen
+   - 7.7 Convex Area dan Solidity
+8. Simulasi Perhitungan Manual Terpadu (Sub-Matriks $5 \times 5$)
+   - 8.1 Data Matriks Asli Patch $5 \times 5$
+   - 8.2 Konversi Manual RGB ke Grayscale 8-Bit
+   - 8.3 Perhitungan Statistik Manual (Mean, Varians, Standar Deviasi, RMS, Smoothness)
+9. Hasil Ekstraksi Fitur Aktual pada Citra `24-068 Berantakan 1`
+   - 9.1 Tabel Parameter Momen Warna RGB
+   - 9.2 Tabel Fitur Statistik Citra Grayscale 8-Bit
+   - 9.3 Tabel Fitur Tekstur GLCM Haralick
+   - 9.4 Tabel Fitur Morfologi Geometri ROI
+10. Implementasi Pipeline Komputasi dengan Python
+11. Analisis Komparatif: Citra Berantakan vs Rapi & Strategi Fusi Fitur
+    - 11.1 Evaluasi Fitur pada 6 Sampel Dataset
+    - 11.2 Rangkuman Kelebihan, Kekurangan, Efisiensi, dan Akurasi
+    - 11.3 Strategi Fusi Multi-Fitur
+12. Kesimpulan
+13. Referensi
 
 ---
 
-## 1. Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D
+## 1. Pendahuluan: Urgensi dan Taksonomi Ekstraksi Fitur Citra
 
-Dalam disiplin ilmu **Pengolahan Sinyal Digital (PSD)**, sinyal didefinisikan sebagai fungsi yang membawa informasi mengenai status atau perilaku suatu fenomena fisis. Berdasarkan dimensinya:
+### 1.1 Mengapa Ekstraksi Fitur Penting?
 
-1. **Sinyal 1-Dimensi (1D):** Sinyal bervariasi terhadap satu variabel independen, umumnya adalah waktu ($t$). Contoh paling nyata adalah **sinyal suara (audio)** $s(t)$, di mana amplitudo tekanan gelombang udara berubah terhadap waktu.
-2. **Sinyal 2-Dimensi (2D):** Sinyal bervariasi terhadap dua variabel spasial independen, yaitu koordinat horizontal ($x$) dan vertikal ($y$). Contohnya adalah **citra digital monokrom / grayscale** $I(x, y)$, di mana setiap titik merepresentasikan intensitas kecerahan pada koordinat tersebut.
-3. **Sinyal Multi-Kanal / Tensor 3-Dimensi (3D):** Citra digital berwarna tersusun atas sekumpulan bidang 2D independen yang mewakili komponen warna tertentu. Pada model warna **RGB (Red, Green, Blue)**, sinyal citra dimodelkan sebagai fungsi $I(x, y, c)$, di mana $c \in \{R, G, B\}$ mewakili indeks kanal warna.
+Dalam bidang **Pengolahan Sinyal Digital (PSD)** dan **Computer Vision**, citra digital beresolusi tinggi menyimpan data yang sangat besar. Sebagai contoh, citra beresolusi $1600 \times 1200$ piksel dengan format RGB menyimpan $5.760.000$ nilai numerik mentah (*raw pixels*). Memproses jutaan piksel ini secara langsung untuk tugas klasifikasi atau pengenalan pola sangat tidak efisien, membutuhkan memori masif, dan rentan terhadap *curse of dimensionality*.
+
+**Ekstraksi Fitur (*Feature Extraction*)** adalah proses matematis untuk mentransformasikan data citra mentah menjadi sekumpulan representasi numerik yang ringkas (*compact*), informatif, dan memiliki daya pisah (*discriminative power*) yang tinggi, dengan tetap mempertahankan karakteristik esensial dari citra tersebut.
 
 ```
-+-----------------------------------------------------------------------------------+
-|                            HIERARKI SINYAL DIGITAL                               |
-+-----------------------------------------------------------------------------------+
-|  1D: Sinyal Audio        ->  s(t)             Amplitudo = f(Waktu)                |
-|  2D: Citra Grayscale     ->  I(x, y)          Kecerahan = f(Baris, Kolom)         |
-|  3D: Citra Warna (RGB)   ->  I(x, y, c)       Intensitas = f(Baris, Kolom, Kanal) |
-+-----------------------------------------------------------------------------------+
++------------------+       Ekstraksi Fitur       +-------------------+       Model Keputusan       +----------------------+
+| Citra Mentah     | ------------------------>   | Vektor Fitur (x)  | ------------------------>   | Keputusan / Prediksi |
+| 5.760.000 Piksel |   Reduksi Dimensi Spasial   | d-Dimensi Terpilih|     ML / Deep Learning      | (Berantakan vs Rapi) |
++------------------+                             +-------------------+                             +----------------------+
 ```
 
-Tujuan mendasar dari ekstraksi fitur statistik citra adalah mereduksi volume data piksel yang sangat besar (jutaan titik) menjadi sekumpulan ringkasan deskriptor numerik yang bermakna. Dua deskriptor statistik momen warna (*color moments*) yang paling fundamental adalah **Mean (Rata-rata)** dan **Standar Deviasi (Simpangan Baku)**.
+### 1.2 Domain Aplikasi Ekstraksi Fitur
+
+Ekstraksi fitur citra menjadi fondasi utama dalam berbagai sistem cerdas modern:
+1. **Pengenalan Wajah & Biometrik:** Mengidentifikasi individu berdasarkan proporsi geometris wajah, jarak antar-landmark, dan tekstur kulit.
+2. **Analisis Deteksi Emosi (Affective Computing):** Mendeteksi perubahan mikro-ekspresi, kerutan wajah (fitur tekstur), dan perubahan rona wajah (fitur warna).
+3. **Diagnostik Citra Medis:** Menganalisis tekstur jaringan pada CT-Scan, MRI, atau rontgen untuk mendeteksi massa tumor, lesi, atau kelainan patologis.
+4. **Keselamatan Pengemudi (Driver Monitoring System):** Mengamati kedipan mata, orientasi kepala (*head pose*), dan kelelahan pengemudi secara *real-time*.
+5. **Klasifikasi Pemandangan & Tata Guna Lahan:** Membedakan area vegetasi, perairan, dan pemukiman pada citra satelit/drone.
+
+### 1.3 Taksonomi Empat Kategori Fitur Citra
+
+Merujuk pada tinjauan ilmiah komprehensif oleh **Hallur & Gavade (Franklin Open, Elsevier 2025)** serta silabus materi perkuliahan *Teknik Ekstraksi Fitur Citra* oleh **Dr. Mulaab (UTM)**, fitur citra digital diklasifikasikan ke dalam 4 kategori utama:
+
+```
+                                      TAKSONOMI FITUR CITRA DIGITAL
+                                                    |
+       +--------------------+-----------------------+------------------------+----------------------+
+       |                    |                                                |                      |
+[1. Fitur Warna]     [2. Fitur Statistik]                             [3. Fitur Tekstur]     [4. Fitur Geometri]
+  - Momen Warna        - Mean (μ) & Varians (σ²)                        - GLCM Haralick        - Area & Perimeter
+  - Color Histogram    - Standar Deviasi (σ)                              * Contrast             - Centroid (xu, yu)
+  - Average RGB        - Skewness (γ₁) & Kurtosis (γ₂)                    * Energy               - Slope (m)
+                       - Root Mean Square (RMS)                           * Correlation          - Irregularity Index
+                       - Total Energy (E)                                 * Entropy              - Equiv. Diameter
+                       - Entropi Shannon (H)                              * Homogeneity          - Convex Area
+                       - Smoothness (Q)                                 - Tamura Features        - Solidity (S)
+                                                                          * Coarseness, Contrast,
+                                                                            Directionality, Roughness
+```
 
 ---
 
-## 2. Karakteristik dan Representasi Citra Sampel
+## 2. Karakteristik dan Representasi Citra Sampel (`24-068 Berantakan 1.jpeg`)
 
-### 2.1 Identitas dan Resolusi Citra
+### 2.1 Dimensi Spasial dan Tensor 3D
 
-Pada materi ini, objek analisis utama yang dibedah secara komprehensif adalah:
-
-* **Nama Berkas:** `24-068 Berantakan 1.jpeg`
-* **Kategori Objek:** Citra Ruang/Meja Kondisi *Berantakan* (Cluttered Scene)
-* **Format Berkas:** JPEG (Joint Photographic Experts Group)
-* **Lebar Citra ($W$ / Width):** $1600$ piksel (arah sumbu horizontal $x$)
-* **Tinggi Citra ($H$ / Height):** $1200$ piksel (arah sumbu vertikal $y$)
-* **Jumlah Kanal ($C$ / Channels):** $3$ kanal warna aditif (Red, Green, Blue)
-* **Total Piksel per Kanal:** 
-  $$N = W \times H = 1600 \times 1200 = 1.920.000\text{ piksel}$$
-* **Total Data Numerik (Elemen Matriks):**
-  $$N_{\text{total}} = 1.920.000 \times 3 = 5.760.000\text{ nilai intensitas}$$
+Citra yang dijadikan objek pengujian utama pada penelitian ini adalah:
+* **Nama Berkas:** `24-068 Berantakan 1.jpeg` (Koleksi NIM 240411100068)
+* **Kondisi Objek:** Area meja/ruang dalam kondisi tidak tertata (*Berantakan*)
+* **Resolusi Horizontal (Lebar / $W$):** $1600$ piksel
+* **Resolusi Vertikal (Tinggi / $H$):** $1200$ piksel
+* **Jumlah Kanal ($C$):** $3$ saluran warna (Red, Green, Blue)
+* **Total Piksel Spasial per Kanal:** $N = W \times H = 1600 \times 1200 = 1.920.000$ piksel
+* **Total Elemen Tensor Citra:** $1.920.000 \times 3 = 5.760.000$ elemen bernilai $[0, 255]$
 
 ### 2.2 Dekomposisi Kanal Warna RGB
 
-Citra digital berwarna tidak disimpan sebagai warna tunggal di memori, melainkan ditumpuk dari 3 matriks intensitas 2 dimensi:
-1. **Bidang Merah (Red Plane / $I_R$):** Menyimpan energi panjang gelombang merah ($\approx 700\text{ nm}$).
-2. **Bidang Hijau (Green Plane / $I_G$):** Menyimpan energi panjang gelombang hijau ($\approx 546\text{ nm}$).
-3. **Bidang Biru (Blue Plane / $I_B$):** Menyimpan energi panjang gelombang biru ($\approx 435\text{ nm}$).
+Citra digital warna tersusun atas superposisi 3 bidang intensitas:
+1. **Kanal Merah ($I_R$):** Membawa komponen spektral merah ($\approx 700\text{ nm}$).
+2. **Kanal Hijau ($I_G$):** Membawa komponen spektral hijau ($\approx 546\text{ nm}$).
+3. **Kanal Biru ($I_B$):** Membawa komponen spektral biru ($\approx 435\text{ nm}$).
 
 ![Dekomposisi Kanal RGB](output/citra_rgb_decomposition.png)
 
-> **Interpretasi Visual Gambar di Atas:**
-> - Pada baris atas, kanal R, G, dan B ditampilkan dalam skala keabuan (*grayscale intensity*). Bagian yang tampak terang (putih) menunjukkan bahwa piksel tersebut memiliki kontribusi energi yang dominan pada kanal bersangkutan.
-> - Pada baris bawah, masing-masing kanal diisolasi ke dalam warna monokromatis aslinya (merah murni, hijau murni, dan biru murni) sebelum digabungkan kembali (*channel superposition*) membentuk citra RGB penuh.
+---
+
+## 3. Materi Khusus: Transformasi Citra RGB ke Grayscale 8-Bit
+
+### 3.1 Rasionalitas Konversi ke Grayscale
+
+Banyak algoritma analisis tekstur (seperti GLCM dan Tamura), deteksi tepi (Sobel, Canny), serta segmentasi morfologi yang dirancang bekerja pada **sinyal intensitas tunggal 2D** ($I(x, y)$), bukan tensor 3D. 
+
+Alasan konversi RGB ke Grayscale:
+1. **Reduksi Dimensi Data:** Mengurangi volume data sebesar $66.7\%$ (dari 3 matriks menjadi 1 matriks), mempercepat pemrosesan algoritma secara signifikan.
+2. **Fokus pada Informasi Struktural:** Mata manusia dan sistem penglihatan komputer mengenali objek, tepi, dan tekstur terutama melalui kontras luminansi (terang-gelap), bukan melalui nilai kromatisitas warna murni.
+3. **Penyederhanaan Komputasi Matriks:** Matriks $1$ saluran memudahkan operasi konvolusi spasial, penapisan filter frekuensi, dan penentuan ambang batas (*thresholding*).
+
+### 3.2 Landasan Fisiologis Penglihatan Manusia
+
+Retina mata manusia memiliki sel fotoreseptor kerucut (*cone cells*) dengan sensitivitas yang tidak merata terhadap panjang gelombang cahaya:
+* Sel kerucut tipe **M (Medium)** paling peka terhadap spektrum **Hijau** ($\approx 530\text{ nm}$).
+* Sel kerucut tipe **L (Long)** peka terhadap spektrum **Merah** ($\approx 560\text{ nm}$).
+* Sel kerucut tipe **S (Short)** paling sedikit jumlahnya dan kurang peka terhadap spektrum **Biru** ($\approx 420\text{ nm}$).
+
+Oleh karena itu, konversi ke grayscale tidak boleh sekadar merata-ratakan nilai R, G, dan B secara seimbang, melainkan harus memberikan bobot pembobotan persepsi (*perceptual luminance weighting*).
+
+```
+Sensitivitas Spektral Mata Manusia:
+Hijau (~59%) >>> Merah (~30%) >>> Biru (~11%)
+```
+
+### 3.3 Formulasi Matematis Metode Konversi
+
+Terdapat beberapa metode utama untuk mengonversi citra warna RGB menjadi citra monokromatik (Grayscale):
+
+#### 1. Metode Luminansi Standar ITU-R BT.601 (NTSC/PAL)
+Metode pembobotan psikofisiologis standar yang diadopsi secara luas dalam penyiaran televisi dan pemrosesan citra digital:
+
+$$Y_{\text{BT.601}} = 0.299 \cdot R + 0.587 \cdot G + 0.114 \cdot B$$
+
+Bobot hijau ($0.587$) paling tinggi karena mata manusia paling sensitif terhadap cahaya hijau.
+
+#### 2. Metode Luminansi Standar ITU-R BT.709 (HDTV / sRGB)
+Standar yang disesuaikan untuk monitor modern dan HDTV:
+
+$$Y_{\text{BT.709}} = 0.2126 \cdot R + 0.7152 \cdot G + 0.0722 \cdot B$$
+
+#### 3. Metode Rata-Rata Aritmatika Sederhana (Average Method)
+Metode tanpa pembobotan, menghitung rata-rata nilai ketiga kanal:
+
+$$Y_{\text{Average}} = \frac{R + G + B}{3}$$
+
+Kelemahan metode ini adalah mengabaikan sensitivitas visual mata manusia, sehingga area berwarna hijau terang tampak lebih gelap dari aslinya, dan area biru tampak terlalu terang.
+
+#### 4. Metode Desaturasi / Lightness
+Mengambil nilai tengah antara intensitas saluran tertinggi dan terendah:
+
+$$Y_{\text{Lightness}} = \frac{\max(R, G, B) + \min(R, G, B)}{2}$$
 
 ---
 
-## 3. Landasan Teori dan Formulasi Matematis
+### 3.4 Kuantisasi dan Representasi Diskrit 8-Bit
 
-### 3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)
+Citra grayscale standar menggunakan kedalaman bit **8-bit per piksel** (`uint8`). Artinya, hasil perhitungan kontinu $Y$ harus dibulatkan (*rounding*) ke bilangan bulat terdekat dan dibatasi dalam rentang $[0, 255]$:
 
-Setiap nilai piksel pada citra digital standar disimpan menggunakan format bilangan bulat tak bertanda 8-bit (*unsigned 8-bit integer* / `uint8`).
+$$I_{\text{gray}}(i, j) = \text{clip}\left( \text{round}\left( Y(i, j) \right), 0, 255 \right)$$
 
-Rentang nilai intensitas yang mungkin dimiliki oleh setiap piksel pada kanal $c$ adalah:
+* $I_{\text{gray}} = 0 \rightarrow$ Hitam mutlak (tidak ada cahaya).
+* $I_{\text{gray}} = 128 \rightarrow$ Abu-abu netral (*mid-gray*).
+* $I_{\text{gray}} = 255 \rightarrow$ Putih terang maksimal.
 
-$$I_c(i, j) \in [0, 2^{8} - 1] = [0, 255]$$
+---
 
-* Nilai **$0$** melambangkan ketiadaan energi cahaya secara total (hitam mutlak).
-* Nilai **$255$** melambangkan saturasi energi cahaya penuh (kecerahan maksimal).
-* Kombinasi $(R=255, G=255, B=255)$ menghasilkan warna **putih murni**, sedangkan $(R=0, G=0, B=0)$ menghasilkan warna **hitam murni**.
+### 3.5 Visualisasi Perbandingan Metode Konversi
 
-```
-Hitam [0] <------------------- Abu-abu [128] -------------------> Putih Terang [255]
-```
+Berikut adalah visualisasi hasil konversi citra nyata `24-068 Berantakan 1.jpeg` ke grayscale 8-bit menggunakan Luminansi BT.601 vs Rata-Rata Sederhana:
 
-### 3.2 Formulasi Nilai Rata-rata (Mean / $\mu$)
+![Perbandingan Konversi RGB ke Grayscale](output/citra_rgb_to_grayscale_comparison.png)
 
-**Mean (Nilai Rata-rata)** adalah momen pertama (*first-order statistical moment*) dari distribusi intensitas warna. Mean mengukur **tendensi sentral** atau tingkat kecerahan rata-rata (*average brightness / luminance*) suatu kanal citra.
+> **Analisis Gambar:**
+> Panel paling kanan menampilkan selisih absolut $|Y_{\text{BT.601}} - Y_{\text{Average}}|$. Terlihat area dengan perbedaan intensitas hingga $8 - 15$ level keabuan, terutama pada objek berwarna merah hangat dan kayu di mana pembobotan mata manusia menghasilkan luminansi yang lebih alami dan bergradasi halus.
 
-Secara matematis, untuk citra berukuran $H \times W$ pada kanal $c \in \{R, G, B\}$, nilai Mean didefinisikan sebagai:
+---
 
-$$\mu_c = \frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} I_c(i, j)$$
+## 4. Kategori 1: Fitur Warna (Color Features)
 
-Dimana:
-* $\mu_c$ adalah nilai rata-rata intensitas untuk kanal warna $c$.
-* $H$ adalah tinggi citra dalam satuan piksel (jumlah baris matriks).
-* $W$ adalah lebar citra dalam satuan piksel (jumlah kolom matriks).
-* $I_c(i, j)$ adalah nilai intensitas piksel pada baris ke-$i$ dan kolom ke-$j$ pada kanal $c$.
-* $H \times W$ adalah jumlah total piksel pada satu bidang kanal ($N$).
+### 4.1 Momen Warna (Color Moments) Orde 1 hingga 4
 
-### 3.3 Formulasi Simpangan Baku (Standar Deviasi / $\sigma$)
+Momen warna adalah deskriptor statistik yang mencirikan distribusi probabilitas intensitas warna di dalam citra. Untuk setiap kanal warna $C \in \{R, G, B\}$ dengan dimensi $M \times N$:
 
-**Standar Deviasi (Simpangan Baku)** adalah momen sentral kedua (*second-order central moment*) yang telah diakarkuadratkan. Standar deviasi mengukur seberapa jauh nilai intensitas piksel tersebar dari nilai rata-ratanya.
+#### 1. Momen Pertama: Mean ($\mu_C$)
+Mengukur tendensi sentral atau tingkat kecerahan rata-rata kanal warna:
 
-Dalam domain citra, standar deviasi merupakan representasi langsung dari **kontras citra (*image contrast*)** dan tingkat dinamika tekstur visual:
-* **$\sigma$ bernilai kecil:** Nilai piksel berkumpul sangat dekat di sekitar mean. Citra terlihat monoton, seragam, atau berkontras rendah (*low contrast / flat*).
-* **$\sigma$ bernilai besar:** Terdapat rentang variasi yang lebar antara area gelap (bayangan) dan area terang (sorotan cahaya). Citra memiliki dinamika kontras tinggi dan kaya detail visual (*high contrast*).
+$$\mu_C = \frac{1}{M \times N} \sum_{i=1}^{M} \sum_{j=1}^{N} C(i, j)$$
 
-Rumus matematis Standar Deviasi Populasi ($\sigma_c$) pada kanal $c$ adalah:
+#### 2. Momen Kedua: Varians ($\sigma_C^2$) dan Standar Deviasi ($\sigma_C$)
+Mengukur sebaran atau dispersi warna di sekitar nilai rata-rata:
 
-$$\sigma_c = \sqrt{\frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} \left( I_c(i, j) - \mu_c \right)^2}$$
+$$\sigma_C = \sqrt{\frac{1}{M \times N} \sum_{i=1}^{M} \sum_{j=1}^{N} \left( C(i, j) - \mu_C \right)^2}$$
 
-Untuk Standar Deviasi Sampel ($s_c$) dengan koreksi Bessel ($N - 1$):
+#### 3. Momen Ketiga: Skewness ($\gamma_{1, C}$)
+Mengukur tingkat asimetri distribusi warna terhadap nilai mean:
 
-$$s_c = \sqrt{\frac{1}{H \times W - 1} \sum_{i=1}^{H} \sum_{j=1}^{W} \left( I_c(i, j) - \mu_c \right)^2}$$
+$$\text{Skewness}_C = \frac{1}{M \times N} \sum_{i=1}^{M} \sum_{j=1}^{N} \left( \frac{C(i, j) - \mu_C}{\sigma_C} \right)^3$$
 
-> **Catatan Teknis PSD:**
-> Karena jumlah piksel citra sampel kita sangat besar ($N = 1.920.000$), selisih antara pembagi $N$ dan $N - 1$ adalah:
-> $$\frac{1}{1.920.000} \text{ vs } \frac{1}{1.919.999} \approx 0.0000005$$
-> Perbedaannya sangat kecil ($< 0.00002$), sehingga standar deviasi populasi ($\sigma$) dan sampel ($s$) menghasilkan nilai yang secara praktis identik.
+* $\text{Skewness} > 0$: Ekor distribusi menjulur ke kanan (didominasi area gelap dengan sedikit highlight terang).
+* $\text{Skewness} < 0$: Ekor distribusi menjulur ke kiri (didominasi area terang dengan sedikit bayangan gelap).
+* $\text{Skewness} \approx 0$: Distribusi warna simetris seimbang di sekitar mean.
 
-### 3.4 Formulasi Mean Gabungan Kanal RGB
+#### 4. Momen Keempat: Kurtosis ($\gamma_{2, C}$)
+Mengukur ketajaman puncak (*tailedness/peakedness*) dari distribusi warna:
 
-Untuk mendapatkan gambaran umum kecerahan citra secara keseluruhan, kita dapat menghitung rata-rata dari ketiga kanal warna (*mean of RGB channel means*):
+$$\text{Kurtosis}_C = \left[ \frac{1}{M \times N} \sum_{i=1}^{M} \sum_{j=1}^{N} \left( \frac{C(i, j) - \mu_C}{\sigma_C} \right)^4 \right] - 3$$
+
+Pengurangan angka $3$ menghasilkan *Excess Kurtosis* (distribusi normal Gaussian bernilai $0$):
+* $\text{Kurtosis} > 0$ (*Leptokurtik*): Distribusi berpuncak tajam dan berekor tebal (banyak nilai ekstrem/outlier).
+* $\text{Kurtosis} < 0$ (*Platikurtik*): Distribusi berpuncak mendatar dan berekor tipis (sebaran nilai merata).
+
+---
+
+### 4.2 Histogram Warna (Color Histogram)
+
+Histogram warna mencatat frekuensi kemunculan setiap nilai intensitas warna dalam bin tertentu. Jika digunakan $B$ bin per kanal, maka citra warna 3D dapat direpresentasikan sebagai histogram bersama (*joint histogram*) berdimensi $B \times B \times B$.
+
+### 4.3 Rata-rata RGB (Average RGB)
+
+Rata-rata RGB merefleksikan tanda tangan warna global (*global chromatic signature*) dari citra:
 
 $$\mu_{\text{RGB}} = \frac{\mu_R + \mu_G + \mu_B}{3}$$
 
-Secara ekuivalen, $\mu_{\text{RGB}}$ juga sama dengan penjumlahan seluruh $5.760.000$ nilai piksel yang dibagi dengan total elemen pada tensor 3D:
+---
 
-$$\mu_{\text{RGB}} = \frac{1}{3 \times H \times W} \sum_{c \in \{R, G, B\}} \sum_{i=1}^{H} \sum_{j=1}^{W} I_c(i, j)$$
+### 4.4 Analisis Kompleksitas Komputasi dan Memori
+
+Tabel berikut menyajikan perbandingan efisiensi penyimpanan antara Momen Warna dan Histogram Warna (mengacu pada data empiris Hallur & Gavade, Elsevier 2025):
+
+| Tipe Fitur Warna | Resolusi / Bin | Dimensi Vektor Fitur | Konsumsi Memori (`float32`) | Karakteristik Utama |
+| :--- | :---: | :---: | :---: | :--- |
+| **Color Moments (Mean, Std, Skew)** | $3$ kanal $\times 3$ momen | **$9$ fitur** | **$36$ Byte (Tetap)** | Sangat cepat, hemat memori, ideal untuk IoT & *real-time* |
+| **Color Moments (Orde 1-4)** | $3$ kanal $\times 4$ momen | **$12$ fitur** | **$48$ Byte (Tetap)** | Representasi distribusi warna sangat lengkap |
+| **Color Histogram ($8^3$)** | $8$ bin per kanal | $512$ bin | $2.048$ Byte ($2$ KB) | Menangkap detail kromatik, sensitif pencahayaan |
+| **Color Histogram ($16^3$)** | $16$ bin per kanal | $4.096$ bin | $16.384$ Byte ($16$ KB) | Dimensi tinggi, memerlukan normalisasi |
+| **Color Histogram ($32^3$)** | $32$ bin per kanal | $32.768$ bin | $131.072$ Byte (~$128$ KB) | Sangat berat, rentan *overfitting* pada ML |
 
 ---
 
-## 4. Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks $5 \times 5$)
+## 5. Kategori 2: Fitur Statistik Intensitas Global (Statistical Features)
 
-Bagi seorang pemula atau mahasiswa yang baru mempelajari pengolahan citra digital, membayangkan operasi matematika pada $1.920.000$ piksel secara langsung dapat terasa abstrak. 
+Fitur statistik mengevaluasi sifat non-deterministik dan sebaran tingkat keabuan pada citra grayscale $I(x, y)$ berukuran $M \times N$ ($N_{\text{total}} = M \times N$):
 
-Oleh karena itu, pada bagian ini disajikan **simulasi perhitungan manual langkah demi langkah** menggunakan sub-matriks berukuran $5 \times 5$ ($N = 25$ piksel) yang dipotong langsung dari bagian tengah citra nyata `24-068 Berantakan 1.jpeg` pada koordinat baris $y \in [600, 604]$ dan kolom $x \in [800, 804]$.
+### 5.1 Mean ($\mu$) dan Varians ($\sigma^2$)
+$$\mu = \frac{1}{N_{\text{total}}} \sum_{x=1}^{M} \sum_{y=1}^{N} I(x, y)$$
 
-![Sub-Matriks Patch 5x5](output/citra_pixel_matrix_patch.png)
+$$\text{Variance} = \sigma^2 = \frac{1}{N_{\text{total}}} \sum_{x=1}^{M} \sum_{y=1}^{N} \left( I(x, y) - \mu \right)^2$$
 
-### 4.1 Ekstraksi Patch Numerik Piksel Nyata
+### 5.2 Standar Deviasi ($\sigma$ / Kontras Statistik)
+Standar deviasi merupakan ukuran utama dari kontras intensitas global citra:
 
-Berikut adalah matriks integer $5 \times 5$ hasil ekstraksi aktual dari citra:
+$$\text{Contrast}_{\text{stat}} = \sigma = \sqrt{\frac{1}{N_{\text{total}}} \sum_{x=1}^{M} \sum_{y=1}^{N} \left( I(x, y) - \mu \right)^2}$$
 
-| Koordinat | Kanal Merah ($I_R$) | Kanal Hijau ($I_G$) | Kanal Biru ($I_B$) |
+### 5.3 Root Mean Square (RMS)
+Mengukur energi magnitudo rata-rata dari sinyal kecerahan citra:
+
+$$\text{RMS} = \sqrt{\frac{1}{M \times N} \sum_{x=1}^{M} \sum_{y=1}^{N} I(x, y)^2}$$
+
+### 5.4 Total Energy ($E$)
+Konsentrasi kuadratik energi intensitas piksel secara kumulatif:
+
+$$E = \sum_{x=1}^{M} \sum_{y=1}^{N} I(x, y)^2$$
+
+### 5.5 Entropi Shannon ($H$)
+Mengukur tingkat keacakan, ketidakteraturan (*randomness*), atau kompleksitas informasi dalam citra:
+
+$$H = - \sum_{i=0}^{L-1} p(i) \log_2 p(i)$$
+
+Dimana $L$ adalah jumlah tingkat keabuan ($L = 256$ untuk 8-bit), dan $p(i)$ adalah probabilitas kemunculan piksel dengan intensitas $i$. Nilai entropi yang mendekati $8$ bit menandakan tekstur visual yang sangat kaya dan tidak berpola tunggal.
+
+### 5.6 Smoothness (Tingkat Kehalusan Relatif / $Q$)
+Mengukur kehalusan relatif permukaan intensitas citra ($Q \in [0, 1)$):
+
+$$Q = 1 - \frac{1}{1 + \sigma^2}$$
+
+* Jika varians $\sigma^2 = 0$ (bidang warna polos sempurna), maka $Q = 0$ (sangat halus).
+* Semakin besar varians kontras citra, nilai $Q$ akan mendekati $1$ (kasar/bertekstur).
+
+---
+
+## 6. Kategori 3: Fitur Tekstur Spasial (Spatial Texture Features)
+
+### 6.1 Gray-Level Co-occurrence Matrix (GLCM) Haralick
+
+Tekstur tidak dapat dijelaskan hanya melalui statistik piksel independen, melainkan membutuhkan hubungan spasial antar-piksel tetangga. **GLCM** mentabulasi seberapa sering pasangan piksel dengan intensitas keabuan tertentu muncul pada jarak offset $d$ dan orientasi sudut $\theta$ tertentu ($\theta = 0^\circ$ horizontal, $45^\circ$ diagonal, $90^\circ$ vertikal, atau $135^\circ$).
+
+```
+Offset Spasial Horizontal (d=1, θ=0°):
+[ Piksel Acuan (x, y) ]  ---- d=1 ---->  [ Piksel Tetangga (x, y+1) ]
+```
+
+---
+
+### 6.2 Simulasi Pembentukan GLCM Langkah demi Langkah (Matriks $3 \times 3$)
+
+Untuk memahami cara kerja GLCM secara intuitif, berikut disajikan simulasi pembentukan matriks GLCM menggunakan contoh resmi dari materi perkuliahan UTM:
+
+Diberikan citra grayscale sederhana berukuran $3 \times 3$ piksel dengan 3 tingkat keabuan ($0, 1, 2$):
+
+$$\text{Citra Input } I = \begin{bmatrix} 0 & 1 & 1 \\ 0 & 2 & 1 \\ 2 & 2 & 0 \end{bmatrix}$$
+
+Parameter offset: Jarak $d = 1$, arah horizontal kanan $\theta = 0^\circ$.
+
+#### Langkah 1: Observasi Pasangan Piksel Horisontal
+* **Baris 1:** $(0, 1)$ dan $(1, 1)$
+* **Baris 2:** $(0, 2)$ dan $(2, 1)$
+* **Baris 3:** $(2, 2)$ dan $(2, 0)$
+
+*(Piksel terakhir di ujung kanan kolom tidak memiliki tetangga kanan, sehingga tidak berpasangan).*  
+Total pasangan teramati = $6$ pasangan.
+
+#### Langkah 2: Tabulasi Matriks Frekuensi GLCM Mentah
+Baris matriks menyatakan nilai piksel asal ($i$), dan kolom menyatakan nilai piksel tetangga ($j$):
+
+$$\text{GLCM Mentah} = \begin{bmatrix} 
+0 & 1 & 1 \\ 
+0 & 1 & 0 \\ 
+1 & 1 & 1 
+\end{bmatrix}$$
+
+#### Langkah 3: Normalisasi Matriks Menjadi Probabilitas $P(i, j)$
+Setiap elemen dibagi dengan total frekuensi ($6$):
+
+$$P(i, j) = \begin{bmatrix} 
+0 & 1/6 & 1/6 \\ 
+0 & 1/6 & 0 \\ 
+1/6 & 1/6 & 1/6 
+\end{bmatrix} \approx \begin{bmatrix} 
+0.0000 & 0.1667 & 0.1667 \\ 
+0.0000 & 0.1667 & 0.0000 \\ 
+0.1667 & 0.1667 & 0.1667 
+\end{bmatrix}$$
+
+Total penjumlahan $\sum_{i} \sum_{j} P(i, j) = 6 \times \frac{1}{6} = 1.0$.
+
+---
+
+### 6.3 Lima Atribut Tekstur GLCM (Haralick Features)
+
+Dari matriks probabilitas $P(i, j)$, dihitung 5 fitur tekstur utama:
+
+#### 1. Contrast (Kontras Spasial)
+Mengukur variasi intensitas lokal antar-piksel bertetangga. Nilai tinggi menunjukkan transisi yang tajam (kasar):
+
+$$\text{Contrast}_{\text{GLCM}} = \sum_{i=1}^{N} \sum_{j=1}^{N} (i - j)^2 P(i, j)$$
+
+*Pada contoh $3 \times 3$:*
+$$\text{Contrast} = (0-1)^2(1/6) + (0-2)^2(1/6) + (1-1)^2(1/6) + (2-0)^2(1/6) + (2-1)^2(1/6) + (2-2)^2(1/6)$$
+$$\text{Contrast} = \frac{1 + 4 + 0 + 4 + 1 + 0}{6} = \frac{10}{6} \approx \mathbf{1.6667}$$
+
+#### 2. Energy / Angular Second Moment (ASM)
+Mengukur keseragaman (*uniformity*) atau keteraturan tekstur:
+
+$$\text{Energy} = \sum_{i=1}^{N} \sum_{j=1}^{N} P(i, j)^2$$
+
+*Pada contoh $3 \times 3$:* $\text{Energy} = 6 \times \left(\frac{1}{6}\right)^2 = \frac{6}{36} = \frac{1}{6} \approx \mathbf{0.1667}$
+
+#### 3. Homogeneity / Inverse Difference Moment (IDM)
+Mengukur kedekatan sebaran elemen GLCM terhadap garis diagonal utama:
+
+$$\text{Homogeneity} = \sum_{i=1}^{N} \sum_{j=1}^{N} \frac{P(i, j)}{1 + |i - j|}$$
+
+*Pada contoh $3 \times 3$:*
+$$\text{Homogeneity} = \frac{1}{6} \left( \frac{1}{1+1} + \frac{1}{1+2} + \frac{1}{1+0} + \frac{1}{1+2} + \frac{1}{1+1} + \frac{1}{1+0} \right) = \frac{1}{6} \left( 0.5 + 0.333 + 1.0 + 0.333 + 0.5 + 1.0 \right) \approx \mathbf{0.6111}$$
+
+#### 4. Entropy GLCM
+Mengukur tingkat ketidakteraturan atau keacakan susunan spasial:
+
+$$\text{Entropy}_{\text{GLCM}} = - \sum_{i=1}^{N} \sum_{j=1}^{N} P(i, j) \log_2 P(i, j)$$
+
+*Pada contoh $3 \times 3$:* $\text{Entropy} = - 6 \times \left( \frac{1}{6} \log_2 \frac{1}{6} \right) = \log_2(6) \approx \mathbf{2.5850}$
+
+#### 5. Correlation (Korelasi Linier Spasial)
+Mengukur kebergantungan linier nilai keabuan antar-piksel bertetangga ($\rho \in [-1, 1]$):
+
+$$\text{Correlation} = \sum_{i=1}^{N} \sum_{j=1}^{N} \frac{(i - \mu_i)(j - \mu_j) P(i, j)}{\sigma_i \sigma_j}$$
+
+*Pada contoh $3 \times 3$:* $\text{Correlation} \approx \mathbf{-0.3153}$
+
+![Analisis Tekstur GLCM](output/citra_glcm_texture_analysis.png)
+
+---
+
+### 6.4 Enam Atribut Tekstur Tamura (Persepsi Visual Manusia)
+
+Metode Tamura merumuskan tekstur citra berdasarkan eksperimen psikofisika persepsi penglihatan manusia:
+
+1. **Coarseness (Kekasaran Butir):** Menilai skala ukuran elemen tekstur fundamental (butiran halus vs pola kasar besar).
+2. **Contrast (Kontras Tamura):**
+   $$\text{Contrast}_{\text{Tamura}} = \frac{\sigma}{\mu_4^{1/4}}, \quad \text{dimana } \mu_4 = \frac{1}{M \times N} \sum \sum (I(i, j) - \mu)^4$$
+3. **Directionality (Arah Pola):** Mengukur derajat orientasi garis atau gradien tepi dalam citra.
+4. **Line-likeness (Kemiripan Garis):** Mengukur seberapa besar tekstur menyerupai pola garis lurus beraturan.
+5. **Regularity (Keteraturan):** Menilai keseragaman pengulangan elemen tekstur di seluruh bidang citra:
+   $$\text{Regularity} = \frac{1}{R} \left( \sigma_{\text{coarseness}} + \sigma_{\text{contrast}} + \sigma_{\text{directionality}} \right)$$
+6. **Roughness (Kekasaran Permukaan):**
+   $$\text{Roughness} = \text{Coarseness} + \text{Contrast}$$
+
+---
+
+## 7. Kategori 4: Fitur Bentuk dan Geometri (Shape & Geometry Features)
+
+Fitur bentuk digunakan untuk mendeskripsikan morfologi dan ukuran fisik objek dalam citra setelah dilakukan proses segmentasi biner (pemisahan *foreground* objek dari *background*).
+
+![Ekstraksi Fitur Geometris](output/citra_segmentasi_geometri.png)
+
+### 7.1 Binarisasi dan Deteksi Region of Interest (ROI)
+Citra grayscale dikonversi menjadi citra biner hitam-putih ($B(x, y) \in \{0, 1\}$) menggunakan algoritma penentuan ambang batas optimal **Otsu's Thresholding**. Pada citra `24-068 Berantakan 1.jpeg`, nilai ambang Otsu optimal terhitung pada nilai $T = 112$.
+
+### 7.2 Luas (Area / $A$)
+Jumlah piksel yang menyusun objek biner:
+
+$$A = \sum_{i=1}^{M} \sum_{j=1}^{N} B(i, j)$$
+
+### 7.3 Keliling (Perimeter / $P$)
+Panjang batas terluar (*boundary pixels*) yang mengelilingi objek.
+
+### 7.4 Sentroid / Pusat Massa ($x_u, y_u$)
+Titik pusat gravitasi geometri dari objek:
+
+$$x_u = \frac{\sum x \cdot B(x, y)}{A}, \quad y_u = \frac{\sum y \cdot B(x, y)}{A}$$
+
+### 7.5 Indeks Irregularitas (Irregularity Index / $II$)
+Mengukur deviasi bentuk objek dari bentuk lingkaran sempurna ($II \ge 1$):
+
+$$II = \frac{P^2}{4 \pi A}$$
+
+* Untuk lingkaran sempurna: $II = 1.0$.
+* Semakin rumit, bergerigi, atau tak beraturan bentuk objek, nilai $II$ akan semakin besar.
+
+### 7.6 Diameter Ekuivalen ($D$)
+Diameter lingkaran imajiner yang memiliki luas sama dengan luas objek:
+
+$$D = 2 \sqrt{\frac{A}{\pi}}$$
+
+### 7.7 Convex Area ($A_{\text{convex}}$) dan Solidity ($S$)
+* **Convex Area ($A_{\text{convex}}$):** Luas poligon cembung terkecil (*convex hull*) yang dapat membungkus seluruh objek.
+* **Solidity ($S$):** Tingkat kepadatan atau keutuhan bentuk objek:
+  $$S = \frac{A}{A_{\text{convex}}}$$
+  Nilai $S = 1.0$ menunjukkan objek cembung pejal tanpa cekungan. Nilai $S < 1$ menunjukkan objek memiliki lekukan atau rongga.
+
+---
+
+## 8. Simulasi Perhitungan Manual Terpadu (Sub-Matriks $5 \times 5$)
+
+Berikut adalah simulasi perhitungan manual lengkap pada sub-matriks $5 \times 5$ ($N = 25$ piksel) yang diambil dari citra riil `24-068 Berantakan 1.jpeg` pada koordinat baris $y \in [600, 604]$ dan kolom $x \in [800, 804]$:
+
+### 8.1 Data Matriks Asli Patch $5 \times 5$
+
+| Koordinat | Matriks Kanal Merah ($R$) | Matriks Kanal Hijau ($G$) | Matriks Kanal Biru ($B$) |
 | :---: | :---: | :---: | :---: |
 | Baris 0 | `[166, 166, 165, 165, 164]` | `[162, 162, 161, 161, 160]` | `[153, 153, 152, 152, 151]` |
 | Baris 1 | `[160, 160, 159, 159, 159]` | `[156, 156, 155, 155, 155]` | `[147, 147, 146, 146, 146]` |
@@ -183,363 +500,296 @@ Berikut adalah matriks integer $5 \times 5$ hasil ekstraksi aktual dari citra:
 | Baris 3 | `[162, 162, 162, 161, 161]` | `[158, 158, 158, 157, 157]` | `[149, 149, 149, 148, 148]` |
 | Baris 4 | `[158, 158, 157, 157, 157]` | `[154, 154, 153, 153, 153]` | `[145, 145, 144, 144, 144]` |
 
-Jumlah elemen dalam patch: $N = 5 \times 5 = 25$ piksel.
+### 8.2 Konversi Manual RGB ke Grayscale 8-Bit
+
+Menggunakan formula luminansi ITU-R BT.601: $Y = \text{round}(0.299R + 0.587G + 0.114B)$:
+
+* Piksel $(0, 0)$: $0.299(166) + 0.587(162) + 0.114(153) = 49.634 + 95.094 + 17.442 = 162.17 \rightarrow \mathbf{162}$
+* Piksel $(0, 4)$: $0.299(164) + 0.587(160) + 0.114(151) = 49.036 + 93.920 + 17.214 = 160.17 \rightarrow \mathbf{160}$
+* Piksel $(4, 4)$: $0.299(157) + 0.587(153) + 0.114(144) = 46.943 + 89.811 + 16.416 = 153.17 \rightarrow \mathbf{153}$
+
+Matriks Grayscale 8-bit Terkuantisasi ($5 \times 5$):
+$$\text{Patch Grayscale} = \begin{bmatrix}
+162 & 162 & 161 & 161 & 160 \\
+156 & 156 & 155 & 155 & 155 \\
+157 & 157 & 157 & 156 & 156 \\
+158 & 158 & 158 & 157 & 157 \\
+154 & 154 & 153 & 153 & 153
+\end{bmatrix}$$
+
+### 8.3 Perhitungan Statistik Manual
+
+1. **Jumlah Nilai ($\sum I_{\text{gray}}$):**
+   $$(162+162+161+161+160) + (156+156+155+155+155) + (157+157+157+156+156) + (158+158+158+157+157) + (154+154+153+153+153)$$
+   $$= 806 + 777 + 783 + 788 + 767 = \mathbf{3921}$$
+
+2. **Mean Grayscale ($\mu_{\text{gray}}$):**
+   $$\mu_{\text{gray}} = \frac{3921}{25} = \mathbf{156.8400}$$
+
+3. **Jumlah Selisih Kuadrat ($\sum (I - \mu)^2$):**
+   $$\sum_{k=1}^{25} (I_k - 156.84)^2 = \mathbf{175.3600}$$
+
+4. **Varians ($\sigma^2$) dan Standar Deviasi ($\sigma$):**
+   $$\sigma^2 = \frac{175.3600}{25} = \mathbf{7.0144}$$
+   $$\sigma = \sqrt{7.0144} \approx \mathbf{2.6485}$$
+
+5. **Root Mean Square (RMS):**
+   $$\text{RMS} = \sqrt{\frac{\sum I^2}{25}} = \sqrt{\frac{615145}{25}} = \sqrt{24605.8} \approx \mathbf{156.8624}$$
+
+6. **Smoothness ($Q$):**
+   $$Q = 1 - \frac{1}{1 + \sigma^2} = 1 - \frac{1}{1 + 7.0144} = 1 - \frac{1}{8.0144} = 1 - 0.124775 = \mathbf{0.875225}$$
 
 ---
 
-### 4.2 Perhitungan Manual Kanal Merah (R)
+## 9. Hasil Ekstraksi Fitur Aktual pada Citra `24-068 Berantakan 1`
 
-#### Langkah 1: Menghitung Jumlah Total Nilai Intensitas ($\sum I_R$)
-$$\begin{aligned}
-\sum_{k=1}^{25} I_R(k) = & (166 + 166 + 165 + 165 + 164) \\
-& + (160 + 160 + 159 + 159 + 159) \\
-& + (161 + 161 + 161 + 160 + 160) \\
-& + (162 + 162 + 162 + 161 + 161) \\
-& + (158 + 158 + 157 + 157 + 157) \\
-= & 826 + 797 + 803 + 808 + 787 = \mathbf{4021}
-\end{aligned}$$
+Berikut adalah tabel hasil ekstraksi fitur menyeluruh pada citra penuh `24-068 Berantakan 1.jpeg` ($1.920.000$ piksel):
 
-#### Langkah 2: Menghitung Nilai Rata-rata ($\mu_R$)
-$$\mu_R = \frac{\sum I_R}{N} = \frac{4021}{25} = \mathbf{160.8400}$$
+### 9.1 Tabel Parameter Momen Warna RGB
 
-#### Langkah 3: Menghitung Selisih Deviasi Kuadrat $\sum (I_R(k) - \mu_R)^2$
-Tabel deviasi kuadrat terhadap $\mu_R = 160.84$:
+| Kanal Warna | Mean ($\mu$) | Standar Deviasi ($\sigma$) | Varians ($\sigma^2$) | Skewness ($\gamma_1$) | Excess Kurtosis ($\gamma_2$) | Min | Max |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Kanal Merah ($R$)** | **$134.8988$** | **$56.2021$** | $3158.67$ | $-0.5372$ | $-0.4682$ | $0$ | $255$ |
+| **Kanal Hijau ($G$)** | **$133.4873$** | **$55.0876$** | $3034.64$ | $-0.5367$ | $-0.4026$ | $0$ | $255$ |
+| **Kanal Biru ($B$)** | **$128.8982$** | **$52.1753$** | $2722.26$ | $-0.5481$ | $-0.3809$ | $0$ | $255$ |
+| **Rata-rata Gabungan RGB** | **$132.4281$** | **$54.5749$** | $2978.42$ | $-0.5410$ | $-0.4180$ | $0$ | $255$ |
 
-* Baris 0:
-  - $(166 - 160.84)^2 = (5.16)^2 = 26.6256$ ($\times 2 = 53.2512$)
-  - $(165 - 160.84)^2 = (4.16)^2 = 17.3056$ ($\times 2 = 34.6112$)
-  - $(164 - 160.84)^2 = (3.16)^2 = 9.9856$
-  - Subtotal Baris 0 = $97.8480$
-* Baris 1:
-  - $(160 - 160.84)^2 = (-0.84)^2 = 0.7056$ ($\times 2 = 1.4112$)
-  - $(159 - 160.84)^2 = (-1.84)^2 = 3.3856$ ($\times 3 = 10.1568$)
-  - Subtotal Baris 1 = $11.5680$
-* Baris 2:
-  - $(161 - 160.84)^2 = (0.16)^2 = 0.0256$ ($\times 3 = 0.0768$)
-  - $(160 - 160.84)^2 = (-0.84)^2 = 0.7056$ ($\times 2 = 1.4112$)
-  - Subtotal Baris 2 = $1.4880$
-* Baris 3:
-  - $(162 - 160.84)^2 = (1.16)^2 = 1.3456$ ($\times 3 = 4.0368$)
-  - $(161 - 160.84)^2 = (0.16)^2 = 0.0256$ ($\times 2 = 0.0512$)
-  - Subtotal Baris 3 = $4.0880$
-* Baris 4:
-  - $(158 - 160.84)^2 = (-2.84)^2 = 8.0656$ ($\times 2 = 16.1312$)
-  - $(157 - 160.84)^2 = (-3.84)^2 = 14.7456$ ($\times 3 = 44.2368$)
-  - Subtotal Baris 4 = $60.3680$
+### 9.2 Tabel Fitur Statistik Citra Grayscale 8-Bit (BT.601)
 
-Jumlah Total Kuadrat Deviasi ($SS_R$):
-$$\sum_{k=1}^{25} (I_R(k) - \mu_R)^2 = 97.8480 + 11.5680 + 1.4880 + 4.0880 + 60.3680 = \mathbf{175.3600}$$
+| Parameter Statistik | Simbol Formula | Nilai Terhitung | Keterangan Fisis |
+| :--- | :---: | :---: | :--- |
+| **Tingkat Kecerahan Rata-Rata** | $\mu$ | **$133.3659$** | Berada tepat di tengah rentang 8-bit (pencahayaan optimal) |
+| **Varians Intensitas** | $\sigma^2$ | **$2997.6434$** | Dispersi energi pencahayaan luas |
+| **Standar Deviasi (Kontras Global)** | $\sigma$ | **$54.7507$** | Kontras tinggi, gradasi terang-gelap dinamis |
+| **Asimetri Distribusi (Skewness)** | $\gamma_1$ | **$-0.5417$** | Menceng ke kiri (*slightly left-skewed*) |
+| **Kepuncakan (Excess Kurtosis)** | $\gamma_2$ | **$-0.4213$** | Platikurtik (kurva lebih landai dari Gaussian) |
+| **Root Mean Square (RMS)** | $\text{RMS}$ | **$144.1669$** | Magnitudo intensitas efektif |
+| **Total Energy Sinyal** | $E$ | **$3.9905 \times 10^{10}$** | Akumulasi kuadrat intensitas seluruh piksel |
+| **Entropi Informasi Shannon** | $H$ | **$7.5174\text{ bit}$** | Mendekati batas maksimum ($8.0$), kaya detail tekstur |
+| **Tingkat Kehalusan Relatif** | $Q$ | **$0.999667$** | Mendekati $1.0$ (citra bertekstur heterogen/kasar) |
+| **Kontras Tamura** | $\text{Contrast}_{\text{Tamura}}$ | **$0.7891$** | Menilai kontras tekstur berbasis persepsi optik |
 
-#### Langkah 4: Menghitung Varians ($\sigma_R^2$) dan Standar Deviasi ($\sigma_R$)
-$$\sigma_R^2 = \frac{175.3600}{25} = 7.0144$$
+### 9.3 Tabel Fitur Tekstur GLCM Haralick (Kuantisasi 16 Level, $d=1, \theta=0^\circ$)
 
-$$\sigma_R = \sqrt{7.0144} \approx \mathbf{2.6485}$$
+| Atribut GLCM | Nilai Terhitung | Interpretasi Tekstural |
+| :--- | :---: | :--- |
+| **Contrast** | **$0.3430$** | Fluktuasi intensitas antar-piksel bertetangga relatif rapat pada skala lokal |
+| **Energy (ASM)** | **$0.0736$** | Nilai rendah menunjukkan tekstur acak/kompleks (*tidak seragam*) |
+| **Homogeneity (IDM)**| **$0.9138$** | Mayoritas transisi piksel berdekatan terkonsentrasi di dekat diagonal |
+| **Correlation** | **$0.9853$** | Ketergantungan linier spasial sangat kuat antar piksel horizontal |
+| **Entropy GLCM** | **$4.5046$** | Keacakan spasial pasangan piksel tergolong tinggi |
 
----
+### 9.4 Tabel Fitur Morfologi Geometri ROI Utama (Segmentasi Otsu $T=112$)
 
-### 4.3 Perhitungan Manual Kanal Hijau (G)
-
-Perhatikan pola menarik pada data: seluruh nilai intensitas Kanal Hijau pada matriks ini tepat bergeser $4$ satuan lebih rendah daripada Kanal Merah ($I_G(k) = I_R(k) - 4$).
-
-* **Jumlah Total Nilai ($\sum I_G$):**
-  $$\sum I_G = \sum (I_R - 4) = 4021 - (25 \times 4) = 4021 - 100 = \mathbf{3921}$$
-* **Mean ($\mu_G$):**
-  $$\mu_G = \frac{3921}{25} = \mathbf{156.8400}$$
-* **Standar Deviasi ($\sigma_G$):**
-  Karena pergeseran nilai bersifat konstan ($c = -4$), sebaran data tidak berubah:
-  $$(I_G - \mu_G) = ((I_R - 4) - (\mu_R - 4)) = (I_R - \mu_R)$$
-  Maka nilai varians dan standar deviasi persis sama:
-  $$\sigma_G = \sqrt{\frac{175.3600}{25}} = \sqrt{7.0144} \approx \mathbf{2.6485}$$
+| Parameter Geometri | Simbol | Nilai Terukur | Satuan |
+| :--- | :---: | :---: | :--- |
+| **Luas Objek (Area)** | $A$ | $1.070.266,5$ | piksel ($55.7\%$ luas bidang citra) |
+| **Keliling (Perimeter)** | $P$ | $16.250,0$ | piksel |
+| **Koordinat Sentroid** | $(x_u, y_u)$ | $(828.8, 810.4)$ | piksel (berada di area tengah bawah) |
+| **Indeks Irregularitas** | $II$ | $19.6338$ | Bentuk sangat tak beraturan ($II \gg 1.0$) |
+| **Diameter Ekuivalen** | $D$ | $1167.3$ | piksel |
+| **Luas Convex Hull** | $A_{\text{convex}}$ | $1.342.584,5$ | piksel |
+| **Solidity** | $S$ | $0.7972$ | Memiliki lekukan kontur signifikan akibat barang berserakan |
 
 ---
 
-### 4.4 Perhitungan Manual Kanal Biru (B)
+## 10. Implementasi Pipeline Komputasi dengan Python
 
-Dengan cara serupa, perhatikan bahwa Kanal Biru bergeser tepat $13$ satuan lebih rendah daripada Kanal Merah ($I_B(k) = I_R(k) - 13$).
-
-* **Jumlah Total Nilai ($\sum I_B$):**
-  $$\sum I_B = 4021 - (25 \times 13) = 4021 - 325 = \mathbf{3696}$$
-* **Mean ($\mu_B$):**
-  $$\mu_B = \frac{3696}{25} = \mathbf{147.8400}$$
-* **Standar Deviasi ($\sigma_B$):**
-  $$\sigma_B = \sqrt{7.0144} \approx \mathbf{2.6485}$$
-
----
-
-### 4.5 Rekapitulasi Perhitungan Manual Patch
-
-Dari hasil perhitungan manual sub-matriks $5 \times 5$:
-
-1. **Rata-rata Kanal Merah ($\mu_R$):** $160.8400$
-2. **Rata-rata Kanal Hijau ($\mu_G$):** $156.8400$
-3. **Rata-rata Kanal Biru ($\mu_B$):** $147.8400$
-4. **Mean Gabungan Kanal RGB ($\mu_{\text{RGB}}$):**
-   $$\mu_{\text{RGB-Patch}} = \frac{160.84 + 156.84 + 147.84}{3} = \frac{465.52}{3} = \mathbf{155.1733}$$
-5. **Standar Deviasi per Kanal ($\sigma$):** $2.6485$
-
-> **Wawasan Penting:** 
-> Perhitungan manual di atas membuktikan dengan jelas bagaimana algoritma komputasi memproses data matriks 2 dimensi. Komputer modern menjalankan operasi yang sama persis seperti di atas, namun diperluas untuk mencakup seluruh $1.920.000$ piksel secara paralel.
-
----
-
-## 5. Implementasi Kode Komputasi dengan Python
-
-Dalam lingkungan praktikum dan riset data nyata, perhitungan dilakukan menggunakan pustaka standar Python: **OpenCV (`cv2`)** untuk manipulasi berkas citra dan **NumPy (`numpy`)** untuk aljabar linier ter-vektorisasi berkecepatan tinggi.
-
-### 5.1 Skrip Ekstraksi Fitur Citra Tunggal (`24-068 Berantakan 1.jpeg`)
+Berikut skrip modular Python lengkap untuk mengekstrak seluruh fitur di atas secara otomatis:
 
 ```python
 """
-Praktikum Pengolahan Sinyal Digital (PSD)
-Modul: Ekstraksi Fitur Citra Digital RGB
+Pipeline Terintegrasi Ekstraksi Fitur Citra Digital
+Mata Kuliah: Pengolahan Sinyal Digital (PSD)
 Penulis: Muhammad Zaidan Nabil Rafi (240411100068)
 """
 
 import cv2
 import numpy as np
+import scipy.stats as stats
 
-# 1. Definisikan jalur berkas citra
-image_path = r'Foto citra/24-068 Berantakan 1.jpeg'
+def extract_all_image_features(image_path):
+    # 1. Akuisisi Citra
+    bgr = cv2.imread(image_path)
+    if bgr is None:
+        raise FileNotFoundError(f"File tidak ditemukan: {image_path}")
+    rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+    h, w, _ = rgb.shape
+    total_pixels = h * w
+    
+    # 2. Pemisahan Kanal RGB
+    r, g, b = rgb[:,:,0].astype(float), rgb[:,:,1].astype(float), rgb[:,:,2].astype(float)
+    
+    # Momen Warna RGB
+    color_features = {
+        'mean_r': float(np.mean(r)), 'std_r': float(np.std(r)), 'skew_r': float(stats.skew(r.ravel())),
+        'mean_g': float(np.mean(g)), 'std_g': float(np.std(g)), 'skew_g': float(stats.skew(g.ravel())),
+        'mean_b': float(np.mean(b)), 'std_b': float(np.std(b)), 'skew_b': float(stats.skew(b.ravel())),
+        'mean_rgb_combined': float((np.mean(r) + np.mean(g) + np.mean(b)) / 3.0),
+        'global_std_rgb': float(np.std(rgb))
+    }
+    
+    # 3. Konversi ke Grayscale 8-bit (ITU-R BT.601)
+    gray = np.round(0.299 * r + 0.587 * g + 0.114 * b).astype(np.uint8)
+    g_flt = gray.astype(float)
+    
+    # 4. Fitur Statistik Intensitas Global
+    mu = float(np.mean(g_flt))
+    var = float(np.var(g_flt))
+    sigma = float(np.std(g_flt))
+    skew = float(stats.skew(g_flt.ravel()))
+    kurt = float(stats.kurtosis(g_flt.ravel())) # excess kurtosis
+    rms = float(np.sqrt(np.mean(g_flt**2)))
+    energy_total = float(np.sum(g_flt**2))
+    smoothness = float(1.0 - (1.0 / (1.0 + var)))
+    
+    # Entropi Shannon
+    counts, _ = np.histogram(gray, bins=256, range=(0, 256))
+    p = counts[counts > 0] / float(total_pixels)
+    shannon_entropy = float(-np.sum(p * np.log2(p)))
+    
+    # Tamura Contrast
+    mu4 = float(np.mean((g_flt - mu)**4))
+    tamura_contrast = float(sigma / (mu4 ** 0.25))
+    
+    stat_features = {
+        'mean_gray': mu, 'var_gray': var, 'std_gray': sigma,
+        'skew_gray': skew, 'kurtosis_gray': kurt, 'rms': rms,
+        'energy_total': energy_total, 'shannon_entropy': shannon_entropy,
+        'smoothness_q': smoothness, 'tamura_contrast': tamura_contrast
+    }
+    
+    # 5. Fitur Tekstur Spasial GLCM (16 Level, d=1, θ=0°)
+    levels = 16
+    q_gray = (gray // (256 // levels)).astype(int)
+    src = q_gray[:, :-1].ravel()
+    dst = q_gray[:, 1:].ravel()
+    glcm_counts = np.bincount(src * levels + dst, minlength=levels*levels).reshape((levels, levels)).astype(float)
+    P = glcm_counts / np.sum(glcm_counts)
+    
+    i_idx, j_idx = np.indices((levels, levels))
+    glcm_contrast = float(np.sum((i_idx - j_idx)**2 * P))
+    glcm_energy = float(np.sum(P**2))
+    glcm_homogeneity = float(np.sum(P / (1.0 + np.abs(i_idx - j_idx))))
+    mask = P > 0
+    glcm_entropy = float(-np.sum(P[mask] * np.log2(P[mask])))
+    
+    p_i = np.sum(P, axis=1)
+    p_j = np.sum(P, axis=0)
+    mu_i = np.sum(np.arange(levels) * p_i)
+    mu_j = np.sum(np.arange(levels) * p_j)
+    sig_i = np.sqrt(np.sum((np.arange(levels) - mu_i)**2 * p_i))
+    sig_j = np.sqrt(np.sum((np.arange(levels) - mu_j)**2 * p_j))
+    glcm_correlation = float(np.sum((i_idx - mu_i) * (j_idx - mu_j) * P) / (sig_i * sig_j))
+    
+    glcm_features = {
+        'glcm_contrast': glcm_contrast, 'glcm_energy': glcm_energy,
+        'glcm_homogeneity': glcm_homogeneity, 'glcm_entropy': glcm_entropy,
+        'glcm_correlation': glcm_correlation
+    }
+    
+    # 6. Fitur Morfologi Geometri (Otsu Thresholding)
+    thresh_val, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    contours, _ = cv2.findContours(binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    largest_c = max(contours, key=cv2.contourArea)
+    area = float(cv2.contourArea(largest_c))
+    perimeter = float(cv2.arcLength(largest_c, True))
+    M = cv2.moments(largest_c)
+    cx = float(M['m10'] / M['m00']) if M['m00'] != 0 else 0.0
+    cy = float(M['m01'] / M['m00']) if M['m00'] != 0 else 0.0
+    ii = float((perimeter**2) / (4 * np.pi * area)) if area > 0 else 0.0
+    equiv_diam = float(2 * np.sqrt(area / np.pi)) if area > 0 else 0.0
+    convex_area = float(cv2.contourArea(cv2.convexHull(largest_c)))
+    solidity = float(area / convex_area) if convex_area > 0 else 0.0
+    
+    geom_features = {
+        'otsu_thresh': float(thresh_val), 'area': area, 'perimeter': perimeter,
+        'centroid_x': cx, 'centroid_y': cy, 'irregularity_index': ii,
+        'equiv_diameter': equiv_diam, 'convex_area': convex_area, 'solidity': solidity
+    }
+    
+    return {**color_features, **stat_features, **glcm_features, **geom_features}
 
-# 2. Baca citra menggunakan OpenCV
-# CATATAN PENTING: Secara bawaan, OpenCV membaca citra dalam format BGR (bukan RGB)!
-image_bgr = cv2.imread(image_path)
-
-if image_bgr is None:
-    raise FileNotFoundError(f"Citra tidak ditemukan di jalur: {image_path}")
-
-# 3. Konversi format warna dari BGR ke RGB
-image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-
-# Dapatkan dimensi matriks citra (Height, Width, Channels)
-height, width, channels = image_rgb.shape
-total_pixels = height * width
-
-# 4. Pisahkan kanal warna menjadi array 2D independen
-channel_red = image_rgb[:, :, 0]    # Indeks 0 = Kanal Merah
-channel_green = image_rgb[:, :, 1]  # Indeks 1 = Kanal Hijau
-channel_blue = image_rgb[:, :, 2]   # Indeks 2 = Kanal Biru
-
-# 5. Hitung Nilai Rata-rata (Mean) untuk masing-masing kanal
-mean_r = float(np.mean(channel_red))
-mean_g = float(np.mean(channel_green))
-mean_b = float(np.mean(channel_blue))
-
-# Hitung Rata-rata dari Nilai Rata-rata Kanal RGB
-mean_of_rgb_channels = float((mean_r + mean_g + mean_b) / 3.0)
-
-# 6. Hitung Standar Deviasi (Simpangan Baku) untuk masing-masing kanal
-std_r = float(np.std(channel_red))
-std_g = float(np.std(channel_green))
-std_b = float(np.std(channel_blue))
-
-# Standar deviasi tensor keseluruhan (variasi spasial + variasi spektral warna)
-overall_std = float(np.std(image_rgb))
-
-# 7. Tampilkan hasil ekstraksi ke konsol
-print("=" * 60)
-print("      HASIL EKSTRAKSI FITUR CITRA DIGITAL (RGB)")
-print("      File: 24-068 Berantakan 1.jpeg")
-print("=" * 60)
-print(f"Resolusi Citra          : {width} x {height} piksel")
-print(f"Total Piksel per Kanal  : {total_pixels:,} piksel")
-print("-" * 60)
-print(f"Kanal Merah (Red)       : Mean = {mean_r:8.4f} | Std Dev = {std_r:8.4f}")
-print(f"Kanal Hijau (Green)     : Mean = {mean_g:8.4f} | Std Dev = {std_g:8.4f}")
-print(f"Kanal Biru (Blue)       : Mean = {mean_b:8.4f} | Std Dev = {std_b:8.4f}")
-print("-" * 60)
-print(f"Mean dari Rata-rata RGB : {mean_of_rgb_channels:8.4f}")
-print(f"Standar Deviasi Global  : {overall_std:8.4f}")
-print("=" * 60)
+# Contoh Eksekusi
+if __name__ == '__main__':
+    path = r'Foto citra/24-068 Berantakan 1.jpeg'
+    results = extract_all_image_features(path)
+    for k, v in results.items():
+        print(f"{k:20s}: {v:12.4f}")
 ```
 
 ---
 
-### 5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra
+## 11. Analisis Komparatif: Citra Berantakan vs Rapi & Strategi Fusi Fitur
 
-Untuk mengolah seluruh berkas citra dalam folder `Foto citra/` dan menyimpannya ke dalam format tabel data (`pandas.DataFrame`), dapat digunakan kode otomasi berikut:
+### 11.1 Evaluasi Fitur pada 6 Sampel Dataset
 
-```python
-import os
-import glob
-import cv2
-import numpy as np
-import pandas as pd
+Tabel berikut membandingkan fitur statistik dan warna antar sampel citra dalam dataset:
 
-folder_path = r'Foto citra'
-image_files = sorted(glob.glob(os.path.join(folder_path, '*.jpeg')))
-
-feature_records = []
-
-for file_path in image_files:
-    file_name = os.path.basename(file_path)
-    
-    # Baca dan konversi ke RGB
-    img_bgr = cv2.imread(file_path)
-    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    
-    h, w, _ = img_rgb.shape
-    r, g, b = img_rgb[:, :, 0], img_rgb[:, :, 1], img_rgb[:, :, 2]
-    
-    mean_r, std_r = float(np.mean(r)), float(np.std(r))
-    mean_g, std_g = float(np.mean(g)), float(np.std(g))
-    mean_b, std_b = float(np.mean(b)), float(np.std(b))
-    
-    mean_rgb = float((mean_r + mean_g + mean_b) / 3.0)
-    overall_std = float(np.std(img_rgb))
-    
-    label_kategori = 'Berantakan' if 'Berantakan' in file_name else 'Rapi'
-    
-    feature_records.append({
-        'Nama File': file_name,
-        'Kategori': label_kategori,
-        'Resolusi': f"{w}x{h}",
-        'Mean_R': round(mean_r, 4),
-        'Mean_G': round(mean_g, 4),
-        'Mean_B': round(mean_b, 4),
-        'Mean_RGB_Channels': round(mean_rgb, 4),
-        'Std_R': round(std_r, 4),
-        'Std_G': round(std_g, 4),
-        'Std_B': round(std_b, 4),
-        'Overall_Std': round(overall_std, 4)
-    })
-
-df_features = pd.DataFrame(feature_records)
-print(df_features.to_markdown(index=False))
-```
-
----
-
-## 6. Hasil Ekstraksi Fitur Aktual pada Citra `24-068 Berantakan 1`
-
-### 6.1 Tabel Statistik Lengkap
-
-Berikut adalah hasil pengukuran statistik eksak dari citra `24-068 Berantakan 1.jpeg` yang dihitung secara presisi dari $1.920.000$ piksel per kanal:
-
-| Parameter Statistik | Kanal Merah ($R$) | Kanal Hijau ($G$) | Kanal Biru ($B$) | Gabungan / Rata-rata RGB |
-| :--- | :---: | :---: | :---: | :---: |
-| **Nilai Rata-rata (Mean / $\mu$)** | **$134.8988$** | **$133.4873$** | **$128.8982$** | **$132.4281$** |
-| **Standar Deviasi Populasi ($\sigma$)** | **$56.2021$** | **$55.0876$** | **$52.1753$** | **$54.5749$** |
-| **Standar Deviasi Sampel ($s$)** | $56.2021$ | $55.0876$ | $52.1753$ | $54.5749$ |
-| **Varians ($\sigma^2$)** | $3158.67$ | $3034.64$ | $2722.26$ | $2978.42$ |
-| **Nilai Minimum** | $0$ | $0$ | $0$ | $0$ |
-| **Nilai Maksimum** | $255$ | $255$ | $255$ | $255$ |
-| **Nilai Median** | $131.00$ | $130.00$ | $126.00$ | $129.00$ |
-| **Total Piksel Evaluasi ($N$)** | $1.920.000$ | $1.920.000$ | $1.920.000$ | $5.760.000$ |
-
-> **Temuan Kunci:**
-> 1. **Mean Kanal Merah ($\mu_R = 134.90$)** memiliki nilai paling tinggi, disusul oleh Hijau ($\mu_G = 133.49$), dan Biru ($\mu_B = 128.90$).
-> 2. **Mean dari rata-rata kanal RGB ($\mu_{\text{RGB}}$)** bernilai **$132.4281$**.
-> 3. **Standar Deviasi kanal Merah ($\sigma_R = 56.20$)** juga merupakan yang tertinggi, menunjukkan rentang kontras paling dinamis pada spektrum merah.
-
----
-
-### 6.2 Analisis Distribusi Histogram Intensitas Piksel
-
-Untuk melihat bagaimana intensitas piksel tersebar di sepanjang rentang $[0, 255]$, histogram kerapatan probabilitas (*probability density histogram*) digambarkan bersama dengan posisi mean ($\mu$) dan interval standar deviasi $[\mu - \sigma, \mu + \sigma]$:
-
-![Histogram Kanal RGB](output/citra_rgb_histogram.png)
-
-#### Karakteristik Distribusi Histogram:
-1. **Bentuk Distribusi Lonceng Simetris (Near-Gaussian):**
-   - Ketiga kanal menunjukkan kurva distribusi unimodal yang mendekati kurva normal (Gaussian) berpusat di sekitar $130 - 135$.
-   - Tidak terjadi penumpukan ekstrem di ujung kiri ($0$) maupun ujung kanan ($255$), yang membuktikan bahwa foto diambil dengan eksposur seimbang (tidak terjadi *under-exposure blackout* maupun *over-exposure clipping*).
-2. **Interval Rentang Standar Deviasi $[\mu - \sigma, \mu + \sigma]$:**
-   - **Kanal Merah:** Interval $[78.70, 191.10]$ mencakup lebih dari $68\%$ populasi piksel.
-   - **Kanal Hijau:** Interval $[78.40, 188.58]$ mencakup variasi warna dedaunan, permukaan kayu, atau dinding ruangan.
-   - **Kanal Biru:** Interval $[76.72, 181.07]$ sedikit lebih sempit, yang konsisten dengan nilai $\sigma_B = 52.18$ yang lebih rendah.
-
----
-
-## 7. Interpretasi Fisis dan Analisis Karakteristik Citra
-
-### 7.1 Makna Nilai Rata-rata Kanal (Mean RGB)
-
-Dalam fisika pencitraan dan sinyal optik:
-
-1. **Keseimbangan Warna (*Color Balance / Color Temperature*):**
-   - Hubungan intensitas $\mu_R (134.90) > \mu_G (133.49) > \mu_B (128.90)$ menunjukkan bahwa citra memiliki temperatur warna hangat (*warm white / yellowish cast*).
-   - Hal ini sangat wajar pada fotografi ruangan (*indoor*) yang diterangi oleh lampu bohlam pijar atau pantulan cahaya dari lantai kayu/meja kerja.
-2. **Tingkat Kecerahan Global (*Global Brightness*):**
-   - Nilai rata-rata gabungan $\mu_{\text{RGB}} = 132.4281$ berada tepat di atas titik tengah nilai skala 8-bit ($128$).
-   - Ini mengindikasikan bahwa ruangan berada dalam kondisi pencahayaan yang cukup (*well-lit*), tidak redup dan tidak menyilaukan.
-
-### 7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)
-
-Standar deviasi merupakan parameter statistik yang menggambarkan **keragaman visual (*visual clutter*)**:
-
-1. **Indikator Kontras Spasial:**
-   - Nilai $\sigma_R = 56.20$, $\sigma_G = 55.09$, dan $\sigma_B = 52.18$ adalah nilai simpangan yang relatif besar (mencakup lebih dari $21\%$ dari total rentang dinamis 8-bit).
-   - Sebaran yang lebar ini menandakan bahwa citra tidak terdiri dari warna datar yang homogen, melainkan memiliki gradasi bayangan, garis tepi tajam (*edges*), dan perbedaan warna yang tegas antara objek dan latar belakang.
-2. **Korelasi dengan Kondisi "Berantakan":**
-   - Pada pemandangan yang berantakan (*cluttered scene*), berbagai benda bertumpuk secara acak (buku, kabel, alat tulis, wadah, dll.).
-   - Setiap benda memantulkan cahaya dengan karakteristik berbeda dan menciptakan bayangan mikro (*micro-shadows*). Akibatnya, deviasi standar intensitas piksel menjadi tinggi.
-
----
-
-## 8. Studi Komparatif: Citra Kondisi "Berantakan" vs "Rapi"
-
-Untuk memahami fungsi ekstraksi fitur ini dalam konteks yang lebih luas, mari kita bandingkan citra `24-068 Berantakan 1` dengan 5 citra lainnya dalam direktori `Foto citra/`:
-
-| Nama File | Kategori | Mean R | Mean G | Mean B | Mean RGB Gabungan | Std R | Std G | Std B | Std Global |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`24-068 Berantakan 1.jpeg`** | **Berantakan** | **134.90** | **133.49** | **128.90** | **132.43** | **56.20** | **55.09** | **52.18** | **54.57** |
-| `24-068 Berantakan 2.jpeg` | Berantakan | 163.02 | 160.17 | 151.98 | 158.39 | 58.43 | 60.53 | 59.05 | 59.53 |
-| `24-068 Berantakan 3.jpeg` | Berantakan | 165.02 | 154.04 | 145.38 | 154.81 | 56.48 | 59.73 | 62.33 | 60.10 |
-| `24-068 Rapi 1.jpeg` | Rapi | 124.46 | 125.32 | 120.72 | 123.50 | 49.36 | 54.91 | 56.32 | 53.65 |
-| `24-068 Rapi 2.jpeg` | Rapi | 130.51 | 133.04 | 130.78 | 131.44 | 49.96 | 55.11 | 58.48 | 54.64 |
-| `24-068 Rapi 3.jpeg` | Rapi | 146.69 | 149.35 | 143.92 | 146.65 | 44.28 | 48.36 | 49.93 | 47.64 |
+| Nama File | Kategori | Mean R | Mean G | Mean B | Mean RGB | Std R | Std G | Std B | Std Global | Entropi (bit) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **`24-068 Berantakan 1.jpeg`** | **Berantakan** | **134.90** | **133.49** | **128.90** | **132.43** | **56.20** | **55.09** | **52.18** | **54.57** | **7.52** |
+| `24-068 Berantakan 2.jpeg` | Berantakan | 163.02 | 160.17 | 151.98 | 158.39 | 58.43 | 60.53 | 59.05 | 59.53 | 7.61 |
+| `24-068 Berantakan 3.jpeg` | Berantakan | 165.02 | 154.04 | 145.38 | 154.81 | 56.48 | 59.73 | 62.33 | 60.10 | 7.58 |
+| `24-068 Rapi 1.jpeg` | Rapi | 124.46 | 125.32 | 120.72 | 123.50 | 49.36 | 54.91 | 56.32 | 53.65 | 7.39 |
+| `24-068 Rapi 2.jpeg` | Rapi | 130.51 | 133.04 | 130.78 | 131.44 | 49.96 | 55.11 | 58.48 | 54.64 | 7.42 |
+| `24-068 Rapi 3.jpeg` | Rapi | 146.69 | 149.35 | 143.92 | 146.65 | 44.28 | 48.36 | 49.93 | 47.64 | 7.15 |
 
 ![Komparasi Dataset](output/citra_komparasi_dataset.png)
 
-### Wawasan Komparatif:
-1. **Perilaku Standar Deviasi Kanal Merah ($\text{Std\_R}$):**
-   - Pada ketiga foto kondisi **Berantakan**, nilai $\text{Std\_R}$ selalu tinggi dan konsisten berada di atas $56.0$ ($\mathbf{56.20}$, $\mathbf{58.43}$, $\mathbf{56.48}$).
-   - Sebaliknya, pada foto kondisi **Rapi**, nilai $\text{Std\_R}$ turun secara signifikan di bawah $50.0$ ($\mathbf{49.36}$, $\mathbf{49.96}$, $\mathbf{44.28}$).
-   - Hal ini mengindikasikan bahwa variasi warna merah merupakan fitur diskriminatif yang potensial untuk membedakan kondisi meja berantakan vs rapi.
-2. **Kestabilan Mean RGB:**
-   - Nilai rata-rata kecerahan ($\mu$) dipengaruhi secara kuat oleh pencahayaan ruangan saat pengambilan gambar, sedangkan standar deviasi ($\sigma$) lebih mencerminkan keteraturan struktural dan tekstural objek.
+---
+
+### 11.2 Rangkuman Kelebihan, Kekurangan, Efisiensi, dan Akurasi
+
+Merujuk pada sintesis komparatif **Table 5 pada Hallur & Gavade (Franklin Open 2025)**:
+
+| No | Kategori Fitur | Metode Ekstraksi | Kelebihan (*Merits*) | Kekurangan (*Demerits*) | Domain Aplikasi Utama | Efisiensi Komputasi | Akurasi Diskriminatif |
+| :-: | :--- | :--- | :--- | :--- | :--- | :-: | :-: |
+| 1 | **Warna** | **Color Moments** | Komputasi sangat cepat, vektor berukuran kecil (9 float), invarian terhadap rotasi | Kehilangan informasi spasial, sensitif terhadap perubahan cahaya ekstrem | *Image retrieval*, pengenalan objek cepat | **Tinggi** | **Moderat** |
+| 2 | **Warna** | **Color Histogram** | Menangkap detail kromatisitas kaya, implementasi mudah | Dimensi fitur tinggi, sensitif pergeseran intensitas | CBIR, klasifikasi pemandangan | **Moderat** | **Moderat** |
+| 3 | **Warna** | **Average RGB** | Komputasi instan $O(N)$, representasi global ringkas | Kehilangan detail warna lokal dan distribusi | Kategorisasi awal citra | **Sangat Tinggi** | **Rendah** |
+| 4 | **Tekstur** | **GLCM Haralick** | Menangkap relasi spasial piksel, deskriptor tekstur sangat kuat | Memerlukan kuantisasi level keabuan, lambat jika tanpa vektorisasi | Analisis citra medis, klasifikasi material | **Rendah** | **Tinggi** |
+| 5 | **Tekstur** | **Tamura Features**| Memodelkan persepsi visual manusia (kasar/halus, kontras, arah) | Terbatas pada jenis tekstur naturalis tertentu | Analisis permukaan, inspeksi visual industri | **Moderat** | **Moderat** |
+| 6 | **Statistik** | **Mean & Std Dev** | Sederhana, mengukur kecerahan global dan kontras secara objektif | Tidak membedakan struktur geometris objek | Kategorisasi citra dasar, prapemrosesan | **Sangat Tinggi**| **Rendah-Moderat** |
+| 7 | **Statistik** | **Entropy Shannon**| Mengukur ketidakteraturan sinyal dan kompleksitas informasi | Komputasi memerlukan histogram frekuensi | Segmentasi citra, kompresi data | **Moderat** | **Tinggi** |
+| 8 | **Statistik** | **RMS & Energy** | Mengukur konsentrasi energi kuadratik sinyal secara efektif | Sensitif terhadap noise pencahayaan | *Image quality assessment* | **Tinggi** | **Moderat** |
+| 9 | **Statistik** | **Skewness & Kurtosis**| Menangkap asimetri dan kepuncakan distribusi (ekor tebal/outlier) | Interpretasi non-linear, rentan noise ekstrem | Deteksi anomali citra | **Moderat** | **Moderat** |
+| 10 | **Geometri** | **Area & Perimeter** | Intuitif, mengukur dimensi fisik objek biner secara presisi | Kehilangan struktur internal objek | Analisis bentuk, pengenalan siluet | **Tinggi** | **Moderat** |
+| 11 | **Geometri** | **Centroid & Solidity**| Mengetahui posisi spasial dan derajat kepadatan bentuk objek | Membutuhkan tahap segmentasi biner yang akurat | Pelacakan objek (*tracking*), biometrik | **Moderat** | **Moderat** |
 
 ---
 
-## 9. Relevansi dalam Kecerdasan Buatan dan Computer Vision
+### 11.3 Strategi Fusi Multi-Fitur
 
-Ekstraksi fitur Mean dan Standar Deviasi kanal RGB bukan sekadar latihan matematika, melainkan pilar penting dalam arsitektur AI modern:
+Tidak ada satu fitur tunggal yang sempurna untuk semua kondisi citra. Oleh karena itu, pendekatan terbaik adalah menggabungkan beberapa fitur (*multi-feature fusion*):
 
-### 1. Ekstraksi Fitur Berbasis Momen Warna (*Color Moments*)
-Dalam klasifikasi Machine Learning klasik (seperti Support Vector Machine, k-NN, atau Random Forest), vektor fitur citra dibentuk dari momen-momen statistik tiap kanal:
-$$\mathbf{x} = \begin{bmatrix} \mu_R, & \sigma_R, & \mu_G, & \sigma_G, & \mu_B, & \sigma_B \end{bmatrix}^T$$
-Dengan vektor 6 dimensi ini, model dapat mengklasifikasikan tipe citra tanpa harus memproses jutaan piksel secara mentah.
-
-### 2. Normalisasi Data pada Deep Learning (Convolutional Neural Networks)
-Model arsitektur deep learning mutakhir (seperti ResNet, EfficientNet, dan Vision Transformer) mewajibkan proses standardisasi z-score pada lapisan input menggunakan nilai mean ($\boldsymbol{\mu}$) dan standar deviasi ($\boldsymbol{\sigma}$):
-
-$$I_{\text{norm}}(i, j, c) = \frac{I(i, j, c) - \mu_c}{\sigma_c}$$
-
-Proses ini menjaga gradien *backpropagation* tetap stabil dan mempercepat konvergensi model selama pelatihan.
+1. **Feature-Level Fusion (Early Fusion):**  
+   Menggabungkan vektor fitur warna, statistik, dan tekstur menjadi satu vektor gabungan:
+   $$\mathbf{x}_{\text{fused}} = \left[ \mu_R, \sigma_R, \dots, \mu_{\text{gray}}, \sigma_{\text{gray}}, H, \text{Contrast}_{\text{GLCM}}, \text{Energy}_{\text{GLCM}}, \dots \right]^T$$
+   Kelebihan: Model machine learning (seperti SVM atau Random Forest) dapat mempelajari korelasi silang antar-fitur secara simultan.
+2. **Decision-Level Fusion (Late Fusion):**  
+   Melatih klasifier terpisah pada masing-masing modalitas fitur (misal: satu model untuk warna, satu untuk tekstur), lalu menggabungkan hasil prediksi melalui *soft voting* atau pembobotan probabilitas Bayesian.
 
 ---
 
-## 10. Kesimpulan
+## 12. Kesimpulan
 
-Berdasarkan analisis teoritis, simulasi manual, dan komputasi aktual pada citra `24-068 Berantakan 1.jpeg`, dapat ditarik beberapa kesimpulan penting:
-
-1. **Representasi Citra sebagai Sinyal Multidimensi:** Citra digital warna merupakan sinyal diskrit 3 dimensi dengan dimensi spasial $1600 \times 1200$ piksel dan 3 kanal warna aditif, menghasilkan $5.760.000$ nilai numerik dalam rentang $[0, 255]$.
-2. **Karakteristik Kecerahan (Mean):**
-   - Nilai rata-rata per kanal terukur adalah $\mu_R = 134.8988$, $\mu_G = 133.4873$, dan $\mu_B = 128.8982$.
-   - Mean dari rata-rata ketiga kanal RGB ($\mu_{\text{RGB}}$) adalah **$132.4281$**, menandakan eksposur pencahayaan ruangan yang seimbang dengan nuansa warna hangat (*warm tone*).
-3. **Karakteristik Kontras (Standar Deviasi):**
-   - Nilai standar deviasi per kanal terukur adalah $\sigma_R = 56.2021$, $\sigma_G = 55.0876$, dan $\sigma_B = 52.1753$, dengan standar deviasi gabungan sebesar **$54.5749$**.
-   - Nilai deviasi yang tinggi membuktikan keberadaan variasi tekstur yang heterogen, kontras yang tajam, serta bayangan mikro akibat objek yang tertata acak (*berantakan*).
-4. **Verifikasi Matematis:** Simulasi perhitungan manual pada sub-matriks $5 \times 5$ mengonfirmasi kebenaran alur komputasi diskrit, memberikan pemahaman intuitif dari tingkat piksel dasar hingga skala citra menyeluruh.
+1. **Konversi RGB ke Grayscale 8-Bit:** Merupakan langkah krusial dalam pemrosesan citra digital yang mereduksi dimensi data sebesar $66.7\%$ ($3$ kanal menjadi $1$ kanal) tanpa menghilangkan karakteristik spasial dan kontras. Metode pembobotan Luminansi ITU-R BT.601 ($Y = 0.299R + 0.587G + 0.114B$) menghasilkan representasi keabuan yang paling sesuai dengan sensitivitas fisiologis mata manusia.
+2. **Karakteristik Citra `24-068 Berantakan 1.jpeg`:**
+   - **Momen Warna RGB:** Rata-rata kecerahan per kanal terukur $\mu_R = 134.90$, $\mu_G = 133.49$, $\mu_B = 128.90$, dengan Mean Gabungan RGB $\mu_{\text{RGB}} = 132.43$. Nilai $\mu_R > \mu_G > \mu_B$ mencerminkan pencahayaan lampu ruangan hangat (*warm lighting*).
+   - **Fitur Statistik Grayscale:** Standar deviasi $\sigma = 54.75$ dan Entropi Shannon $H = 7.52\text{ bit}$ membuktikan dinamika kontras yang tinggi dan variasi tekstur visual yang kaya akibat benda-benda yang tersebar acak.
+   - **Fitur Tekstur Spasial GLCM:** Menghasilkan kontras lokal $0.3430$, korelasi spasial tinggi $0.9853$, dan energi $0.0736$, mencerminkan struktur permukaan yang kompleks dan heterogen.
+   - **Morfologi Geometris:** Binarisasi Otsu ($T=112$) menghasilkan Indeks Irregularitas tinggi ($II = 19.63$) dan Solidity $0.7972$, menegaskan ketidakteraturan bentuk tumpukan objek pada kondisi "Berantakan".
+3. **Validasi Matematis & Implementasi:** Simulasi perhitungan manual pada sub-matriks $5 \times 5$ dan contoh GLCM $3 \times 3$ membuktikan ketepatan alur komputasi diskrit di balik algoritma Python modern.
 
 ---
 
-## 11. Referensi
+## 13. Referensi
 
-1. Gonzalez, R. C., & Woods, R. E. (2018). *Digital Image Processing* (4th ed.). Pearson.
-2. Szeliski, R. (2022). *Computer Vision: Algorithms and Applications* (2nd ed.). Springer.
-3. Oppenheim, A. V., & Schafer, R. W. (2009). *Discrete-Time Signal Processing* (3rd ed.). Prentice Hall.
-4. Bradski, G., & Kaehler, A. (2008). *Learning OpenCV: Computer Vision with the OpenCV Library*. O'Reilly Media.
-5. NumPy Documentation. *Mathematical functions: Statistics (`numpy.mean`, `numpy.std`)*. https://numpy.org/doc/stable/reference/routines.statistics.html
-
+1. Hallur, S., & Gavade, A. (2025). Image feature extraction techniques: A comprehensive review. *Franklin Open*, 12, 100366. Elsevier. https://doi.org/10.1016/j.fraope.2025.100366
+2. Mulaab. *Teknik Ekstraksi Fitur Citra*. Jurusan Teknik Informatika, Fakultas Teknik, Universitas Trunojoyo Madura (UTM).
+3. Haralick, R. M., Shanmugam, K., & Dinstein, I. (1973). Textural features for image classification. *IEEE Transactions on Systems, Man, and Cybernetics*, SMC-3(6), 610–621.
+4. Tamura, H., Mori, S., & Yamawaki, T. (1978). Textural features corresponding to visual perception. *IEEE Transactions on Systems, Man, and Cybernetics*, 8(6), 460–473.
+5. Gonzalez, R. C., & Woods, R. E. (2018). *Digital Image Processing* (4th ed.). Pearson.
+6. International Telecommunication Union. (2011). *Studio encoding parameters of digital television for standard 4:3 and wide-screen 16:9 aspect ratios* (Recommendation ITU-R BT.601-7).
+7. Otsu, N. (1979). A threshold selection method from gray-level histograms. *IEEE Transactions on Systems, Man, and Cybernetics*, 9(1), 62–66.
