@@ -1,0 +1,1363 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ekstraksi Fitur Citra Digital: Analisis Mean dan Standar Deviasi Kanal RGB (Red, Green, Blue) &#8212; Tugas PSD</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'ekstraksi_fitur_citra_digital';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Identifikasi dan Klasifikasi Suara Menggunakan Fitur Audio: Studi Kasus Berisik vs Non-Berisik (Hening)" href="identifikasi_klasifikasi_suara.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/foto.png" class="logo__image only-light" alt="Tugas PSD - Home"/>
+    <script>document.write(`<img src="_static/foto.png" class="logo__image only-dark" alt="Tugas PSD - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Analisis Kualitas Udara (Polutan NO2) Area Suramadu
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="business_understanding.html">1. Business Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_understanding.html">2. Data Understanding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="1_pengumpulan_data.html">Bab 1: Pengumpulan Data, Preprocessing, dan Ekstraksi Fitur <em>Time-Series</em> NO2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="2_database_dan_analisis.html">Bab 2: Sentralisasi Data, Manajemen Database, dan Analisis Statistik Deskriptif</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda.html">3. Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="time_series.html">Analisis Time Series: Persiapan Data Kualitas Udara (NO2) Suramadu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="conclusion.html">4. Kesimpulan dan Rekomendasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eda_polutan.html">Bagian 1: Eksplorasi Data (EDA) Time Series pada Setiap Polutan</a></li>
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%202%20Analisis%20dan%20Perhitungan%20Manual%20Fitur%20TSFEL.html">Bagian 2: Analisis dan Perhitungan Manual Fitur TSFEL</a></li>
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Bagian%203%20Pemodelan%20Machine%20Learning%20%26%20Evaluasi%20K-Means.html">Bagian 3: Pemodelan Machine Learning &amp; Evaluasi K-Means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap1_pengambilan_data_eda.html">Tahap 1 - Pengambilan Data &amp; Exploratory Data Analysis (EDA)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap2_reduksi_dimensi.html">Tahap 2 - Reduksi Dimensi: 204 -&gt; 203 -&gt; 74 -&gt; 37</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap3_eksperimen_clustering.html">Tahap 3 - Eksperimen Clustering &amp; Analisis Silhouette</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tahap4_kmeans_knime_dan_visualisasi_peta.html">Pemodelan K-Means &amp; Visualisasi Peta Segmentasi</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tugas_PSD_LULC_Final.html">Klasifikasi Penggunaan dan Tutupan Lahan (Land Use / Land Cover) Jawa Timur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identifikasi_klasifikasi_suara.html">Identifikasi dan Klasifikasi Suara Menggunakan Fitur Audio: Studi Kasus Berisik vs Non-Berisik (Hening)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Ekstraksi Fitur Citra Digital: Analisis Mean dan Standar Deviasi Kanal RGB (Red, Green, Blue)</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/ekstraksi_fitur_citra_digital.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Ekstraksi Fitur Citra Digital: Analisis Mean dan Standar Deviasi Kanal RGB (Red, Green, Blue)</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daftar-isi">Daftar Isi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan-dari-sinyal-1d-ke-sinyal-spasial-2d-3d">1. Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#karakteristik-dan-representasi-citra-sampel">2. Karakteristik dan Representasi Citra Sampel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identitas-dan-resolusi-citra">2.1 Identitas dan Resolusi Citra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dekomposisi-kanal-warna-rgb">2.2 Dekomposisi Kanal Warna RGB</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#landasan-teori-dan-formulasi-matematis">3. Landasan Teori dan Formulasi Matematis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-warna-rgb-dan-kedalaman-bit-bit-depth">3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-nilai-rata-rata-mean-mu">3.2 Formulasi Nilai Rata-rata (Mean / <span class="math notranslate nohighlight">\(\mu\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-simpangan-baku-standar-deviasi-sigma">3.3 Formulasi Simpangan Baku (Standar Deviasi / <span class="math notranslate nohighlight">\(\sigma\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-mean-gabungan-kanal-rgb">3.4 Formulasi Mean Gabungan Kanal RGB</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual-step-by-step-sub-matriks-5-times-5">4. Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-patch-numerik-piksel-nyata">4.1 Ekstraksi Patch Numerik Piksel Nyata</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-merah-r">4.2 Perhitungan Manual Kanal Merah (R)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-jumlah-total-nilai-intensitas-sum-i-r">Langkah 1: Menghitung Jumlah Total Nilai Intensitas (<span class="math notranslate nohighlight">\(\sum I_R\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menghitung-nilai-rata-rata-mu-r">Langkah 2: Menghitung Nilai Rata-rata (<span class="math notranslate nohighlight">\(\mu_R\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-selisih-deviasi-kuadrat-sum-i-r-k-mu-r-2">Langkah 3: Menghitung Selisih Deviasi Kuadrat <span class="math notranslate nohighlight">\(\sum (I_R(k) - \mu_R)^2\)</span></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-varians-sigma-r-2-dan-standar-deviasi-sigma-r">Langkah 4: Menghitung Varians (<span class="math notranslate nohighlight">\(\sigma_R^2\)</span>) dan Standar Deviasi (<span class="math notranslate nohighlight">\(\sigma_R\)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-hijau-g">4.3 Perhitungan Manual Kanal Hijau (G)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-biru-b">4.4 Perhitungan Manual Kanal Biru (B)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rekapitulasi-perhitungan-manual-patch">4.5 Rekapitulasi Perhitungan Manual Patch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-komputasi-dengan-python">5. Implementasi Kode Komputasi dengan Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-ekstraksi-fitur-citra-tunggal-24-068-berantakan-1-jpeg">5.1 Skrip Ekstraksi Fitur Citra Tunggal (<code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-ekstraksi-otomatis-batch-untuk-seluruh-citra">5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual-pada-citra-24-068-berantakan-1">6. Hasil Ekstraksi Fitur Aktual pada Citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-statistik-lengkap">6.1 Tabel Statistik Lengkap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-distribusi-histogram-intensitas-piksel">6.2 Analisis Distribusi Histogram Intensitas Piksel</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#karakteristik-distribusi-histogram">Karakteristik Distribusi Histogram:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-fisis-dan-analisis-karakteristik-citra">7. Interpretasi Fisis dan Analisis Karakteristik Citra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-nilai-rata-rata-kanal-mean-rgb">7.1 Makna Nilai Rata-rata Kanal (Mean RGB)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-standar-deviasi-kontras-dan-kompleksitas-visual">7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studi-komparatif-citra-kondisi-berantakan-vs-rapi">8. Studi Komparatif: Citra Kondisi “Berantakan” vs “Rapi”</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wawasan-komparatif">Wawasan Komparatif:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relevansi-dalam-kecerdasan-buatan-dan-computer-vision">9. Relevansi dalam Kecerdasan Buatan dan Computer Vision</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-fitur-berbasis-momen-warna-color-moments">1. Ekstraksi Fitur Berbasis Momen Warna (<em>Color Moments</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi-data-pada-deep-learning-convolutional-neural-networks">2. Normalisasi Data pada Deep Learning (Convolutional Neural Networks)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">10. Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referensi">11. Referensi</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="ekstraksi-fitur-citra-digital-analisis-mean-dan-standar-deviasi-kanal-rgb-red-green-blue">
+<h1>Ekstraksi Fitur Citra Digital: Analisis Mean dan Standar Deviasi Kanal RGB (Red, Green, Blue)<a class="headerlink" href="#ekstraksi-fitur-citra-digital-analisis-mean-dan-standar-deviasi-kanal-rgb-red-green-blue" title="Link to this heading">#</a></h1>
+<p><strong>Mata Kuliah:</strong> Pengolahan Sinyal Digital (PSD)<br />
+<strong>Topik:</strong> Pengolahan Citra Digital (Digital Image Processing)<br />
+<strong>Program Studi:</strong> Sains Data / Teknik Informatika<br />
+<strong>Penulis:</strong> Muhammad Zaidan Nabil Rafi (NIM: 240411100068)<br />
+<strong>Sampel Citra Fokus:</strong> <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code><br />
+<strong>Dataset Pendukung:</strong> Direktori <code class="docutils literal notranslate"><span class="pre">Foto</span> <span class="pre">citra/</span></code> (6 Sampel Citra Berantakan vs Rapi)<br />
+<strong>Tanggal:</strong> November 2026</p>
+<hr class="docutils" />
+<section id="daftar-isi">
+<h2>Daftar Isi<a class="headerlink" href="#daftar-isi" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D</p></li>
+<li><p>Karakteristik dan Representasi Citra Sampel</p>
+<ul class="simple">
+<li><p>2.1 Identitas dan Resolusi Citra</p></li>
+<li><p>2.2 Dekomposisi Kanal Warna RGB</p></li>
+</ul>
+</li>
+<li><p>Landasan Teori dan Formulasi Matematis</p>
+<ul class="simple">
+<li><p>3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)</p></li>
+<li><p>3.2 Formulasi Nilai Rata-rata (Mean / <span class="math notranslate nohighlight">\(\mu\)</span>)</p></li>
+<li><p>3.3 Formulasi Simpangan Baku (Standar Deviasi / <span class="math notranslate nohighlight">\(\sigma\)</span>)</p></li>
+<li><p>3.4 Formulasi Mean Gabungan Kanal RGB</p></li>
+</ul>
+</li>
+<li><p>Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span>)</p>
+<ul class="simple">
+<li><p>4.1 Ekstraksi Patch Numerik Piksel Nyata</p></li>
+<li><p>4.2 Perhitungan Manual Kanal Merah (R)</p></li>
+<li><p>4.3 Perhitungan Manual Kanal Hijau (G)</p></li>
+<li><p>4.4 Perhitungan Manual Kanal Biru (B)</p></li>
+<li><p>4.5 Rekapitulasi Perhitungan Manual Patch</p></li>
+</ul>
+</li>
+<li><p>Implementasi Kode Komputasi dengan Python</p>
+<ul class="simple">
+<li><p>5.1 Skrip Ekstraksi Fitur Citra Tunggal (<code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code>)</p></li>
+<li><p>5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra</p></li>
+</ul>
+</li>
+<li><p>Hasil Ekstraksi Fitur Aktual pada Citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1</span></code></p>
+<ul class="simple">
+<li><p>6.1 Tabel Statistik Lengkap</p></li>
+<li><p>6.2 Analisis Distribusi Histogram Intensitas Piksel</p></li>
+</ul>
+</li>
+<li><p>Interpretasi Fisis dan Analisis Karakteristik Citra</p>
+<ul class="simple">
+<li><p>7.1 Makna Nilai Rata-rata Kanal (Mean RGB)</p></li>
+<li><p>7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)</p></li>
+</ul>
+</li>
+<li><p>Studi Komparatif: Citra Kondisi “Berantakan” vs “Rapi”</p></li>
+<li><p>Relevansi dalam Kecerdasan Buatan dan Computer Vision</p></li>
+<li><p>Kesimpulan</p></li>
+<li><p>Referensi</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="pendahuluan-dari-sinyal-1d-ke-sinyal-spasial-2d-3d">
+<h2>1. Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D<a class="headerlink" href="#pendahuluan-dari-sinyal-1d-ke-sinyal-spasial-2d-3d" title="Link to this heading">#</a></h2>
+<p>Dalam disiplin ilmu <strong>Pengolahan Sinyal Digital (PSD)</strong>, sinyal didefinisikan sebagai fungsi yang membawa informasi mengenai status atau perilaku suatu fenomena fisis. Berdasarkan dimensinya:</p>
+<ol class="arabic simple">
+<li><p><strong>Sinyal 1-Dimensi (1D):</strong> Sinyal bervariasi terhadap satu variabel independen, umumnya adalah waktu (<span class="math notranslate nohighlight">\(t\)</span>). Contoh paling nyata adalah <strong>sinyal suara (audio)</strong> <span class="math notranslate nohighlight">\(s(t)\)</span>, di mana amplitudo tekanan gelombang udara berubah terhadap waktu.</p></li>
+<li><p><strong>Sinyal 2-Dimensi (2D):</strong> Sinyal bervariasi terhadap dua variabel spasial independen, yaitu koordinat horizontal (<span class="math notranslate nohighlight">\(x\)</span>) dan vertikal (<span class="math notranslate nohighlight">\(y\)</span>). Contohnya adalah <strong>citra digital monokrom / grayscale</strong> <span class="math notranslate nohighlight">\(I(x, y)\)</span>, di mana setiap titik merepresentasikan intensitas kecerahan pada koordinat tersebut.</p></li>
+<li><p><strong>Sinyal Multi-Kanal / Tensor 3-Dimensi (3D):</strong> Citra digital berwarna tersusun atas sekumpulan bidang 2D independen yang mewakili komponen warna tertentu. Pada model warna <strong>RGB (Red, Green, Blue)</strong>, sinyal citra dimodelkan sebagai fungsi <span class="math notranslate nohighlight">\(I(x, y, c)\)</span>, di mana <span class="math notranslate nohighlight">\(c \in \{R, G, B\}\)</span> mewakili indeks kanal warna.</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+-----------------------------------------------------------------------------------+</span>
+<span class="o">|</span>                            <span class="n">HIERARKI</span> <span class="n">SINYAL</span> <span class="n">DIGITAL</span>                               <span class="o">|</span>
+<span class="o">+-----------------------------------------------------------------------------------+</span>
+<span class="o">|</span>  <span class="mi">1</span><span class="n">D</span><span class="p">:</span> <span class="n">Sinyal</span> <span class="n">Audio</span>        <span class="o">-&gt;</span>  <span class="n">s</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>             <span class="n">Amplitudo</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Waktu</span><span class="p">)</span>                <span class="o">|</span>
+<span class="o">|</span>  <span class="mi">2</span><span class="n">D</span><span class="p">:</span> <span class="n">Citra</span> <span class="n">Grayscale</span>     <span class="o">-&gt;</span>  <span class="n">I</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>          <span class="n">Kecerahan</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Baris</span><span class="p">,</span> <span class="n">Kolom</span><span class="p">)</span>         <span class="o">|</span>
+<span class="o">|</span>  <span class="mi">3</span><span class="n">D</span><span class="p">:</span> <span class="n">Citra</span> <span class="n">Warna</span> <span class="p">(</span><span class="n">RGB</span><span class="p">)</span>   <span class="o">-&gt;</span>  <span class="n">I</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>       <span class="n">Intensitas</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Baris</span><span class="p">,</span> <span class="n">Kolom</span><span class="p">,</span> <span class="n">Kanal</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+-----------------------------------------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>Tujuan mendasar dari ekstraksi fitur statistik citra adalah mereduksi volume data piksel yang sangat besar (jutaan titik) menjadi sekumpulan ringkasan deskriptor numerik yang bermakna. Dua deskriptor statistik momen warna (<em>color moments</em>) yang paling fundamental adalah <strong>Mean (Rata-rata)</strong> dan <strong>Standar Deviasi (Simpangan Baku)</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="karakteristik-dan-representasi-citra-sampel">
+<h2>2. Karakteristik dan Representasi Citra Sampel<a class="headerlink" href="#karakteristik-dan-representasi-citra-sampel" title="Link to this heading">#</a></h2>
+<section id="identitas-dan-resolusi-citra">
+<h3>2.1 Identitas dan Resolusi Citra<a class="headerlink" href="#identitas-dan-resolusi-citra" title="Link to this heading">#</a></h3>
+<p>Pada materi ini, objek analisis utama yang dibedah secara komprehensif adalah:</p>
+<ul class="simple">
+<li><p><strong>Nama Berkas:</strong> <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code></p></li>
+<li><p><strong>Kategori Objek:</strong> Citra Ruang/Meja Kondisi <em>Berantakan</em> (Cluttered Scene)</p></li>
+<li><p><strong>Format Berkas:</strong> JPEG (Joint Photographic Experts Group)</p></li>
+<li><p><strong>Lebar Citra (<span class="math notranslate nohighlight">\(W\)</span> / Width):</strong> <span class="math notranslate nohighlight">\(1600\)</span> piksel (arah sumbu horizontal <span class="math notranslate nohighlight">\(x\)</span>)</p></li>
+<li><p><strong>Tinggi Citra (<span class="math notranslate nohighlight">\(H\)</span> / Height):</strong> <span class="math notranslate nohighlight">\(1200\)</span> piksel (arah sumbu vertikal <span class="math notranslate nohighlight">\(y\)</span>)</p></li>
+<li><p><strong>Jumlah Kanal (<span class="math notranslate nohighlight">\(C\)</span> / Channels):</strong> <span class="math notranslate nohighlight">\(3\)</span> kanal warna aditif (Red, Green, Blue)</p></li>
+<li><p><strong>Total Piksel per Kanal:</strong>
+$<span class="math notranslate nohighlight">\(N = W \times H = 1600 \times 1200 = 1.920.000\text{ piksel}\)</span>$</p></li>
+<li><p><strong>Total Data Numerik (Elemen Matriks):</strong>
+$<span class="math notranslate nohighlight">\(N_{\text{total}} = 1.920.000 \times 3 = 5.760.000\text{ nilai intensitas}\)</span>$</p></li>
+</ul>
+</section>
+<section id="dekomposisi-kanal-warna-rgb">
+<h3>2.2 Dekomposisi Kanal Warna RGB<a class="headerlink" href="#dekomposisi-kanal-warna-rgb" title="Link to this heading">#</a></h3>
+<p>Citra digital berwarna tidak disimpan sebagai warna tunggal di memori, melainkan ditumpuk dari 3 matriks intensitas 2 dimensi:</p>
+<ol class="arabic simple">
+<li><p><strong>Bidang Merah (Red Plane / <span class="math notranslate nohighlight">\(I_R\)</span>):</strong> Menyimpan energi panjang gelombang merah (<span class="math notranslate nohighlight">\(\approx 700\text{ nm}\)</span>).</p></li>
+<li><p><strong>Bidang Hijau (Green Plane / <span class="math notranslate nohighlight">\(I_G\)</span>):</strong> Menyimpan energi panjang gelombang hijau (<span class="math notranslate nohighlight">\(\approx 546\text{ nm}\)</span>).</p></li>
+<li><p><strong>Bidang Biru (Blue Plane / <span class="math notranslate nohighlight">\(I_B\)</span>):</strong> Menyimpan energi panjang gelombang biru (<span class="math notranslate nohighlight">\(\approx 435\text{ nm}\)</span>).</p></li>
+</ol>
+<p><img alt="Dekomposisi Kanal RGB" src="_images/citra_rgb_decomposition.png" /></p>
+<blockquote>
+<div><p><strong>Interpretasi Visual Gambar di Atas:</strong></p>
+<ul class="simple">
+<li><p>Pada baris atas, kanal R, G, dan B ditampilkan dalam skala keabuan (<em>grayscale intensity</em>). Bagian yang tampak terang (putih) menunjukkan bahwa piksel tersebut memiliki kontribusi energi yang dominan pada kanal bersangkutan.</p></li>
+<li><p>Pada baris bawah, masing-masing kanal diisolasi ke dalam warna monokromatis aslinya (merah murni, hijau murni, dan biru murni) sebelum digabungkan kembali (<em>channel superposition</em>) membentuk citra RGB penuh.</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="landasan-teori-dan-formulasi-matematis">
+<h2>3. Landasan Teori dan Formulasi Matematis<a class="headerlink" href="#landasan-teori-dan-formulasi-matematis" title="Link to this heading">#</a></h2>
+<section id="model-warna-rgb-dan-kedalaman-bit-bit-depth">
+<h3>3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)<a class="headerlink" href="#model-warna-rgb-dan-kedalaman-bit-bit-depth" title="Link to this heading">#</a></h3>
+<p>Setiap nilai piksel pada citra digital standar disimpan menggunakan format bilangan bulat tak bertanda 8-bit (<em>unsigned 8-bit integer</em> / <code class="docutils literal notranslate"><span class="pre">uint8</span></code>).</p>
+<p>Rentang nilai intensitas yang mungkin dimiliki oleh setiap piksel pada kanal <span class="math notranslate nohighlight">\(c\)</span> adalah:</p>
+<div class="math notranslate nohighlight">
+\[I_c(i, j) \in [0, 2^{8} - 1] = [0, 255]\]</div>
+<ul class="simple">
+<li><p>Nilai <strong><span class="math notranslate nohighlight">\(0\)</span></strong> melambangkan ketiadaan energi cahaya secara total (hitam mutlak).</p></li>
+<li><p>Nilai <strong><span class="math notranslate nohighlight">\(255\)</span></strong> melambangkan saturasi energi cahaya penuh (kecerahan maksimal).</p></li>
+<li><p>Kombinasi <span class="math notranslate nohighlight">\((R=255, G=255, B=255)\)</span> menghasilkan warna <strong>putih murni</strong>, sedangkan <span class="math notranslate nohighlight">\((R=0, G=0, B=0)\)</span> menghasilkan warna <strong>hitam murni</strong>.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hitam</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;-------------------</span> <span class="n">Abu</span><span class="o">-</span><span class="n">abu</span> <span class="p">[</span><span class="mi">128</span><span class="p">]</span> <span class="o">-------------------&gt;</span> <span class="n">Putih</span> <span class="n">Terang</span> <span class="p">[</span><span class="mi">255</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="formulasi-nilai-rata-rata-mean-mu">
+<h3>3.2 Formulasi Nilai Rata-rata (Mean / <span class="math notranslate nohighlight">\(\mu\)</span>)<a class="headerlink" href="#formulasi-nilai-rata-rata-mean-mu" title="Link to this heading">#</a></h3>
+<p><strong>Mean (Nilai Rata-rata)</strong> adalah momen pertama (<em>first-order statistical moment</em>) dari distribusi intensitas warna. Mean mengukur <strong>tendensi sentral</strong> atau tingkat kecerahan rata-rata (<em>average brightness / luminance</em>) suatu kanal citra.</p>
+<p>Secara matematis, untuk citra berukuran <span class="math notranslate nohighlight">\(H \times W\)</span> pada kanal <span class="math notranslate nohighlight">\(c \in \{R, G, B\}\)</span>, nilai Mean didefinisikan sebagai:</p>
+<div class="math notranslate nohighlight">
+\[\mu_c = \frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} I_c(i, j)\]</div>
+<p>Dimana:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\mu_c\)</span> adalah nilai rata-rata intensitas untuk kanal warna <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H\)</span> adalah tinggi citra dalam satuan piksel (jumlah baris matriks).</p></li>
+<li><p><span class="math notranslate nohighlight">\(W\)</span> adalah lebar citra dalam satuan piksel (jumlah kolom matriks).</p></li>
+<li><p><span class="math notranslate nohighlight">\(I_c(i, j)\)</span> adalah nilai intensitas piksel pada baris ke-<span class="math notranslate nohighlight">\(i\)</span> dan kolom ke-<span class="math notranslate nohighlight">\(j\)</span> pada kanal <span class="math notranslate nohighlight">\(c\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(H \times W\)</span> adalah jumlah total piksel pada satu bidang kanal (<span class="math notranslate nohighlight">\(N\)</span>).</p></li>
+</ul>
+</section>
+<section id="formulasi-simpangan-baku-standar-deviasi-sigma">
+<h3>3.3 Formulasi Simpangan Baku (Standar Deviasi / <span class="math notranslate nohighlight">\(\sigma\)</span>)<a class="headerlink" href="#formulasi-simpangan-baku-standar-deviasi-sigma" title="Link to this heading">#</a></h3>
+<p><strong>Standar Deviasi (Simpangan Baku)</strong> adalah momen sentral kedua (<em>second-order central moment</em>) yang telah diakarkuadratkan. Standar deviasi mengukur seberapa jauh nilai intensitas piksel tersebar dari nilai rata-ratanya.</p>
+<p>Dalam domain citra, standar deviasi merupakan representasi langsung dari <strong>kontras citra (<em>image contrast</em>)</strong> dan tingkat dinamika tekstur visual:</p>
+<ul class="simple">
+<li><p><strong><span class="math notranslate nohighlight">\(\sigma\)</span> bernilai kecil:</strong> Nilai piksel berkumpul sangat dekat di sekitar mean. Citra terlihat monoton, seragam, atau berkontras rendah (<em>low contrast / flat</em>).</p></li>
+<li><p><strong><span class="math notranslate nohighlight">\(\sigma\)</span> bernilai besar:</strong> Terdapat rentang variasi yang lebar antara area gelap (bayangan) dan area terang (sorotan cahaya). Citra memiliki dinamika kontras tinggi dan kaya detail visual (<em>high contrast</em>).</p></li>
+</ul>
+<p>Rumus matematis Standar Deviasi Populasi (<span class="math notranslate nohighlight">\(\sigma_c\)</span>) pada kanal <span class="math notranslate nohighlight">\(c\)</span> adalah:</p>
+<div class="math notranslate nohighlight">
+\[\sigma_c = \sqrt{\frac{1}{H \times W} \sum_{i=1}^{H} \sum_{j=1}^{W} \left( I_c(i, j) - \mu_c \right)^2}\]</div>
+<p>Untuk Standar Deviasi Sampel (<span class="math notranslate nohighlight">\(s_c\)</span>) dengan koreksi Bessel (<span class="math notranslate nohighlight">\(N - 1\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[s_c = \sqrt{\frac{1}{H \times W - 1} \sum_{i=1}^{H} \sum_{j=1}^{W} \left( I_c(i, j) - \mu_c \right)^2}\]</div>
+<blockquote>
+<div><p><strong>Catatan Teknis PSD:</strong>
+Karena jumlah piksel citra sampel kita sangat besar (<span class="math notranslate nohighlight">\(N = 1.920.000\)</span>), selisih antara pembagi <span class="math notranslate nohighlight">\(N\)</span> dan <span class="math notranslate nohighlight">\(N - 1\)</span> adalah:
+$<span class="math notranslate nohighlight">\(\frac{1}{1.920.000} \text{ vs } \frac{1}{1.919.999} \approx 0.0000005\)</span><span class="math notranslate nohighlight">\(
+Perbedaannya sangat kecil (\)</span>&lt; 0.00002<span class="math notranslate nohighlight">\(), sehingga standar deviasi populasi (\)</span>\sigma<span class="math notranslate nohighlight">\() dan sampel (\)</span>s$) menghasilkan nilai yang secara praktis identik.</p>
+</div></blockquote>
+</section>
+<section id="formulasi-mean-gabungan-kanal-rgb">
+<h3>3.4 Formulasi Mean Gabungan Kanal RGB<a class="headerlink" href="#formulasi-mean-gabungan-kanal-rgb" title="Link to this heading">#</a></h3>
+<p>Untuk mendapatkan gambaran umum kecerahan citra secara keseluruhan, kita dapat menghitung rata-rata dari ketiga kanal warna (<em>mean of RGB channel means</em>):</p>
+<div class="math notranslate nohighlight">
+\[\mu_{\text{RGB}} = \frac{\mu_R + \mu_G + \mu_B}{3}\]</div>
+<p>Secara ekuivalen, <span class="math notranslate nohighlight">\(\mu_{\text{RGB}}\)</span> juga sama dengan penjumlahan seluruh <span class="math notranslate nohighlight">\(5.760.000\)</span> nilai piksel yang dibagi dengan total elemen pada tensor 3D:</p>
+<div class="math notranslate nohighlight">
+\[\mu_{\text{RGB}} = \frac{1}{3 \times H \times W} \sum_{c \in \{R, G, B\}} \sum_{i=1}^{H} \sum_{j=1}^{W} I_c(i, j)\]</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="simulasi-perhitungan-manual-step-by-step-sub-matriks-5-times-5">
+<h2>4. Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span>)<a class="headerlink" href="#simulasi-perhitungan-manual-step-by-step-sub-matriks-5-times-5" title="Link to this heading">#</a></h2>
+<p>Bagi seorang pemula atau mahasiswa yang baru mempelajari pengolahan citra digital, membayangkan operasi matematika pada <span class="math notranslate nohighlight">\(1.920.000\)</span> piksel secara langsung dapat terasa abstrak.</p>
+<p>Oleh karena itu, pada bagian ini disajikan <strong>simulasi perhitungan manual langkah demi langkah</strong> menggunakan sub-matriks berukuran <span class="math notranslate nohighlight">\(5 \times 5\)</span> (<span class="math notranslate nohighlight">\(N = 25\)</span> piksel) yang dipotong langsung dari bagian tengah citra nyata <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code> pada koordinat baris <span class="math notranslate nohighlight">\(y \in [600, 604]\)</span> dan kolom <span class="math notranslate nohighlight">\(x \in [800, 804]\)</span>.</p>
+<p><img alt="Sub-Matriks Patch 5x5" src="_images/citra_pixel_matrix_patch.png" /></p>
+<section id="ekstraksi-patch-numerik-piksel-nyata">
+<h3>4.1 Ekstraksi Patch Numerik Piksel Nyata<a class="headerlink" href="#ekstraksi-patch-numerik-piksel-nyata" title="Link to this heading">#</a></h3>
+<p>Berikut adalah matriks integer <span class="math notranslate nohighlight">\(5 \times 5\)</span> hasil ekstraksi aktual dari citra:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Koordinat</p></th>
+<th class="head text-center"><p>Kanal Merah (<span class="math notranslate nohighlight">\(I_R\)</span>)</p></th>
+<th class="head text-center"><p>Kanal Hijau (<span class="math notranslate nohighlight">\(I_G\)</span>)</p></th>
+<th class="head text-center"><p>Kanal Biru (<span class="math notranslate nohighlight">\(I_B\)</span>)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>Baris 0</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[166,</span> <span class="pre">166,</span> <span class="pre">165,</span> <span class="pre">165,</span> <span class="pre">164]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[162,</span> <span class="pre">162,</span> <span class="pre">161,</span> <span class="pre">161,</span> <span class="pre">160]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[153,</span> <span class="pre">153,</span> <span class="pre">152,</span> <span class="pre">152,</span> <span class="pre">151]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>Baris 1</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[160,</span> <span class="pre">160,</span> <span class="pre">159,</span> <span class="pre">159,</span> <span class="pre">159]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[156,</span> <span class="pre">156,</span> <span class="pre">155,</span> <span class="pre">155,</span> <span class="pre">155]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[147,</span> <span class="pre">147,</span> <span class="pre">146,</span> <span class="pre">146,</span> <span class="pre">146]</span></code></p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>Baris 2</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[161,</span> <span class="pre">161,</span> <span class="pre">161,</span> <span class="pre">160,</span> <span class="pre">160]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[157,</span> <span class="pre">157,</span> <span class="pre">157,</span> <span class="pre">156,</span> <span class="pre">156]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[148,</span> <span class="pre">148,</span> <span class="pre">148,</span> <span class="pre">147,</span> <span class="pre">147]</span></code></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>Baris 3</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[162,</span> <span class="pre">162,</span> <span class="pre">162,</span> <span class="pre">161,</span> <span class="pre">161]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[158,</span> <span class="pre">158,</span> <span class="pre">158,</span> <span class="pre">157,</span> <span class="pre">157]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[149,</span> <span class="pre">149,</span> <span class="pre">149,</span> <span class="pre">148,</span> <span class="pre">148]</span></code></p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>Baris 4</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[158,</span> <span class="pre">158,</span> <span class="pre">157,</span> <span class="pre">157,</span> <span class="pre">157]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[154,</span> <span class="pre">154,</span> <span class="pre">153,</span> <span class="pre">153,</span> <span class="pre">153]</span></code></p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">[145,</span> <span class="pre">145,</span> <span class="pre">144,</span> <span class="pre">144,</span> <span class="pre">144]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Jumlah elemen dalam patch: <span class="math notranslate nohighlight">\(N = 5 \times 5 = 25\)</span> piksel.</p>
+</section>
+<hr class="docutils" />
+<section id="perhitungan-manual-kanal-merah-r">
+<h3>4.2 Perhitungan Manual Kanal Merah (R)<a class="headerlink" href="#perhitungan-manual-kanal-merah-r" title="Link to this heading">#</a></h3>
+<section id="langkah-1-menghitung-jumlah-total-nilai-intensitas-sum-i-r">
+<h4>Langkah 1: Menghitung Jumlah Total Nilai Intensitas (<span class="math notranslate nohighlight">\(\sum I_R\)</span>)<a class="headerlink" href="#langkah-1-menghitung-jumlah-total-nilai-intensitas-sum-i-r" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\sum_{k=1}^{25} I_R(k) = &amp; (166 + 166 + 165 + 165 + 164) \\
+&amp; + (160 + 160 + 159 + 159 + 159) \\
+&amp; + (161 + 161 + 161 + 160 + 160) \\
+&amp; + (162 + 162 + 162 + 161 + 161) \\
+&amp; + (158 + 158 + 157 + 157 + 157) \\
+= &amp; 826 + 797 + 803 + 808 + 787 = \mathbf{4021}
+\end{aligned}\end{split}\]</div>
+</section>
+<section id="langkah-2-menghitung-nilai-rata-rata-mu-r">
+<h4>Langkah 2: Menghitung Nilai Rata-rata (<span class="math notranslate nohighlight">\(\mu_R\)</span>)<a class="headerlink" href="#langkah-2-menghitung-nilai-rata-rata-mu-r" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\mu_R = \frac{\sum I_R}{N} = \frac{4021}{25} = \mathbf{160.8400}\]</div>
+</section>
+<section id="langkah-3-menghitung-selisih-deviasi-kuadrat-sum-i-r-k-mu-r-2">
+<h4>Langkah 3: Menghitung Selisih Deviasi Kuadrat <span class="math notranslate nohighlight">\(\sum (I_R(k) - \mu_R)^2\)</span><a class="headerlink" href="#langkah-3-menghitung-selisih-deviasi-kuadrat-sum-i-r-k-mu-r-2" title="Link to this heading">#</a></h4>
+<p>Tabel deviasi kuadrat terhadap <span class="math notranslate nohighlight">\(\mu_R = 160.84\)</span>:</p>
+<ul class="simple">
+<li><p>Baris 0:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\((166 - 160.84)^2 = (5.16)^2 = 26.6256\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 53.2512\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((165 - 160.84)^2 = (4.16)^2 = 17.3056\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 34.6112\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((164 - 160.84)^2 = (3.16)^2 = 9.9856\)</span></p></li>
+<li><p>Subtotal Baris 0 = <span class="math notranslate nohighlight">\(97.8480\)</span></p></li>
+</ul>
+</li>
+<li><p>Baris 1:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\((160 - 160.84)^2 = (-0.84)^2 = 0.7056\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 1.4112\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((159 - 160.84)^2 = (-1.84)^2 = 3.3856\)</span> (<span class="math notranslate nohighlight">\(\times 3 = 10.1568\)</span>)</p></li>
+<li><p>Subtotal Baris 1 = <span class="math notranslate nohighlight">\(11.5680\)</span></p></li>
+</ul>
+</li>
+<li><p>Baris 2:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\((161 - 160.84)^2 = (0.16)^2 = 0.0256\)</span> (<span class="math notranslate nohighlight">\(\times 3 = 0.0768\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((160 - 160.84)^2 = (-0.84)^2 = 0.7056\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 1.4112\)</span>)</p></li>
+<li><p>Subtotal Baris 2 = <span class="math notranslate nohighlight">\(1.4880\)</span></p></li>
+</ul>
+</li>
+<li><p>Baris 3:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\((162 - 160.84)^2 = (1.16)^2 = 1.3456\)</span> (<span class="math notranslate nohighlight">\(\times 3 = 4.0368\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((161 - 160.84)^2 = (0.16)^2 = 0.0256\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 0.0512\)</span>)</p></li>
+<li><p>Subtotal Baris 3 = <span class="math notranslate nohighlight">\(4.0880\)</span></p></li>
+</ul>
+</li>
+<li><p>Baris 4:</p>
+<ul>
+<li><p><span class="math notranslate nohighlight">\((158 - 160.84)^2 = (-2.84)^2 = 8.0656\)</span> (<span class="math notranslate nohighlight">\(\times 2 = 16.1312\)</span>)</p></li>
+<li><p><span class="math notranslate nohighlight">\((157 - 160.84)^2 = (-3.84)^2 = 14.7456\)</span> (<span class="math notranslate nohighlight">\(\times 3 = 44.2368\)</span>)</p></li>
+<li><p>Subtotal Baris 4 = <span class="math notranslate nohighlight">\(60.3680\)</span></p></li>
+</ul>
+</li>
+</ul>
+<p>Jumlah Total Kuadrat Deviasi (<span class="math notranslate nohighlight">\(SS_R\)</span>):
+$<span class="math notranslate nohighlight">\(\sum_{k=1}^{25} (I_R(k) - \mu_R)^2 = 97.8480 + 11.5680 + 1.4880 + 4.0880 + 60.3680 = \mathbf{175.3600}\)</span>$</p>
+</section>
+<section id="langkah-4-menghitung-varians-sigma-r-2-dan-standar-deviasi-sigma-r">
+<h4>Langkah 4: Menghitung Varians (<span class="math notranslate nohighlight">\(\sigma_R^2\)</span>) dan Standar Deviasi (<span class="math notranslate nohighlight">\(\sigma_R\)</span>)<a class="headerlink" href="#langkah-4-menghitung-varians-sigma-r-2-dan-standar-deviasi-sigma-r" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\sigma_R^2 = \frac{175.3600}{25} = 7.0144\]</div>
+<div class="math notranslate nohighlight">
+\[\sigma_R = \sqrt{7.0144} \approx \mathbf{2.6485}\]</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="perhitungan-manual-kanal-hijau-g">
+<h3>4.3 Perhitungan Manual Kanal Hijau (G)<a class="headerlink" href="#perhitungan-manual-kanal-hijau-g" title="Link to this heading">#</a></h3>
+<p>Perhatikan pola menarik pada data: seluruh nilai intensitas Kanal Hijau pada matriks ini tepat bergeser <span class="math notranslate nohighlight">\(4\)</span> satuan lebih rendah daripada Kanal Merah (<span class="math notranslate nohighlight">\(I_G(k) = I_R(k) - 4\)</span>).</p>
+<ul class="simple">
+<li><p><strong>Jumlah Total Nilai (<span class="math notranslate nohighlight">\(\sum I_G\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\sum I_G = \sum (I_R - 4) = 4021 - (25 \times 4) = 4021 - 100 = \mathbf{3921}\)</span>$</p></li>
+<li><p><strong>Mean (<span class="math notranslate nohighlight">\(\mu_G\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\mu_G = \frac{3921}{25} = \mathbf{156.8400}\)</span>$</p></li>
+<li><p><strong>Standar Deviasi (<span class="math notranslate nohighlight">\(\sigma_G\)</span>):</strong>
+Karena pergeseran nilai bersifat konstan (<span class="math notranslate nohighlight">\(c = -4\)</span>), sebaran data tidak berubah:
+$<span class="math notranslate nohighlight">\((I_G - \mu_G) = ((I_R - 4) - (\mu_R - 4)) = (I_R - \mu_R)\)</span><span class="math notranslate nohighlight">\(
+Maka nilai varians dan standar deviasi persis sama:
+\)</span><span class="math notranslate nohighlight">\(\sigma_G = \sqrt{\frac{175.3600}{25}} = \sqrt{7.0144} \approx \mathbf{2.6485}\)</span>$</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="perhitungan-manual-kanal-biru-b">
+<h3>4.4 Perhitungan Manual Kanal Biru (B)<a class="headerlink" href="#perhitungan-manual-kanal-biru-b" title="Link to this heading">#</a></h3>
+<p>Dengan cara serupa, perhatikan bahwa Kanal Biru bergeser tepat <span class="math notranslate nohighlight">\(13\)</span> satuan lebih rendah daripada Kanal Merah (<span class="math notranslate nohighlight">\(I_B(k) = I_R(k) - 13\)</span>).</p>
+<ul class="simple">
+<li><p><strong>Jumlah Total Nilai (<span class="math notranslate nohighlight">\(\sum I_B\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\sum I_B = 4021 - (25 \times 13) = 4021 - 325 = \mathbf{3696}\)</span>$</p></li>
+<li><p><strong>Mean (<span class="math notranslate nohighlight">\(\mu_B\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\mu_B = \frac{3696}{25} = \mathbf{147.8400}\)</span>$</p></li>
+<li><p><strong>Standar Deviasi (<span class="math notranslate nohighlight">\(\sigma_B\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\sigma_B = \sqrt{7.0144} \approx \mathbf{2.6485}\)</span>$</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="rekapitulasi-perhitungan-manual-patch">
+<h3>4.5 Rekapitulasi Perhitungan Manual Patch<a class="headerlink" href="#rekapitulasi-perhitungan-manual-patch" title="Link to this heading">#</a></h3>
+<p>Dari hasil perhitungan manual sub-matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span>:</p>
+<ol class="arabic simple">
+<li><p><strong>Rata-rata Kanal Merah (<span class="math notranslate nohighlight">\(\mu_R\)</span>):</strong> <span class="math notranslate nohighlight">\(160.8400\)</span></p></li>
+<li><p><strong>Rata-rata Kanal Hijau (<span class="math notranslate nohighlight">\(\mu_G\)</span>):</strong> <span class="math notranslate nohighlight">\(156.8400\)</span></p></li>
+<li><p><strong>Rata-rata Kanal Biru (<span class="math notranslate nohighlight">\(\mu_B\)</span>):</strong> <span class="math notranslate nohighlight">\(147.8400\)</span></p></li>
+<li><p><strong>Mean Gabungan Kanal RGB (<span class="math notranslate nohighlight">\(\mu_{\text{RGB}}\)</span>):</strong>
+$<span class="math notranslate nohighlight">\(\mu_{\text{RGB-Patch}} = \frac{160.84 + 156.84 + 147.84}{3} = \frac{465.52}{3} = \mathbf{155.1733}\)</span>$</p></li>
+<li><p><strong>Standar Deviasi per Kanal (<span class="math notranslate nohighlight">\(\sigma\)</span>):</strong> <span class="math notranslate nohighlight">\(2.6485\)</span></p></li>
+</ol>
+<blockquote>
+<div><p><strong>Wawasan Penting:</strong>
+Perhitungan manual di atas membuktikan dengan jelas bagaimana algoritma komputasi memproses data matriks 2 dimensi. Komputer modern menjalankan operasi yang sama persis seperti di atas, namun diperluas untuk mencakup seluruh <span class="math notranslate nohighlight">\(1.920.000\)</span> piksel secara paralel.</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="implementasi-kode-komputasi-dengan-python">
+<h2>5. Implementasi Kode Komputasi dengan Python<a class="headerlink" href="#implementasi-kode-komputasi-dengan-python" title="Link to this heading">#</a></h2>
+<p>Dalam lingkungan praktikum dan riset data nyata, perhitungan dilakukan menggunakan pustaka standar Python: <strong>OpenCV (<code class="docutils literal notranslate"><span class="pre">cv2</span></code>)</strong> untuk manipulasi berkas citra dan <strong>NumPy (<code class="docutils literal notranslate"><span class="pre">numpy</span></code>)</strong> untuk aljabar linier ter-vektorisasi berkecepatan tinggi.</p>
+<section id="skrip-ekstraksi-fitur-citra-tunggal-24-068-berantakan-1-jpeg">
+<h3>5.1 Skrip Ekstraksi Fitur Citra Tunggal (<code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code>)<a class="headerlink" href="#skrip-ekstraksi-fitur-citra-tunggal-24-068-berantakan-1-jpeg" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Praktikum Pengolahan Sinyal Digital (PSD)</span>
+<span class="sd">Modul: Ekstraksi Fitur Citra Digital RGB</span>
+<span class="sd">Penulis: Muhammad Zaidan Nabil Rafi (240411100068)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># 1. Definisikan jalur berkas citra</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;Foto citra/24-068 Berantakan 1.jpeg&#39;</span>
+
+<span class="c1"># 2. Baca citra menggunakan OpenCV</span>
+<span class="c1"># CATATAN PENTING: Secara bawaan, OpenCV membaca citra dalam format BGR (bukan RGB)!</span>
+<span class="n">image_bgr</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">image_bgr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Citra tidak ditemukan di jalur: </span><span class="si">{</span><span class="n">image_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Konversi format warna dari BGR ke RGB</span>
+<span class="n">image_rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image_bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+
+<span class="c1"># Dapatkan dimensi matriks citra (Height, Width, Channels)</span>
+<span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">channels</span> <span class="o">=</span> <span class="n">image_rgb</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">total_pixels</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">width</span>
+
+<span class="c1"># 4. Pisahkan kanal warna menjadi array 2D independen</span>
+<span class="n">channel_red</span> <span class="o">=</span> <span class="n">image_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>    <span class="c1"># Indeks 0 = Kanal Merah</span>
+<span class="n">channel_green</span> <span class="o">=</span> <span class="n">image_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span>  <span class="c1"># Indeks 1 = Kanal Hijau</span>
+<span class="n">channel_blue</span> <span class="o">=</span> <span class="n">image_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>   <span class="c1"># Indeks 2 = Kanal Biru</span>
+
+<span class="c1"># 5. Hitung Nilai Rata-rata (Mean) untuk masing-masing kanal</span>
+<span class="n">mean_r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">channel_red</span><span class="p">))</span>
+<span class="n">mean_g</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">channel_green</span><span class="p">))</span>
+<span class="n">mean_b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">channel_blue</span><span class="p">))</span>
+
+<span class="c1"># Hitung Rata-rata dari Nilai Rata-rata Kanal RGB</span>
+<span class="n">mean_of_rgb_channels</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">mean_r</span> <span class="o">+</span> <span class="n">mean_g</span> <span class="o">+</span> <span class="n">mean_b</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
+
+<span class="c1"># 6. Hitung Standar Deviasi (Simpangan Baku) untuk masing-masing kanal</span>
+<span class="n">std_r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">channel_red</span><span class="p">))</span>
+<span class="n">std_g</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">channel_green</span><span class="p">))</span>
+<span class="n">std_b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">channel_blue</span><span class="p">))</span>
+
+<span class="c1"># Standar deviasi tensor keseluruhan (variasi spasial + variasi spektral warna)</span>
+<span class="n">overall_std</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">image_rgb</span><span class="p">))</span>
+
+<span class="c1"># 7. Tampilkan hasil ekstraksi ke konsol</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      HASIL EKSTRAKSI FITUR CITRA DIGITAL (RGB)&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;      File: 24-068 Berantakan 1.jpeg&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolusi Citra          : </span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s2"> piksel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total Piksel per Kanal  : </span><span class="si">{</span><span class="n">total_pixels</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> piksel&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kanal Merah (Red)       : Mean = </span><span class="si">{</span><span class="n">mean_r</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2"> | Std Dev = </span><span class="si">{</span><span class="n">std_r</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kanal Hijau (Green)     : Mean = </span><span class="si">{</span><span class="n">mean_g</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2"> | Std Dev = </span><span class="si">{</span><span class="n">std_g</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Kanal Biru (Blue)       : Mean = </span><span class="si">{</span><span class="n">mean_b</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2"> | Std Dev = </span><span class="si">{</span><span class="n">std_b</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean dari Rata-rata RGB : </span><span class="si">{</span><span class="n">mean_of_rgb_channels</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Standar Deviasi Global  : </span><span class="si">{</span><span class="n">overall_std</span><span class="si">:</span><span class="s2">8.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="skrip-ekstraksi-otomatis-batch-untuk-seluruh-citra">
+<h3>5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra<a class="headerlink" href="#skrip-ekstraksi-otomatis-batch-untuk-seluruh-citra" title="Link to this heading">#</a></h3>
+<p>Untuk mengolah seluruh berkas citra dalam folder <code class="docutils literal notranslate"><span class="pre">Foto</span> <span class="pre">citra/</span></code> dan menyimpannya ke dalam format tabel data (<code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>), dapat digunakan kode otomasi berikut:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">folder_path</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;Foto citra&#39;</span>
+<span class="n">image_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="s1">&#39;*.jpeg&#39;</span><span class="p">)))</span>
+
+<span class="n">feature_records</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">image_files</span><span class="p">:</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    
+    <span class="c1"># Baca dan konversi ke RGB</span>
+    <span class="n">img_bgr</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">img_rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img_bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+    
+    <span class="n">h</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">img_rgb</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">img_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">img_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">img_rgb</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
+    
+    <span class="n">mean_r</span><span class="p">,</span> <span class="n">std_r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+    <span class="n">mean_g</span><span class="p">,</span> <span class="n">std_g</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+    <span class="n">mean_b</span><span class="p">,</span> <span class="n">std_b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">b</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+    
+    <span class="n">mean_rgb</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">mean_r</span> <span class="o">+</span> <span class="n">mean_g</span> <span class="o">+</span> <span class="n">mean_b</span><span class="p">)</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
+    <span class="n">overall_std</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">img_rgb</span><span class="p">))</span>
+    
+    <span class="n">label_kategori</span> <span class="o">=</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="k">if</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="ow">in</span> <span class="n">file_name</span> <span class="k">else</span> <span class="s1">&#39;Rapi&#39;</span>
+    
+    <span class="n">feature_records</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s1">&#39;Nama File&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">,</span>
+        <span class="s1">&#39;Kategori&#39;</span><span class="p">:</span> <span class="n">label_kategori</span><span class="p">,</span>
+        <span class="s1">&#39;Resolusi&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">w</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="s1">&#39;Mean_R&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Mean_G&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_g</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Mean_B&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_b</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Mean_RGB_Channels&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_rgb</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Std_R&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Std_G&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_g</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Std_B&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_b</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="s1">&#39;Overall_Std&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">overall_std</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">df_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">feature_records</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_features</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="hasil-ekstraksi-fitur-aktual-pada-citra-24-068-berantakan-1">
+<h2>6. Hasil Ekstraksi Fitur Aktual pada Citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1</span></code><a class="headerlink" href="#hasil-ekstraksi-fitur-aktual-pada-citra-24-068-berantakan-1" title="Link to this heading">#</a></h2>
+<section id="tabel-statistik-lengkap">
+<h3>6.1 Tabel Statistik Lengkap<a class="headerlink" href="#tabel-statistik-lengkap" title="Link to this heading">#</a></h3>
+<p>Berikut adalah hasil pengukuran statistik eksak dari citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code> yang dihitung secara presisi dari <span class="math notranslate nohighlight">\(1.920.000\)</span> piksel per kanal:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Parameter Statistik</p></th>
+<th class="head text-center"><p>Kanal Merah (<span class="math notranslate nohighlight">\(R\)</span>)</p></th>
+<th class="head text-center"><p>Kanal Hijau (<span class="math notranslate nohighlight">\(G\)</span>)</p></th>
+<th class="head text-center"><p>Kanal Biru (<span class="math notranslate nohighlight">\(B\)</span>)</p></th>
+<th class="head text-center"><p>Gabungan / Rata-rata RGB</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong>Nilai Rata-rata (Mean / <span class="math notranslate nohighlight">\(\mu\)</span>)</strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(134.8988\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(133.4873\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(128.8982\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(132.4281\)</span></strong></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Standar Deviasi Populasi (<span class="math notranslate nohighlight">\(\sigma\)</span>)</strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(56.2021\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(55.0876\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(52.1753\)</span></strong></p></td>
+<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(54.5749\)</span></strong></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Standar Deviasi Sampel (<span class="math notranslate nohighlight">\(s\)</span>)</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(56.2021\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(55.0876\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(52.1753\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(54.5749\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Varians (<span class="math notranslate nohighlight">\(\sigma^2\)</span>)</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(3158.67\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(3034.64\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(2722.26\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(2978.42\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Nilai Minimum</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(0\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Nilai Maksimum</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(255\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(255\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(255\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(255\)</span></p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><strong>Nilai Median</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(131.00\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(130.00\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(126.00\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(129.00\)</span></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><strong>Total Piksel Evaluasi (<span class="math notranslate nohighlight">\(N\)</span>)</strong></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.920.000\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.920.000\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(1.920.000\)</span></p></td>
+<td class="text-center"><p><span class="math notranslate nohighlight">\(5.760.000\)</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<div><p><strong>Temuan Kunci:</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Mean Kanal Merah (<span class="math notranslate nohighlight">\(\mu_R = 134.90\)</span>)</strong> memiliki nilai paling tinggi, disusul oleh Hijau (<span class="math notranslate nohighlight">\(\mu_G = 133.49\)</span>), dan Biru (<span class="math notranslate nohighlight">\(\mu_B = 128.90\)</span>).</p></li>
+<li><p><strong>Mean dari rata-rata kanal RGB (<span class="math notranslate nohighlight">\(\mu_{\text{RGB}}\)</span>)</strong> bernilai <strong><span class="math notranslate nohighlight">\(132.4281\)</span></strong>.</p></li>
+<li><p><strong>Standar Deviasi kanal Merah (<span class="math notranslate nohighlight">\(\sigma_R = 56.20\)</span>)</strong> juga merupakan yang tertinggi, menunjukkan rentang kontras paling dinamis pada spektrum merah.</p></li>
+</ol>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="analisis-distribusi-histogram-intensitas-piksel">
+<h3>6.2 Analisis Distribusi Histogram Intensitas Piksel<a class="headerlink" href="#analisis-distribusi-histogram-intensitas-piksel" title="Link to this heading">#</a></h3>
+<p>Untuk melihat bagaimana intensitas piksel tersebar di sepanjang rentang <span class="math notranslate nohighlight">\([0, 255]\)</span>, histogram kerapatan probabilitas (<em>probability density histogram</em>) digambarkan bersama dengan posisi mean (<span class="math notranslate nohighlight">\(\mu\)</span>) dan interval standar deviasi <span class="math notranslate nohighlight">\([\mu - \sigma, \mu + \sigma]\)</span>:</p>
+<p><img alt="Histogram Kanal RGB" src="_images/citra_rgb_histogram.png" /></p>
+<section id="karakteristik-distribusi-histogram">
+<h4>Karakteristik Distribusi Histogram:<a class="headerlink" href="#karakteristik-distribusi-histogram" title="Link to this heading">#</a></h4>
+<ol class="arabic simple">
+<li><p><strong>Bentuk Distribusi Lonceng Simetris (Near-Gaussian):</strong></p>
+<ul class="simple">
+<li><p>Ketiga kanal menunjukkan kurva distribusi unimodal yang mendekati kurva normal (Gaussian) berpusat di sekitar <span class="math notranslate nohighlight">\(130 - 135\)</span>.</p></li>
+<li><p>Tidak terjadi penumpukan ekstrem di ujung kiri (<span class="math notranslate nohighlight">\(0\)</span>) maupun ujung kanan (<span class="math notranslate nohighlight">\(255\)</span>), yang membuktikan bahwa foto diambil dengan eksposur seimbang (tidak terjadi <em>under-exposure blackout</em> maupun <em>over-exposure clipping</em>).</p></li>
+</ul>
+</li>
+<li><p><strong>Interval Rentang Standar Deviasi <span class="math notranslate nohighlight">\([\mu - \sigma, \mu + \sigma]\)</span>:</strong></p>
+<ul class="simple">
+<li><p><strong>Kanal Merah:</strong> Interval <span class="math notranslate nohighlight">\([78.70, 191.10]\)</span> mencakup lebih dari <span class="math notranslate nohighlight">\(68\%\)</span> populasi piksel.</p></li>
+<li><p><strong>Kanal Hijau:</strong> Interval <span class="math notranslate nohighlight">\([78.40, 188.58]\)</span> mencakup variasi warna dedaunan, permukaan kayu, atau dinding ruangan.</p></li>
+<li><p><strong>Kanal Biru:</strong> Interval <span class="math notranslate nohighlight">\([76.72, 181.07]\)</span> sedikit lebih sempit, yang konsisten dengan nilai <span class="math notranslate nohighlight">\(\sigma_B = 52.18\)</span> yang lebih rendah.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+</section>
+<hr class="docutils" />
+<section id="interpretasi-fisis-dan-analisis-karakteristik-citra">
+<h2>7. Interpretasi Fisis dan Analisis Karakteristik Citra<a class="headerlink" href="#interpretasi-fisis-dan-analisis-karakteristik-citra" title="Link to this heading">#</a></h2>
+<section id="makna-nilai-rata-rata-kanal-mean-rgb">
+<h3>7.1 Makna Nilai Rata-rata Kanal (Mean RGB)<a class="headerlink" href="#makna-nilai-rata-rata-kanal-mean-rgb" title="Link to this heading">#</a></h3>
+<p>Dalam fisika pencitraan dan sinyal optik:</p>
+<ol class="arabic simple">
+<li><p><strong>Keseimbangan Warna (<em>Color Balance / Color Temperature</em>):</strong></p>
+<ul class="simple">
+<li><p>Hubungan intensitas <span class="math notranslate nohighlight">\(\mu_R (134.90) &gt; \mu_G (133.49) &gt; \mu_B (128.90)\)</span> menunjukkan bahwa citra memiliki temperatur warna hangat (<em>warm white / yellowish cast</em>).</p></li>
+<li><p>Hal ini sangat wajar pada fotografi ruangan (<em>indoor</em>) yang diterangi oleh lampu bohlam pijar atau pantulan cahaya dari lantai kayu/meja kerja.</p></li>
+</ul>
+</li>
+<li><p><strong>Tingkat Kecerahan Global (<em>Global Brightness</em>):</strong></p>
+<ul class="simple">
+<li><p>Nilai rata-rata gabungan <span class="math notranslate nohighlight">\(\mu_{\text{RGB}} = 132.4281\)</span> berada tepat di atas titik tengah nilai skala 8-bit (<span class="math notranslate nohighlight">\(128\)</span>).</p></li>
+<li><p>Ini mengindikasikan bahwa ruangan berada dalam kondisi pencahayaan yang cukup (<em>well-lit</em>), tidak redup dan tidak menyilaukan.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="makna-standar-deviasi-kontras-dan-kompleksitas-visual">
+<h3>7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)<a class="headerlink" href="#makna-standar-deviasi-kontras-dan-kompleksitas-visual" title="Link to this heading">#</a></h3>
+<p>Standar deviasi merupakan parameter statistik yang menggambarkan <strong>keragaman visual (<em>visual clutter</em>)</strong>:</p>
+<ol class="arabic simple">
+<li><p><strong>Indikator Kontras Spasial:</strong></p>
+<ul class="simple">
+<li><p>Nilai <span class="math notranslate nohighlight">\(\sigma_R = 56.20\)</span>, <span class="math notranslate nohighlight">\(\sigma_G = 55.09\)</span>, dan <span class="math notranslate nohighlight">\(\sigma_B = 52.18\)</span> adalah nilai simpangan yang relatif besar (mencakup lebih dari <span class="math notranslate nohighlight">\(21\%\)</span> dari total rentang dinamis 8-bit).</p></li>
+<li><p>Sebaran yang lebar ini menandakan bahwa citra tidak terdiri dari warna datar yang homogen, melainkan memiliki gradasi bayangan, garis tepi tajam (<em>edges</em>), dan perbedaan warna yang tegas antara objek dan latar belakang.</p></li>
+</ul>
+</li>
+<li><p><strong>Korelasi dengan Kondisi “Berantakan”:</strong></p>
+<ul class="simple">
+<li><p>Pada pemandangan yang berantakan (<em>cluttered scene</em>), berbagai benda bertumpuk secara acak (buku, kabel, alat tulis, wadah, dll.).</p></li>
+<li><p>Setiap benda memantulkan cahaya dengan karakteristik berbeda dan menciptakan bayangan mikro (<em>micro-shadows</em>). Akibatnya, deviasi standar intensitas piksel menjadi tinggi.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="studi-komparatif-citra-kondisi-berantakan-vs-rapi">
+<h2>8. Studi Komparatif: Citra Kondisi “Berantakan” vs “Rapi”<a class="headerlink" href="#studi-komparatif-citra-kondisi-berantakan-vs-rapi" title="Link to this heading">#</a></h2>
+<p>Untuk memahami fungsi ekstraksi fitur ini dalam konteks yang lebih luas, mari kita bandingkan citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1</span></code> dengan 5 citra lainnya dalam direktori <code class="docutils literal notranslate"><span class="pre">Foto</span> <span class="pre">citra/</span></code>:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head text-left"><p>Nama File</p></th>
+<th class="head text-center"><p>Kategori</p></th>
+<th class="head text-center"><p>Mean R</p></th>
+<th class="head text-center"><p>Mean G</p></th>
+<th class="head text-center"><p>Mean B</p></th>
+<th class="head text-center"><p>Mean RGB Gabungan</p></th>
+<th class="head text-center"><p>Std R</p></th>
+<th class="head text-center"><p>Std G</p></th>
+<th class="head text-center"><p>Std B</p></th>
+<th class="head text-center"><p>Std Global</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code></strong></p></td>
+<td class="text-center"><p><strong>Berantakan</strong></p></td>
+<td class="text-center"><p><strong>134.90</strong></p></td>
+<td class="text-center"><p><strong>133.49</strong></p></td>
+<td class="text-center"><p><strong>128.90</strong></p></td>
+<td class="text-center"><p><strong>132.43</strong></p></td>
+<td class="text-center"><p><strong>56.20</strong></p></td>
+<td class="text-center"><p><strong>55.09</strong></p></td>
+<td class="text-center"><p><strong>52.18</strong></p></td>
+<td class="text-center"><p><strong>54.57</strong></p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">2.jpeg</span></code></p></td>
+<td class="text-center"><p>Berantakan</p></td>
+<td class="text-center"><p>163.02</p></td>
+<td class="text-center"><p>160.17</p></td>
+<td class="text-center"><p>151.98</p></td>
+<td class="text-center"><p>158.39</p></td>
+<td class="text-center"><p>58.43</p></td>
+<td class="text-center"><p>60.53</p></td>
+<td class="text-center"><p>59.05</p></td>
+<td class="text-center"><p>59.53</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">3.jpeg</span></code></p></td>
+<td class="text-center"><p>Berantakan</p></td>
+<td class="text-center"><p>165.02</p></td>
+<td class="text-center"><p>154.04</p></td>
+<td class="text-center"><p>145.38</p></td>
+<td class="text-center"><p>154.81</p></td>
+<td class="text-center"><p>56.48</p></td>
+<td class="text-center"><p>59.73</p></td>
+<td class="text-center"><p>62.33</p></td>
+<td class="text-center"><p>60.10</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">1.jpeg</span></code></p></td>
+<td class="text-center"><p>Rapi</p></td>
+<td class="text-center"><p>124.46</p></td>
+<td class="text-center"><p>125.32</p></td>
+<td class="text-center"><p>120.72</p></td>
+<td class="text-center"><p>123.50</p></td>
+<td class="text-center"><p>49.36</p></td>
+<td class="text-center"><p>54.91</p></td>
+<td class="text-center"><p>56.32</p></td>
+<td class="text-center"><p>53.65</p></td>
+</tr>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">2.jpeg</span></code></p></td>
+<td class="text-center"><p>Rapi</p></td>
+<td class="text-center"><p>130.51</p></td>
+<td class="text-center"><p>133.04</p></td>
+<td class="text-center"><p>130.78</p></td>
+<td class="text-center"><p>131.44</p></td>
+<td class="text-center"><p>49.96</p></td>
+<td class="text-center"><p>55.11</p></td>
+<td class="text-center"><p>58.48</p></td>
+<td class="text-center"><p>54.64</p></td>
+</tr>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">3.jpeg</span></code></p></td>
+<td class="text-center"><p>Rapi</p></td>
+<td class="text-center"><p>146.69</p></td>
+<td class="text-center"><p>149.35</p></td>
+<td class="text-center"><p>143.92</p></td>
+<td class="text-center"><p>146.65</p></td>
+<td class="text-center"><p>44.28</p></td>
+<td class="text-center"><p>48.36</p></td>
+<td class="text-center"><p>49.93</p></td>
+<td class="text-center"><p>47.64</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><img alt="Komparasi Dataset" src="_images/citra_komparasi_dataset.png" /></p>
+<section id="wawasan-komparatif">
+<h3>Wawasan Komparatif:<a class="headerlink" href="#wawasan-komparatif" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p><strong>Perilaku Standar Deviasi Kanal Merah (<span class="math notranslate nohighlight">\(\text{Std\_R}\)</span>):</strong></p>
+<ul class="simple">
+<li><p>Pada ketiga foto kondisi <strong>Berantakan</strong>, nilai <span class="math notranslate nohighlight">\(\text{Std\_R}\)</span> selalu tinggi dan konsisten berada di atas <span class="math notranslate nohighlight">\(56.0\)</span> (<span class="math notranslate nohighlight">\(\mathbf{56.20}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{58.43}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{56.48}\)</span>).</p></li>
+<li><p>Sebaliknya, pada foto kondisi <strong>Rapi</strong>, nilai <span class="math notranslate nohighlight">\(\text{Std\_R}\)</span> turun secara signifikan di bawah <span class="math notranslate nohighlight">\(50.0\)</span> (<span class="math notranslate nohighlight">\(\mathbf{49.36}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{49.96}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{44.28}\)</span>).</p></li>
+<li><p>Hal ini mengindikasikan bahwa variasi warna merah merupakan fitur diskriminatif yang potensial untuk membedakan kondisi meja berantakan vs rapi.</p></li>
+</ul>
+</li>
+<li><p><strong>Kestabilan Mean RGB:</strong></p>
+<ul class="simple">
+<li><p>Nilai rata-rata kecerahan (<span class="math notranslate nohighlight">\(\mu\)</span>) dipengaruhi secara kuat oleh pencahayaan ruangan saat pengambilan gambar, sedangkan standar deviasi (<span class="math notranslate nohighlight">\(\sigma\)</span>) lebih mencerminkan keteraturan struktural dan tekstural objek.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<hr class="docutils" />
+<section id="relevansi-dalam-kecerdasan-buatan-dan-computer-vision">
+<h2>9. Relevansi dalam Kecerdasan Buatan dan Computer Vision<a class="headerlink" href="#relevansi-dalam-kecerdasan-buatan-dan-computer-vision" title="Link to this heading">#</a></h2>
+<p>Ekstraksi fitur Mean dan Standar Deviasi kanal RGB bukan sekadar latihan matematika, melainkan pilar penting dalam arsitektur AI modern:</p>
+<section id="ekstraksi-fitur-berbasis-momen-warna-color-moments">
+<h3>1. Ekstraksi Fitur Berbasis Momen Warna (<em>Color Moments</em>)<a class="headerlink" href="#ekstraksi-fitur-berbasis-momen-warna-color-moments" title="Link to this heading">#</a></h3>
+<p>Dalam klasifikasi Machine Learning klasik (seperti Support Vector Machine, k-NN, atau Random Forest), vektor fitur citra dibentuk dari momen-momen statistik tiap kanal:
+$<span class="math notranslate nohighlight">\(\mathbf{x} = \begin{bmatrix} \mu_R, &amp; \sigma_R, &amp; \mu_G, &amp; \sigma_G, &amp; \mu_B, &amp; \sigma_B \end{bmatrix}^T\)</span>$
+Dengan vektor 6 dimensi ini, model dapat mengklasifikasikan tipe citra tanpa harus memproses jutaan piksel secara mentah.</p>
+</section>
+<section id="normalisasi-data-pada-deep-learning-convolutional-neural-networks">
+<h3>2. Normalisasi Data pada Deep Learning (Convolutional Neural Networks)<a class="headerlink" href="#normalisasi-data-pada-deep-learning-convolutional-neural-networks" title="Link to this heading">#</a></h3>
+<p>Model arsitektur deep learning mutakhir (seperti ResNet, EfficientNet, dan Vision Transformer) mewajibkan proses standardisasi z-score pada lapisan input menggunakan nilai mean (<span class="math notranslate nohighlight">\(\boldsymbol{\mu}\)</span>) dan standar deviasi (<span class="math notranslate nohighlight">\(\boldsymbol{\sigma}\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[I_{\text{norm}}(i, j, c) = \frac{I(i, j, c) - \mu_c}{\sigma_c}\]</div>
+<p>Proses ini menjaga gradien <em>backpropagation</em> tetap stabil dan mempercepat konvergensi model selama pelatihan.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="kesimpulan">
+<h2>10. Kesimpulan<a class="headerlink" href="#kesimpulan" title="Link to this heading">#</a></h2>
+<p>Berdasarkan analisis teoritis, simulasi manual, dan komputasi aktual pada citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code>, dapat ditarik beberapa kesimpulan penting:</p>
+<ol class="arabic simple">
+<li><p><strong>Representasi Citra sebagai Sinyal Multidimensi:</strong> Citra digital warna merupakan sinyal diskrit 3 dimensi dengan dimensi spasial <span class="math notranslate nohighlight">\(1600 \times 1200\)</span> piksel dan 3 kanal warna aditif, menghasilkan <span class="math notranslate nohighlight">\(5.760.000\)</span> nilai numerik dalam rentang <span class="math notranslate nohighlight">\([0, 255]\)</span>.</p></li>
+<li><p><strong>Karakteristik Kecerahan (Mean):</strong></p>
+<ul class="simple">
+<li><p>Nilai rata-rata per kanal terukur adalah <span class="math notranslate nohighlight">\(\mu_R = 134.8988\)</span>, <span class="math notranslate nohighlight">\(\mu_G = 133.4873\)</span>, dan <span class="math notranslate nohighlight">\(\mu_B = 128.8982\)</span>.</p></li>
+<li><p>Mean dari rata-rata ketiga kanal RGB (<span class="math notranslate nohighlight">\(\mu_{\text{RGB}}\)</span>) adalah <strong><span class="math notranslate nohighlight">\(132.4281\)</span></strong>, menandakan eksposur pencahayaan ruangan yang seimbang dengan nuansa warna hangat (<em>warm tone</em>).</p></li>
+</ul>
+</li>
+<li><p><strong>Karakteristik Kontras (Standar Deviasi):</strong></p>
+<ul class="simple">
+<li><p>Nilai standar deviasi per kanal terukur adalah <span class="math notranslate nohighlight">\(\sigma_R = 56.2021\)</span>, <span class="math notranslate nohighlight">\(\sigma_G = 55.0876\)</span>, dan <span class="math notranslate nohighlight">\(\sigma_B = 52.1753\)</span>, dengan standar deviasi gabungan sebesar <strong><span class="math notranslate nohighlight">\(54.5749\)</span></strong>.</p></li>
+<li><p>Nilai deviasi yang tinggi membuktikan keberadaan variasi tekstur yang heterogen, kontras yang tajam, serta bayangan mikro akibat objek yang tertata acak (<em>berantakan</em>).</p></li>
+</ul>
+</li>
+<li><p><strong>Verifikasi Matematis:</strong> Simulasi perhitungan manual pada sub-matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span> mengonfirmasi kebenaran alur komputasi diskrit, memberikan pemahaman intuitif dari tingkat piksel dasar hingga skala citra menyeluruh.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="referensi">
+<h2>11. Referensi<a class="headerlink" href="#referensi" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Gonzalez, R. C., &amp; Woods, R. E. (2018). <em>Digital Image Processing</em> (4th ed.). Pearson.</p></li>
+<li><p>Szeliski, R. (2022). <em>Computer Vision: Algorithms and Applications</em> (2nd ed.). Springer.</p></li>
+<li><p>Oppenheim, A. V., &amp; Schafer, R. W. (2009). <em>Discrete-Time Signal Processing</em> (3rd ed.). Prentice Hall.</p></li>
+<li><p>Bradski, G., &amp; Kaehler, A. (2008). <em>Learning OpenCV: Computer Vision with the OpenCV Library</em>. O’Reilly Media.</p></li>
+<li><p>NumPy Documentation. <em>Mathematical functions: Statistics (<code class="docutils literal notranslate"><span class="pre">numpy.mean</span></code>, <code class="docutils literal notranslate"><span class="pre">numpy.std</span></code>)</em>. <a class="reference external" href="https://numpy.org/doc/stable/reference/routines.statistics.html">https://numpy.org/doc/stable/reference/routines.statistics.html</a></p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="identifikasi_klasifikasi_suara.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Identifikasi dan Klasifikasi Suara Menggunakan Fitur Audio: Studi Kasus Berisik vs Non-Berisik (Hening)</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#daftar-isi">Daftar Isi</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pendahuluan-dari-sinyal-1d-ke-sinyal-spasial-2d-3d">1. Pendahuluan: Dari Sinyal 1D ke Sinyal Spasial 2D/3D</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#karakteristik-dan-representasi-citra-sampel">2. Karakteristik dan Representasi Citra Sampel</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#identitas-dan-resolusi-citra">2.1 Identitas dan Resolusi Citra</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dekomposisi-kanal-warna-rgb">2.2 Dekomposisi Kanal Warna RGB</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#landasan-teori-dan-formulasi-matematis">3. Landasan Teori dan Formulasi Matematis</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-warna-rgb-dan-kedalaman-bit-bit-depth">3.1 Model Warna RGB dan Kedalaman Bit (Bit-Depth)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-nilai-rata-rata-mean-mu">3.2 Formulasi Nilai Rata-rata (Mean / <span class="math notranslate nohighlight">\(\mu\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-simpangan-baku-standar-deviasi-sigma">3.3 Formulasi Simpangan Baku (Standar Deviasi / <span class="math notranslate nohighlight">\(\sigma\)</span>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-mean-gabungan-kanal-rgb">3.4 Formulasi Mean Gabungan Kanal RGB</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulasi-perhitungan-manual-step-by-step-sub-matriks-5-times-5">4. Simulasi Perhitungan Manual (Step-by-Step Sub-Matriks <span class="math notranslate nohighlight">\(5 \times 5\)</span>)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-patch-numerik-piksel-nyata">4.1 Ekstraksi Patch Numerik Piksel Nyata</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-merah-r">4.2 Perhitungan Manual Kanal Merah (R)</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-1-menghitung-jumlah-total-nilai-intensitas-sum-i-r">Langkah 1: Menghitung Jumlah Total Nilai Intensitas (<span class="math notranslate nohighlight">\(\sum I_R\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-2-menghitung-nilai-rata-rata-mu-r">Langkah 2: Menghitung Nilai Rata-rata (<span class="math notranslate nohighlight">\(\mu_R\)</span>)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-3-menghitung-selisih-deviasi-kuadrat-sum-i-r-k-mu-r-2">Langkah 3: Menghitung Selisih Deviasi Kuadrat <span class="math notranslate nohighlight">\(\sum (I_R(k) - \mu_R)^2\)</span></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#langkah-4-menghitung-varians-sigma-r-2-dan-standar-deviasi-sigma-r">Langkah 4: Menghitung Varians (<span class="math notranslate nohighlight">\(\sigma_R^2\)</span>) dan Standar Deviasi (<span class="math notranslate nohighlight">\(\sigma_R\)</span>)</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-hijau-g">4.3 Perhitungan Manual Kanal Hijau (G)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perhitungan-manual-kanal-biru-b">4.4 Perhitungan Manual Kanal Biru (B)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rekapitulasi-perhitungan-manual-patch">4.5 Rekapitulasi Perhitungan Manual Patch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-kode-komputasi-dengan-python">5. Implementasi Kode Komputasi dengan Python</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-ekstraksi-fitur-citra-tunggal-24-068-berantakan-1-jpeg">5.1 Skrip Ekstraksi Fitur Citra Tunggal (<code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-ekstraksi-otomatis-batch-untuk-seluruh-citra">5.2 Skrip Ekstraksi Otomatis Batch untuk Seluruh Citra</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-ekstraksi-fitur-aktual-pada-citra-24-068-berantakan-1">6. Hasil Ekstraksi Fitur Aktual pada Citra <code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-statistik-lengkap">6.1 Tabel Statistik Lengkap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-distribusi-histogram-intensitas-piksel">6.2 Analisis Distribusi Histogram Intensitas Piksel</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#karakteristik-distribusi-histogram">Karakteristik Distribusi Histogram:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretasi-fisis-dan-analisis-karakteristik-citra">7. Interpretasi Fisis dan Analisis Karakteristik Citra</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-nilai-rata-rata-kanal-mean-rgb">7.1 Makna Nilai Rata-rata Kanal (Mean RGB)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#makna-standar-deviasi-kontras-dan-kompleksitas-visual">7.2 Makna Standar Deviasi (Kontras dan Kompleksitas Visual)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#studi-komparatif-citra-kondisi-berantakan-vs-rapi">8. Studi Komparatif: Citra Kondisi “Berantakan” vs “Rapi”</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wawasan-komparatif">Wawasan Komparatif:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#relevansi-dalam-kecerdasan-buatan-dan-computer-vision">9. Relevansi dalam Kecerdasan Buatan dan Computer Vision</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ekstraksi-fitur-berbasis-momen-warna-color-moments">1. Ekstraksi Fitur Berbasis Momen Warna (<em>Color Moments</em>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normalisasi-data-pada-deep-learning-convolutional-neural-networks">2. Normalisasi Data pada Deep Learning (Convolutional Neural Networks)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kesimpulan">10. Kesimpulan</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#referensi">11. Referensi</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Zaidan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
