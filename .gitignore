@@ -13,3 +13,8 @@ berantakan pilah/
 rapi pilah/
 .keras_cache/
 deep_features_mobilenet_v2.npy
+*.pt
+dataset_baru/
+dataset_yolo/
+runs/
+runs_yolo/
