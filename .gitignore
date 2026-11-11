@@ -6,3 +6,10 @@ dataset_audio/
 dataset_audio_temp/
 BerisikPSD.zip
 NonBerisikPSD.zip
+
+*.zip
+dataset_pilah/
+berantakan pilah/
+rapi pilah/
+.keras_cache/
+deep_features_mobilenet_v2.npy
