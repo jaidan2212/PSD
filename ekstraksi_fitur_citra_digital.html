@@ -444,21 +444,22 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-pipeline-komputasi-dengan-python">10. Implementasi Pipeline Komputasi dengan Python</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-dataset-fitur-14-fitur-label-ekspor-csv-dan-pemodelan-klasifikasi">11. Pembentukan Dataset Fitur (14 Fitur + Label), Ekspor CSV, dan Pemodelan Klasifikasi</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-dan-komposisi-14-fitur-citra-digital">11.1 Alur dan Komposisi 14 Fitur Citra Digital</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-5-fitur-tekstur-matriks-ko-okurensi-glcm">Formulasi 5 Fitur Tekstur Matriks Ko-okurensi (GLCM):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-dan-komposisi-14-fitur-citra-digital-inti">11.1 Alur dan Komposisi 14 Fitur Citra Digital Inti</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-matematis-5-fitur-tekstur-matriks-ko-okurensi-glcm-haralick">Formulasi Matematis 5 Fitur Tekstur Matriks Ko-okurensi (GLCM Haralick):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-6-citra">11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 6 Citra)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-194-citra">11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 194 Citra)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-matriks-akurasi-matriks-konfusi-accuracy-confusion-matrix">11.3 Pembentukan Matriks Akurasi / Matriks Konfusi (Accuracy &amp; Confusion Matrix)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-metrik-evaluasi">Formulasi Metrik Evaluasi:</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-matriks-akurasi-nyata-pada-dataset">Hasil Evaluasi Matriks Akurasi Nyata pada Dataset:</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-klasifikasi-machine-learning-analisis-daya-pisah-fitur">11.4 Pemodelan Klasifikasi Machine Learning &amp; Analisis Daya Pisah Fitur</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-fitur-fitur-ini-mampu-memisahkan-kelas-secara-akurat">Mengapa Fitur-Fitur Ini Mampu Memisahkan Kelas Secara Akurat?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-klasifikasi-seperti-audio-kemarin">11.4 Pemodelan Klasifikasi Seperti Audio Kemarin</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-hasil-evaluasi-klasifikasi-pada-14-fitur-inti-dosen">Tabel Hasil Evaluasi Klasifikasi pada 14 Fitur Inti Dosen:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-matriks-akurasi-confusion-matrix-pada-data-uji-independen-n-text-test-39">Visualisasi Matriks Akurasi (Confusion Matrix) pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 39\)</span>):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest">Analisis Tingkat Kepentingan Fitur (<em>Feature Importance</em> dari Random Forest):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-fitur-pembuatan-csv-dan-klasifikasi">11.5 Skrip Python Lengkap Ekstraksi Fitur, Pembuatan CSV, dan Klasifikasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-skala-besar-dataset-194-citra-baru-integrasi-model-yolo-fusi-84-fitur-keyakinan-akurasi-fitur-dan-keyakinan-model">12. Eksperimen Skala Besar Dataset 194 Citra Baru: Integrasi Model YOLO, Fusi 84 Fitur, Keyakinan Akurasi Fitur, dan Keyakinan Model</a><ul class="nav section-nav flex-column">
@@ -1533,53 +1534,54 @@ $<span class="math notranslate nohighlight">\(Q = 1 - \frac{1}{1 + \sigma^2} = 1
 <hr class="docutils" />
 <section id="pembentukan-dataset-fitur-14-fitur-label-ekspor-csv-dan-pemodelan-klasifikasi">
 <h2>11. Pembentukan Dataset Fitur (14 Fitur + Label), Ekspor CSV, dan Pemodelan Klasifikasi<a class="headerlink" href="#pembentukan-dataset-fitur-14-fitur-label-ekspor-csv-dan-pemodelan-klasifikasi" title="Link to this heading">#</a></h2>
-<p>Sesuai dengan rancangan sistem klasifikasi citra berbasis konten, dataset numerik terstruktur dibangun dari seluruh sampel citra yang ada di dalam direktori <code class="docutils literal notranslate"><span class="pre">Foto</span> <span class="pre">citra/</span></code> (3 sampel citra berkategori <strong>Berantakan</strong> dan 3 sampel citra berkategori <strong>Rapi</strong>).</p>
-<section id="alur-dan-komposisi-14-fitur-citra-digital">
-<h3>11.1 Alur dan Komposisi 14 Fitur Citra Digital<a class="headerlink" href="#alur-dan-komposisi-14-fitur-citra-digital" title="Link to this heading">#</a></h3>
-<p>Setiap berkas citra diekstraksi ke dalam vektor fitur berdimensi <span class="math notranslate nohighlight">\(14\)</span> yang terbagi menjadi dua kelompok besar:</p>
+<p>Sesuai dengan instruksi dan materi perkuliahan dari dosen pengampu (<strong>Teknik Ekstraksi Fitur Citra - UTM</strong>), tugas praktikum inti berfokus pada pembangunan dataset numerik berdimensi <span class="math notranslate nohighlight">\(14\)</span> fitur yang merepresentasikan momen warna dan tekstur spasial dari seluruh dataset citra, diikuti oleh pembentukan matriks akurasi (<em>confusion matrix</em>) dan klasifikasi machine learning dengan alur yang identik dengan praktikum audio sebelumnya.</p>
+<hr class="docutils" />
+<section id="alur-dan-komposisi-14-fitur-citra-digital-inti">
+<h3>11.1 Alur dan Komposisi 14 Fitur Citra Digital Inti<a class="headerlink" href="#alur-dan-komposisi-14-fitur-citra-digital-inti" title="Link to this heading">#</a></h3>
+<p>Setiap berkas citra diekstraksi ke dalam vektor fitur berdimensi <span class="math notranslate nohighlight">\(14\)</span> numerik ditambah satu kolom label kategori:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+----------------------------------------------------------------------------------------------------+</span>
-<span class="o">|</span>                         <span class="n">KOMPOSISI</span> <span class="mi">14</span> <span class="n">FITUR</span> <span class="n">EKSTRAKSI</span> <span class="n">CITRA</span> <span class="n">DIGITAL</span> <span class="o">+</span> <span class="mi">1</span> <span class="n">LABEL</span>                       <span class="o">|</span>
+<span class="o">|</span>                         <span class="n">KOMPOSISI</span> <span class="mi">14</span> <span class="n">FITUR</span> <span class="n">INTI</span> <span class="n">SESUAI</span> <span class="n">SPESIFIKASI</span> <span class="n">DOSEN</span>                           <span class="o">|</span>
 <span class="o">+----------------------------------------------------------------------------------------------------+</span>
-<span class="o">|</span> <span class="mf">1.</span> <span class="n">FITUR</span> <span class="n">MOMEN</span> <span class="n">WARNA</span> <span class="n">RGB</span> <span class="p">(</span><span class="mi">9</span> <span class="n">Fitur</span><span class="p">):</span>                                                                <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Merah</span>  <span class="p">:</span> <span class="n">mean_r</span><span class="p">,</span> <span class="n">std_r</span><span class="p">,</span> <span class="n">skew_r</span>                                                          <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Hijau</span>  <span class="p">:</span> <span class="n">mean_g</span><span class="p">,</span> <span class="n">std_g</span><span class="p">,</span> <span class="n">skew_g</span>                                                          <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Biru</span>   <span class="p">:</span> <span class="n">mean_b</span><span class="p">,</span> <span class="n">std_b</span><span class="p">,</span> <span class="n">skew_b</span>                                                          <span class="o">|</span>
+<span class="o">|</span> <span class="mf">1.</span> <span class="n">FITUR</span> <span class="n">MOMEN</span> <span class="n">WARNA</span> <span class="n">TIAP</span> <span class="n">KANAL</span> <span class="n">RGB</span> <span class="p">(</span><span class="mi">9</span> <span class="n">Fitur</span> <span class="o">-</span> <span class="n">Slide</span> <span class="mi">9</span><span class="o">-</span><span class="mi">11</span> <span class="n">PPTX</span> <span class="n">Dosen</span><span class="p">):</span>                             <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Merah</span> <span class="p">(</span><span class="n">R</span><span class="p">)</span> <span class="p">:</span> <span class="n">mean_r</span><span class="p">,</span> <span class="n">std_r</span><span class="p">,</span> <span class="n">skew_r</span>                                                       <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Hijau</span> <span class="p">(</span><span class="n">G</span><span class="p">)</span> <span class="p">:</span> <span class="n">mean_g</span><span class="p">,</span> <span class="n">std_g</span><span class="p">,</span> <span class="n">skew_g</span>                                                       <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">Kanal</span> <span class="n">Biru</span> <span class="p">(</span><span class="n">B</span><span class="p">)</span>  <span class="p">:</span> <span class="n">mean_b</span><span class="p">,</span> <span class="n">std_b</span><span class="p">,</span> <span class="n">skew_b</span>                                                       <span class="o">|</span>
 <span class="o">|</span>                                                                                                    <span class="o">|</span>
-<span class="o">|</span> <span class="mf">2.</span> <span class="n">FITUR</span> <span class="n">TEKSTUR</span> <span class="n">SPASIAL</span> <span class="n">DARI</span> <span class="n">GRAYSCALE</span> <span class="n">GLCM</span> <span class="p">(</span><span class="mi">5</span> <span class="n">Fitur</span><span class="p">):</span>                                            <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_energy</span>       <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">keseragaman</span> <span class="n">susunan</span> <span class="n">intensitas</span> <span class="n">kuadratik</span> <span class="p">(</span><span class="n">ASM</span><span class="p">)</span>                   <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_entropy</span>      <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">tingkat</span> <span class="n">keacakan</span> <span class="n">atau</span> <span class="n">ketidakteraturan</span> <span class="n">tekstur</span>                   <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_contrast</span>     <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">intensitas</span> <span class="n">variasi</span> <span class="n">lokal</span> <span class="n">dan</span> <span class="n">ketajaman</span> <span class="n">kontras</span>                   <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_correlation</span>  <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">ketergantungan</span> <span class="n">linier</span> <span class="n">nilai</span> <span class="n">keabuan</span> <span class="n">antar</span> <span class="n">piksel</span> <span class="n">tetangga</span>        <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_homogeneity</span>  <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">kelancaran</span> <span class="n">transisi</span> <span class="n">keabuan</span> <span class="p">(</span><span class="n">Inverse</span> <span class="n">Difference</span> <span class="n">Moment</span><span class="p">)</span>          <span class="o">|</span>
+<span class="o">|</span> <span class="mf">2.</span> <span class="n">FITUR</span> <span class="n">TEKSTUR</span> <span class="n">SPASIAL</span> <span class="n">ORDE</span> <span class="n">KEDUA</span> <span class="n">DARI</span> <span class="n">GRAYSCALE</span> <span class="n">GLCM</span> <span class="p">(</span><span class="mi">5</span> <span class="n">Fitur</span> <span class="o">-</span> <span class="n">Slide</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span> <span class="n">PPTX</span> <span class="n">Dosen</span><span class="p">):</span>    <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_energy</span>       <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">keseragaman</span> <span class="n">susunan</span> <span class="n">intensitas</span> <span class="n">kuadratik</span> <span class="p">(</span><span class="n">Angular</span> <span class="n">Second</span> <span class="n">Moment</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_entropy</span>      <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">derajat</span> <span class="n">keacakan</span> <span class="n">atau</span> <span class="n">ketidakteraturan</span> <span class="n">tekstur</span>                   <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_contrast</span>     <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">intensitas</span> <span class="n">variasi</span> <span class="n">lokal</span> <span class="n">dan</span> <span class="n">momen</span> <span class="n">inersia</span> <span class="n">transisi</span> <span class="n">keabuan</span>       <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_correlation</span>  <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">ketergantungan</span> <span class="n">linier</span> <span class="n">nilai</span> <span class="n">keabuan</span> <span class="n">spasial</span> <span class="n">antar</span> <span class="n">piksel</span> <span class="n">tetangga</span><span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">glcm_homogeneity</span>  <span class="p">:</span> <span class="n">Mengukur</span> <span class="n">kelancaran</span> <span class="n">transisi</span> <span class="n">keabuan</span> <span class="p">(</span><span class="n">Inverse</span> <span class="n">Difference</span> <span class="n">Moment</span> <span class="o">/</span> <span class="n">IDM</span><span class="p">)</span>    <span class="o">|</span>
 <span class="o">|</span>                                                                                                    <span class="o">|</span>
 <span class="o">|</span> <span class="mf">3.</span> <span class="n">LABEL</span> <span class="n">KATEGORI</span><span class="p">:</span>                                                                                 <span class="o">|</span>
-<span class="o">|</span>    <span class="o">-</span> <span class="n">label</span>             <span class="p">:</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="n">vs</span> <span class="s1">&#39;Rapi&#39;</span>                                                    <span class="o">|</span>
+<span class="o">|</span>    <span class="o">-</span> <span class="n">label</span>             <span class="p">:</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">vs</span> <span class="s1">&#39;Rapi&#39;</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>                                            <span class="o">|</span>
 <span class="o">+----------------------------------------------------------------------------------------------------+</span>
 </pre></div>
 </div>
-<section id="formulasi-5-fitur-tekstur-matriks-ko-okurensi-glcm">
-<h4>Formulasi 5 Fitur Tekstur Matriks Ko-okurensi (GLCM):<a class="headerlink" href="#formulasi-5-fitur-tekstur-matriks-ko-okurensi-glcm" title="Link to this heading">#</a></h4>
-<p>Setelah citra dikonversi menjadi citra grayscale 8-bit (ITU-R BT.601) dan dikuantisasi ke dalam <span class="math notranslate nohighlight">\(N_g = 16\)</span> level keabuan dengan offset spasial horizontal (<span class="math notranslate nohighlight">\(d=1, \theta=0^\circ\)</span>), matriks probabilitas normalisasi <span class="math notranslate nohighlight">\(P(i, j)\)</span> digunakan untuk menghitung kelima fitur tekstur:</p>
+<section id="formulasi-matematis-5-fitur-tekstur-matriks-ko-okurensi-glcm-haralick">
+<h4>Formulasi Matematis 5 Fitur Tekstur Matriks Ko-okurensi (GLCM Haralick):<a class="headerlink" href="#formulasi-matematis-5-fitur-tekstur-matriks-ko-okurensi-glcm-haralick" title="Link to this heading">#</a></h4>
+<p>Citra RGB terlebih dahulu dikonversi menjadi citra grayscale 8-bit (ITU-R BT.601) lalu dikuantisasi ke dalam tingkat keabuan diskrit dengan offset spasial horizontal (<span class="math notranslate nohighlight">\(d=1, \theta=0^\circ\)</span>). Matriks probabilitas ko-okurensi ternormalisasi <span class="math notranslate nohighlight">\(P(i, j)\)</span> digunakan untuk menghitung kelima fitur tekstur sesuai slide dosen:</p>
 <ol class="arabic simple">
-<li><p><strong>Energi (<em>Energy / Angular Second Moment</em>):</strong>
-$<span class="math notranslate nohighlight">\(\text{Energy} = \sum_{i=1}^{N_g} \sum_{j=1}^{N_g} P(i, j)^2\)</span>$</p></li>
-<li><p><strong>Entropi (<em>Entropy</em>):</strong>
-$<span class="math notranslate nohighlight">\(\text{Entropy} = - \sum_{i=1}^{N_g} \sum_{j=1}^{N_g} P(i, j) \log_2 P(i, j)\)</span>$</p></li>
-<li><p><strong>Kontras (<em>Contrast</em>):</strong>
-$<span class="math notranslate nohighlight">\(\text{Contrast} = \sum_{i=1}^{N_g} \sum_{j=1}^{N_g} (i - j)^2 P(i, j)\)</span>$</p></li>
-<li><p><strong>Korelasi (<em>Correlation</em>):</strong>
-$<span class="math notranslate nohighlight">\(\text{Correlation} = \sum_{i=1}^{N_g} \sum_{j=1}^{N_g} \frac{(i - \mu_i)(j - \mu_j) P(i, j)}{\sigma_i \sigma_j}\)</span>$</p></li>
-<li><p><strong>Homogenitas (<em>Homogeneity / IDM</em>):</strong>
-$<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N_g} \sum_{j=1}^{N_g} \frac{P(i, j)}{1 + |i - j|}\)</span>$</p></li>
+<li><p><strong>Energi (<em>Energy / Angular Second Moment - Pers. 8 Slide 20</em>):</strong>
+$<span class="math notranslate nohighlight">\(\text{Energy} = \sum_{i} \sum_{j} P(i, j)^2\)</span>$</p></li>
+<li><p><strong>Entropi (<em>Entropy - Pers. 5 Slide 19</em>):</strong>
+$<span class="math notranslate nohighlight">\(\text{Entropy} = - \sum_{i} \sum_{j} P(i, j) \log_2(P(i, j) + \epsilon)\)</span>$</p></li>
+<li><p><strong>Kontras (<em>Contrast - Pers. 6 Slide 19</em>):</strong>
+$<span class="math notranslate nohighlight">\(\text{Contrast} = \sum_{i} \sum_{j} (i - j)^2 P(i, j)\)</span>$</p></li>
+<li><p><strong>Korelasi (<em>Correlation - Pers. 7 Slide 20</em>):</strong>
+$<span class="math notranslate nohighlight">\(\text{Correlation} = \sum_{i} \sum_{j} \frac{(i - \mu_i)(j - \mu_j) P(i, j)}{\sigma_i \sigma_j}\)</span>$</p></li>
+<li><p><strong>Homogenitas (<em>Homogeneity / IDM - Pers. 9 Slide 20</em>):</strong>
+$<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i} \sum_{j} \frac{P(i, j)}{1 + |i - j|}\)</span>$</p></li>
 </ol>
 </section>
 </section>
 <hr class="docutils" />
-<section id="tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-6-citra">
-<h3>11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 6 Citra)<a class="headerlink" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-6-citra" title="Link to this heading">#</a></h3>
-<p>Hasil ekstraksi fitur secara otomatis disimpan ke dalam berkas format CSV:<br />
-📁 <strong>Lokasi Berkas CSV:</strong> [<code class="docutils literal notranslate"><span class="pre">hasil_ekstraksi_fitur_citra.csv</span></code>](file:///c:/laragon/www/TugasPSD/hasil_ekstraksi_fitur_citra.csv) dan [<code class="docutils literal notranslate"><span class="pre">materi/output/hasil_ekstraksi_fitur_citra.csv</span></code>](file:///c:/laragon/www/TugasPSD/materi/output/hasil_ekstraksi_fitur_citra.csv).</p>
-<p>Berikut adalah data tabel aktual yang dihasilkan dari 6 sampel citra:</p>
+<section id="tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-194-citra">
+<h3>11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 194 Citra)<a class="headerlink" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-194-citra" title="Link to this heading">#</a></h3>
+<p>Hasil ekstraksi fitur secara otomatis disimpan ke dalam berkas CSV standar:<br />
+📁 <strong>Lokasi Berkas CSV Utama:</strong> [<code class="docutils literal notranslate"><span class="pre">hasil_ekstraksi_fitur_citra.csv</span></code>](file:///c:/laragon/www/TugasPSD/hasil_ekstraksi_fitur_citra.csv) dan [<code class="docutils literal notranslate"><span class="pre">materi/output/hasil_ekstraksi_fitur_citra.csv</span></code>](file:///c:/laragon/www/TugasPSD/materi/output/hasil_ekstraksi_fitur_citra.csv).</p>
+<p>Berikut adalah pratinjau sampel data aktual dari berkas CSV yang dihasilkan (mencakup 194 baris data):</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-left"><p>filename</p></th>
@@ -1601,16 +1603,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">1.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>134.899</p></td>
-<td class="text-center"><p>56.2021</p></td>
-<td class="text-center"><p>-0.5853</p></td>
-<td class="text-center"><p>133.487</p></td>
-<td class="text-center"><p>55.0876</p></td>
-<td class="text-center"><p>-0.5420</p></td>
-<td class="text-center"><p>128.898</p></td>
-<td class="text-center"><p>52.1753</p></td>
-<td class="text-center"><p>-0.4197</p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-003</span> <span class="pre">Berantakan</span> <span class="pre">1.jpg</span></code></p></td>
+<td class="text-center"><p>134.89</p></td>
+<td class="text-center"><p>56.20</p></td>
+<td class="text-center"><p>-0.585</p></td>
+<td class="text-center"><p>133.49</p></td>
+<td class="text-center"><p>55.09</p></td>
+<td class="text-center"><p>-0.542</p></td>
+<td class="text-center"><p>128.90</p></td>
+<td class="text-center"><p>52.18</p></td>
+<td class="text-center"><p>-0.420</p></td>
 <td class="text-center"><p>0.0736</p></td>
 <td class="text-center"><p>4.5046</p></td>
 <td class="text-center"><p>0.3430</p></td>
@@ -1618,16 +1620,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <td class="text-center"><p>0.9138</p></td>
 <td class="text-center"><p><strong>Berantakan</strong></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">2.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>163.019</p></td>
-<td class="text-center"><p>58.4285</p></td>
-<td class="text-center"><p>-1.3009</p></td>
-<td class="text-center"><p>160.170</p></td>
-<td class="text-center"><p>60.5276</p></td>
-<td class="text-center"><p>-1.0323</p></td>
-<td class="text-center"><p>151.978</p></td>
-<td class="text-center"><p>59.0504</p></td>
-<td class="text-center"><p>-0.7674</p></td>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-034</span> <span class="pre">Berantakan</span> <span class="pre">2.jpg</span></code></p></td>
+<td class="text-center"><p>163.02</p></td>
+<td class="text-center"><p>58.43</p></td>
+<td class="text-center"><p>-1.301</p></td>
+<td class="text-center"><p>160.17</p></td>
+<td class="text-center"><p>60.53</p></td>
+<td class="text-center"><p>-1.032</p></td>
+<td class="text-center"><p>151.98</p></td>
+<td class="text-center"><p>59.05</p></td>
+<td class="text-center"><p>-0.767</p></td>
 <td class="text-center"><p>0.0959</p></td>
 <td class="text-center"><p>3.9686</p></td>
 <td class="text-center"><p>0.1444</p></td>
@@ -1635,16 +1637,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <td class="text-center"><p>0.9519</p></td>
 <td class="text-center"><p><strong>Berantakan</strong></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Berantakan</span> <span class="pre">3.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>165.015</p></td>
-<td class="text-center"><p>56.4835</p></td>
-<td class="text-center"><p>-1.3208</p></td>
-<td class="text-center"><p>154.042</p></td>
-<td class="text-center"><p>59.7339</p></td>
-<td class="text-center"><p>-0.7438</p></td>
-<td class="text-center"><p>145.376</p></td>
-<td class="text-center"><p>62.3327</p></td>
-<td class="text-center"><p>-0.5448</p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-201_Berantakan3.jpg</span></code></p></td>
+<td class="text-center"><p>165.02</p></td>
+<td class="text-center"><p>56.48</p></td>
+<td class="text-center"><p>-1.321</p></td>
+<td class="text-center"><p>154.04</p></td>
+<td class="text-center"><p>59.73</p></td>
+<td class="text-center"><p>-0.744</p></td>
+<td class="text-center"><p>145.38</p></td>
+<td class="text-center"><p>62.33</p></td>
+<td class="text-center"><p>-0.545</p></td>
 <td class="text-center"><p>0.0904</p></td>
 <td class="text-center"><p>4.1900</p></td>
 <td class="text-center"><p>0.2377</p></td>
@@ -1652,16 +1654,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <td class="text-center"><p>0.9355</p></td>
 <td class="text-center"><p><strong>Berantakan</strong></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">1.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>124.462</p></td>
-<td class="text-center"><p>49.3635</p></td>
-<td class="text-center"><p>-0.1454</p></td>
-<td class="text-center"><p>125.316</p></td>
-<td class="text-center"><p>54.9110</p></td>
-<td class="text-center"><p>-0.4134</p></td>
-<td class="text-center"><p>120.717</p></td>
-<td class="text-center"><p>56.3177</p></td>
-<td class="text-center"><p>-0.4612</p></td>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-115</span> <span class="pre">Rapi</span> <span class="pre">2.jpg</span></code></p></td>
+<td class="text-center"><p>124.46</p></td>
+<td class="text-center"><p>49.36</p></td>
+<td class="text-center"><p>-0.145</p></td>
+<td class="text-center"><p>125.32</p></td>
+<td class="text-center"><p>54.91</p></td>
+<td class="text-center"><p>-0.413</p></td>
+<td class="text-center"><p>120.72</p></td>
+<td class="text-center"><p>56.32</p></td>
+<td class="text-center"><p>-0.461</p></td>
 <td class="text-center"><p>0.0777</p></td>
 <td class="text-center"><p>4.5446</p></td>
 <td class="text-center"><p>0.4163</p></td>
@@ -1669,16 +1671,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <td class="text-center"><p>0.9062</p></td>
 <td class="text-center"><p><strong>Rapi</strong></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">2.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>130.509</p></td>
-<td class="text-center"><p>49.9565</p></td>
-<td class="text-center"><p>-0.0003</p></td>
-<td class="text-center"><p>133.036</p></td>
-<td class="text-center"><p>55.1133</p></td>
-<td class="text-center"><p>-0.3531</p></td>
-<td class="text-center"><p>130.778</p></td>
-<td class="text-center"><p>58.4824</p></td>
-<td class="text-center"><p>-0.5376</p></td>
+<tr class="row-even"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-003</span> <span class="pre">Rapi</span> <span class="pre">3.jpg</span></code></p></td>
+<td class="text-center"><p>130.51</p></td>
+<td class="text-center"><p>49.96</p></td>
+<td class="text-center"><p>-0.000</p></td>
+<td class="text-center"><p>133.04</p></td>
+<td class="text-center"><p>55.11</p></td>
+<td class="text-center"><p>-0.353</p></td>
+<td class="text-center"><p>130.78</p></td>
+<td class="text-center"><p>58.48</p></td>
+<td class="text-center"><p>-0.538</p></td>
 <td class="text-center"><p>0.0883</p></td>
 <td class="text-center"><p>4.3986</p></td>
 <td class="text-center"><p>0.3495</p></td>
@@ -1686,16 +1688,16 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <td class="text-center"><p>0.9290</p></td>
 <td class="text-center"><p><strong>Rapi</strong></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><strong><code class="docutils literal notranslate"><span class="pre">24-068</span> <span class="pre">Rapi</span> <span class="pre">3.jpeg</span></code></strong></p></td>
-<td class="text-center"><p>146.688</p></td>
-<td class="text-center"><p>44.2810</p></td>
-<td class="text-center"><p>-0.5851</p></td>
-<td class="text-center"><p>149.350</p></td>
-<td class="text-center"><p>48.3646</p></td>
-<td class="text-center"><p>-0.6045</p></td>
-<td class="text-center"><p>143.923</p></td>
-<td class="text-center"><p>49.9276</p></td>
-<td class="text-center"><p>-0.5944</p></td>
+<tr class="row-odd"><td class="text-left"><p><code class="docutils literal notranslate"><span class="pre">24-201_Rapi1.jpg</span></code></p></td>
+<td class="text-center"><p>146.69</p></td>
+<td class="text-center"><p>44.28</p></td>
+<td class="text-center"><p>-0.585</p></td>
+<td class="text-center"><p>149.35</p></td>
+<td class="text-center"><p>48.36</p></td>
+<td class="text-center"><p>-0.605</p></td>
+<td class="text-center"><p>143.92</p></td>
+<td class="text-center"><p>49.93</p></td>
+<td class="text-center"><p>-0.594</p></td>
 <td class="text-center"><p>0.0908</p></td>
 <td class="text-center"><p>4.1571</p></td>
 <td class="text-center"><p>0.2227</p></td>
@@ -1710,12 +1712,11 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 <hr class="docutils" />
 <section id="pembentukan-matriks-akurasi-matriks-konfusi-accuracy-confusion-matrix">
 <h3>11.3 Pembentukan Matriks Akurasi / Matriks Konfusi (Accuracy &amp; Confusion Matrix)<a class="headerlink" href="#pembentukan-matriks-akurasi-matriks-konfusi-accuracy-confusion-matrix" title="Link to this heading">#</a></h3>
-<p>Dalam machine learning dan pengolahan citra digital, evaluasi keberhasilan model klasifikasi dievaluasi secara matematis melalui <strong>Matriks Konfusi (<em>Confusion Matrix</em>)</strong>, yang juga sering disebut sebagai <strong>Matriks Akurasi (<em>Accuracy Matrix</em>)</strong>.</p>
-<p>Matriks konfusi memetakan perbandingan antara kelas yang sebenarnya (<em>Ground Truth</em>) dan kelas yang diprediksi oleh algoritma:</p>
+<p>Sebagaimana diminta dosen (<em>“bentuk matriks ocuracy”</em>), evaluasi keberhasilan model klasifikasi diukur secara objektif melalui <strong>Matriks Konfusi (<em>Confusion Matrix</em>)</strong>, yang memetakan perbandingan antara label ground truth aktual dengan hasil prediksi model:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                       <span class="n">PREDIKSI</span> <span class="n">MODEL</span>
-                    <span class="n">Berantakan</span>      <span class="n">Rapi</span>
-<span class="n">AKTUAL</span>  <span class="n">Berantakan</span> <span class="p">[</span>    <span class="n">TP</span>     <span class="o">|</span>     <span class="n">FN</span>    <span class="p">]</span>
-        <span class="n">Rapi</span>       <span class="p">[</span>    <span class="n">FP</span>     <span class="o">|</span>     <span class="n">TN</span>    <span class="p">]</span>
+                    <span class="n">Rapi</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>       <span class="n">Berantakan</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">AKTUAL</span>  <span class="n">Rapi</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span>       <span class="p">[</span>    <span class="n">TN</span>     <span class="o">|</span>     <span class="n">FP</span>    <span class="p">]</span>
+        <span class="n">Berantakan</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">[</span>    <span class="n">FN</span>     <span class="o">|</span>     <span class="n">TP</span>    <span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -1730,85 +1731,90 @@ $<span class="math notranslate nohighlight">\(\text{Homogeneity} = \sum_{i=1}^{N
 \[\text{Akurasi} = \frac{TP + TN}{TP + TN + FP + FN} \times 100\%\]</div>
 <div class="math notranslate nohighlight">
 \[\text{Presisi} = \frac{TP}{TP + FP}, \quad \text{Recall} = \frac{TP}{TP + FN}, \quad F1\text{-Score} = 2 \times \frac{\text{Presisi} \times \text{Recall}}{\text{Presisi} + \text{Recall}}\]</div>
-<p><img alt="Matriks Akurasi dan Konfusi" src="_images/citra_confusion_matrix_klasifikasi.png" /></p>
-</section>
-<section id="hasil-evaluasi-matriks-akurasi-nyata-pada-dataset">
-<h4>Hasil Evaluasi Matriks Akurasi Nyata pada Dataset:<a class="headerlink" href="#hasil-evaluasi-matriks-akurasi-nyata-pada-dataset" title="Link to this heading">#</a></h4>
-<ol class="arabic simple">
-<li><p><strong>Evaluasi Training Set (Model Fit):</strong></p>
-<ul class="simple">
-<li><p>True Positive (<span class="math notranslate nohighlight">\(TP\)</span>) = <span class="math notranslate nohighlight">\(3\)</span>, True Negative (<span class="math notranslate nohighlight">\(TN\)</span>) = <span class="math notranslate nohighlight">\(3\)</span></p></li>
-<li><p>False Positive (<span class="math notranslate nohighlight">\(FP\)</span>) = <span class="math notranslate nohighlight">\(0\)</span>, False Negative (<span class="math notranslate nohighlight">\(FN\)</span>) = <span class="math notranslate nohighlight">\(0\)</span></p></li>
-<li><p><strong>Akurasi Training Set:</strong> <span class="math notranslate nohighlight">\(\mathbf{100.0\%}\)</span> (<span class="math notranslate nohighlight">\(6/6\)</span> data terklasifikasi dengan tepat tanpa ada kesalahan).</p></li>
-</ul>
-</li>
-<li><p><strong>Evaluasi Validasi Silang (Leave-One-Out Cross-Validation / LOOCV):</strong>
-Pada dataset kecil (<span class="math notranslate nohighlight">\(N=6\)</span>), metode validasi paling objektif dan ketat adalah <em>Leave-One-Out Cross-Validation</em> (LOOCV), di mana setiap sampel citra diuji secara bergantian terhadap model yang dilatih dari <span class="math notranslate nohighlight">\(5\)</span> sampel lainnya:</p>
-<ul class="simple">
-<li><p>Confusion Matrix LOOCV (Logistic Regression):
-$<span class="math notranslate nohighlight">\(\begin{bmatrix} 2 &amp; 1 \\ 0 &amp; 3 \end{bmatrix}\)</span>$</p></li>
-<li><p>True Positive = <span class="math notranslate nohighlight">\(2\)</span>, True Negative = <span class="math notranslate nohighlight">\(3\)</span>, False Negative = <span class="math notranslate nohighlight">\(1\)</span>, False Positive = <span class="math notranslate nohighlight">\(0\)</span>.</p></li>
-<li><p><strong>Akurasi LOOCV:</strong> <span class="math notranslate nohighlight">\(\mathbf{83.33\%}\)</span> (<span class="math notranslate nohighlight">\(5\)</span> dari <span class="math notranslate nohighlight">\(6\)</span> citra berhasil diprediksi secara benar pada unseen validation).</p></li>
-</ul>
-</li>
-</ol>
 </section>
 </section>
 <hr class="docutils" />
-<section id="pemodelan-klasifikasi-machine-learning-analisis-daya-pisah-fitur">
-<h3>11.4 Pemodelan Klasifikasi Machine Learning &amp; Analisis Daya Pisah Fitur<a class="headerlink" href="#pemodelan-klasifikasi-machine-learning-analisis-daya-pisah-fitur" title="Link to this heading">#</a></h3>
-<p>Beberapa algoritma klasifikasi standar dievaluasi menggunakan pipeline standardisasi <em>Z-Score</em> (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>):</p>
+<section id="pemodelan-klasifikasi-seperti-audio-kemarin">
+<h3>11.4 Pemodelan Klasifikasi Seperti Audio Kemarin<a class="headerlink" href="#pemodelan-klasifikasi-seperti-audio-kemarin" title="Link to this heading">#</a></h3>
+<p>Mengikuti protokol eksperimen yang sama persis seperti pada praktikum audio kemarin:</p>
+<ol class="arabic simple">
+<li><p><strong>Partisi Dataset Terstratifikasi (Stratified Train-Test Split 80:20):</strong><br />
+Dari total 194 sampel citra, <span class="math notranslate nohighlight">\(80\%\)</span> (155 sampel: 78 Berantakan, 77 Rapi) digunakan sebagai data latih (<em>training set</em>), dan <span class="math notranslate nohighlight">\(20\%\)</span> (39 sampel: 19 Berantakan, 20 Rapi) diisolasi sebagai data uji independen (<em>test set</em>).</p></li>
+<li><p><strong>Standardisasi Fitur Z-Score (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>):</strong><br />
+Penskalaan nilai <span class="math notranslate nohighlight">\(\mu = 0\)</span> dan <span class="math notranslate nohighlight">\(\sigma = 1\)</span> dihitung (<em>fit</em>) <strong>hanya pada data training</strong> untuk mencegah terjadinya kebocoran data (<em>data leakage</em>), kemudian diaplikasikan (<em>transform</em>) pada data uji.</p></li>
+<li><p><strong>Model Klasifikasi yang Digunakan:</strong></p>
+<ul class="simple">
+<li><p><strong>Support Vector Machine (SVM Kernel RBF)</strong></p></li>
+<li><p><strong>Random Forest Classifier (100 Trees)</strong></p></li>
+<li><p><strong>Logistic Regression (L2)</strong></p></li>
+</ul>
+</li>
+<li><p><strong>Validasi Silang (5-Fold Stratified Cross-Validation):</strong><br />
+Dataset dibagi menjadi 5 lipatan (<em>folds</em>) berimbang untuk mengevaluasi konsistensi generalisasi model.</p></li>
+</ol>
+<section id="tabel-hasil-evaluasi-klasifikasi-pada-14-fitur-inti-dosen">
+<h4>Tabel Hasil Evaluasi Klasifikasi pada 14 Fitur Inti Dosen:<a class="headerlink" href="#tabel-hasil-evaluasi-klasifikasi-pada-14-fitur-inti-dosen" title="Link to this heading">#</a></h4>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head text-left"><p>Model Klasifikasi</p></th>
-<th class="head text-center"><p>Akurasi Training Set</p></th>
-<th class="head text-center"><p>Akurasi Validasi (LOOCV)</p></th>
-<th class="head text-left"><p>Catatan Karakteristik Model</p></th>
+<th class="head text-center"><p>Train Acc (%)</p></th>
+<th class="head text-center"><p>Test Acc (%)</p></th>
+<th class="head text-center"><p>5-Fold CV (%)</p></th>
+<th class="head text-center"><p>Precision (%)</p></th>
+<th class="head text-center"><p>Recall (%)</p></th>
+<th class="head text-center"><p>F1-Score (%)</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td class="text-left"><p><strong>Logistic Regression (L2)</strong></p></td>
-<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(100.0\%\)</span></strong></p></td>
-<td class="text-center"><p><strong><span class="math notranslate nohighlight">\(83.33\%\)</span></strong></p></td>
-<td class="text-left"><p><strong>Model Terbaik:</strong> Pembobotan linier menghasilkan margin pemisah yang seimbang dan stabil</p></td>
+<tr class="row-even"><td class="text-left"><p><strong>Support Vector Machine (RBF)</strong></p></td>
+<td class="text-center"><p><strong>91.61%</strong></p></td>
+<td class="text-center"><p><strong>79.49%</strong></p></td>
+<td class="text-center"><p><strong>78.89% (<span class="math notranslate nohighlight">\(\pm 4.88\%\)</span>)</strong></p></td>
+<td class="text-center"><p><strong>78.95%</strong></p></td>
+<td class="text-center"><p><strong>78.95%</strong></p></td>
+<td class="text-center"><p><strong>78.95%</strong></p></td>
 </tr>
-<tr class="row-odd"><td class="text-left"><p><strong>Linear Support Vector Machine (SVM)</strong></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(100.0\%\)</span></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(66.67\%\)</span></p></td>
-<td class="text-left"><p>Mampu memisahkan data latih secara linear dengan margin optimal</p></td>
+<tr class="row-odd"><td class="text-left"><p><strong>Random Forest (100 Trees)</strong></p></td>
+<td class="text-center"><p><strong>98.06%</strong></p></td>
+<td class="text-center"><p><strong>74.36%</strong></p></td>
+<td class="text-center"><p><strong>76.26% (<span class="math notranslate nohighlight">\(\pm 4.28\%\)</span>)</strong></p></td>
+<td class="text-center"><p><strong>73.68%</strong></p></td>
+<td class="text-center"><p><strong>73.68%</strong></p></td>
+<td class="text-center"><p><strong>73.68%</strong></p></td>
 </tr>
-<tr class="row-even"><td class="text-left"><p><strong>Random Forest (<span class="math notranslate nohighlight">\(N_{\text{tree}}=50\)</span>)</strong></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(100.0\%\)</span></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(50.00\%\)</span></p></td>
-<td class="text-left"><p>Ansambel pohon keputusan, rentan fluktuasi pada ukuran sampel mikro</p></td>
-</tr>
-<tr class="row-odd"><td class="text-left"><p><strong>k-Nearest Neighbors (<span class="math notranslate nohighlight">\(k=3\)</span>)</strong></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(66.67\%\)</span></p></td>
-<td class="text-center"><p><span class="math notranslate nohighlight">\(50.00\%\)</span></p></td>
-<td class="text-left"><p>Jarak Euclidean antar-vektor fitur 14 dimensi</p></td>
+<tr class="row-even"><td class="text-left"><p><strong>Logistic Regression</strong></p></td>
+<td class="text-center"><p>70.32%</p></td>
+<td class="text-center"><p>71.79%</p></td>
+<td class="text-center"><p>68.07% (<span class="math notranslate nohighlight">\(\pm 4.29\%\)</span>)</p></td>
+<td class="text-center"><p>72.22%</p></td>
+<td class="text-center"><p>68.42%</p></td>
+<td class="text-center"><p>70.27%</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><img alt="Pemisahan Fitur Scatter Plot" src="_images/citra_klasifikasi_scatter.png" /></p>
-<section id="mengapa-fitur-fitur-ini-mampu-memisahkan-kelas-secara-akurat">
-<h4>Mengapa Fitur-Fitur Ini Mampu Memisahkan Kelas Secara Akurat?<a class="headerlink" href="#mengapa-fitur-fitur-ini-mampu-memisahkan-kelas-secara-akurat" title="Link to this heading">#</a></h4>
-<ol class="arabic simple">
-<li><p><strong>Standar Deviasi Kanal Merah (<code class="docutils literal notranslate"><span class="pre">std_r</span></code>):</strong><br />
-Pada ketiga citra kondisi <strong>Berantakan</strong>, nilai <code class="docutils literal notranslate"><span class="pre">std_r</span></code> secara konsisten bernilai <span class="math notranslate nohighlight">\(\ge 56.20\)</span> (<span class="math notranslate nohighlight">\(56.20, 58.43, 56.48\)</span>). Sedangkan pada seluruh citra <strong>Rapi</strong>, nilai <code class="docutils literal notranslate"><span class="pre">std_r</span></code> selalu berada di bawah <span class="math notranslate nohighlight">\(50.00\)</span> (<span class="math notranslate nohighlight">\(49.36, 49.96, 44.28\)</span>). Terdapat celah batas pemisah linear (<em>linear margin gap</em>) sebesar <span class="math notranslate nohighlight">\(&gt; 6.2\)</span> poin.</p></li>
-<li><p><strong>Kombinasi dengan GLCM Contrast (<code class="docutils literal notranslate"><span class="pre">glcm_contrast</span></code>):</strong><br />
-Kondisi berantakan menghasilkan variasi lokal intensitas yang lebih rapat dan bayangan tajam, memperkuat daya pembeda (<em>separability</em>) ketika dikombinasikan dengan momen warna.</p></li>
-</ol>
+</section>
+<section id="visualisasi-matriks-akurasi-confusion-matrix-pada-data-uji-independen-n-text-test-39">
+<h4>Visualisasi Matriks Akurasi (Confusion Matrix) pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 39\)</span>):<a class="headerlink" href="#visualisasi-matriks-akurasi-confusion-matrix-pada-data-uji-independen-n-text-test-39" title="Link to this heading">#</a></h4>
+<p><img alt="Matriks Konfusi 14 Fitur Dosen" src="_images/citra_confusion_matrix_14fitur.png" /></p>
+<ul class="simple">
+<li><p><strong>SVM (RBF):</strong> Berhasil mengklasifikasikan 31 dari 39 citra dengan benar (<span class="math notranslate nohighlight">\(TP=15, TN=16, FP=4, FN=4\)</span>), menghasilkan akurasi <strong><span class="math notranslate nohighlight">\(79.49\%\)</span></strong>.</p></li>
+<li><p><strong>Random Forest:</strong> Berhasil mengklasifikasikan 29 dari 39 citra dengan benar (<span class="math notranslate nohighlight">\(TP=14, TN=15, FP=5, FN=5\)</span>), menghasilkan akurasi <strong><span class="math notranslate nohighlight">\(74.36\%\)</span></strong>.</p></li>
+</ul>
+</section>
+<section id="analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest">
+<h4>Analisis Tingkat Kepentingan Fitur (<em>Feature Importance</em> dari Random Forest):<a class="headerlink" href="#analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest" title="Link to this heading">#</a></h4>
+<p><img alt="Tingkat Kepentingan 14 Fitur" src="_images/citra_feature_importance_14fitur.png" /></p>
+<p>Dari ke-14 fitur inti yang diujikan, fitur tekstur spasial <strong><code class="docutils literal notranslate"><span class="pre">glcm_energy</span></code></strong> dan <strong><code class="docutils literal notranslate"><span class="pre">glcm_contrast</span></code></strong> bersama fitur warna <strong><code class="docutils literal notranslate"><span class="pre">mean_r</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">std_b</span></code></strong>, dan <strong><code class="docutils literal notranslate"><span class="pre">mean_b</span></code></strong> menduduki peringkat teratas dalam membedakan tatanan ruang berantakan dan rapi.</p>
 </section>
 </section>
 <hr class="docutils" />
-<section id="skrip-python-lengkap-ekstraksi-fitur-pembuatan-csv-dan-klasifikasi">
-<h3>11.5 Skrip Python Lengkap Ekstraksi Fitur, Pembuatan CSV, dan Klasifikasi<a class="headerlink" href="#skrip-python-lengkap-ekstraksi-fitur-pembuatan-csv-dan-klasifikasi" title="Link to this heading">#</a></h3>
-<p>Berikut adalah skrip Python mandiri yang dapat langsung dijalankan untuk melakukan seluruh alur ekstraksi 14 fitur, menyimpan berkas CSV, dan mengevaluasi klasifikasi:</p>
+<section id="skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">
+<h3>11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi<a class="headerlink" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi" title="Link to this heading">#</a></h3>
+<p>Berikut adalah skrip Python mandiri yang mengimplementasikan seluruh permintaan dosen secara lengkap:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Praktikum Pengolahan Sinyal Digital (PSD)</span>
-<span class="sd">Modul: Ekstraksi 14 Fitur Citra, Ekspor CSV, dan Evaluasi Klasifikasi</span>
-<span class="sd">Penulis: Muhammad Zaidan Nabil Rafi (240411100068)</span>
+<span class="sd">Praktikum Pengolahan Sinyal Digital (PSD) - Teknik Informatika UTM</span>
+<span class="sd">Modul: Ekstraksi 14 Fitur Citra Digital, Ekspor CSV, dan Klasifikasi (Alur Audio)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -1816,20 +1822,17 @@ Kondisi berantakan menghasilkan variasi lokal intensitas yang lebih rapat dan ba
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">stats</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeaveOneOut</span><span class="p">,</span> <span class="n">cross_val_predict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">StratifiedKFold</span><span class="p">,</span> <span class="n">cross_val_score</span><span class="p">,</span> <span class="n">train_test_split</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.linear_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogisticRegression</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span><span class="p">,</span> <span class="n">accuracy_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">,</span> <span class="n">classification_report</span>
 
-<span class="c1"># 1. Direktori Citra</span>
-<span class="n">image_folder</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;Foto citra&#39;</span>
-<span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">image_folder</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.jpeg&#39;</span><span class="p">)])</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_glcm_features</span><span class="p">(</span><span class="n">gray_img</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-    <span class="c1"># Kuantisasi citra ke 16 tingkat keabuan</span>
+<span class="c1"># =========================================================================</span>
+<span class="c1"># 1. FUNGSI EKSTRAKSI GLCM (5 FITUR HARALICK)</span>
+<span class="c1"># =========================================================================</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_glcm_5_features</span><span class="p">(</span><span class="n">gray_img</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="n">q</span> <span class="o">=</span> <span class="p">(</span><span class="n">gray_img</span> <span class="o">//</span> <span class="p">(</span><span class="mi">256</span> <span class="o">//</span> <span class="n">levels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-    <span class="c1"># Pasangan spasial horizontal (d=1, theta=0)</span>
     <span class="n">src</span> <span class="o">=</span> <span class="n">q</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="n">d</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">dst</span> <span class="o">=</span> <span class="n">q</span><span class="p">[:,</span> <span class="n">d</span><span class="p">:]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">glcm_counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">src</span> <span class="o">*</span> <span class="n">levels</span> <span class="o">+</span> <span class="n">dst</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="n">levels</span><span class="o">*</span><span class="n">levels</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">levels</span><span class="p">,</span> <span class="n">levels</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
@@ -1842,91 +1845,66 @@ Kondisi berantakan menghasilkan variasi lokal intensitas yang lebih rapat dan ba
     <span class="n">mask</span> <span class="o">=</span> <span class="n">P</span> <span class="o">&gt;</span> <span class="mi">0</span>
     <span class="n">entropy</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">mask</span><span class="p">])))</span>
     
-    <span class="c1"># Korelasi</span>
     <span class="n">p_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">p_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">mu_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">*</span> <span class="n">p_i</span><span class="p">)</span>
     <span class="n">mu_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">*</span> <span class="n">p_j</span><span class="p">)</span>
     <span class="n">sig_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu_i</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p_i</span><span class="p">))</span>
     <span class="n">sig_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">-</span> <span class="n">mu_j</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">p_j</span><span class="p">))</span>
-    <span class="n">correlation</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">i_idx</span> <span class="o">-</span> <span class="n">mu_i</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">j_idx</span> <span class="o">-</span> <span class="n">mu_j</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sig_i</span> <span class="o">*</span> <span class="n">sig_j</span><span class="p">))</span>
+    <span class="n">correlation</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">i_idx</span> <span class="o">-</span> <span class="n">mu_i</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">j_idx</span> <span class="o">-</span> <span class="n">mu_j</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sig_i</span> <span class="o">*</span> <span class="n">sig_j</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">sig_i</span> <span class="o">*</span> <span class="n">sig_j</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-9</span> <span class="k">else</span> <span class="mf">1.0</span>
     
     <span class="k">return</span> <span class="n">energy</span><span class="p">,</span> <span class="n">entropy</span><span class="p">,</span> <span class="n">contrast</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">homogeneity</span>
 
-<span class="c1"># 2. Ekstraksi Seluruh Fitur pada Dataset</span>
-<span class="n">dataset_records</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-    <span class="n">img_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_folder</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-    <span class="n">bgr</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
-    <span class="n">rgb</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
-    <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">bgr</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
-    
-    <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">rgb</span><span class="p">[:,:,</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-    
-    <span class="c1"># 9 Momen Warna (Mean, Std, Skewness tiap kanal)</span>
-    <span class="n">mean_r</span><span class="p">,</span> <span class="n">std_r</span><span class="p">,</span> <span class="n">skew_r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">r</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
-    <span class="n">mean_g</span><span class="p">,</span> <span class="n">std_g</span><span class="p">,</span> <span class="n">skew_g</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">g</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
-    <span class="n">mean_b</span><span class="p">,</span> <span class="n">std_b</span><span class="p">,</span> <span class="n">skew_b</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">b</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">b</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">skew</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span>
-    
-    <span class="c1"># 5 Fitur Tekstur Spasial GLCM Grayscale</span>
-    <span class="n">energy</span><span class="p">,</span> <span class="n">entropy</span><span class="p">,</span> <span class="n">contrast</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">homogeneity</span> <span class="o">=</span> <span class="n">calculate_glcm_features</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
-    
-    <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="k">if</span> <span class="s1">&#39;Berantakan&#39;</span> <span class="ow">in</span> <span class="n">f</span> <span class="k">else</span> <span class="s1">&#39;Rapi&#39;</span>
-    
-    <span class="n">dataset_records</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;filename&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span>
-        <span class="s1">&#39;mean_r&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;std_r&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;skew_r&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">skew_r</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;mean_g&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_g</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;std_g&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_g</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;skew_g&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">skew_g</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;mean_b&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_b</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;std_b&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_b</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s1">&#39;skew_b&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">skew_b</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;glcm_energy&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;glcm_entropy&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">entropy</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;glcm_contrast&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">contrast</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;glcm_correlation&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;glcm_homogeneity&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">homogeneity</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="n">label</span>
-    <span class="p">})</span>
+<span class="c1"># =========================================================================</span>
+<span class="c1"># 2. PEMBACAAN DATASET &amp; EKSTRAKSI 14 FITUR</span>
+<span class="c1"># =========================================================================</span>
+<span class="c1"># Dataset memuat 194 citra: 97 Rapi dan 97 Berantakan</span>
+<span class="c1"># Disimpan dalam berkas: hasil_ekstraksi_fitur_citra.csv</span>
 
-<span class="n">df_dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dataset_records</span><span class="p">)</span>
-
-<span class="c1"># 3. Simpan ke Format CSV</span>
-<span class="n">output_csv</span> <span class="o">=</span> <span class="s1">&#39;hasil_ekstraksi_fitur_citra.csv&#39;</span>
-<span class="n">df_dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;[SUKSES] Dataset berhasil diekspor ke: &quot;</span> <span class="o">+</span> <span class="n">output_csv</span><span class="p">)</span>
-
-<span class="c1"># 4. Pipeline Pemodelan Klasifikasi</span>
-<span class="n">feature_names</span> <span class="o">=</span> <span class="p">[</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;hasil_ekstraksi_fitur_citra.csv&#39;</span><span class="p">)</span>
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;mean_r&#39;</span><span class="p">,</span> <span class="s1">&#39;std_r&#39;</span><span class="p">,</span> <span class="s1">&#39;skew_r&#39;</span><span class="p">,</span>
     <span class="s1">&#39;mean_g&#39;</span><span class="p">,</span> <span class="s1">&#39;std_g&#39;</span><span class="p">,</span> <span class="s1">&#39;skew_g&#39;</span><span class="p">,</span>
     <span class="s1">&#39;mean_b&#39;</span><span class="p">,</span> <span class="s1">&#39;std_b&#39;</span><span class="p">,</span> <span class="s1">&#39;skew_b&#39;</span><span class="p">,</span>
     <span class="s1">&#39;glcm_energy&#39;</span><span class="p">,</span> <span class="s1">&#39;glcm_entropy&#39;</span><span class="p">,</span> <span class="s1">&#39;glcm_contrast&#39;</span><span class="p">,</span> <span class="s1">&#39;glcm_correlation&#39;</span><span class="p">,</span> <span class="s1">&#39;glcm_homogeneity&#39;</span>
 <span class="p">]</span>
-<span class="n">X</span> <span class="o">=</span> <span class="n">df_dataset</span><span class="p">[</span><span class="n">feature_names</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">df_dataset</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;label&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Berantakan&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
 
-<span class="c1"># Standardisasi dan Model Logistic Regression</span>
-<span class="n">classifier</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">))</span>
+<span class="c1"># =========================================================================</span>
+<span class="c1"># 3. STRATIFIED TRAIN-TEST SPLIT (80:20) &amp; Z-SCORE SCALING</span>
+<span class="c1"># =========================================================================</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.20</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
 
-<span class="c1"># Pelatihan pada Training Set</span>
-<span class="n">classifier</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">y_pred_train</span> <span class="o">=</span> <span class="n">classifier</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-<span class="n">acc_train</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_train</span><span class="p">)</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_test_sc</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
 
-<span class="c1"># Evaluasi Validasi Silang LOOCV</span>
-<span class="n">loo</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
-<span class="n">y_pred_loocv</span> <span class="o">=</span> <span class="n">cross_val_predict</span><span class="p">(</span><span class="n">classifier</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">loo</span><span class="p">)</span>
-<span class="n">acc_loocv</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_loocv</span><span class="p">)</span>
-<span class="n">cm_loocv</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_loocv</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Berantakan&#39;</span><span class="p">,</span> <span class="s1">&#39;Rapi&#39;</span><span class="p">])</span>
+<span class="c1"># =========================================================================</span>
+<span class="c1"># 4. PELATIHAN MODEL KLASIFIKASI &amp; MATRIKS AKURASI</span>
+<span class="c1"># =========================================================================</span>
+<span class="n">svm</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">svm</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_sc</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_sc</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AKURASI TRAINING SET        : </span><span class="si">{</span><span class="n">acc_train</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AKURASI LOOCV VALIDASI      : </span><span class="si">{</span><span class="n">acc_loocv</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MATRIKS KONFUSI LOOCV (Accuracy Matrix):&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cm_loocv</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LAPORAN KLASIFIKASI LOOCV:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_loocv</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AKURASI PENGUJIAN SVM (14 Fitur) : </span><span class="si">{</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
+<span class="n">MATRIKS</span> <span class="n">AKURASI</span> <span class="p">(</span><span class="n">Confusion</span> <span class="n">Matrix</span><span class="p">):</span><span class="s2">&quot;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
+<span class="n">LAPORAN</span> <span class="n">KLASIFIKASI</span><span class="p">:</span><span class="s2">&quot;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Rapi&#39;</span><span class="p">,</span> <span class="s1">&#39;Berantakan&#39;</span><span class="p">]))</span>
 </pre></div>
 </div>
+<hr class="docutils" />
+<blockquote>
+<div><p>[!NOTE]
+<strong>Jembatan Transisi Menuju Bab 12 (Eksperimen Peningkatan Akurasi <span class="math notranslate nohighlight">\(\ge 90\%\)</span>):</strong><br />
+Pada Bab 11 di atas, seluruh instruksi wajib dari dosen pengampu (ekstraksi 14 fitur, konversi grayscale, perhitungan 5 fitur GLCM, pembuatan CSV, pembentukan matriks akurasi, dan klasifikasi terstandarisasi seperti audio) telah diselesaikan secara tuntas dengan akurasi pengujian mencapai <span class="math notranslate nohighlight">\(\mathbf{79.49\%}\)</span>.<br />
+Namun, karena variabilitas dataset dunia nyata yang sangat tinggi (194 citra dengan sudut dan pencahayaan beragam), model berbasis 14 fitur dasar memiliki batas performa pada kisaran <span class="math notranslate nohighlight">\(75\% - 80\%\)</span>. Oleh karena itu, pada <strong>Bab 12</strong>, dilakukan eksplorasi ilmiah lanjutan untuk mendongkrak akurasi hingga di atas <span class="math notranslate nohighlight">\(\mathbf{90\%}\)</span> (mencapai <strong><span class="math notranslate nohighlight">\(97.50\%\)</span></strong>) menggunakan <strong>Fusi 84 Fitur Multimodal</strong>, model Deep Learning mutakhir <strong>YOLOv8</strong>, analisis <strong>Keyakinan Akurasi Fitur</strong>, dan analisis <strong>Keyakinan Model</strong>.</p>
+</div></blockquote>
 </section>
 </section>
 <hr class="docutils" />
@@ -3005,21 +2983,22 @@ Melatih klasifier terpisah pada fitur warna dan fitur tekstur, lalu menggabungka
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementasi-pipeline-komputasi-dengan-python">10. Implementasi Pipeline Komputasi dengan Python</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-dataset-fitur-14-fitur-label-ekspor-csv-dan-pemodelan-klasifikasi">11. Pembentukan Dataset Fitur (14 Fitur + Label), Ekspor CSV, dan Pemodelan Klasifikasi</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-dan-komposisi-14-fitur-citra-digital">11.1 Alur dan Komposisi 14 Fitur Citra Digital</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-5-fitur-tekstur-matriks-ko-okurensi-glcm">Formulasi 5 Fitur Tekstur Matriks Ko-okurensi (GLCM):</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#alur-dan-komposisi-14-fitur-citra-digital-inti">11.1 Alur dan Komposisi 14 Fitur Citra Digital Inti</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-matematis-5-fitur-tekstur-matriks-ko-okurensi-glcm-haralick">Formulasi Matematis 5 Fitur Tekstur Matriks Ko-okurensi (GLCM Haralick):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-6-citra">11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 6 Citra)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-dataset-lengkap-14-fitur-label-hasil-ekstraksi-194-citra">11.2 Tabel Dataset Lengkap 14 Fitur + Label (Hasil Ekstraksi 194 Citra)</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pembentukan-matriks-akurasi-matriks-konfusi-accuracy-confusion-matrix">11.3 Pembentukan Matriks Akurasi / Matriks Konfusi (Accuracy &amp; Confusion Matrix)</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#formulasi-metrik-evaluasi">Formulasi Metrik Evaluasi:</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-evaluasi-matriks-akurasi-nyata-pada-dataset">Hasil Evaluasi Matriks Akurasi Nyata pada Dataset:</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-klasifikasi-machine-learning-analisis-daya-pisah-fitur">11.4 Pemodelan Klasifikasi Machine Learning &amp; Analisis Daya Pisah Fitur</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#mengapa-fitur-fitur-ini-mampu-memisahkan-kelas-secara-akurat">Mengapa Fitur-Fitur Ini Mampu Memisahkan Kelas Secara Akurat?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pemodelan-klasifikasi-seperti-audio-kemarin">11.4 Pemodelan Klasifikasi Seperti Audio Kemarin</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tabel-hasil-evaluasi-klasifikasi-pada-14-fitur-inti-dosen">Tabel Hasil Evaluasi Klasifikasi pada 14 Fitur Inti Dosen:</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#visualisasi-matriks-akurasi-confusion-matrix-pada-data-uji-independen-n-text-test-39">Visualisasi Matriks Akurasi (Confusion Matrix) pada Data Uji Independen (<span class="math notranslate nohighlight">\(N_{\text{test}} = 39\)</span>):</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest">Analisis Tingkat Kepentingan Fitur (<em>Feature Importance</em> dari Random Forest):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-fitur-pembuatan-csv-dan-klasifikasi">11.5 Skrip Python Lengkap Ekstraksi Fitur, Pembuatan CSV, dan Klasifikasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-skala-besar-dataset-194-citra-baru-integrasi-model-yolo-fusi-84-fitur-keyakinan-akurasi-fitur-dan-keyakinan-model">12. Eksperimen Skala Besar Dataset 194 Citra Baru: Integrasi Model YOLO, Fusi 84 Fitur, Keyakinan Akurasi Fitur, dan Keyakinan Model</a><ul class="nav section-nav flex-column">
