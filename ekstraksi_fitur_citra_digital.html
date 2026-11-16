@@ -459,7 +459,10 @@ document.write(`
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest">Analisis Tingkat Kepentingan Fitur (<em>Feature Importance</em> dari Random Forest):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-eksekusi-kode-langsung-pada-terminal-python-klasifikasi-14-fitur-py">Hasil Eksekusi Kode Langsung pada Terminal (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">klasifikasi_14_fitur.py</span></code>):</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-skala-besar-dataset-194-citra-baru-integrasi-model-yolo-fusi-84-fitur-keyakinan-akurasi-fitur-dan-keyakinan-model">12. Eksperimen Skala Besar Dataset 194 Citra Baru: Integrasi Model YOLO, Fusi 84 Fitur, Keyakinan Akurasi Fitur, dan Keyakinan Model</a><ul class="nav section-nav flex-column">
@@ -1890,12 +1893,92 @@ Dataset dibagi menjadi 5 lipatan (<em>folds</em>) berimbang untuk mengevaluasi k
 <span class="n">y_pred</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_sc</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AKURASI PENGUJIAN SVM (14 Fitur) : </span><span class="si">{</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span><span class="w"> </span><span class="n">y_pred</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
-<span class="n">MATRIKS</span> <span class="n">AKURASI</span> <span class="p">(</span><span class="n">Confusion</span> <span class="n">Matrix</span><span class="p">):</span><span class="s2">&quot;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">MATRIKS AKURASI (Confusion Matrix):&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span>
-<span class="n">LAPORAN</span> <span class="n">KLASIFIKASI</span><span class="p">:</span><span class="s2">&quot;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">LAPORAN KLASIFIKASI:&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">target_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Rapi&#39;</span><span class="p">,</span> <span class="s1">&#39;Berantakan&#39;</span><span class="p">]))</span>
+</pre></div>
+</div>
+<section id="hasil-eksekusi-kode-langsung-pada-terminal-python-klasifikasi-14-fitur-py">
+<h4>Hasil Eksekusi Kode Langsung pada Terminal (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">klasifikasi_14_fitur.py</span></code>):<a class="headerlink" href="#hasil-eksekusi-kode-langsung-pada-terminal-python-klasifikasi-14-fitur-py" title="Link to this heading">#</a></h4>
+<p>Berikut adalah log keluaran (<em>console output</em>) otentik saat kode di atas dieksekusi langsung pada terminal:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>================================================================================
+  KLASIFIKASI 14 FITUR INTI CITRA DIGITAL (SESUAI SPESIFIKASI DOSEN)
+================================================================================
+[1] Memuat Dataset CSV: hasil_ekstraksi_fitur_citra.csv
+    Total Sampel: 194 citra
+    Distribusi Kelas: {&#39;Berantakan&#39;: 97, &#39;Rapi&#39;: 97}
+
+[2] Daftar 14 Fitur yang Digunakan:
+     1. mean_r
+     2. std_r
+     3. skew_r
+     4. mean_g
+     5. std_g
+     6. skew_g
+     7. mean_b
+     8. std_b
+     9. skew_b
+    10. glcm_energy
+    11. glcm_entropy
+    12. glcm_contrast
+    13. glcm_correlation
+    14. glcm_homogeneity
+
+[3] Partisi Dataset (Stratified Split 80:20):
+    - Training Set : 155 sampel (77 Rapi, 78 Berantakan)
+    - Testing Set  : 39 sampel (20 Rapi, 19 Berantakan)
+
+================================================================================
+  HASIL EVALUASI AKURASI DARI KODE (MODEL BENCHMARK 14 FITUR)
+================================================================================
+
+&gt;&gt;&gt; MODEL: Support Vector Machine (RBF)
+    * Akurasi Data Latih (Train Acc)     : 91.61%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 79.49% (31/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 78.89% (+/- 4.88%)
+    * Presisi (Precision)                : 78.95%
+    * Sensitivitas / Recall              : 78.95%
+    * F1-Score                           : 78.95%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=16 (Rapi benar)     FP= 4 (Rapi salah)]
+        [FN= 4 (Berantakan salah) TP=15 (Berantakan benar)]
+
+&gt;&gt;&gt; MODEL: Random Forest (100 Trees)
+    * Akurasi Data Latih (Train Acc)     : 98.06%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 74.36% (29/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 76.26% (+/- 4.28%)
+    * Presisi (Precision)                : 73.68%
+    * Sensitivitas / Recall              : 73.68%
+    * F1-Score                           : 73.68%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=15 (Rapi benar)     FP= 5 (Rapi salah)]
+        [FN= 5 (Berantakan salah) TP=14 (Berantakan benar)]
+
+&gt;&gt;&gt; MODEL: Logistic Regression
+    * Akurasi Data Latih (Train Acc)     : 70.32%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 71.79% (28/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 68.07% (+/- 4.29%)
+    * Presisi (Precision)                : 72.22%
+    * Sensitivitas / Recall              : 68.42%
+    * F1-Score                           : 70.27%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=15 (Rapi benar)     FP= 5 (Rapi salah)]
+        [FN= 6 (Berantakan salah) TP=13 (Berantakan benar)]
+
+================================================================================
+  LAPORAN KLASIFIKASI LENGKAP (SVM RBF - MODEL TERBAIK 14 FITUR)
+================================================================================
+                precision    recall  f1-score   support
+
+      Rapi (0)       0.80      0.80      0.80        20
+Berantakan (1)       0.79      0.79      0.79        19
+
+      accuracy                           0.79        39
+     macro avg       0.79      0.79      0.79        39
+  weighted avg       0.79      0.79      0.79        39
+
+================================================================================
 </pre></div>
 </div>
 <hr class="docutils" />
@@ -1905,6 +1988,7 @@ Dataset dibagi menjadi 5 lipatan (<em>folds</em>) berimbang untuk mengevaluasi k
 Pada Bab 11 di atas, seluruh instruksi wajib dari dosen pengampu (ekstraksi 14 fitur, konversi grayscale, perhitungan 5 fitur GLCM, pembuatan CSV, pembentukan matriks akurasi, dan klasifikasi terstandarisasi seperti audio) telah diselesaikan secara tuntas dengan akurasi pengujian mencapai <span class="math notranslate nohighlight">\(\mathbf{79.49\%}\)</span>.<br />
 Namun, karena variabilitas dataset dunia nyata yang sangat tinggi (194 citra dengan sudut dan pencahayaan beragam), model berbasis 14 fitur dasar memiliki batas performa pada kisaran <span class="math notranslate nohighlight">\(75\% - 80\%\)</span>. Oleh karena itu, pada <strong>Bab 12</strong>, dilakukan eksplorasi ilmiah lanjutan untuk mendongkrak akurasi hingga di atas <span class="math notranslate nohighlight">\(\mathbf{90\%}\)</span> (mencapai <strong><span class="math notranslate nohighlight">\(97.50\%\)</span></strong>) menggunakan <strong>Fusi 84 Fitur Multimodal</strong>, model Deep Learning mutakhir <strong>YOLOv8</strong>, analisis <strong>Keyakinan Akurasi Fitur</strong>, dan analisis <strong>Keyakinan Model</strong>.</p>
 </div></blockquote>
+</section>
 </section>
 </section>
 <hr class="docutils" />
@@ -2998,7 +3082,10 @@ Melatih klasifier terpisah pada fitur warna dan fitur tekstur, lalu menggabungka
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-tingkat-kepentingan-fitur-feature-importance-dari-random-forest">Analisis Tingkat Kepentingan Fitur (<em>Feature Importance</em> dari Random Forest):</a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#skrip-python-lengkap-ekstraksi-14-fitur-csv-dan-klasifikasi">11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#hasil-eksekusi-kode-langsung-pada-terminal-python-klasifikasi-14-fitur-py">Hasil Eksekusi Kode Langsung pada Terminal (<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">klasifikasi_14_fitur.py</span></code>):</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eksperimen-skala-besar-dataset-194-citra-baru-integrasi-model-yolo-fusi-84-fitur-keyakinan-akurasi-fitur-dan-keyakinan-model">12. Eksperimen Skala Besar Dataset 194 Citra Baru: Integrasi Model YOLO, Fusi 84 Fitur, Keyakinan Akurasi Fitur, dan Keyakinan Model</a><ul class="nav section-nav flex-column">

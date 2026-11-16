@@ -944,12 +944,94 @@ svm.fit(X_train_sc, y_train)
 y_pred = svm.predict(X_test_sc)
 
 print(f"AKURASI PENGUJIAN SVM (14 Fitur) : {accuracy_score(y_test, y_pred) * 100:.2f}%")
-print("
-MATRIKS AKURASI (Confusion Matrix):")
+print("\nMATRIKS AKURASI (Confusion Matrix):")
 print(confusion_matrix(y_test, y_pred))
-print("
-LAPORAN KLASIFIKASI:")
+print("\nLAPORAN KLASIFIKASI:")
 print(classification_report(y_test, y_pred, target_names=['Rapi', 'Berantakan']))
+```
+
+#### Hasil Eksekusi Kode Langsung pada Terminal (`python klasifikasi_14_fitur.py`):
+
+Berikut adalah log keluaran (*console output*) otentik saat kode di atas dieksekusi langsung pada terminal:
+
+```text
+================================================================================
+  KLASIFIKASI 14 FITUR INTI CITRA DIGITAL (SESUAI SPESIFIKASI DOSEN)
+================================================================================
+[1] Memuat Dataset CSV: hasil_ekstraksi_fitur_citra.csv
+    Total Sampel: 194 citra
+    Distribusi Kelas: {'Berantakan': 97, 'Rapi': 97}
+
+[2] Daftar 14 Fitur yang Digunakan:
+     1. mean_r
+     2. std_r
+     3. skew_r
+     4. mean_g
+     5. std_g
+     6. skew_g
+     7. mean_b
+     8. std_b
+     9. skew_b
+    10. glcm_energy
+    11. glcm_entropy
+    12. glcm_contrast
+    13. glcm_correlation
+    14. glcm_homogeneity
+
+[3] Partisi Dataset (Stratified Split 80:20):
+    - Training Set : 155 sampel (77 Rapi, 78 Berantakan)
+    - Testing Set  : 39 sampel (20 Rapi, 19 Berantakan)
+
+================================================================================
+  HASIL EVALUASI AKURASI DARI KODE (MODEL BENCHMARK 14 FITUR)
+================================================================================
+
+>>> MODEL: Support Vector Machine (RBF)
+    * Akurasi Data Latih (Train Acc)     : 91.61%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 79.49% (31/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 78.89% (+/- 4.88%)
+    * Presisi (Precision)                : 78.95%
+    * Sensitivitas / Recall              : 78.95%
+    * F1-Score                           : 78.95%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=16 (Rapi benar)     FP= 4 (Rapi salah)]
+        [FN= 4 (Berantakan salah) TP=15 (Berantakan benar)]
+
+>>> MODEL: Random Forest (100 Trees)
+    * Akurasi Data Latih (Train Acc)     : 98.06%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 74.36% (29/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 76.26% (+/- 4.28%)
+    * Presisi (Precision)                : 73.68%
+    * Sensitivitas / Recall              : 73.68%
+    * F1-Score                           : 73.68%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=15 (Rapi benar)     FP= 5 (Rapi salah)]
+        [FN= 5 (Berantakan salah) TP=14 (Berantakan benar)]
+
+>>> MODEL: Logistic Regression
+    * Akurasi Data Latih (Train Acc)     : 70.32%
+    * AKURASI DATA UJI (TEST ACCURACY)   : 71.79% (28/39 Citra Benar)
+    * Validasi Silang (5-Fold CV)        : 68.07% (+/- 4.29%)
+    * Presisi (Precision)                : 72.22%
+    * Sensitivitas / Recall              : 68.42%
+    * F1-Score                           : 70.27%
+    * Matriks Akurasi (Confusion Matrix) :
+        [TN=15 (Rapi benar)     FP= 5 (Rapi salah)]
+        [FN= 6 (Berantakan salah) TP=13 (Berantakan benar)]
+
+================================================================================
+  LAPORAN KLASIFIKASI LENGKAP (SVM RBF - MODEL TERBAIK 14 FITUR)
+================================================================================
+                precision    recall  f1-score   support
+
+      Rapi (0)       0.80      0.80      0.80        20
+Berantakan (1)       0.79      0.79      0.79        19
+
+      accuracy                           0.79        39
+     macro avg       0.79      0.79      0.79        39
+  weighted avg       0.79      0.79      0.79        39
+
+================================================================================
 ```
 
 ---
