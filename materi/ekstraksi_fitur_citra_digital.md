@@ -861,17 +861,19 @@ Dari ke-14 fitur inti yang diujikan, fitur tekstur spasial **`glcm_energy`** dan
 
 ---
 
-### 11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur, CSV, dan Klasifikasi
+### 11.5 Skrip Python Lengkap: Ekstraksi 14 Fitur Langsung dari Citra, CSV, dan Klasifikasi
 
-Berikut adalah skrip Python mandiri yang mengimplementasikan seluruh permintaan dosen secara lengkap:
+Berikut adalah skrip Python mandiri yang mengimplementasikan seluruh alur secara utuh: mulai dari membaca citra mentah dari folder, konversi warna dan derajat keabuan, ekstraksi 14 fitur (9 warna + 5 tekstur GLCM), penyimpanan ke CSV, hingga pemodelan klasifikasi dan evaluasi matriks akurasi:
 
 ```python
 """
 Praktikum Pengolahan Sinyal Digital (PSD) - Teknik Informatika UTM
 Modul: Ekstraksi 14 Fitur Citra Digital, Ekspor CSV, dan Klasifikasi (Alur Audio)
+Penulis: Muhammad Zaidan Nabil Rafi (240411100068)
 """
 
 import os
+import sys
 import cv2
 import numpy as np
 import scipy.stats as stats
@@ -880,42 +882,132 @@ from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report
+)
 
-# =========================================================================
-# 1. FUNGSI EKSTRAKSI GLCM (5 FITUR HARALICK)
-# =========================================================================
-def calculate_glcm_5_features(gray_img, levels=16, d=1):
-    q = (gray_img // (256 // levels)).astype(int)
-    src = q[:, :-d].ravel()
-    dst = q[:, d:].ravel()
-    glcm_counts = np.bincount(src * levels + dst, minlength=levels*levels).reshape((levels, levels)).astype(float)
-    P = glcm_counts / np.sum(glcm_counts)
-    
-    i_idx, j_idx = np.indices((levels, levels))
-    contrast = float(np.sum((i_idx - j_idx)**2 * P))
-    energy = float(np.sum(P**2))
-    homogeneity = float(np.sum(P / (1.0 + np.abs(i_idx - j_idx))))
-    mask = P > 0
-    entropy = float(-np.sum(P[mask] * np.log2(P[mask])))
-    
-    p_i = np.sum(P, axis=1)
-    p_j = np.sum(P, axis=0)
-    mu_i = np.sum(np.arange(levels) * p_i)
-    mu_j = np.sum(np.arange(levels) * p_j)
-    sig_i = np.sqrt(np.sum((np.arange(levels) - mu_i)**2 * p_i))
-    sig_j = np.sqrt(np.sum((np.arange(levels) - mu_j)**2 * p_j))
-    correlation = float(np.sum((i_idx - mu_i) * (j_idx - mu_j) * P) / (sig_i * sig_j)) if (sig_i * sig_j) > 1e-9 else 1.0
-    
-    return energy, entropy, contrast, correlation, homogeneity
+# =============================================================================
+# 1. FUNGSI EKSTRAKSI FITUR CITRA DIGITAL (WARNA RGB & TEKSTUR GLCM)
+# =============================================================================
 
-# =========================================================================
-# 2. PEMBACAAN DATASET & EKSTRAKSI 14 FITUR
-# =========================================================================
-# Dataset memuat 194 citra: 97 Rapi dan 97 Berantakan
-# Disimpan dalam berkas: hasil_ekstraksi_fitur_citra.csv
+def compute_glcm_features(gray_img, n_levels=64, distance=1):
+    """
+    Menghitung 5 Fitur Tekstur Haralick dari GLCM (Gray-Level Co-occurrence Matrix):
+    - glcm_contrast    : Variasi kontras lokal derajat keabuan
+    - glcm_homogeneity : Tingkat kemiripan intensitas lokal (IDM)
+    - glcm_energy      : Keseragaman energi spasial (ASM)
+    - glcm_correlation : Ketergantungan linier intensitas piksel bertetangga
+    - glcm_entropy     : Kompleksitas dan keacakan derajat keabuan
+    """
+    scaled = (gray_img.astype(np.float32) / 256.0 * n_levels).astype(np.uint32)
+    scaled = np.clip(scaled, 0, n_levels - 1)
+    H, W = scaled.shape
+    
+    # 4 arah spasial ortogonal & diagonal (0, 45, 90, 135 derajat)
+    directions = [(0, 1), (-1, 1), (-1, 0), (-1, -1)]
+    d = distance
+    
+    contrasts, homogeneities, energies, correlations, entropies = [], [], [], [], []
+    
+    for dy, dx in directions:
+        y1_s = max(0, -dy * d); y1_e = min(H, H - dy * d)
+        x1_s = max(0, -dx * d); x1_e = min(W, W - dx * d)
+        y2_s = max(0, dy * d);  y2_e = min(H, H + dy * d)
+        x2_s = max(0, dx * d);  x2_e = min(W, W + dx * d)
+        
+        p1 = scaled[y1_s:y1_e, x1_s:x1_e].ravel()
+        p2 = scaled[y2_s:y2_e, x2_s:x2_e].ravel()
+        
+        mat, _, _ = np.histogram2d(p1, p2, bins=n_levels, range=[[0, n_levels], [0, n_levels]])
+        mat = mat + mat.T
+        tot = mat.sum()
+        p = mat / tot if tot > 0 else mat
+        
+        i_idx, j_idx = np.indices((n_levels, n_levels))
+        diff = np.abs(i_idx - j_idx)
+        
+        contrasts.append(np.sum((diff ** 2) * p))
+        homogeneities.append(np.sum(p / (1.0 + diff)))
+        energies.append(np.sum(p ** 2))
+        
+        nonzero_p = p[p > 0]
+        entropies.append(-np.sum(nonzero_p * np.log2(nonzero_p)) if len(nonzero_p) > 0 else 0.0)
+        
+        mu_i = np.sum(i_idx * p)
+        mu_j = np.sum(j_idx * p)
+        var_i = np.sum(((i_idx - mu_i) ** 2) * p)
+        var_j = np.sum(((j_idx - mu_j) ** 2) * p)
+        std_ij = np.sqrt(var_i * var_j)
+        corr = np.sum((i_idx - mu_i) * (j_idx - mu_j) * p) / std_ij if std_ij > 1e-9 else 1.0
+        correlations.append(corr)
+        
+    return {
+        'glcm_energy': float(np.mean(energies)),
+        'glcm_entropy': float(np.mean(entropies)),
+        'glcm_contrast': float(np.mean(contrasts)),
+        'glcm_correlation': float(np.mean(correlations)),
+        'glcm_homogeneity': float(np.mean(homogeneities))
+    }
 
-df = pd.read_csv('hasil_ekstraksi_fitur_citra.csv')
+def extract_14_features(img_bgr):
+    """
+    Fungsi Ekstraksi 14 Fitur Citra Sesuai Permintaan Dosen:
+    1. Konversi BGR -> RGB & Grayscale 8-bit (ITU-R BT.601)
+    2. Ekstraksi 9 Momen Warna (Mean, Std, Skewness per kanal R, G, B)
+    3. Ekstraksi 5 Fitur Tekstur GLCM Haralick
+    """
+    img_std = cv2.resize(img_bgr, (512, 512), interpolation=cv2.INTER_AREA)
+    img_rgb = cv2.cvtColor(img_std, cv2.COLOR_BGR2RGB)
+    gray = cv2.cvtColor(img_std, cv2.COLOR_BGR2GRAY)
+    
+    feats = {}
+    # A. 9 Momen Warna RGB
+    for idx, c in enumerate(['r', 'g', 'b']):
+        channel_data = img_rgb[:, :, idx].astype(np.float64)
+        feats[f'mean_{c}'] = float(np.mean(channel_data))
+        feats[f'std_{c}'] = float(np.std(channel_data))
+        feats[f'skew_{c}'] = float(stats.skew(channel_data.ravel()))
+        
+    # B. 5 Fitur GLCM Tekstur Haralick
+    glcm_res = compute_glcm_features(gray, n_levels=64, distance=1)
+    feats.update(glcm_res)
+    return feats
+
+def extract_dataset_to_csv(dirs_dict, output_csv_path):
+    """
+    Membaca semua gambar dari folder dataset, mengekstrak 14 fitur, dan menyimpannya ke CSV.
+    """
+    records = []
+    for label, folder in dirs_dict.items():
+        files = sorted([f for f in os.listdir(folder) if f.lower().endswith(('.jpg', '.jpeg', '.png'))])
+        for fname in files:
+            img = cv2.imread(os.path.join(folder, fname))
+            if img is not None:
+                feats = extract_14_features(img)
+                feats['filename'] = fname
+                feats['label'] = label
+                records.append(feats)
+    df = pd.DataFrame(records)
+    df.to_csv(output_csv_path, index=False)
+    return df
+
+# =============================================================================
+# 2. PEMODELAN KLASIFIKASI MACHINE LEARNING & MATRIKS AKURASI
+# =============================================================================
+
+# Membaca dataset CSV hasil ekstraksi 14 fitur
+csv_file = 'hasil_ekstraksi_fitur_citra.csv'
+if not os.path.exists(csv_file):
+    # Jika CSV belum ada, ekstrak langsung dari folder gambar mentah
+    df = extract_dataset_to_csv({
+        'Berantakan': 'dataset_baru/berantakan',
+        'Rapi': 'dataset_baru/rapi'
+    }, csv_file)
+else:
+    df = pd.read_csv(csv_file)
+
 features = [
     'mean_r', 'std_r', 'skew_r',
     'mean_g', 'std_g', 'skew_g',
@@ -925,20 +1017,13 @@ features = [
 X = df[features].values
 y = (df['label'] == 'Berantakan').astype(int).values
 
-# =========================================================================
-# 3. STRATIFIED TRAIN-TEST SPLIT (80:20) & Z-SCORE SCALING
-# =========================================================================
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.20, random_state=42, stratify=y
-)
-
+# Stratified Split 80:20 & Normalisasi Z-Score
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
 scaler = StandardScaler()
 X_train_sc = scaler.fit_transform(X_train)
 X_test_sc = scaler.transform(X_test)
 
-# =========================================================================
-# 4. PELATIHAN MODEL KLASIFIKASI & MATRIKS AKURASI
-# =========================================================================
+# Pelatihan Model SVM (RBF)
 svm = SVC(kernel='rbf', C=5.0, probability=True, random_state=42)
 svm.fit(X_train_sc, y_train)
 y_pred = svm.predict(X_test_sc)
@@ -946,8 +1031,8 @@ y_pred = svm.predict(X_test_sc)
 print(f"AKURASI PENGUJIAN SVM (14 Fitur) : {accuracy_score(y_test, y_pred) * 100:.2f}%")
 print("\nMATRIKS AKURASI (Confusion Matrix):")
 print(confusion_matrix(y_test, y_pred))
-print("\nLAPORAN KLASIFIKASI:")
-print(classification_report(y_test, y_pred, target_names=['Rapi', 'Berantakan']))
+print("\nLAPORAN KLASIFIKASI LENGKAP:")
+print(classification_report(y_test, y_pred, target_names=['Rapi (0)', 'Berantakan (1)']))
 ```
 
 #### Hasil Eksekusi Kode Langsung pada Terminal (`python klasifikasi_14_fitur.py`):
