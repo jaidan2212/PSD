@@ -1121,6 +1121,94 @@ Berantakan (1)       0.79      0.79      0.79        19
 
 ---
 
+### 11.6 Skrip Pengujian & Demonstrasi Mandiri (`test_modul_14_fitur.py`)
+
+Untuk mempermudah pengujian modul dan demonstrasi langsung di hadapan penguji/dosen, telah dibuatkan modul ekstraksi terisolasi [`ekstraksi_14_fitur.py`](file:///c:/laragon/www/TugasPSD/ekstraksi_14_fitur.py) serta skrip pengujian otomatis [`test_modul_14_fitur.py`](file:///c:/laragon/www/TugasPSD/test_modul_14_fitur.py) yang mencakup 4 skenario evaluasi:
+1. **Pengujian 1:** Ekstraksi 14 fitur pada citra tunggal (citra milik mahasiswa `24-068`) dan komparasi *side-by-side* Berantakan vs Rapi.
+2. **Pengujian 2:** Verifikasi integritas tabel dataset CSV (194 sampel, 14 fitur, 0 missing value).
+3. **Pengujian 3:** Pengujian benchmark klasifikasi Machine Learning (SVM RBF, Random Forest, Logistic Regression).
+4. **Pengujian 4:** Pengujian inferensi / prediksi live pada citra baru dengan estimasi tingkat keyakinan (*confidence score*).
+
+#### Log Hasil Eksekusi Pengujian Mandiri (`python test_modul_14_fitur.py`):
+
+```text
+################################################################################
+#           DEMO & PENGUJIAN MODUL LENGKAP EKSTRAKSI 14 FITUR CITRA           #
+#           Praktikum Pengolahan Sinyal Digital - Teknik Informatika UTM       #
+#           Nama: Muhammad Zaidan Nabil Rafi (NIM: 240411100068)               #
+################################################################################
+
+================================================================================
+  PENGUJIAN 1: EKSTRAKSI 14 FITUR PADA CITRA TUNGGAL (24-068)
+================================================================================
+[A] Membaca Citra Berantakan: dataset_baru\berantakan\24-068 Berantakan 1.jpeg
+[B] Membaca Citra Rapi       : dataset_baru\rapi\24-068 Rapi 1.jpeg
+
+--------------------------------------------------------------------------------
+  TABEL KOMPARASI 14 FITUR SECARA SIDE-BY-SIDE (BERANTAKAN vs RAPI)
+--------------------------------------------------------------------------------
+No  | Nama Fitur         | Berantakan      | Rapi            | Domain / Karakteristik
+--------------------------------------------------------------------------------
+ 1  | mean_r             |       134.89879 |       124.46167 | Warna R (Kecerahan Merah)
+ 2  | std_r              |        55.54135 |        48.49903 | Warna R (Kontras Merah)
+ 3  | skew_r             |        -0.58299 |        -0.13906 | Warna R (Kemiringan Distribusi)
+ 4  | mean_g             |       133.48738 |       125.31627 | Warna G (Kecerahan Hijau)
+ 5  | std_g              |        54.40930 |        54.13625 | Warna G (Kontras Hijau)
+ 6  | skew_g             |        -0.54035 |        -0.41899 | Warna G (Kemiringan Distribusi)
+ 7  | mean_b             |       128.89809 |       120.71827 | Warna B (Kecerahan Biru)
+ 8  | std_b              |        51.46392 |        55.59013 | Warna B (Kontras Biru)
+ 9  | skew_b             |        -0.41564 |        -0.46567 | Warna B (Kemiringan Distribusi)
+10  | glcm_energy        |         0.00900 |         0.01043 | Tekstur (Keseragaman Pola / ASM)
+11  | glcm_entropy       |         8.17384 |         8.18302 | Tekstur (Kompleksitas / Keacakan)
+12  | glcm_contrast      |        12.82003 |        15.39988 | Tekstur (Variasi Derajat Keabuan)
+13  | glcm_correlation   |         0.96487 |         0.95429 | Tekstur (Ketergantungan Linier)
+14  | glcm_homogeneity   |         0.67541 |         0.68169 | Tekstur (Kehalusan Permukaan / IDM)
+--------------------------------------------------------------------------------
+
+================================================================================
+  PENGUJIAN 2: VERIFIKASI INTEGRITAS DATASET TABEL CSV
+================================================================================
+[1] Berkas Dataset       : hasil_ekstraksi_fitur_citra.csv
+[2] Total Baris Sampel   : 194 citra digital
+[3] Total Kolom          : 16 kolom (1 filename + 14 fitur + 1 label)
+[4] Distribusi Kelas     : {'Berantakan': 97, 'Rapi': 97}
+[5] Pengecekan Missing Value (NaN): 0 missing values (Data 100% Bersih)
+
+================================================================================
+  PENGUJIAN 3: EVALUASI KLASIFIKASI MACHINE LEARNING (ALUR AUDIO KEMARIN)
+================================================================================
+[1] Partisi Data Latih (Train 80%) : 155 citra (77 Rapi, 78 Berantakan)
+[2] Partisi Data Uji (Test 20%)    : 39 citra (20 Rapi, 19 Berantakan)
+
+--------------------------------------------------------------------------------
+  HASIL BENCHMARK AKURASI & MATRIKS KONFUSI 14 FITUR
+--------------------------------------------------------------------------------
+Model                      | Train Acc  | Test Acc   | 5-Fold CV      | Confusion Matrix (TN,FP,FN,TP)
+-------------------------------------------------------------------------------------
+SVM RBF (C=5.0)            |    91.61% |    79.49% | 78.89% (±4.88%) | TN=16, FP=4, FN=4, TP=15
+Random Forest (100 Trees)  |    98.06% |    74.36% | 76.26% (±4.28%) | TN=15, FP=5, FN=5, TP=14
+Logistic Regression        |    70.32% |    71.79% | 68.07% (±4.29%) | TN=15, FP=5, FN=6, TP=13
+-------------------------------------------------------------------------------------
+
+================================================================================
+  PENGUJIAN 4: TESTING PREDIKSI LANGSUNG (LIVE INFERENCE TESTING)
+================================================================================
+Skenario: Membaca file citra baru -> Ekstraksi 14 fitur on-the-fly -> Normalisasi -> Prediksi SVM
+--------------------------------------------------------------------------------
+File Citra       : 24-068 Berantakan 2.jpeg
+Label Asli       : Berantakan
+Hasil Prediksi   : Berantakan (Keyakinan: 75.51%)
+Status Evaluasi  : [BENAR / MATCH]
+--------------------------------------------------------------------------------
+File Citra       : 24-068 Rapi 2.jpeg
+Label Asli       : Rapi
+Hasil Prediksi   : Rapi (Keyakinan: 88.43%)
+Status Evaluasi  : [BENAR / MATCH]
+--------------------------------------------------------------------------------
+```
+
+---
+
 > [!NOTE]
 > **Jembatan Transisi Menuju Bab 12 (Eksperimen Peningkatan Akurasi $\ge 90\%$):**  
 > Pada Bab 11 di atas, seluruh instruksi wajib dari dosen pengampu (ekstraksi 14 fitur, konversi grayscale, perhitungan 5 fitur GLCM, pembuatan CSV, pembentukan matriks akurasi, dan klasifikasi terstandarisasi seperti audio) telah diselesaikan secara tuntas dengan akurasi pengujian mencapai $\mathbf{79.49\%}$.  
